@@ -1,0 +1,66 @@
+plugins {
+    id 'idea'
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'com.adarshr.test-logger' version '2.0.0'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
+}
+
+javafx {
+    version = "11.0.2"
+    modules = ['javafx.controls', 'javafx.graphics']
+}
+
+apply plugin: 'kotlin-kapt'
+
+
+def arrow_version = "0.10.4"
+def kotest_version = "4.1.1"
+def dagger_version = "2.28.1"
+
+dependencies {
+    implementation platform('org.jetbrains.kotlin:kotlin-bom')
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+    implementation group: 'no.tornado', name: 'tornadofx', version: "1.7.20"
+
+    // Arrow
+    implementation group: 'io.arrow-kt', name: 'arrow-fx', version: "$arrow_version"
+    implementation group: 'io.arrow-kt', name: 'arrow-syntax', version: "$arrow_version"
+    kapt group: 'io.arrow-kt', name: 'arrow-meta', version: "$arrow_version"
+
+    // Dagger
+    implementation group: 'com.google.dagger', name:'dagger', version: "$dagger_version"
+    kapt group: 'com.google.dagger', name:'dagger-compiler', version: "$dagger_version"
+
+    // Kotest
+    testImplementation group: 'io.kotest', name: 'kotest-runner-junit5-jvm', version: "$kotest_version"
+    testImplementation group: 'io.kotest', name: 'kotest-assertions-core-jvm', version: "$kotest_version"
+    testImplementation group: 'io.kotest', name: 'kotest-property-jvm', version: "$kotest_version"
+    testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"
+    testImplementation group: 'io.kotest', name: 'kotest-runner-console-jvm', version: "$kotest_version"
+
+    testImplementation group: 'io.mockk', name: 'mockk', version: '1.9'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClassName = 'insulator.AppKt'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
