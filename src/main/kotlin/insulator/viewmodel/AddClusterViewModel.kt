@@ -17,5 +17,6 @@ class AddClusterViewModel(private val configurationRepo: ConfigurationRepo) : It
     val clusterName: StringProperty = bind { item?.clusterNameProperty }
     fun save() {
         configurationRepo.store(Cluster(endpoint.value, clusterName.value))
+                .mapLeft { println("Unable to store the new configuration $it") }
     }
 }
