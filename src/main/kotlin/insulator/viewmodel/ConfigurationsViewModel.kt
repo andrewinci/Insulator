@@ -1,8 +1,17 @@
 package insulator.viewmodel
 
+import insulator.configuration.ConfigurationRepo
 import insulator.model.Cluster
-import tornadofx.Controller
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
+import tornadofx.*
 
-class ConfigurationsViewModel : Controller() {
-    fun clusters(): List<Cluster>  = listOf(Cluster("Cluster name", "http://clusterurl.co.uk"))
+
+class ConfigurationsViewModel(private val configurationRepo: ConfigurationRepo) : ViewModel() {
+    val clusters: ObservableList<Cluster> = FXCollections.observableArrayList(emptyList<Cluster>())
+
+    init {
+        configurationRepo.addCallback { clusters.add(it) }
+        clusters.addAll(configurationRepo.getClusters())
+    }
 }

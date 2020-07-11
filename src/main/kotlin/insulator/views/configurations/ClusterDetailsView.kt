@@ -6,12 +6,17 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos
 import tornadofx.*
 
-class ConfigurationView(cluster: Cluster) : View(cluster.name) {
+class ClusterDetailsView(cluster: Cluster) : View(cluster.name) {
     override val root = vbox(alignment = Pos.CENTER, spacing = 15) {
         padding = Insets(10.0)
         title(cluster.name)
         label {
             text = "Sample"
+        }
+        fieldset {
+            field("Sample") {
+
+            }
         }
     }
 }

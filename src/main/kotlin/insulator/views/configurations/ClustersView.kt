@@ -11,7 +11,7 @@ import tornadofx.*
 import tornadofx.label
 import tornadofx.vbox
 
-class ClustersView: View("Insulator") {
+class ClustersView : View("Insulator") {
 
     private val viewModel: ConfigurationsViewModel by di()
 
@@ -19,7 +19,7 @@ class ClustersView: View("Insulator") {
         padding = Insets(10.0)
         title("Clusters")
 
-        listview(FXCollections.observableArrayList(viewModel.clusters() )) {
+        listview(viewModel.clusters) {
             cellFormat { cluster ->
                 graphic = borderpane {
                     center = vbox {
@@ -28,7 +28,7 @@ class ClustersView: View("Insulator") {
                     }
                     right = vbox(alignment = Pos.CENTER) {
                         settingsButton {
-                            onMouseClicked = EventHandler { replaceWith(ConfigurationView(cluster)) }
+                            onMouseClicked = EventHandler { replaceWith(ClusterDetailsView(cluster)) }
                         }
                     }
                     maxHeight = 50.0
@@ -37,6 +37,7 @@ class ClustersView: View("Insulator") {
         }
         button {
             text = "Add new cluster"
+            action { find<AddClusterView>().openWindow() }
         }
     }
 }
