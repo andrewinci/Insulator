@@ -18,7 +18,7 @@ class ConfigurationRepo(private val gson: Gson) {
                 .fold({ it.right() }, { ConfigurationRepoException("Unable to load the file", it).left() })
                 .flatMap {
                     gson.runCatching { fromJson<Configuration>(it, Configuration::class.java) }
-                            .fold({ it.right() }, { ConfigurationRepoException("Unable to load configurations", it).left() })
+                            .fold({ it.right() }, { ConfigurationRepoException("Unable to load the configurations", it).left() })
                 }
     }
 

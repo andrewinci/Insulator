@@ -15,5 +15,5 @@ class Insulator: App(ClustersView::class) {
 
 fun main(args: Array<String>) {
     FX.dicontainer = DIContainer()
-    launch<Insulator>(args)
+    runCatching {  launch<Insulator>(args) }
 }

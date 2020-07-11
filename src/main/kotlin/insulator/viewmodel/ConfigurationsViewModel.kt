@@ -1,6 +1,7 @@
 package insulator.viewmodel
 
-import arrow.core.handleErrorWith
+import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.right
 import insulator.configuration.ConfigurationRepo
 import insulator.model.Cluster
@@ -10,12 +11,9 @@ import tornadofx.*
 
 
 class ConfigurationsViewModel(private val configurationRepo: ConfigurationRepo) : ViewModel() {
-    val clusters: ObservableList<Cluster> = FXCollections.observableArrayList(emptyList<Cluster>())
-
-    init {
-        configurationRepo.addNewClusterCallback { clusters.add(it) }
+    val clusters: Either<Throwable, ObservableList<Cluster>> by lazy {
+        configurationRepo.addNewClusterCallback { new -> clusters.map { it.add(new) } }
         configurationRepo.getConfiguration()
-                .map { clusters.addAll(it.clusters) }
-                .handleErrorWith { println("Unable to load the configurations $it").right() }
+                .flatMap { FXCollections.observableArrayList(it.clusters).right() }
     }
 }
