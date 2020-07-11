@@ -1,7 +1,9 @@
 package insulator.kafka
 
+import arrow.core.left
+import arrow.core.right
+import insulator.model.Topic
 import org.apache.kafka.clients.admin.AdminClient
-import org.apache.kafka.common.config.ConfigResource
 
 class AdminApi(private val admin: AdminClient) {
 
@@ -15,6 +17,10 @@ class AdminApi(private val admin: AdminClient) {
                 consumerGroupsCount = consumers.all().get().size
         )
     }
+
+    fun listTopics() = admin.runCatching { listTopics().names().get() }
+            .fold({ it.toList().map { topicName -> Topic(topicName) }.right() }, { it.left() })
+
 }
 
 data class ClusterOverview(

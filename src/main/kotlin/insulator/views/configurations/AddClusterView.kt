@@ -14,6 +14,22 @@ class AddClusterView : Fragment("Add cluster") {
             field("Endpoint (url:port)") {
                 textfield(viewModel.endpoint).required()
             }
+            field("Use SSL"){
+                checkbox(property=viewModel.useSSL)
+            }
+            field("SSL Truststore Location"){
+                textfield(viewModel.sslTruststoreLocation)
+            }
+            field("SSL Truststore Password"){
+                textfield(viewModel.sslTruststorePassword)
+            }
+            field("SSL Keystore Location"){
+                textfield(viewModel.sslKeystoreLocation)
+            }
+            field("SSL KeyStore Password"){
+                textfield(viewModel.sslKeyStorePassword)
+            }
+
             buttonbar {
                 button("Test connection") {
                     //todo: add logic to test connection

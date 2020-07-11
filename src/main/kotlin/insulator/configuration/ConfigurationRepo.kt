@@ -35,6 +35,10 @@ class ConfigurationRepo(private val gson: Gson) {
     }
 
     fun addNewClusterCallback(callback: (Cluster) -> Unit) = callbacks.add(callback)
+
+    companion object {
+        lateinit var currentCluster: Cluster
+    }
 }
 
 class ConfigurationRepoException(message: String, base: Throwable) : Throwable(message, base)

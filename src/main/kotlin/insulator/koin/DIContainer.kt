@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 
 class DIContainer : KoinComponent, DIContainer {
     init {
-        startKoin { modules(viewModelModule) }
+        startKoin { modules(kafkaModule, viewModelModule) }
     }
 
     override fun <T : Any> getInstance(type: KClass<T>) = getKoin().get<T>(type)

@@ -1,6 +1,7 @@
 package insulator.views.configurations
 
 import arrow.core.extensions.either.applicativeError.handleError
+import insulator.configuration.ConfigurationRepo
 import insulator.viewmodel.ConfigurationsViewModel
 import insulator.views.common.settingsButton
 import insulator.views.common.title
@@ -9,7 +10,6 @@ import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
-import javafx.stage.Stage
 import tornadofx.*
 import tornadofx.label
 import tornadofx.vbox
@@ -33,7 +33,7 @@ class ClustersView : View("Insulator") {
                     graphic = borderpane {
                         center = vbox {
                             title(cluster.name)
-                            label(cluster.url)
+                            label(cluster.endpoint)
                         }
                         right = vbox(alignment = Pos.CENTER) {
                             settingsButton {
@@ -42,7 +42,10 @@ class ClustersView : View("Insulator") {
                         }
                         maxHeight = 50.0
                     }
-                    onMouseClicked = EventHandler { replaceWith(find<MainView>()) }
+                    onMouseClicked = EventHandler {
+                        ConfigurationRepo.currentCluster = cluster
+                        replaceWith(find<MainView>())
+                    }
                 }
             }
         }.handleError {
