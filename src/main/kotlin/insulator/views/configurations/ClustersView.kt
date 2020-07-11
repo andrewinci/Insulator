@@ -1,18 +1,15 @@
 package insulator.views.configurations
 
 import arrow.core.extensions.either.applicativeError.handleError
-import arrow.core.flatMap
-import arrow.core.handleErrorWith
-import arrow.core.right
 import insulator.viewmodel.ConfigurationsViewModel
 import insulator.views.common.settingsButton
-import insulator.views.common.showError
 import insulator.views.common.title
-import javafx.collections.FXCollections
+import insulator.views.main.MainView
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
+import javafx.stage.Stage
 import tornadofx.*
 import tornadofx.label
 import tornadofx.vbox
@@ -20,6 +17,12 @@ import tornadofx.vbox
 class ClustersView : View("Insulator") {
 
     private val viewModel: ConfigurationsViewModel by di()
+
+    override fun onDock() {
+        super.onDock()
+        super.currentStage?.width = 300.0
+        super.currentStage?.height = 400.0
+    }
 
     override val root = vbox(alignment = Pos.CENTER, spacing = 15) {
         padding = Insets(10.0)
@@ -34,11 +37,12 @@ class ClustersView : View("Insulator") {
                         }
                         right = vbox(alignment = Pos.CENTER) {
                             settingsButton {
-                                onMouseClicked = EventHandler { replaceWith(ClusterDetailsView(cluster)) }
+                                onMouseClicked = EventHandler { replaceWith(ClusterDetailsView(cluster)) }//find<CustomerEditor>(mapOf(CustomerEditor::customer to customer))
                             }
                         }
                         maxHeight = 50.0
                     }
+                    onMouseClicked = EventHandler { replaceWith(find<MainView>()) }
                 }
             }
         }.handleError {

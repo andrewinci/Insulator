@@ -35,6 +35,9 @@ dependencies {
     implementation group: 'io.arrow-kt', name: 'arrow-syntax', version: "$arrow_version"
     kapt group: 'io.arrow-kt', name: 'arrow-meta', version: "$arrow_version"
 
+    // Kafka
+    compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.5.0'
+
     // Koin
     implementation group: 'org.koin', name: 'koin-core', version: "$koin_version"
     implementation group: 'org.koin', name: 'koin-core-ext', version: "$koin_version"

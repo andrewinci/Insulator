@@ -5,13 +5,7 @@ import insulator.views.configurations.ClustersView
 import javafx.stage.Stage
 import tornadofx.*
 
-class Insulator: App(ClustersView::class) {
-    override fun start(stage: Stage) {
-        stage.width = 300.0
-        stage.height = 400.0
-        super.start(stage)
-    }
-}
+class Insulator: App(ClustersView::class)
 
 fun main(args: Array<String>) {
     FX.dicontainer = DIContainer()
