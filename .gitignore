@@ -2,3 +2,4 @@
 build
 .gradle
 .insulator.config
+.DS_Store

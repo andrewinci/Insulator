@@ -5,40 +5,32 @@ import insulator.model.Cluster
 import javafx.beans.property.Property
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
 import javafx.beans.value.ObservableValue
 import tornadofx.*
 
+class AddClusterViewModel(private val configurationRepo: ConfigurationRepo) {
 
-class ClusterSettings {
-    val sslTruststorePassword = SimpleStringProperty()
-    val sslTruststoreLocation = SimpleStringProperty()
-    val sslKeystoreLocation = SimpleStringProperty()
-    val sslKeyStorePassword = SimpleStringProperty()
-    val useSSL = SimpleBooleanProperty(false)
-    val clusterNameProperty = SimpleStringProperty()
-    val endpointProperty = SimpleStringProperty()
-}
-
-class AddClusterViewModel(private val configurationRepo: ConfigurationRepo) : ItemViewModel<ClusterSettings>(ClusterSettings()) {
-
-    val sslTruststorePassword: StringProperty = bind { item?.sslTruststorePassword }
-    val sslTruststoreLocation: StringProperty = bind { item?.sslTruststoreLocation }
-    val sslKeystoreLocation: StringProperty = bind { item?.sslKeystoreLocation }
-    val sslKeyStorePassword: StringProperty = bind { item?.sslKeyStorePassword }
-    val useSSL: Property<Boolean> = bind { item?.useSSL }
-    val endpoint: StringProperty = bind { item?.endpointProperty }
-    val clusterName: StringProperty = bind { item?.clusterNameProperty }
+    val validProperty = SimpleBooleanProperty(false)
+    val sslTruststorePasswordProperty = SimpleStringProperty()
+    val sslTruststoreLocationProperty = SimpleStringProperty()
+    val sslKeystoreLocationProperty = SimpleStringProperty()
+    val sslKeyStorePasswordProperty = SimpleStringProperty()
+    val useSSLProperty: Property<Boolean> = SimpleBooleanProperty(false)
+    val endpointProperty = SimpleStringProperty().also { it.onChange { updateIsValid() } }
+    val clusterNameProperty = SimpleStringProperty().also { it.onChange { updateIsValid() } }
 
     fun save() {
         configurationRepo.store(
-                Cluster(clusterName.value,
-                        endpoint.value,
-                        useSSL.value,
-                        sslTruststoreLocation.value,
-                        sslTruststorePassword.value,
-                        sslKeystoreLocation.value,
-                        sslKeyStorePassword.value))
+                Cluster(clusterNameProperty.value,
+                        endpointProperty.value,
+                        useSSLProperty.value,
+                        sslTruststoreLocationProperty.value,
+                        sslTruststorePasswordProperty.value,
+                        sslKeystoreLocationProperty.value,
+                        sslKeyStorePasswordProperty.value))
                 .mapLeft { println("Unable to store the new configuration $it") }
     }
+
+    private fun updateIsValid(): Unit =
+            validProperty.set(!endpointProperty.value.isNullOrEmpty() && !clusterNameProperty.value.isNullOrEmpty())
 }

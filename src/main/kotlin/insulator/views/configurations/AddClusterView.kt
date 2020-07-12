@@ -8,17 +8,17 @@ class AddClusterView : Fragment("Add cluster") {
 
     override val root = form {
         fieldset {
-            field("Cluster name") { textfield(viewModel.clusterName) }
-            field("Endpoint (url:port)") { textfield(viewModel.endpoint).required() }
-            field("Use SSL") { checkbox(property = viewModel.useSSL) }
-            field("SSL Truststore Location") { textfield(viewModel.sslTruststoreLocation) }
-            field("SSL Truststore Password") { textfield(viewModel.sslTruststorePassword) }
-            field("SSL Keystore Location") { textfield(viewModel.sslKeystoreLocation) }
-            field("SSL KeyStore Password") { textfield(viewModel.sslKeyStorePassword) }
+            field("Cluster name") { textfield(viewModel.clusterNameProperty) }
+            field("Endpoint (url:port)") { textfield(viewModel.endpointProperty) }
+            field("Use SSL") { checkbox(property = viewModel.useSSLProperty) }
+            field("SSL Truststore Location") { textfield(viewModel.sslTruststoreLocationProperty) }
+            field("SSL Truststore Password") { textfield(viewModel.sslTruststorePasswordProperty) }
+            field("SSL Keystore Location") { textfield(viewModel.sslKeystoreLocationProperty) }
+            field("SSL KeyStore Password") { textfield(viewModel.sslKeyStorePasswordProperty) }
             buttonbar {
                 button("Test connection") { isDisable = true }
                 button("Add") {
-                    enableWhen(viewModel.valid)
+                    enableWhen(viewModel.validProperty)
                     action {
                         viewModel.save()
                         close()
