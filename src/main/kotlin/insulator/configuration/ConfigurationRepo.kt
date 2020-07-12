@@ -9,6 +9,11 @@ import java.io.File
 data class Configuration(var clusters: List<Cluster>)
 
 class ConfigurationRepo(private val gson: Gson) {
+
+    companion object {
+        lateinit var currentCluster: Cluster
+    }
+
     private val callbacks = ArrayList<(Cluster) -> Unit>()
     private val CONFIG_FILE_NAME = ".insulator.config"
 
@@ -35,10 +40,6 @@ class ConfigurationRepo(private val gson: Gson) {
     }
 
     fun addNewClusterCallback(callback: (Cluster) -> Unit) = callbacks.add(callback)
-
-    companion object {
-        lateinit var currentCluster: Cluster
-    }
 }
 
 class ConfigurationRepoException(message: String, base: Throwable) : Throwable(message, base)

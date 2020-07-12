@@ -1,9 +1,14 @@
 package insulator.kafka
 
+import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import arrow.fx.IO
+import arrow.fx.extensions.fx
+import arrow.fx.extensions.io.concurrent.Promise
 import insulator.model.Topic
 import org.apache.kafka.clients.admin.AdminClient
+import java.lang.Exception
 
 class AdminApi(private val admin: AdminClient) {
 
@@ -18,8 +23,9 @@ class AdminApi(private val admin: AdminClient) {
         )
     }
 
-    fun listTopics() = admin.runCatching { listTopics().names().get() }
-            .fold({ it.toList().map { topicName -> Topic(topicName) }.right() }, { it.left() })
+    fun listTopics(): IO<List<Topic>> = IO.fx {
+        admin.listTopics().names().get().map { topicName -> Topic(topicName) }
+    }
 
 }
 

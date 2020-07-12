@@ -1,5 +1,6 @@
 package insulator.koin
 
+import kafkaModule
 import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
 import tornadofx.DIContainer
