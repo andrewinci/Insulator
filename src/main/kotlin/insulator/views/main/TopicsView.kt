@@ -1,27 +1,30 @@
 package insulator.views.main
 
+import insulator.viewmodel.TopicViewModel
 import insulator.viewmodel.TopicsViewModel
 import insulator.views.common.title
 import javafx.geometry.Pos
-import javafx.scene.layout.VBox
+import javafx.scene.layout.AnchorPane
 import javafx.scene.paint.Color
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import tornadofx.*
 
-class TopicsView : VBox(), KoinComponent {
+class TopicsView : AnchorPane(), KoinComponent {
     private val viewModel: TopicsViewModel by inject()
 
     init {
-        title("Topics", Color.ORANGERED)
-        listview(viewModel.topicsProperty) {
-            cellFormat { topic ->
-                graphic = label(topic.name)
-            }
+        vbox {
+            title("Topics", Color.ORANGERED)
+            anchorpaneConstraints { topAnchor = 0;rightAnchor = 0;leftAnchor = 0 }
         }
-
-        alignment = Pos.TOP_CENTER
-        spacing = 15.0
+        tableview(viewModel.topicsProperty) {
+            column("Topic", TopicViewModel::nameProperty).minWidth(200.0)
+            column("#Messages", TopicViewModel::messageCountProperty)
+            column("Internal", TopicViewModel::internalProperty)
+            column("#Partitions", TopicViewModel::partitionsProperty)
+            anchorpaneConstraints { topAnchor = 50;rightAnchor = 0;bottomAnchor = 0;leftAnchor = 0 }
+        }
         paddingAll = 5.0
         anchorpaneConstraints { topAnchor = 0;rightAnchor = 0;bottomAnchor = 0;leftAnchor = 0 }
     }

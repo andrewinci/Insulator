@@ -1,14 +1,11 @@
 package insulator.kafka
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
 import arrow.fx.IO
 import arrow.fx.extensions.fx
-import arrow.fx.extensions.io.concurrent.Promise
 import insulator.model.Topic
 import org.apache.kafka.clients.admin.AdminClient
-import java.lang.Exception
+import org.apache.kafka.common.TopicPartitionInfo
+import org.apache.kafka.common.acl.AclOperation
 
 class AdminApi(private val admin: AdminClient) {
 
@@ -25,6 +22,18 @@ class AdminApi(private val admin: AdminClient) {
 
     fun listTopics(): IO<List<Topic>> = IO.fx {
         admin.listTopics().names().get().map { topicName -> Topic(topicName) }
+    }
+
+    fun describeTopic(vararg topicNames: String) = IO.fx {
+        admin.describeTopics(topicNames.toList()).all().get().values
+                .map {
+                    Topic(
+                            name = it.name(),
+                            messageCount = null,
+                            internal = it.isInternal,
+                            partitions = it.partitions().size)
+
+                }
     }
 
 }
