@@ -5,7 +5,6 @@ import insulator.model.Topic
 import insulator.viewmodel.TopicsViewModel
 import insulator.views.common.title
 import javafx.collections.FXCollections
-import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ListView
@@ -21,10 +20,6 @@ class TopicsView : VBox(), KoinComponent {
     private val viewModel: TopicsViewModel by inject()
 
     init {
-        alignment = Pos.TOP_CENTER
-        spacing = 15.0
-        padding = Insets(5.0)
-        anchorpaneConstraints { topAnchor = 0;rightAnchor = 0;bottomAnchor = 0;leftAnchor = 0 }
         title("Topics", Color.ORANGERED)
         val listView = listview(FXCollections.observableArrayList<Topic>()) {
             cellFormat { topic ->
@@ -32,6 +27,10 @@ class TopicsView : VBox(), KoinComponent {
             }
         }
         loadTopics(listView)
+        alignment = Pos.TOP_CENTER
+        spacing = 15.0
+        paddingAll = 5.0
+        anchorpaneConstraints { topAnchor = 0;rightAnchor = 0;bottomAnchor = 0;leftAnchor = 0 }
     }
 
     private fun loadTopics(list: ListView<Topic>) {
