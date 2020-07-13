@@ -12,7 +12,7 @@ import tornadofx.*
 import tornadofx.label
 import tornadofx.vbox
 
-class ClustersView : View("Insulator") {
+class ListClusterView : View("Insulator") {
 
     private val viewModel: ConfigurationsViewModel by di()
 

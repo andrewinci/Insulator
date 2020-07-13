@@ -4,6 +4,7 @@ import insulator.views.common.ICON_HOME
 import insulator.views.common.ICON_TOPICS
 import insulator.views.common.subtitle
 import insulator.views.common.title
+import insulator.views.main.topic.ListTopicView
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Insets
@@ -23,7 +24,7 @@ class MainView : View("Insulator") {
         vbox(alignment = Pos.TOP_CENTER) {
             title("Cluster name") { paddingAll = 5.0 }
             menuItem("Overview", ICON_HOME) { setCurrentView(OverviewView()) }
-            menuItem("Topics", ICON_TOPICS) { setCurrentView(TopicsView()) }
+            menuItem("Topics", ICON_TOPICS) { setCurrentView(ListTopicView()) }
 
             paddingAll = 5.0;maxWidth = 200.0;minWidth = 200.0
             anchorpaneConstraints { topAnchor = 10; leftAnchor = 10; bottomAnchor = 10; }
@@ -62,7 +63,7 @@ class MainView : View("Insulator") {
         super.onDock()
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
-        setCurrentView(OverviewView())
+        if (rightPane.children.isEmpty()) setCurrentView(OverviewView())
     }
 
 }

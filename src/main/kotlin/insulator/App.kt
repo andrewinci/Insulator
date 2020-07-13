@@ -1,11 +1,10 @@
 package insulator
 
 import insulator.koin.DIContainer
-import insulator.views.configurations.ClustersView
-import javafx.stage.Stage
+import insulator.views.configurations.ListClusterView
 import tornadofx.*
 
-class Insulator: App(ClustersView::class)
+class Insulator: App(ListClusterView::class)
 
 fun main(args: Array<String>) {
     FX.dicontainer = DIContainer()
