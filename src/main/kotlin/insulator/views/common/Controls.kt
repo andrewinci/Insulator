@@ -1,10 +1,13 @@
 package insulator.views.common
 
 import javafx.event.EventTarget
+import javafx.geometry.Insets
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.image.Image
+import javafx.scene.layout.*
 import javafx.scene.paint.Color
+import javafx.scene.paint.Paint
 import javafx.scene.text.FontWeight
 import tornadofx.*
 
@@ -28,4 +31,23 @@ fun EventTarget.subtitle(text: String, color: Color = Color.BLACK, op: Label.() 
         textFill = color
     }
     it.useMaxWidth = true
+}
+
+fun EventTarget.card(title: String? = null, width: Double? = null, op: VBox.() -> Unit = {}) = vbox {
+    if (title != null) title(title, Color.ORANGERED) { paddingAll = 5.0 }
+    paddingAll = 5.0;
+    if (width != null) {
+        maxWidth = width; minWidth = width
+    }
+    background = Background(BackgroundFill(Paint.valueOf("white"), CornerRadii(10.0), Insets(4.0)))
+    minHeight = 100.0
+    opcr(this, VBox(), op)
+}
+
+abstract class SizedView(title: String?, val viewWidth: Double?, val viewHeight: Double?) : View(title) {
+    override fun onDock() {
+        super.onDock()
+        if (viewWidth != null) super.currentStage?.width = viewWidth
+        if (viewHeight != null) super.currentStage?.height = viewHeight
+    }
 }
