@@ -1,6 +1,7 @@
 package insulator.viewmodel
 
 import insulator.kafka.AdminApi
+import insulator.kafka.Consumer
 import insulator.model.Topic
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
@@ -11,7 +12,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import tornadofx.*
 
-class TopicsViewModel(private val adminApi: AdminApi) : ViewModel() {
+class ListTopicViewModel(private val adminApi: AdminApi) : ViewModel() {
     private var updating = false;
     private val internal = FXCollections.observableArrayList<TopicViewModel>()
 
@@ -30,23 +31,4 @@ class TopicsViewModel(private val adminApi: AdminApi) : ViewModel() {
                     }
         }
     }
-}
-
-class TopicViewModel(topic: Topic, adminApi: AdminApi) {
-    init {
-        GlobalScope.launch {
-            adminApi.describeTopic(topic.name).unsafeRunAsync {
-                it.map {
-                    nameProperty.set(it.first().name)
-                    internalProperty.set(it.first().internal ?: false)
-                    partitionsProperty.set(it.first().partitions ?: -1)
-                }
-            }
-        }
-    }
-
-    val nameProperty = SimpleStringProperty(topic.name)
-    val messageCountProperty = SimpleIntegerProperty()
-    val internalProperty = SimpleBooleanProperty()
-    val partitionsProperty = SimpleIntegerProperty()
 }

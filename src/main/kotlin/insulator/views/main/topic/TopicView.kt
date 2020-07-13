@@ -1,17 +1,30 @@
 package insulator.views.main.topic
 
-import insulator.model.Topic
+import insulator.viewmodel.RecordViewModel
+import insulator.viewmodel.TopicViewModel
 import insulator.views.common.SizedView
 import insulator.views.common.card
-import insulator.views.common.title
-import insulator.views.main.OverviewView
-import javafx.scene.paint.Color
 import tornadofx.*
 
 
-class TopicView(topicName: String) : SizedView(topicName, 800.0, 800.0) {
+class TopicView(private val viewModel: TopicViewModel) : SizedView(viewModel.nameProperty.value, 800.0, 800.0) {
 
-    override val root = card(topicName) {
+    override val root = card(viewModel.nameProperty.value) {
+        button("Consume") { action { viewModel.consume() } }
+
+        tableview(viewModel.records) {
+            column("Key", RecordViewModel::keyProperty).minWidth(200.0)
+            column("Value", RecordViewModel::valueProperty)
+            prefHeight = 600.0 //todo: remove hardcoded and retrieve
+        }
     }
+
+    override fun onDock() {
+        currentWindow?.setOnCloseRequest {
+            viewModel.stopConsumer()
+        }
+        super.onDock()
+    }
+
 
 }
