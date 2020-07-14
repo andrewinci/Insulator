@@ -1,6 +1,5 @@
 package insulator.kafka
 
-import arrow.core.Tuple10
 import arrow.core.Tuple3
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -18,11 +17,11 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
 
     fun setCallback(cb: (String, String, Long) -> Unit) = callbackList.add(cb)
 
-    fun start(topic: String) {
+    fun start(topic: String, from: ConsumeFrom) {
         if (isRunning()) throw Throwable("Consumer already running")
         val partitions = consumer.partitionsFor(topic).map { TopicPartition(topic, it.partition()) }
         consumer.assign(partitions)
-        consumer.seekToEnd(partitions)
+        seek(consumer, partitions, from)
         running = true
         loop()
     }
@@ -32,6 +31,7 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
     fun stop() {
         running = false
         callbackList.clear()
+        //todo: lock to avoid start while stopping
         //todo: job.join()
     }
 
@@ -47,9 +47,20 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
         }
     }
 
+    private fun seek(consumer: Consumer<Any, Any>, partitions: List<TopicPartition>, from: ConsumeFrom) {
+        when (from) {
+            ConsumeFrom.Now -> consumer.seekToEnd(partitions)
+            ConsumeFrom.Beginning -> consumer.seekToBeginning(partitions)
+        }
+    }
+
     private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String, String, Long> {
         //todo: parse this thing
         return Tuple3(record.key().toString(), record.value().toString(), record.timestamp())
     }
+}
 
+enum class ConsumeFrom {
+    Now,
+    Beginning
 }

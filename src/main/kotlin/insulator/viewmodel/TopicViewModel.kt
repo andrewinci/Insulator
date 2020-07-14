@@ -1,6 +1,7 @@
 package insulator.viewmodel
 
 import insulator.kafka.AdminApi
+import insulator.kafka.ConsumeFrom
 import insulator.kafka.Consumer
 import insulator.model.Topic
 import javafx.beans.property.SimpleBooleanProperty
@@ -40,13 +41,17 @@ class TopicViewModel(topic: Topic, adminApi: AdminApi) : ViewModel() {
     val partitionsProperty = SimpleIntegerProperty()
     val records = FXCollections.observableArrayList<RecordViewModel>()
 
-    fun consume() {
+    fun consume(from: ConsumeFrom) {
         if (consumer.isRunning()) return
         consumer.setCallback { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
-        consumer.start(nameProperty.value)
+        consumer.start(nameProperty.value, from)
     }
 
     fun stopConsumer() {
         consumer.stop()
+    }
+
+    fun clean() {
+        records.clear()
     }
 }

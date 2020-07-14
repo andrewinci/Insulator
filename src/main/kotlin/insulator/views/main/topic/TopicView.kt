@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.kafka.ConsumeFrom
 import insulator.viewmodel.RecordViewModel
 import insulator.viewmodel.TopicViewModel
 import insulator.views.common.SizedView
@@ -18,7 +19,7 @@ class TopicView(private val viewModel: TopicViewModel) : SizedView(viewModel.nam
                 vbox {
                     buttonbar() {
                         consumeButton()
-                        button("Clean"){action { viewModel.records.clear() }}
+                        button("Clean"){action { viewModel.clean() }}
                     }
                     tableview(viewModel.records) {
                         column("Time", RecordViewModel::timestamp).minWidth(200.0)
@@ -43,7 +44,8 @@ class TopicView(private val viewModel: TopicViewModel) : SizedView(viewModel.nam
         it.action {
             if (it.text == "Consume") {
                 it.text = "Stop"
-                viewModel.consume()
+                viewModel.clean()
+                viewModel.consume(from = ConsumeFrom.Beginning)
             } else {
                 it.text = "Consume"
                 viewModel.stopConsumer()
@@ -57,6 +59,4 @@ class TopicView(private val viewModel: TopicViewModel) : SizedView(viewModel.nam
         }
         super.onDock()
     }
-
-
 }
