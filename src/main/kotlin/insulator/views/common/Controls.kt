@@ -41,6 +41,7 @@ fun EventTarget.card(title: String? = null, width: Double? = null, op: VBox.() -
     }
     background = Background(BackgroundFill(Paint.valueOf("white"), CornerRadii(10.0), Insets(4.0)))
     minHeight = 100.0
+    spacing = 5.0
     opcr(this, VBox(), op)
 }
 

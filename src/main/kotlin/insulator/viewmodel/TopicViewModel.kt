@@ -5,14 +5,16 @@ import insulator.kafka.Consumer
 import insulator.model.Topic
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import tornadofx.*
 
-class RecordViewModel(key: String, value: String) {
+
+class RecordViewModel(key: String, value: String, timestamp: Long) {
+    val timestamp = SimpleLongProperty(timestamp)
     val keyProperty = SimpleStringProperty(key)
     val valueProperty = SimpleStringProperty(value)
 }
@@ -40,7 +42,7 @@ class TopicViewModel(topic: Topic, adminApi: AdminApi) : ViewModel() {
 
     fun consume() {
         if (consumer.isRunning()) return
-        consumer.setCallback { k, v -> this.records.add(RecordViewModel(k, v)) }
+        consumer.setCallback { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
         consumer.start(nameProperty.value)
     }
 

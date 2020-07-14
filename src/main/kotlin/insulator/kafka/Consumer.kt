@@ -1,5 +1,7 @@
 package insulator.kafka
 
+import arrow.core.Tuple10
+import arrow.core.Tuple3
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -11,9 +13,9 @@ import java.util.*
 class Consumer(private val consumer: Consumer<Any, Any>) {
     private lateinit var job: Job
     private var running = false
-    private val callbackList = LinkedList<(String, String) -> Unit>()
+    private val callbackList = LinkedList<(String, String, Long) -> Unit>()
 
-    fun setCallback(cb: (String, String) -> Unit) = callbackList.add(cb)
+    fun setCallback(cb: (String, String, Long) -> Unit) = callbackList.add(cb)
 
     fun start(vararg topic: String) {
         if (isRunning()) throw Throwable("Consumer already running")
@@ -37,14 +39,14 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
                 if (records.isEmpty) continue
                 records.toList()
                         .map { parse(it) }
-                        .forEach { (k, v) -> callbackList.forEach { it(k, v) } }
+                        .forEach { (k, v, t) -> callbackList.forEach { it(k, v, t) } }
             }
         }
     }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Pair<String, String> {
+    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String, String, Long> {
         //todo: parse this thing
-        return Pair(record.key().toString(), record.value().toString())
+        return Tuple3(record.key().toString(), record.value().toString(), record.timestamp())
     }
 
 }

@@ -4,20 +4,52 @@ import insulator.viewmodel.RecordViewModel
 import insulator.viewmodel.TopicViewModel
 import insulator.views.common.SizedView
 import insulator.views.common.card
+import javafx.scene.control.Button
+import javafx.scene.control.ButtonBar
+import javafx.scene.control.TabPane
 import tornadofx.*
 
 
 class TopicView(private val viewModel: TopicViewModel) : SizedView(viewModel.nameProperty.value, 800.0, 800.0) {
 
     override val root = card(viewModel.nameProperty.value) {
-        button("Consume") { action { viewModel.consume() } }
+        tabpane {
+            tab("Consumer") {
+                vbox {
+                    buttonbar() {
+                        consumeButton()
+                        button("Clean"){action { viewModel.records.clear() }}
+                    }
+                    tableview(viewModel.records) {
+                        column("Time", RecordViewModel::timestamp).minWidth(200.0)
+                        column("Key", RecordViewModel::keyProperty).minWidth(200.0)
+                        column("Value", RecordViewModel::valueProperty).minWidth(200.0)
+                        prefHeight = 600.0 //todo: remove hardcoded and retrieve
+                    }
+                }
+                spacing = 5.0
+            }
+            tab("Producer") {
 
-        tableview(viewModel.records) {
-            column("Key", RecordViewModel::keyProperty).minWidth(200.0)
-            column("Value", RecordViewModel::valueProperty)
-            prefHeight = 600.0 //todo: remove hardcoded and retrieve
+            }
+            tab("Settings") {
+
+            }
+            tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
         }
     }
+
+    private fun ButtonBar.consumeButton() = Button("Consume").also {
+        it.action {
+            if (it.text == "Consume") {
+                it.text = "Stop"
+                viewModel.consume()
+            } else {
+                it.text = "Consume"
+                viewModel.stopConsumer()
+            }
+        }
+    }.also { this.buttons.add(it) }
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest {
