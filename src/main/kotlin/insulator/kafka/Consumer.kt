@@ -7,6 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.common.TopicPartition
 import java.time.Duration
 import java.util.*
 
@@ -17,9 +18,11 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
 
     fun setCallback(cb: (String, String, Long) -> Unit) = callbackList.add(cb)
 
-    fun start(vararg topic: String) {
+    fun start(topic: String) {
         if (isRunning()) throw Throwable("Consumer already running")
-        consumer.subscribe(topic.toList())
+        val partitions = consumer.partitionsFor(topic).map { TopicPartition(topic, it.partition()) }
+        consumer.assign(partitions)
+        consumer.seekToEnd(partitions)
         running = true
         loop()
     }

@@ -28,7 +28,6 @@ val kafkaModule = module {
             }
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
-            put(ConsumerConfig.GROUP_ID_CONFIG, "replace")
         }
         properties
     }
