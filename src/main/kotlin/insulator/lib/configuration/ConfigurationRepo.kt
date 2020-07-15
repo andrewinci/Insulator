@@ -1,10 +1,10 @@
-package insulator.configuration
+package insulator.lib.configuration
 
 import arrow.core.*
 import arrow.core.extensions.fx
 import com.google.gson.Gson
-import insulator.configuration.model.Cluster
-import insulator.configuration.model.Configuration
+import insulator.lib.configuration.model.Cluster
+import insulator.lib.configuration.model.Configuration
 import java.io.File
 
 class ConfigurationRepo(private val gson: Gson) {

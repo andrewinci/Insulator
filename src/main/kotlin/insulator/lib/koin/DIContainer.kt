@@ -1,4 +1,4 @@
-package insulator.koin
+package insulator.lib.koin
 
 import kafkaModule
 import org.koin.core.KoinComponent

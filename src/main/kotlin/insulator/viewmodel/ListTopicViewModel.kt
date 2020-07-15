@@ -1,11 +1,6 @@
 package insulator.viewmodel
 
-import insulator.kafka.AdminApi
-import insulator.kafka.Consumer
-import insulator.model.Topic
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleStringProperty
+import insulator.lib.kafka.AdminApi
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import kotlinx.coroutines.GlobalScope

@@ -1,7 +1,7 @@
 package insulator.views.configurations
 
-import insulator.configuration.ConfigurationRepo
-import insulator.configuration.model.Cluster
+import insulator.lib.configuration.ConfigurationRepo
+import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.ConfigurationsViewModel
 import insulator.views.common.settingsButton
 import insulator.views.common.title

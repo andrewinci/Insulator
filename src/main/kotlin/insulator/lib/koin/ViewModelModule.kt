@@ -1,12 +1,9 @@
-package insulator.koin
+package insulator.lib.koin
 
 import com.google.gson.GsonBuilder
-import insulator.configuration.ConfigurationRepo
-import insulator.kafka.AdminApi
-import insulator.kafka.Consumer
-import insulator.viewmodel.ClusterViewModel
-import insulator.viewmodel.ConfigurationsViewModel
-import insulator.viewmodel.ListTopicViewModel
+import insulator.lib.configuration.ConfigurationRepo
+import insulator.lib.kafka.AdminApi
+import insulator.lib.kafka.Consumer
 import org.koin.dsl.module
 
 

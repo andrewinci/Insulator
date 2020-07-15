@@ -1,6 +1,6 @@
 package insulator.viewmodel
 
-import insulator.configuration.ConfigurationRepo
+import insulator.lib.configuration.ConfigurationRepo
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.*
@@ -48,7 +48,7 @@ class ClusterModel {
 }
 
 fun ClusterModel.toClusterConfig() =
-        insulator.configuration.model.Cluster(
+        insulator.lib.configuration.model.Cluster(
                 name = this.name,
                 endpoint = this.endpoint,
                 useSSL = this.useSSL,

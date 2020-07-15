@@ -1,8 +1,8 @@
 package insulator.viewmodel
 
-import insulator.kafka.AdminApi
-import insulator.kafka.ConsumeFrom
-import insulator.kafka.Consumer
+import insulator.lib.kafka.AdminApi
+import insulator.lib.kafka.ConsumeFrom
+import insulator.lib.kafka.Consumer
 import insulator.model.Topic
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty

@@ -1,3 +1,3 @@
-package insulator.configuration.model
+package insulator.lib.configuration.model
 
 data class Configuration(var clusters: List<Cluster>)

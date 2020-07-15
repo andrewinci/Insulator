@@ -1,6 +1,6 @@
 package insulator
 
-import insulator.koin.DIContainer
+import insulator.lib.koin.DIContainer
 import insulator.views.configurations.ListClusterView
 import tornadofx.*
 

@@ -1,4 +1,4 @@
-package insulator.kafka
+package insulator.lib.kafka
 
 import arrow.core.Tuple3
 import kotlinx.coroutines.GlobalScope

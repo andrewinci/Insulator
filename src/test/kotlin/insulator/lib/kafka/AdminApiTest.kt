@@ -1,4 +1,4 @@
-package insulator.kafka
+package insulator.lib.kafka
 
 import org.apache.kafka.clients.admin.AdminClient
 import io.kotest.core.spec.style.StringSpec

@@ -2,8 +2,8 @@ package insulator.viewmodel
 
 import arrow.core.flatMap
 import arrow.core.right
-import insulator.configuration.ConfigurationRepo
-import insulator.configuration.model.Cluster
+import insulator.lib.configuration.ConfigurationRepo
+import insulator.lib.configuration.model.Cluster
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.*

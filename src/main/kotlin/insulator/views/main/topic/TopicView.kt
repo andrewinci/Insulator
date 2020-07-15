@@ -1,6 +1,6 @@
 package insulator.views.main.topic
 
-import insulator.kafka.ConsumeFrom
+import insulator.lib.kafka.ConsumeFrom
 import insulator.viewmodel.RecordViewModel
 import insulator.viewmodel.TopicViewModel
 import insulator.views.common.SizedView

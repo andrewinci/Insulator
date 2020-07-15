@@ -1,6 +1,6 @@
 package insulator.views.main
 
-import insulator.configuration.ConfigurationRepo
+import insulator.lib.configuration.ConfigurationRepo
 import insulator.views.common.*
 import insulator.views.main.topic.ListTopicView
 import javafx.event.EventHandler
@@ -12,7 +12,6 @@ import javafx.scene.Node
 import javafx.scene.image.Image
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
 import tornadofx.*
 
 class MainView : SizedView("Insulator", 800.0, 800.0) {

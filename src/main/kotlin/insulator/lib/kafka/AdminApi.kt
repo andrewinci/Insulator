@@ -1,11 +1,9 @@
-package insulator.kafka
+package insulator.lib.kafka
 
 import arrow.fx.IO
 import arrow.fx.extensions.fx
 import insulator.model.Topic
 import org.apache.kafka.clients.admin.AdminClient
-import org.apache.kafka.common.TopicPartitionInfo
-import org.apache.kafka.common.acl.AclOperation
 
 class AdminApi(private val admin: AdminClient) {
 
