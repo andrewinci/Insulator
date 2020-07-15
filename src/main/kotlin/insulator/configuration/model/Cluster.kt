@@ -1,4 +1,4 @@
-package insulator.model
+package insulator.configuration.model
 
 data class Cluster(val name: String,
                    val endpoint: String,

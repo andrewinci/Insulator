@@ -3,10 +3,9 @@ package insulator.configuration
 import arrow.core.*
 import arrow.core.extensions.fx
 import com.google.gson.Gson
-import insulator.model.Cluster
+import insulator.configuration.model.Cluster
+import insulator.configuration.model.Configuration
 import java.io.File
-
-data class Configuration(var clusters: List<Cluster>)
 
 class ConfigurationRepo(private val gson: Gson) {
 

@@ -1,7 +1,7 @@
 package insulator.views.configurations
 
 import insulator.configuration.ConfigurationRepo
-import insulator.model.Cluster
+import insulator.configuration.model.Cluster
 import insulator.viewmodel.ConfigurationsViewModel
 import insulator.views.common.settingsButton
 import insulator.views.common.title
@@ -14,7 +14,7 @@ import tornadofx.vbox
 
 class ListClusterView : View("Insulator") {
 
-    private val viewModel: ConfigurationsViewModel by di()
+    private val viewModel: ConfigurationsViewModel by inject()
 
     override val root = vbox(alignment = Pos.CENTER, spacing = 15) {
         title("Clusters")
