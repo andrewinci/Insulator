@@ -1,9 +1,9 @@
 package insulator.views.configurations
 
-import insulator.viewmodel.ClusterViewModel
+import insulator.viewmodel.configurations.ClusterViewModel
 import tornadofx.*
 
-class AddClusterView : Fragment("Add cluster") {
+class ClusterView : Fragment("Add cluster") {
     private val viewModel: ClusterViewModel by inject()
 
     override val root = form {
@@ -17,7 +17,7 @@ class AddClusterView : Fragment("Add cluster") {
             field("SSL KeyStore Password") { textfield(viewModel.sslKeyStorePasswordProperty).requiredWhen(viewModel.useSSLProperty) }
             buttonbar {
                 button("Test connection") { isDisable = true }
-                button("Add") {
+                button("Save") {
                     enableWhen(viewModel.valid)
                     action {
                         viewModel.commit()

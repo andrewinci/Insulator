@@ -13,7 +13,7 @@ class ConfigurationRepo(private val gson: Gson) {
         lateinit var currentCluster: Cluster
     }
 
-    private val callbacks = ArrayList<(Cluster) -> Unit>()
+    private val callbacks = ArrayList<(Configuration) -> Unit>()
     private val CONFIG_FILE_NAME = ".insulator.config"
 
     fun getConfiguration(): Either<ConfigurationRepoException, Configuration> {
@@ -27,10 +27,13 @@ class ConfigurationRepo(private val gson: Gson) {
     }
 
     fun store(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
-        val newConfiguration = !getConfiguration()
-        newConfiguration.clusters += cluster
-        !store(newConfiguration)
-        callbacks.forEach { it(cluster) }
+        (!getConfiguration()).clusters
+                .filterNotNull()
+                .map { it.guid to it }.toMap().plus(cluster.guid to cluster)
+                .map { it.value }
+                .let { Configuration(it) }
+                .also { !store(it) }
+                .also { config -> callbacks.forEach { it(config) } }
     }
 
     private fun store(configuration: Configuration) = Either.fx<ConfigurationRepoException, Unit> {
@@ -38,7 +41,7 @@ class ConfigurationRepo(private val gson: Gson) {
                 .fold({ right() }, { ConfigurationRepoException("Unable to store the configuration", it).left() })
     }
 
-    fun addNewClusterCallback(callback: (Cluster) -> Unit) = callbacks.add(callback)
+    fun addNewClusterCallback(callback: (Configuration) -> Unit) = callbacks.add(callback)
 }
 
 class ConfigurationRepoException(message: String, base: Throwable) : Throwable(message, base)

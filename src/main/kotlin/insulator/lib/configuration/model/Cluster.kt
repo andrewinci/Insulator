@@ -1,6 +1,9 @@
 package insulator.lib.configuration.model
 
-data class Cluster(val name: String,
+import java.util.*
+
+data class Cluster(val guid: UUID,
+                   val name: String,
                    val endpoint: String,
                    val useSSL: Boolean = false,
                    val sslTruststoreLocation: String? = null,

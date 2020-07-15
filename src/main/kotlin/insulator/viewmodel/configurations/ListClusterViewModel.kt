@@ -1,4 +1,4 @@
-package insulator.viewmodel
+package insulator.viewmodel.configurations
 
 import arrow.core.flatMap
 import arrow.core.right
@@ -9,12 +9,12 @@ import javafx.collections.ObservableList
 import tornadofx.*
 
 
-class ConfigurationsViewModel : ViewModel() {
+class ListClusterViewModel : ViewModel() {
 
     private val configurationRepo: ConfigurationRepo by di()
 
     val clustersProperty: ObservableList<Cluster> by lazy {
-        configurationRepo.addNewClusterCallback { new -> clustersProperty.add(new) }
+        configurationRepo.addNewClusterCallback { new -> with(clustersProperty) { clear(); addAll(new.clusters) } }
         configurationRepo.getConfiguration()
                 .flatMap { FXCollections.observableArrayList(it.clusters).right() }
                 .fold({ throw  it }, { it })
