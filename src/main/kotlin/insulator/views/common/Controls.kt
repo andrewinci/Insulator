@@ -1,5 +1,9 @@
 package insulator.views.common
 
+import com.fasterxml.jackson.databind.deser.impl.ObjectIdValueProperty
+import javafx.beans.Observable
+import javafx.beans.property.StringProperty
+import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
 import javafx.geometry.Insets
 import javafx.scene.control.Button
@@ -35,11 +39,11 @@ fun EventTarget.subtitle(text: String, color: Color = Color.BLACK, op: Label.() 
 
 fun EventTarget.card(title: String? = null, width: Double? = null, op: VBox.() -> Unit = {}) = vbox {
     if (title != null) title(title, Color.ORANGERED) { paddingAll = 5.0 }
-    paddingAll = 5.0;
     if (width != null) {
         maxWidth = width; minWidth = width
     }
     background = Background(BackgroundFill(Paint.valueOf("white"), CornerRadii(10.0), Insets(4.0)))
+    paddingAll = 5.0
     minHeight = 100.0
     spacing = 5.0
     opcr(this, VBox(), op)
@@ -51,4 +55,10 @@ abstract class SizedView(title: String?, val viewWidth: Double?, val viewHeight:
         if (viewWidth != null) super.currentStage?.width = viewWidth
         if (viewHeight != null) super.currentStage?.height = viewHeight
     }
+}
+
+inline fun <reified T> EventTarget.keyValueLabel(key: String, observable: ObservableValue<T>) = hbox {
+    text("$key :") { style { fontWeight = FontWeight.EXTRA_BOLD } }
+    label(observable)
+    spacing = 2.0
 }

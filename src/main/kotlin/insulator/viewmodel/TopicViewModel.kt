@@ -3,7 +3,6 @@ package insulator.viewmodel
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
-import insulator.lib.kafka.model.Topic
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
@@ -11,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.javafx.JavaFxDispatcher
 import kotlinx.coroutines.launch
 import tornadofx.*
 
@@ -26,23 +26,12 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     private val adminApi: AdminApi by di()
     private val consumer: Consumer by di()
 
-    init {
-        GlobalScope.launch {
-            adminApi.describeTopic(topicName).unsafeRunAsync {
-                it.map {
-                    nameProperty.set(it.first().name)
-                    internalProperty.set(it.first().internal ?: false)
-                    partitionsProperty.set(it.first().partitions ?: -1)
-                }
-            }
-        }
-    }
 
     val nameProperty = SimpleStringProperty(topicName)
     val internalProperty = SimpleBooleanProperty()
     val partitionsProperty = SimpleIntegerProperty()
-
-    val records : ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
+    val messageCountProperty = SimpleLongProperty()
+    val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
     val consumeButtonText = SimpleStringProperty("Consume")
 
     fun consumeButtonClick() {
@@ -66,5 +55,14 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
         consumer.start(nameProperty.value, from)
     }
 
-    fun getMessageCount(): Long? = adminApi.getApproximateMessageCount(topicName).unsafeRunSync()
+    fun loadDetails() {
+        adminApi.describeTopic(topicName).unsafeRunAsync {
+            it.map {
+                nameProperty.set(it.first().name)
+                internalProperty.set(it.first().internal ?: false)
+                partitionsProperty.set(it.first().partitions ?: -1)
+                messageCountProperty.set(it.first().messageCount ?: -1)
+            }
+        }
+    }
 }

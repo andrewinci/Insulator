@@ -1,12 +1,12 @@
 package insulator.views.main.topic
 
-import insulator.lib.kafka.ConsumeFrom
 import insulator.viewmodel.RecordViewModel
 import insulator.viewmodel.TopicViewModel
-import insulator.views.common.SizedView
 import insulator.views.common.card
-import javafx.scene.control.Button
-import javafx.scene.control.ButtonBar
+import insulator.views.common.keyValueLabel
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleLongProperty
 import javafx.scene.control.TabPane
 import tornadofx.*
 
@@ -16,12 +16,15 @@ class TopicView : View() {
     private val viewModel: TopicViewModel by inject()
 
     override val root = card(viewModel.nameProperty.value) {
-        label("Approximate message count: ${viewModel.getMessageCount()}")
+        keyValueLabel("Approximate message count", viewModel.messageCountProperty)
+        keyValueLabel("Internal topic", viewModel.internalProperty)
+        keyValueLabel("Partitions count", viewModel.partitionsProperty)
+
         tabpane {
             tab("Consumer") {
                 vbox {
                     buttonbar() {
-                        button(viewModel.consumeButtonText){ action { viewModel.consumeButtonClick() }}
+                        button(viewModel.consumeButtonText) { action { viewModel.consumeButtonClick() } }
                         button("Clear") { action { viewModel.clear() } }
                     }
                     tableview(viewModel.records) {
@@ -49,6 +52,7 @@ class TopicView : View() {
         }
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
+        viewModel.loadDetails()
         super.onDock()
     }
 }

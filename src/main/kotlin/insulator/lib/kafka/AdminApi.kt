@@ -1,7 +1,6 @@
 package insulator.lib.kafka
 
 import arrow.fx.IO
-import arrow.fx.extensions.fx
 import insulator.lib.kafka.model.Topic
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.TopicDescription
@@ -25,19 +24,18 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
 
     fun describeTopic(vararg topicNames: String) = IO {
         val topicDescriptions = admin.describeTopics(topicNames.toList()).all().get().values
+        val recordCount = topicDescriptions
+                .map { it.name() to it.toTopicPartitions() }
+                .map { (name, partitions) -> name to consumer.endOffsets(partitions).values.sum() - consumer.beginningOffsets(partitions).values.sum() }
+                .toMap()
         topicDescriptions.map {
             Topic(
                     name = it.name(),
+                    messageCount = recordCount.getOrDefault(it.name(), null),
                     internal = it.isInternal,
                     partitions = it.partitions().size
             )
         }
-    }
-
-    fun getApproximateMessageCount(topicName: String) = IO {
-        val topicDescription = admin.describeTopics(listOf(topicName)).all().get().values.first()
-        val topicPartition = topicDescription.toTopicPartitions()
-        consumer.endOffsets(topicPartition).values.sum() - consumer.beginningOffsets(topicPartition).values.sum()
     }
 
     private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
