@@ -7,7 +7,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import tornadofx.*
 
-class ListTopicViewModel(private val adminApi: AdminApi) : ViewModel() {
+class ListTopicViewModel : ViewModel() {
+    private val adminApi: AdminApi by di()
+
     private var updating = false;
     private val internal = FXCollections.observableArrayList<TopicViewModel>()
 
@@ -22,7 +24,7 @@ class ListTopicViewModel(private val adminApi: AdminApi) : ViewModel() {
         GlobalScope.launch {
             adminApi.listTopics()
                     .unsafeRunAsync {
-                        it.map { topics -> internal.addAll(topics.map { TopicViewModel(it, adminApi) }) }
+                        it.map { topics -> internal.addAll(topics.map { TopicViewModel(it) }) }
                     }
         }
     }

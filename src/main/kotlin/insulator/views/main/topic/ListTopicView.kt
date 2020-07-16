@@ -3,20 +3,22 @@ package insulator.views.main.topic
 import insulator.viewmodel.TopicViewModel
 import insulator.viewmodel.ListTopicViewModel
 import insulator.views.common.card
-import javafx.scene.layout.VBox
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import tornadofx.*
 
-class ListTopicView : VBox(), KoinComponent {
+class ListTopicView : View() {
+
     private val viewModel: ListTopicViewModel by inject()
 
-    init {
+    override val root = vbox {
         card("Topics") {
             tableview(viewModel.topicsProperty) {
                 column("", TopicViewModel::nameProperty).fixedWidth(25.0).cellFormat {
                     graphic = button("i") {
-                        action { TopicView(getTopicViewModel(it)).openWindow() }
+                        action {
+                            val scope = Scope()
+                            tornadofx.setInScope(getTopicViewModel(it), scope)
+                            find<TopicView>(scope).openWindow()
+                        }
                     }
                 }
                 column("Topic", TopicViewModel::nameProperty).minWidth(200.0)
@@ -28,5 +30,5 @@ class ListTopicView : VBox(), KoinComponent {
         }
     }
 
-    private fun getTopicViewModel(name: String) = viewModel.topicsProperty.filter { it.nameProperty.value == name }.first()
+    private fun getTopicViewModel(name: String) = viewModel.topicsProperty.first { it.nameProperty.value == name }
 }

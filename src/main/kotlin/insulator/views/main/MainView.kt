@@ -8,7 +8,6 @@ import javafx.event.EventTarget
 import javafx.geometry.Insets
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
-import javafx.scene.Node
 import javafx.scene.image.Image
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
@@ -19,15 +18,15 @@ class MainView : SizedView("Insulator", 800.0, 800.0) {
     override val root = borderpane {
         left = card(ConfigurationRepo.currentCluster.name, 200.0) {
             separator(Orientation.HORIZONTAL)
-            menuItem("Overview", ICON_HOME) { setCurrentView(OverviewView()) }
-            menuItem("Topics", ICON_TOPICS) { setCurrentView(ListTopicView()) }
+            menuItem("Overview", ICON_HOME) { setCurrentView(find<OverviewView>() ) }
+            menuItem("Topics", ICON_TOPICS) { setCurrentView(find<ListTopicView>()) }
         }
-        center = OverviewView()
+        center = find<OverviewView>().root
         background = Background(BackgroundFill(Color.LIGHTGREY, CornerRadii.EMPTY, Insets.EMPTY))
     }
 
-    private fun setCurrentView(view: Node) {
-        this.root.center = view
+    private fun setCurrentView(view: View) {
+        this.root.center = view.root
     }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =

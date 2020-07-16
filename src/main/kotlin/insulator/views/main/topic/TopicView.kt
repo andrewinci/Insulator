@@ -11,15 +11,17 @@ import javafx.scene.control.TabPane
 import tornadofx.*
 
 
-class TopicView(private val viewModel: TopicViewModel) : SizedView(viewModel.nameProperty.value, 800.0, 800.0) {
+class TopicView : View() {
+
+    private val viewModel: TopicViewModel by inject()
 
     override val root = card(viewModel.nameProperty.value) {
         tabpane {
             tab("Consumer") {
                 vbox {
                     buttonbar() {
-                        consumeButton()
-                        button("Clean"){action { viewModel.clean() }}
+                        button(viewModel.consumeButtonText){ action { viewModel.consumeButtonClick() }}
+                        button("Clear") { action { viewModel.clear() } }
                     }
                     tableview(viewModel.records) {
                         column("Time", RecordViewModel::timestamp).minWidth(200.0)
@@ -40,23 +42,12 @@ class TopicView(private val viewModel: TopicViewModel) : SizedView(viewModel.nam
         }
     }
 
-    private fun ButtonBar.consumeButton() = Button("Consume").also {
-        it.action {
-            if (it.text == "Consume") {
-                it.text = "Stop"
-                viewModel.clean()
-                viewModel.consume(from = ConsumeFrom.Beginning)
-            } else {
-                it.text = "Consume"
-                viewModel.stopConsumer()
-            }
-        }
-    }.also { this.buttons.add(it) }
-
     override fun onDock() {
         currentWindow?.setOnCloseRequest {
-            viewModel.stopConsumer()
+            viewModel.stop()
         }
+        super.currentStage?.width = 800.0
+        super.currentStage?.height = 800.0
         super.onDock()
     }
 }
