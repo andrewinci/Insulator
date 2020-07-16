@@ -1,12 +1,9 @@
 package insulator.views.main.topic
 
+import insulator.Styles
 import insulator.viewmodel.RecordViewModel
 import insulator.viewmodel.TopicViewModel
-import insulator.views.common.card
 import insulator.views.common.keyValueLabel
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleLongProperty
 import javafx.scene.control.TabPane
 import tornadofx.*
 
@@ -15,7 +12,8 @@ class TopicView : View() {
 
     private val viewModel: TopicViewModel by inject()
 
-    override val root = card(viewModel.nameProperty.value) {
+    override val root = vbox {
+        label(viewModel.nameProperty.value) { addClass(Styles.h1, Styles.mainColor) }
         keyValueLabel("Approximate message count", viewModel.messageCountProperty)
         keyValueLabel("Internal topic", viewModel.internalProperty)
         keyValueLabel("Partitions count", viewModel.partitionsProperty)
@@ -44,6 +42,7 @@ class TopicView : View() {
             }
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
         }
+        addClass(Styles.card)
     }
 
     override fun onDock() {

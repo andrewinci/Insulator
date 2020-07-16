@@ -26,7 +26,8 @@ class RecordViewModel(key: String, value: String, timestamp: Long) {
 }
 
 class TopicViewModel(private val topicName: String) : ViewModel() {
-
+    private val CONSUME = "Consume"
+    private val STOP = "Stop"
     private val adminApi: AdminApi by di()
     private val consumer: Consumer by di()
 
@@ -36,22 +37,22 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     val partitionsProperty = SimpleIntegerProperty()
     val messageCountProperty = SimpleLongProperty()
     val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
-    val consumeButtonText = SimpleStringProperty("Consume")
+    val consumeButtonText = SimpleStringProperty(CONSUME)
 
     fun consumeButtonClick() {
-        if (consumeButtonText.value == "Consume") {
-            consumeButtonText.value = "Stop"
+        if (consumeButtonText.value == CONSUME) {
+            consumeButtonText.value = STOP
             clear()
             consume(from = ConsumeFrom.Beginning)
         } else {
-            consumeButtonText.value = "Consume"
+            consumeButtonText.value = CONSUME
             consumer.stop()
         }
 
     }
 
     fun clear() = records.clear()
-    fun stop() = consumer.stop().also { consumeButtonText.value = "Consume" }
+    fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
 
     private fun consume(from: ConsumeFrom) {
         if (consumer.isRunning()) return

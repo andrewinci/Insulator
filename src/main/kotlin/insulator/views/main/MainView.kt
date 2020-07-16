@@ -1,6 +1,8 @@
 package insulator.views.main
 
+import insulator.Styles
 import insulator.lib.configuration.ConfigurationRepo
+import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.views.common.*
 import insulator.views.main.topic.ListTopicView
 import javafx.event.EventHandler
@@ -16,10 +18,12 @@ import tornadofx.*
 class MainView : SizedView("Insulator", 800.0, 800.0) {
 
     override val root = borderpane {
-        left = card(ConfigurationRepo.currentCluster.name, 200.0) {
+        left = vbox {
+            label(ConfigurationRepo.currentCluster.name) { addClass(Styles.h1) }
             separator(Orientation.HORIZONTAL)
-            menuItem("Overview", ICON_HOME) { setCurrentView(find<OverviewView>() ) }
+            menuItem("Overview", ICON_HOME) { setCurrentView(find<OverviewView>()) }
             menuItem("Topics", ICON_TOPICS) { setCurrentView(find<ListTopicView>()) }
+            addClass(Styles.card, Styles.mainMenu)
         }
         center = find<OverviewView>().root
         background = Background(BackgroundFill(Color.LIGHTGREY, CornerRadii.EMPTY, Insets.EMPTY))
@@ -31,9 +35,7 @@ class MainView : SizedView("Insulator", 800.0, 800.0) {
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
             borderpane {
-                center = subtitle(name, Color.ORANGERED) {
-                    padding = Insets(0.0, 0.0, 0.0, 10.0)
-                }
+                center =label(name) { addClass(Styles.h2) }
                 left = vbox {
                     imageview(Image(icon, 30.0, 30.0, true, true))
                     alignment = Pos.CENTER_LEFT

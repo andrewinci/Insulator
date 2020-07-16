@@ -1,15 +1,16 @@
 package insulator.views.configurations
 
+import insulator.Styles
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
+import insulator.views.common.ICON_SETTINGS
 import insulator.views.common.SizedView
-import insulator.views.common.settingsButton
-import insulator.views.common.title
 import insulator.views.main.MainView
 import javafx.event.EventHandler
 import javafx.geometry.Pos
+import javafx.scene.image.Image
 import tornadofx.*
 import tornadofx.label
 import tornadofx.vbox
@@ -19,16 +20,17 @@ class ListClusterView : SizedView("Insulator", 350.0, 500.0) {
     private val viewModel: ListClusterViewModel by inject()
 
     override val root = vbox(alignment = Pos.CENTER, spacing = 15) {
-        title("Clusters")
+        label("Clusters"){ addClass(Styles.h1, Styles.mainColor) }
         listview(viewModel.clustersProperty) {
             cellFormat { cluster ->
                 graphic = borderpane {
                     center = vbox {
-                        title(cluster.name)
+                        label(cluster.name){ addClass(Styles.h1) }
                         label(cluster.endpoint)
                     }
                     right = vbox(alignment = Pos.CENTER) {
-                        settingsButton {
+                        button{
+                            graphic = imageview(Image(ICON_SETTINGS, 20.0, 20.0, true, true))
                             onMouseClicked = EventHandler {
                                 val scope = Scope()
                                 setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
