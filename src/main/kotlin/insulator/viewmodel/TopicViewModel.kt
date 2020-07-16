@@ -3,7 +3,7 @@ package insulator.viewmodel
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
-import insulator.model.Topic
+import insulator.lib.kafka.model.Topic
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty

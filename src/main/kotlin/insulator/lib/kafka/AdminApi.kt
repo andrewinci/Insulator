@@ -2,7 +2,7 @@ package insulator.lib.kafka
 
 import arrow.fx.IO
 import arrow.fx.extensions.fx
-import insulator.model.Topic
+import insulator.lib.kafka.model.Topic
 import org.apache.kafka.clients.admin.AdminClient
 
 class AdminApi(private val admin: AdminClient) {
