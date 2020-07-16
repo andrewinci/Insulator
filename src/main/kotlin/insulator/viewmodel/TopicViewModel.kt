@@ -31,6 +31,7 @@ class TopicViewModel(topic: Topic) : ViewModel() {
                 it.map {
                     nameProperty.set(it.first().name)
                     internalProperty.set(it.first().internal ?: false)
+                    messageCountProperty.set(it.first().messageCount ?: -1)
                     partitionsProperty.set(it.first().partitions ?: -1)
                 }
             }
@@ -38,7 +39,7 @@ class TopicViewModel(topic: Topic) : ViewModel() {
     }
 
     val nameProperty = SimpleStringProperty(topic.name)
-    val messageCountProperty = SimpleIntegerProperty()
+    val messageCountProperty = SimpleLongProperty()
     val internalProperty = SimpleBooleanProperty()
     val partitionsProperty = SimpleIntegerProperty()
     val records = FXCollections.observableArrayList<RecordViewModel>()

@@ -10,7 +10,7 @@ import org.koin.dsl.module
 val viewModelModule = module {
 
     // Kafka
-    factory { AdminApi(get()) }
+    factory { AdminApi(get(), get()) }
     factory { Consumer(get()) }
 
     // Configurations
