@@ -12,11 +12,15 @@ import javafx.collections.ObservableList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.javafx.JavaFxDispatcher
 import kotlinx.coroutines.launch
+import org.apache.avro.LogicalTypes
 import tornadofx.*
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.temporal.TemporalAccessor
 
 
 class RecordViewModel(key: String, value: String, timestamp: Long) {
-    val timestamp = SimpleLongProperty(timestamp)
+    val timestamp = SimpleStringProperty(Instant.ofEpochMilli(timestamp).toString())
     val keyProperty = SimpleStringProperty(key)
     val valueProperty = SimpleStringProperty(value)
 }
@@ -47,7 +51,7 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     }
 
     fun clear() = records.clear()
-    fun stop() = consumer.stop()
+    fun stop() = consumer.stop().also { consumeButtonText.value = "Consume" }
 
     private fun consume(from: ConsumeFrom) {
         if (consumer.isRunning()) return
