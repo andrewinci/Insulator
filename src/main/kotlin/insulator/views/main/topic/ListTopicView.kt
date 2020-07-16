@@ -13,9 +13,7 @@ class ListTopicView : View() {
     override val root = vbox {
         card("Topics") {
             tableview<TopicViewModel> {
-
                 column("Topic", TopicViewModel::nameProperty).minWidth(200.0)
-                column("#Messages", TopicViewModel::messageCountProperty)
                 column("Internal", TopicViewModel::internalProperty)
                 column("#Partitions", TopicViewModel::partitionsProperty)
 

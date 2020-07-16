@@ -21,24 +21,23 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
         )
     }
 
-    fun listTopics(): IO<List<Topic>> = IO.fx {
-        admin.listTopics().names().get().map { topicName -> Topic(topicName) }
-    }
+    fun listTopics() = IO { admin.listTopics().names().get().toList() }
 
-    fun describeTopic(vararg topicNames: String) = IO.fx {
+    fun describeTopic(vararg topicNames: String) = IO {
         val topicDescriptions = admin.describeTopics(topicNames.toList()).all().get().values
-        val recordCount = topicDescriptions
-                .map { it.name() to it.toTopicPartitions() }
-                .map { (name, partitions) -> name to consumer.endOffsets(partitions).values.sum() - consumer.beginningOffsets(partitions).values.sum() }
-                .toMap()
         topicDescriptions.map {
             Topic(
                     name = it.name(),
-                    messageCount = recordCount.getOrDefault(it.name(), null),
                     internal = it.isInternal,
                     partitions = it.partitions().size
             )
         }
+    }
+
+    fun getApproximateMessageCount(topicName: String) = IO {
+        val topicDescription = admin.describeTopics(listOf(topicName)).all().get().values.first()
+        val topicPartition = topicDescription.toTopicPartitions()
+        consumer.endOffsets(topicPartition).values.sum() - consumer.beginningOffsets(topicPartition).values.sum()
     }
 
     private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }

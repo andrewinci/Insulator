@@ -16,6 +16,7 @@ class TopicView : View() {
     private val viewModel: TopicViewModel by inject()
 
     override val root = card(viewModel.nameProperty.value) {
+        label("Approximate message count: ${viewModel.getMessageCount()}")
         tabpane {
             tab("Consumer") {
                 vbox {

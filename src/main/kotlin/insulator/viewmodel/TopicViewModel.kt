@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import tornadofx.*
@@ -20,29 +21,28 @@ class RecordViewModel(key: String, value: String, timestamp: Long) {
     val valueProperty = SimpleStringProperty(value)
 }
 
-class TopicViewModel(topic: Topic) : ViewModel() {
+class TopicViewModel(private val topicName: String) : ViewModel() {
 
     private val adminApi: AdminApi by di()
     private val consumer: Consumer by di()
 
     init {
         GlobalScope.launch {
-            adminApi.describeTopic(topic.name).unsafeRunAsync {
+            adminApi.describeTopic(topicName).unsafeRunAsync {
                 it.map {
                     nameProperty.set(it.first().name)
                     internalProperty.set(it.first().internal ?: false)
-                    messageCountProperty.set(it.first().messageCount ?: -1)
                     partitionsProperty.set(it.first().partitions ?: -1)
                 }
             }
         }
     }
 
-    val nameProperty = SimpleStringProperty(topic.name)
-    val messageCountProperty = SimpleLongProperty()
+    val nameProperty = SimpleStringProperty(topicName)
     val internalProperty = SimpleBooleanProperty()
     val partitionsProperty = SimpleIntegerProperty()
-    val records = FXCollections.observableArrayList<RecordViewModel>()
+
+    val records : ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
     val consumeButtonText = SimpleStringProperty("Consume")
 
     fun consumeButtonClick() {
@@ -65,4 +65,6 @@ class TopicViewModel(topic: Topic) : ViewModel() {
         consumer.setCallback { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
         consumer.start(nameProperty.value, from)
     }
+
+    fun getMessageCount(): Long? = adminApi.getApproximateMessageCount(topicName).unsafeRunSync()
 }
