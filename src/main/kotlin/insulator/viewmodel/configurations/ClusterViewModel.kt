@@ -2,6 +2,7 @@ package insulator.viewmodel.configurations
 
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.SaslConfiguration
+import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.configuration.model.SslConfiguration
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
@@ -70,6 +71,11 @@ class ClusterModel(cluster: insulator.lib.configuration.model.Cluster? = null) {
                     saslConfiguration = SaslConfiguration(
                             saslUsername = this.saslUsernameProperty.value,
                             saslPassword = this.saslPasswordProperty.value
+                    ),
+                    schemaRegistryConfig = SchemaRegistryConfiguration(
+                            endpoint = this.schemaRegistryEndpointProperty.value,
+                            username = this.schemaRegistryUsernameProperty.value,
+                            password = this.schemaRegistryPasswordProperty.value
                     )
             )
 }

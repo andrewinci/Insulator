@@ -1,4 +1,8 @@
 import insulator.lib.configuration.ConfigurationRepo
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
+import io.confluent.kafka.schemaregistry.client.rest.RestService
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.consumer.Consumer
@@ -10,10 +14,22 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.koin.dsl.module
 import java.util.*
 
+
 val kafkaModule = module {
 
     factory { AdminClient.create(get<Properties>()) }
     factory<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
+
+    factory<SchemaRegistryClient> {
+        val config = ConfigurationRepo.currentCluster.schemaRegistryConfig
+        val restService = RestService(config?.endpoint)
+        val credentials = mapOf(
+                "basic.auth.credentials.source" to "USER_INFO",
+                "basic.auth.user.info" to "${config?.username}:${config?.password}"
+        )
+        CachedSchemaRegistryClient(restService, 1000, credentials)
+    }
+
 
     factory {
         val cluster = ConfigurationRepo.currentCluster

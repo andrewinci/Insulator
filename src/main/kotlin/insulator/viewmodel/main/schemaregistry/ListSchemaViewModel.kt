@@ -1,11 +1,14 @@
 package insulator.viewmodel.main.schemaregistry
 
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.*
 
 class ListSchemaViewModel : ViewModel() {
-
-    fun listSchemas(): ObservableList<String> = FXCollections.observableArrayList(listOf("Schema1"))
+    private val schemaRegistryClient: SchemaRegistryClient by di()
+    fun listSchemas(): ObservableList<String> {
+        return FXCollections.observableArrayList(schemaRegistryClient.allSubjects)
+    }
 
 }
