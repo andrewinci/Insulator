@@ -9,40 +9,37 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
 import java.time.Duration
 import java.util.*
+import kotlin.concurrent.thread
 
 class Consumer(private val consumer: Consumer<Any, Any>) {
-    private lateinit var job: Job
+
+    private lateinit var threadLoop: Thread
     private var running = false
-    private val callbackList = LinkedList<(String, String, Long) -> Unit>()
 
-    fun setCallback(cb: (String, String, Long) -> Unit) = callbackList.add(cb)
-
-    fun start(topic: String, from: ConsumeFrom) {
+    fun start(topic: String, from: ConsumeFrom, callback: (String, String, Long) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
         val partitions = consumer.partitionsFor(topic).map { TopicPartition(topic, it.partition()) }
         consumer.assign(partitions)
         seek(consumer, partitions, from)
         running = true
-        loop()
+        loop(callback)
     }
 
     fun isRunning() = running
 
     fun stop() {
         running = false
-        callbackList.clear()
-        //todo: lock to avoid start while stopping
-        //todo: job.join()
+        threadLoop.join()
     }
 
-    private fun loop() {
-        job = GlobalScope.launch {
+    private fun loop(callback: (String, String, Long) -> Unit) {
+        threadLoop = thread {
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
                 if (records.isEmpty) continue
                 records.toList()
                         .map { parse(it) }
-                        .forEach { (k, v, t) -> callbackList.forEach { it(k, v, t) } }
+                        .forEach { (k, v, t) -> callback(k, v, t) }
             }
         }
     }

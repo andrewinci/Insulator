@@ -45,8 +45,7 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
 
     private fun consume(from: ConsumeFrom) {
         if (consumer.isRunning()) return
-        consumer.setCallback { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
-        consumer.start(nameProperty.value, from)
+        consumer.start(nameProperty.value, from) { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
     }
 
     fun loadDetails() {
