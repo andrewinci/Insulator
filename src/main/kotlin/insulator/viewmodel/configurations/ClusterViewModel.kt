@@ -1,6 +1,8 @@
 package insulator.viewmodel.configurations
 
 import insulator.lib.configuration.ConfigurationRepo
+import insulator.lib.configuration.model.SaslConfiguration
+import insulator.lib.configuration.model.SslConfiguration
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.*
@@ -33,29 +35,31 @@ class ClusterModel(cluster: insulator.lib.configuration.model.Cluster? = null) {
     val endpointProperty = SimpleStringProperty(cluster?.endpoint)
 
     val useSSLProperty = SimpleBooleanProperty(cluster?.useSSL ?: false)
-    val sslTruststoreLocationProperty = SimpleStringProperty(cluster?.sslTruststoreLocation)
-    val sslTruststorePasswordProperty = SimpleStringProperty(cluster?.sslTruststorePassword)
-    val sslKeystoreLocationProperty = SimpleStringProperty(cluster?.sslKeystoreLocation)
-    val sslKeyStorePasswordProperty = SimpleStringProperty(cluster?.sslKeyStorePassword)
+    val sslTruststoreLocationProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslTruststoreLocation)
+    val sslTruststorePasswordProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslTruststorePassword)
+    val sslKeystoreLocationProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslKeystoreLocation)
+    val sslKeyStorePasswordProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslKeyStorePassword)
 
     val useSaslProperty = SimpleBooleanProperty(cluster?.useSasl ?: false)
-    val saslUsernameProperty = SimpleStringProperty(cluster?.saslUsername)
-    val saslPasswordProperty = SimpleStringProperty(cluster?.saslPassword)
+    val saslUsernameProperty = SimpleStringProperty(cluster?.saslConfiguration?.saslUsername)
+    val saslPasswordProperty = SimpleStringProperty(cluster?.saslConfiguration?.saslPassword)
 
     fun toClusterConfig() =
             insulator.lib.configuration.model.Cluster(
-                    guid = this.guid,
-                    name = this.nameProperty.value,
-                    endpoint = this.endpointProperty.value,
-
-                    useSSL = this.useSSLProperty.value,
+                guid = this.guid,
+                name = this.nameProperty.value,
+                endpoint = this.endpointProperty.value,
+                useSSL = this.useSSLProperty.value,
+                sslConfiguration = SslConfiguration(
                     sslTruststoreLocation = this.sslTruststoreLocationProperty.value,
                     sslTruststorePassword = this.sslTruststorePasswordProperty.value,
                     sslKeystoreLocation = this.sslKeystoreLocationProperty.value,
-                    sslKeyStorePassword = this.sslKeyStorePasswordProperty.value,
-
-                    useSasl = this.useSaslProperty.value,
+                    sslKeyStorePassword = this.sslKeyStorePasswordProperty.value
+                ),
+                useSasl = this.useSaslProperty.value,
+                saslConfiguration = SaslConfiguration(
                     saslUsername = this.saslUsernameProperty.value,
                     saslPassword = this.saslPasswordProperty.value
+                )
             )
 }
