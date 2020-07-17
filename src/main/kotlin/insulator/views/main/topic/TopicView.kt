@@ -1,8 +1,8 @@
 package insulator.views.main.topic
 
 import insulator.Styles
-import insulator.viewmodel.RecordViewModel
-import insulator.viewmodel.TopicViewModel
+import insulator.viewmodel.main.topic.RecordViewModel
+import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.keyValueLabel
 import javafx.scene.control.TabPane
 import tornadofx.*

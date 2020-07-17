@@ -1,8 +1,8 @@
 package insulator.views.main.topic
 
 import insulator.Styles
-import insulator.viewmodel.TopicViewModel
-import insulator.viewmodel.ListTopicViewModel
+import insulator.viewmodel.main.topic.TopicViewModel
+import insulator.viewmodel.main.topic.ListTopicViewModel
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode

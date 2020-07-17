@@ -1,4 +1,4 @@
-package insulator.viewmodel
+package insulator.viewmodel.main.topic
 
 import javafx.beans.property.SimpleStringProperty
 import java.time.Instant

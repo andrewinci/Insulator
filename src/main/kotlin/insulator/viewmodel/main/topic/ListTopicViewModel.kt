@@ -1,4 +1,4 @@
-package insulator.viewmodel
+package insulator.viewmodel.main.topic
 
 import insulator.lib.kafka.AdminApi
 import javafx.collections.FXCollections
