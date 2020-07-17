@@ -1,13 +1,15 @@
 package insulator.views.configurations
 
+import insulator.Styles
 import insulator.viewmodel.configurations.ClusterViewModel
 import tornadofx.*
 
-class ClusterView : Fragment("Add cluster") {
+class ClusterView : View() {
     private val viewModel: ClusterViewModel by inject()
 
     override val root = form {
         fieldset {
+            label("Cluster connection") { addClass(Styles.h2) }
             field("Cluster name") { textfield(viewModel.nameProperty).required() }
             field("Endpoint (url:port)") { textfield(viewModel.endpointProperty).required() }
             fieldset {
@@ -23,6 +25,12 @@ class ClusterView : Fragment("Add cluster") {
                 field("Use SASL (ConfluenceCloud)") { checkbox(property = viewModel.useSaslProperty) }
                 field("Username") { textfield(viewModel.saslUsernameProperty).requiredWhen(viewModel.useSaslProperty) }
                 field("Password") { textfield(viewModel.saslPasswordProperty).requiredWhen(viewModel.useSaslProperty) }
+            }
+            fieldset {
+                label("Schema registry") { addClass(Styles.h2) }
+                field("Endpoint") { textfield(viewModel.schemaRegistryEndpointProperty) }
+                field("Username") { textfield(viewModel.schemaRegistryUsernameProperty) }
+                field("Password") { textfield(viewModel.schemaRegistryPasswordProperty) }
             }
             buttonbar {
                 button("Test connection") { isDisable = true }

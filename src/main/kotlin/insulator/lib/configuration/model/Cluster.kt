@@ -29,7 +29,7 @@ data class SaslConfiguration(
 )
 
 data class SchemaRegistryConfiguration(
-        val url: String? = null,
+        val endpoint: String? = null,
         val username: String? = null,
         val password: String? = null
 )
