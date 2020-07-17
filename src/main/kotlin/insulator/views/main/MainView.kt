@@ -15,7 +15,7 @@ import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import tornadofx.*
 
-class MainView : SizedView("Insulator", 800.0, 800.0) {
+class MainView : View("Insulator") {
 
     override val root = borderpane {
         left = vbox {
@@ -35,7 +35,7 @@ class MainView : SizedView("Insulator", 800.0, 800.0) {
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
             borderpane {
-                center =label(name) { addClass(Styles.h2) }
+                center = label(name) { addClass(Styles.h2) }
                 left = vbox {
                     imageview(Image(icon, 30.0, 30.0, true, true))
                     alignment = Pos.CENTER_LEFT
@@ -50,5 +50,10 @@ class MainView : SizedView("Insulator", 800.0, 800.0) {
                 padding = Insets(0.0, 0.0, 0.0, 5.0)
                 minHeight = 50.0
             }
+
+    override fun onDock() {
+        super.onDock()
+        setWindowMinSize(800.0, 800.0)
+    }
 }
 
