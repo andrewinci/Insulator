@@ -13,6 +13,7 @@ val libModule = module {
     factory { AdminApi(get(), get()) }
     factory { Consumer(get()) }
 
+
     // Configurations
     single { GsonBuilder().setPrettyPrinting().create() }
     single { ConfigurationRepo(get()) }

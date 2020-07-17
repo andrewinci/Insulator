@@ -2,8 +2,8 @@ package insulator.views.main
 
 import insulator.Styles
 import insulator.lib.configuration.ConfigurationRepo
-import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.views.common.*
+import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.event.EventHandler
 import javafx.event.EventTarget
@@ -23,6 +23,7 @@ class MainView : View("Insulator") {
             separator(Orientation.HORIZONTAL)
             menuItem("Overview", ICON_HOME) { setCurrentView(find<OverviewView>()) }
             menuItem("Topics", ICON_TOPICS) { setCurrentView(find<ListTopicView>()) }
+            menuItem("Schema Registry", ICON_REGISTRY) { setCurrentView(find<ListSchemaView>()) }
             addClass(Styles.card, Styles.mainMenu)
         }
         center = find<OverviewView>().root
@@ -34,12 +35,9 @@ class MainView : View("Insulator") {
     }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
-            borderpane {
-                center = label(name) { addClass(Styles.h2) }
-                left = vbox {
-                    imageview(Image(icon, 30.0, 30.0, true, true))
-                    alignment = Pos.CENTER_LEFT
-                }
+            hbox(spacing = 5.0) {
+                imageview(Image(icon, 30.0, 30.0, true, true))
+                label(name) { addClass(Styles.h2) }
                 onMouseEntered = EventHandler {
                     background = Background(BackgroundFill(Color.LIGHTGREY, CornerRadii(10.0), Insets.EMPTY))
                 }
@@ -49,6 +47,7 @@ class MainView : View("Insulator") {
                 onMouseClicked = EventHandler { onClick() }
                 padding = Insets(0.0, 0.0, 0.0, 5.0)
                 minHeight = 50.0
+                alignment = Pos.CENTER_LEFT
             }
 
     override fun onDock() {

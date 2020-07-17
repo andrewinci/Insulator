@@ -17,6 +17,10 @@ class OverviewView : View() {
             addClass(Styles.card)
             label("Consumers") { addClass(Styles.h1, Styles.mainColor) }
         }
+        vbox {
+            addClass(Styles.card)
+            label("Schema registry") { addClass(Styles.h1, Styles.mainColor) }
+        }
     }
 }
 

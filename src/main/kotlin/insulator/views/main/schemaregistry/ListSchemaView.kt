@@ -1,35 +1,36 @@
-package insulator.views.main.topic
+package insulator.views.main.schemaregistry
 
 import insulator.Styles
+import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
-import insulator.viewmodel.main.topic.ListTopicViewModel
+import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import tornadofx.*
 
-class ListTopicView : View() {
+class ListSchemaView : View() {
 
-    private val viewModel: ListTopicViewModel by inject()
+    private val viewModel: ListSchemaViewModel by inject()
     private val searchItem = SimpleStringProperty()
 
     override val root = vbox {
-        label("Topics") { addClass(Styles.h1, Styles.mainColor) }
+        label("Schema registry") { addClass(Styles.h1, Styles.mainColor) }
         hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_RIGHT; spacing = 5.0 }
-        listview<TopicViewModel> {
+        listview<String> {
             cellFormat {
-                graphic = label(it.nameProperty)
+                graphic = label(it)
             }
             onDoubleClick {
                 if (this.selectedItem == null) return@onDoubleClick
                 val scope = Scope()
-                tornadofx.setInScope(this.selectedItem!!, scope)
-                find<TopicView>(scope).openWindow()
+//                tornadofx.setInScope(this.selectedItem!!, scope)
+//                find<TopicView>(scope).openWindow()
             }
             runAsync {
                 itemsProperty().set(
-                        SortedFilteredList(viewModel.listTopics()).apply {
-                            filterWhen(searchItem) { p, i -> i.nameProperty.value.contains(p) }
+                        SortedFilteredList(viewModel.listSchemas()).apply {
+                            filterWhen(searchItem) { p, i -> i.contains(p) }
                         }.filteredItems
                 )
             }

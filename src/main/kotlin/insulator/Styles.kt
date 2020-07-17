@@ -52,8 +52,8 @@ class Styles : Stylesheet() {
             padding = box(10.0.px)
         }
         mainMenu {
-            minWidth = 200.px
-            maxWidth = 200.px
+            minWidth = 250.px
+            maxWidth = 250.px
             alignment = Pos.TOP_CENTER
         }
     }

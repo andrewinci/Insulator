@@ -1,4 +1,5 @@
 import insulator.lib.configuration.ConfigurationRepo
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.consumer.Consumer
