@@ -7,7 +7,7 @@ import insulator.lib.kafka.Consumer
 import org.koin.dsl.module
 
 
-val viewModelModule = module {
+val libModule = module {
 
     // Kafka
     factory { AdminApi(get(), get()) }
