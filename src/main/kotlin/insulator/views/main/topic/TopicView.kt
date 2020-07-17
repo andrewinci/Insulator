@@ -1,9 +1,12 @@
 package insulator.views.main.topic
 
 import insulator.Styles
+import insulator.lib.kafka.ConsumeFrom
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.keyValueLabel
+import javafx.collections.FXCollections
+import javafx.geometry.Pos
 import javafx.scene.control.TabPane
 import tornadofx.*
 
@@ -21,12 +24,23 @@ class TopicView : View() {
         tabpane {
             tab("Consumer") {
                 vbox {
-                    buttonbar() {
-                        button(viewModel.consumeButtonText) { action { viewModel.consumeButtonClick() } }
+                    hbox {
+                        label("from")
+                        combobox<String> {
+                            items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
+                            valueProperty().bindBidirectional(viewModel.consumeFromProperty)
+                        }
+                        button(viewModel.consumeButtonText) {
+                            action { viewModel.consumeButtonClick() }
+                            prefWidth = 80.0
+                        }
                         button("Clear") { action { viewModel.clear() } }
+                        spacing = 2.0
+                        paddingAll = 5.0
+                        alignment = Pos.CENTER_RIGHT
                     }
                     tableview(viewModel.records) {
-                        column("Time", RecordViewModel::timestamp).minWidth(200.0)
+                        column("Time", RecordViewModel::timestampProperty).minWidth(200.0)
                         column("Key", RecordViewModel::keyProperty).minWidth(200.0)
                         column("Value", RecordViewModel::valueProperty).minWidth(200.0)
                         prefHeight = 600.0 //todo: remove hardcoded and retrieve

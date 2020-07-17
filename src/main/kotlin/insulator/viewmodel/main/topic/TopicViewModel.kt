@@ -11,12 +11,14 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.*
 
+private const val CONSUME = "Consume"
+private const val STOP = "Stop"
+
 class TopicViewModel(private val topicName: String) : ViewModel() {
-    private val CONSUME = "Consume"
-    private val STOP = "Stop"
+
+
     private val adminApi: AdminApi by di()
     private val consumer: Consumer by di()
-
 
     val nameProperty = SimpleStringProperty(topicName)
     val internalProperty = SimpleBooleanProperty()
@@ -24,12 +26,13 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     val messageCountProperty = SimpleLongProperty()
     val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
     val consumeButtonText = SimpleStringProperty(CONSUME)
+    val consumeFromProperty = SimpleStringProperty(ConsumeFrom.Beginning.name)
 
     fun consumeButtonClick() {
         if (consumeButtonText.value == CONSUME) {
             consumeButtonText.value = STOP
             clear()
-            consume(from = ConsumeFrom.Beginning)
+            consume(from = ConsumeFrom.valueOf(consumeFromProperty.value))
         } else {
             consumeButtonText.value = CONSUME
             consumer.stop()
