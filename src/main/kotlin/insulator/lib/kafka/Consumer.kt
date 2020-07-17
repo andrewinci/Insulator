@@ -16,7 +16,7 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
     private lateinit var threadLoop: Thread
     private var running = false
 
-    fun start(topic: String, from: ConsumeFrom, callback: (String, String, Long) -> Unit) {
+    fun start(topic: String, from: ConsumeFrom, callback: (String?, String, Long) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
         val partitions = consumer.partitionsFor(topic).map { TopicPartition(topic, it.partition()) }
         consumer.assign(partitions)
@@ -32,7 +32,7 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
         threadLoop.join()
     }
 
-    private fun loop(callback: (String, String, Long) -> Unit) {
+    private fun loop(callback: (String?, String, Long) -> Unit) {
         threadLoop = thread {
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
@@ -51,9 +51,9 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
         }
     }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String, String, Long> {
+    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
         //todo: parse this thing
-        return Tuple3(record.key().toString(), record.value().toString(), record.timestamp())
+        return Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
     }
 }
 

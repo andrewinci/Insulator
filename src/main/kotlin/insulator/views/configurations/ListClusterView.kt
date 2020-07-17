@@ -54,7 +54,7 @@ class ListClusterView : View("Insulator") {
 
     override fun onDock() {
         super.onDock()
-        setWindowMinSize(350.0, 500.0)
+        setWindowMinSize(380.0, 500.0)
         super.currentStage?.resizableProperty()?.value = false
     }
 

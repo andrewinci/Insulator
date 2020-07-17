@@ -9,5 +9,8 @@ data class Cluster(val guid: UUID,
                    val sslTruststoreLocation: String? = null,
                    val sslTruststorePassword: String? = null,
                    val sslKeystoreLocation: String? = null,
-                   val sslKeyStorePassword: String? = null
+                   val sslKeyStorePassword: String? = null,
+                   val useSasl: Boolean = false,
+                   val saslUsername: String? = null,
+                   val saslPassword: String? = null
 )
