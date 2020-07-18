@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Java JDK
+      uses: actions/setup-java@v1.3.0
+      with:
+        java-version: 14
+        java-package: jdk
+    
+    - name: Gradle package
+      run: "./gradlew :packageApp"
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: insulator-debian
+        path: insulator*.deb
+
+      
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Java JDK
+      uses: actions/setup-java@v1.3.0
+      with:
+        java-version: 14
+        java-package: jdk
+    
+    - name: Gradle package
+      run: "./gradlew :packageApp"
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: insulator-macos
+        path: Insulator*.dmg
+
+  
+  build-win:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Java JDK
+      uses: actions/setup-java@v1.3.0
+      with:
+        java-version: 14
+        java-package: jdk
+    
+    - name: Gradle package
+      run: "./gradlew :packageApp"
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: insulator-win
+        path: Insulator*.exe
