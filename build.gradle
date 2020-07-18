@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.72'
     id 'org.openjfx.javafxplugin' version '0.0.9'
     id 'com.adarshr.test-logger' version '2.0.0'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
 repositories {
@@ -15,11 +16,13 @@ repositories {
 }
 
 javafx {
-    version = "11.0.2"
+    version = "14"
     modules = ['javafx.controls', 'javafx.graphics']
 }
 
+apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'kotlin-kapt'
+apply plugin: 'org.openjfx.javafxplugin'
 
 def arrow_version = "0.10.4"
 def kotest_version = "4.1.1"
@@ -72,9 +75,29 @@ application {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions.jvmTarget = "1.8"
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'insulator.AppKt'
+        )
+    }
+}
+
+task packageApp(type: Exec) {
+    group = 'jpackage'
+    dependsOn 'shadowJar'
+    commandLine 'jpackage',
+            '--input', './build/libs',
+            '--main-jar', 'insulator-all.jar',
+            '-d', '.',
+            '--name', 'Insulator',
+            '--java-options', "'--enable-preview'",
+            '--app-version', '0.1'
 }

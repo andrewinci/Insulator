@@ -3,6 +3,7 @@ package insulator.lib.kafka
 import org.apache.kafka.clients.admin.AdminClient
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
+import io.mockk.mockk
 import org.apache.kafka.clients.admin.AdminClientConfig
 import java.util.*
 
@@ -11,7 +12,7 @@ class AdminApiTest : StringSpec({
         with(AdminApiTestFixture()) {
             // arrange
             val adminClient = AdminClient.create(properties)
-            val sut = AdminApi(adminClient)
+            val sut = AdminApi(adminClient, mockk())
             // act
             val result = sut.getOverview()
             // assert

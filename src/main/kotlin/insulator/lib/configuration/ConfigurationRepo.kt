@@ -14,7 +14,7 @@ class ConfigurationRepo(private val gson: Gson) {
     }
 
     private val callbacks = ArrayList<(Configuration) -> Unit>()
-    private val CONFIG_FILE_NAME = ".insulator.config"
+    private val CONFIG_FILE_NAME = "${System.getProperty("user.home")}/.insulator.config"
 
     fun getConfiguration(): Either<ConfigurationRepoException, Configuration> {
         if (!File(CONFIG_FILE_NAME).exists()) store(Configuration(emptyList()))
