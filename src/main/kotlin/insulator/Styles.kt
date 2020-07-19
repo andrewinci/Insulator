@@ -1,10 +1,6 @@
 package insulator
 
-import javafx.geometry.Insets
 import javafx.geometry.Pos
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.text.FontWeight
@@ -18,7 +14,8 @@ class Styles : Stylesheet() {
         val h2 by cssclass()
 
         val card by cssclass()
-        val mainMenu by cssclass()
+        val mainViewLeftPane by cssclass()
+        val mainViewTopPane by cssclass()
 
         // Define our colors
         val mainColor by cssclass()
@@ -51,10 +48,14 @@ class Styles : Stylesheet() {
             spacing = 5.px
             padding = box(10.0.px)
         }
-        mainMenu {
+        mainViewLeftPane {
             minWidth = 250.px
             maxWidth = 250.px
             alignment = Pos.TOP_CENTER
+        }
+        mainViewTopPane {
+            padding = box(2.0.px)
+            alignment = Pos.CENTER_LEFT
         }
     }
 }

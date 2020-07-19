@@ -1,5 +1,6 @@
 package insulator.viewmodel.main.topic
 
+import insulator.di.getInstanceNow
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
@@ -16,9 +17,8 @@ private const val STOP = "Stop"
 
 class TopicViewModel(private val topicName: String) : ViewModel() {
 
-
-    private val adminApi: AdminApi by di()
-    private val consumer: Consumer by di()
+    private val adminApi: AdminApi = getInstanceNow()
+    private val consumer: Consumer = getInstanceNow()
 
     val nameProperty = SimpleStringProperty(topicName)
     val internalProperty = SimpleBooleanProperty()

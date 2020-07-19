@@ -14,7 +14,10 @@ data class Cluster(
         val saslConfiguration: SaslConfiguration? = null,
 
         val schemaRegistryConfig: SchemaRegistryConfiguration? = null
-)
+) {
+    companion object { val Empty = Cluster(UUID.randomUUID(), "", "")}
+    fun isSchemaRegistryConfigured() = schemaRegistryConfig?.endpoint != null
+}
 
 data class SslConfiguration(
         val sslTruststoreLocation: String? = null,

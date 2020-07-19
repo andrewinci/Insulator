@@ -1,7 +1,7 @@
 package insulator.views.configurations
 
 import insulator.Styles
-import insulator.lib.configuration.ConfigurationRepo
+import insulator.di.GlobalConfiguration
 import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
@@ -40,8 +40,11 @@ class ListClusterView : View("Insulator") {
                     maxHeight = 50.0
                 }
                 onMouseClicked = EventHandler {
-                    ConfigurationRepo.currentCluster = cluster
-                    replaceWith(find<MainView>())
+                    GlobalConfiguration.currentCluster = cluster
+                    val scope = Scope()
+                    setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
+                    find<MainView>(scope).openWindow(owner = null)
+                    close()
                 }
             }
         }
@@ -55,6 +58,7 @@ class ListClusterView : View("Insulator") {
     override fun onDock() {
         super.onDock()
         setWindowMinSize(380.0, 500.0)
+        setWindowMaxSize(380.0, 500.0)
         super.currentStage?.resizableProperty()?.value = false
     }
 

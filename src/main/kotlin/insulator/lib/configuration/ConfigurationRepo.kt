@@ -9,10 +9,6 @@ import java.io.File
 
 class ConfigurationRepo(private val gson: Gson) {
 
-    companion object {
-        lateinit var currentCluster: Cluster
-    }
-
     private val callbacks = ArrayList<(Configuration) -> Unit>()
     private val CONFIG_FILE_NAME = "${System.getProperty("user.home")}/.insulator.config"
 

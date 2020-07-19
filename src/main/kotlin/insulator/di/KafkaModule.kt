@@ -1,8 +1,7 @@
-import insulator.lib.configuration.ConfigurationRepo
+import insulator.di.GlobalConfiguration
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.rest.RestService
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.consumer.Consumer
@@ -11,28 +10,30 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.*
 
-
 val kafkaModule = module {
 
-    factory { AdminClient.create(get<Properties>()) }
-    factory<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
+    scope(named("clusterScope")) {
+        // Kafka
+        scoped { AdminClient.create(get<Properties>()) }
+        scoped<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
 
-    factory<SchemaRegistryClient> {
-        val config = ConfigurationRepo.currentCluster.schemaRegistryConfig
-        val restService = RestService(config?.endpoint)
-        val credentials = mapOf(
-                "basic.auth.credentials.source" to "USER_INFO",
-                "basic.auth.user.info" to "${config?.username}:${config?.password}"
-        )
-        CachedSchemaRegistryClient(restService, 1000, credentials)
+        scoped<SchemaRegistryClient> {
+            val config = GlobalConfiguration.currentCluster.schemaRegistryConfig
+            val restService = RestService(config?.endpoint)
+            val credentials = mapOf(
+                    "basic.auth.credentials.source" to "USER_INFO",
+                    "basic.auth.user.info" to "${config?.username}:${config?.password}"
+            )
+            CachedSchemaRegistryClient(restService, 1000, credentials)
+        }
     }
 
-
     factory {
-        val cluster = ConfigurationRepo.currentCluster
+        val cluster = GlobalConfiguration.currentCluster
         val properties = Properties().apply {
             put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.endpoint)
             if (cluster.useSSL) {

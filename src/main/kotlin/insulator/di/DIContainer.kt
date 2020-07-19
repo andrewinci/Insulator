@@ -1,8 +1,9 @@
-package insulator.lib.koin
+package insulator.di
 
 import kafkaModule
 import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
+import tornadofx.*
 import tornadofx.DIContainer
 import kotlin.reflect.KClass
 
@@ -13,3 +14,5 @@ class DIContainer : KoinComponent, DIContainer {
 
     override fun <T : Any> getInstance(type: KClass<T>) = getKoin().get<T>(type)
 }
+
+inline fun <reified T : Any> getInstanceNow() = FX.dicontainer!!.getInstance<T>()

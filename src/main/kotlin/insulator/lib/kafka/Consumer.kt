@@ -13,7 +13,7 @@ import kotlin.concurrent.thread
 
 class Consumer(private val consumer: Consumer<Any, Any>) {
 
-    private lateinit var threadLoop: Thread
+    private var threadLoop: Thread? = null
     private var running = false
 
     fun start(topic: String, from: ConsumeFrom, callback: (String?, String, Long) -> Unit) {
@@ -29,7 +29,7 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
 
     fun stop() {
         running = false
-        threadLoop.join()
+        threadLoop?.join()
     }
 
     private fun loop(callback: (String?, String, Long) -> Unit) {
