@@ -1,14 +1,10 @@
 package insulator.lib.kafka
 
 import arrow.core.Tuple3
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
 import java.time.Duration
-import java.util.*
 import kotlin.concurrent.thread
 
 class Consumer(private val consumer: Consumer<Any, Any>) {
@@ -60,4 +56,9 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
 enum class ConsumeFrom {
     Now,
     Beginning
+}
+
+enum class DeserializationFormat {
+    String,
+    Avro
 }

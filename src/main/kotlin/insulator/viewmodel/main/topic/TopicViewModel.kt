@@ -4,6 +4,7 @@ import insulator.di.getInstanceNow
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
+import insulator.lib.kafka.DeserializationFormat
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
@@ -27,6 +28,9 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
     val consumeButtonText = SimpleStringProperty(CONSUME)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.Beginning.name)
+
+    val deserializeKeyProperty = SimpleStringProperty(DeserializationFormat.String.name)
+    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.name)
 
     fun consumeButtonClick() {
         if (consumeButtonText.value == CONSUME) {

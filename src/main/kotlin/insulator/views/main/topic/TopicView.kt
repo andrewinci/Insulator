@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.Styles
 import insulator.lib.kafka.ConsumeFrom
+import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.keyValueLabel
@@ -25,6 +26,16 @@ class TopicView : View() {
             tab("Consumer") {
                 vbox {
                     hbox {
+                        label("key")
+                        combobox<String> {
+                            items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                            valueProperty().bindBidirectional(viewModel.deserializeKeyProperty)
+                        }
+                        label("value")
+                        combobox<String> {
+                            items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                            valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+                        }
                         label("from")
                         combobox<String> {
                             items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
@@ -35,7 +46,7 @@ class TopicView : View() {
                             prefWidth = 80.0
                         }
                         button("Clear") { action { viewModel.clear() } }
-                        spacing = 2.0
+                        spacing = 5.0
                         paddingAll = 5.0
                         alignment = Pos.CENTER_RIGHT
                     }
