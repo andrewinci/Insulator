@@ -28,15 +28,16 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
     val consumeButtonText = SimpleStringProperty(CONSUME)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.Beginning.name)
-
-    val deserializeKeyProperty = SimpleStringProperty(DeserializationFormat.String.name)
+    
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.name)
 
     fun consumeButtonClick() {
         if (consumeButtonText.value == CONSUME) {
             consumeButtonText.value = STOP
             clear()
-            consume(from = ConsumeFrom.valueOf(consumeFromProperty.value))
+            consume(
+                    from = ConsumeFrom.valueOf(consumeFromProperty.value),
+                    valueFormat = DeserializationFormat.valueOf(deserializeValueProperty.value))
         } else {
             consumeButtonText.value = CONSUME
             consumer.stop()
@@ -47,14 +48,14 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     fun clear() = records.clear()
     fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
 
-    private fun consume(from: ConsumeFrom) {
+    private fun consume(from: ConsumeFrom, valueFormat: DeserializationFormat) {
         if (consumer.isRunning()) return
-        consumer.start(nameProperty.value, from) { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
+        consumer.start(nameProperty.value, from, valueFormat) { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
     }
 
     fun loadDetails() {
-        adminApi.describeTopic(topicName).unsafeRunAsync {
-            it.map {
+        adminApi.describeTopic(topicName).unsafeRunAsync { topic ->
+            topic.map {
                 nameProperty.set(it.first().name)
                 internalProperty.set(it.first().internal ?: false)
                 partitionsProperty.set(it.first().partitions ?: -1)

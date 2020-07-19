@@ -1,6 +1,7 @@
 package insulator.views.main.topic
 
 import insulator.Styles
+import insulator.di.GlobalConfiguration
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
@@ -26,15 +27,12 @@ class TopicView : View() {
             tab("Consumer") {
                 vbox {
                     hbox {
-                        label("key")
-                        combobox<String> {
-                            items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
-                            valueProperty().bindBidirectional(viewModel.deserializeKeyProperty)
-                        }
-                        label("value")
-                        combobox<String> {
-                            items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
-                            valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+                        if(GlobalConfiguration.currentCluster.isSchemaRegistryConfigured()) {
+                            label("value format")
+                            combobox<String> {
+                                items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                                valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+                            }
                         }
                         label("from")
                         combobox<String> {

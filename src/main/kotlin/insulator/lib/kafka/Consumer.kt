@@ -1,24 +1,28 @@
 package insulator.lib.kafka
 
 import arrow.core.Tuple3
+import insulator.di.clusterScopedGet
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
+import org.koin.core.qualifier.named
 import java.time.Duration
 import kotlin.concurrent.thread
 
-class Consumer(private val consumer: Consumer<Any, Any>) {
+class Consumer {
 
     private var threadLoop: Thread? = null
     private var running = false
 
-    fun start(topic: String, from: ConsumeFrom, callback: (String?, String, Long) -> Unit) {
+    fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (String?, String, Long) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
-        val partitions = consumer.partitionsFor(topic).map { TopicPartition(topic, it.partition()) }
-        consumer.assign(partitions)
-        seek(consumer, partitions, from)
+        val consumer: Consumer<Any, Any> = when (valueFormat) {
+            DeserializationFormat.Avro -> clusterScopedGet(named("avroConsumer"))
+            DeserializationFormat.String -> clusterScopedGet()
+        }
+        initializeConsumer(consumer, topic, from)
         running = true
-        loop(callback)
+        loop(consumer, callback)
     }
 
     fun isRunning() = running
@@ -28,7 +32,7 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
         threadLoop?.join()
     }
 
-    private fun loop(callback: (String?, String, Long) -> Unit) {
+    private fun loop(consumer: Consumer<Any, Any>, callback: (String?, String, Long) -> Unit) {
         threadLoop = thread {
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
@@ -40,7 +44,9 @@ class Consumer(private val consumer: Consumer<Any, Any>) {
         }
     }
 
-    private fun seek(consumer: Consumer<Any, Any>, partitions: List<TopicPartition>, from: ConsumeFrom) {
+    private fun initializeConsumer(consumer: Consumer<Any, Any>, topic: String, from: ConsumeFrom) {
+        val partitions = consumer.partitionsFor(topic).map { TopicPartition(topic, it.partition()) }
+        consumer.assign(partitions)
         when (from) {
             ConsumeFrom.Now -> consumer.seekToEnd(partitions)
             ConsumeFrom.Beginning -> consumer.seekToBeginning(partitions)
