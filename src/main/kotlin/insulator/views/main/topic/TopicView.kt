@@ -57,9 +57,15 @@ class TopicView : View() {
                     }
 
                     tableview<RecordViewModel> {
-                        column("Time", RecordViewModel::timestampProperty).minWidth(200.0)
-                        column("Key", RecordViewModel::keyProperty).minWidth(200.0)
-                        column("Value", RecordViewModel::valueProperty).minWidth(200.0)
+                        column("Time", RecordViewModel::timestampProperty){
+                            prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(1))
+                        }
+                        column("Key", RecordViewModel::keyProperty){
+                            prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(1))
+                        }
+                        column("Value", RecordViewModel::valueProperty){
+                            prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(2).minus(20.0))
+                        }
                         prefHeight = 600.0 //todo: remove hardcoded and retrieve
                         itemsProperty().set(
                                 SortedFilteredList(viewModel.records).apply {
