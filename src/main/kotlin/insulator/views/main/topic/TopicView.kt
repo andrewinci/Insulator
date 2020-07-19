@@ -10,7 +10,11 @@ import insulator.views.common.keyValueLabel
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
+import javafx.scene.control.Alert
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
+import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
 import tornadofx.*
 
 
@@ -47,9 +51,7 @@ class TopicView : View() {
                                 prefWidth = 80.0
                             }
                             button("Clear") { action { viewModel.clear() } }
-
                             spacing = 5.0
-
                             alignment = Pos.CENTER_RIGHT
                         }
                         left = hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_LEFT; spacing = 5.0 }
@@ -65,6 +67,7 @@ class TopicView : View() {
                         }
                         column("Value", RecordViewModel::valueProperty){
                             prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(2).minus(20.0))
+                            enableTextWrap()
                         }
                         prefHeight = 600.0 //todo: remove hardcoded and retrieve
                         itemsProperty().set(
@@ -72,10 +75,16 @@ class TopicView : View() {
                                     filterWhen(searchItem) { p, i -> i.keyProperty.value.contains(p) || i.valueProperty.value.contains(p)}
                                 }.filteredItems
                         )
+                        selectionModel.selectionMode = SelectionMode.SINGLE
+                        onDoubleClick {
+                           //todo: show record
+                            // alert(Alert.AlertType.NONE, selectedItem!!.keyProperty.value, selectedItem!!.valueProperty.value)
+                        }
+                        vgrow = Priority.ALWAYS
                     }
                 }
-                spacing = 5.0
             }
+            vgrow = Priority.ALWAYS
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
         }
         addClass(Styles.card)

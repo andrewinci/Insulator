@@ -6,6 +6,7 @@ import insulator.viewmodel.main.topic.ListTopicViewModel
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
+import javafx.scene.layout.Priority
 import tornadofx.*
 
 class ListTopicView : View() {
@@ -35,7 +36,7 @@ class ListTopicView : View() {
             }
 
             selectionModel.selectionMode = SelectionMode.SINGLE
-            prefHeight = 600.0 //todo: remove hardcoded and retrieve
+            vgrow = Priority.ALWAYS
         }
         addClass(Styles.card)
     }
