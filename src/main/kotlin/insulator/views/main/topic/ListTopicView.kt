@@ -34,7 +34,6 @@ class ListTopicView : View() {
                         }.filteredItems
                 )
             }
-
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }

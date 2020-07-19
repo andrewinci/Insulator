@@ -10,11 +10,11 @@ import insulator.views.common.keyValueLabel
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
-import javafx.scene.control.Alert
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TabPane
+import javafx.scene.input.Clipboard
+import javafx.scene.input.ClipboardContent
 import javafx.scene.layout.Priority
-import javafx.scene.layout.VBox
 import tornadofx.*
 
 
@@ -77,8 +77,11 @@ class TopicView : View() {
                         )
                         selectionModel.selectionMode = SelectionMode.SINGLE
                         onDoubleClick {
-                           //todo: show record
-                            // alert(Alert.AlertType.NONE, selectedItem!!.keyProperty.value, selectedItem!!.valueProperty.value)
+                            //todo: improve UX
+                            val content = Clipboard.getSystemClipboard()
+                            content.putString("${selectedItem!!.timestampProperty.value}\t" +
+                                    "${selectedItem!!.keyProperty.value}\t" +
+                                    selectedItem!!.valueProperty.value)
                         }
                         vgrow = Priority.ALWAYS
                     }
