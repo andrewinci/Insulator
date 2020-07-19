@@ -7,6 +7,7 @@ import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.keyValueLabel
+import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import javafx.scene.control.TabPane
@@ -16,6 +17,7 @@ import tornadofx.*
 class TopicView : View() {
 
     private val viewModel: TopicViewModel by inject()
+    private val searchItem = SimpleStringProperty()
 
     override val root = vbox {
         label(viewModel.nameProperty.value) { addClass(Styles.h1, Styles.mainColor) }
@@ -26,42 +28,47 @@ class TopicView : View() {
         tabpane {
             tab("Consumer") {
                 vbox {
-                    hbox {
-                        if(GlobalConfiguration.currentCluster.isSchemaRegistryConfigured()) {
-                            label("value format")
-                            combobox<String> {
-                                items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
-                                valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+                    borderpane {
+                        right = hbox {
+                            if (GlobalConfiguration.currentCluster.isSchemaRegistryConfigured()) {
+                                label("value format")
+                                combobox<String> {
+                                    items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                                    valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+                                }
                             }
+                            label("from")
+                            combobox<String> {
+                                items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
+                                valueProperty().bindBidirectional(viewModel.consumeFromProperty)
+                            }
+                            button(viewModel.consumeButtonText) {
+                                action { viewModel.consumeButtonClick() }
+                                prefWidth = 80.0
+                            }
+                            button("Clear") { action { viewModel.clear() } }
+
+                            spacing = 5.0
+
+                            alignment = Pos.CENTER_RIGHT
                         }
-                        label("from")
-                        combobox<String> {
-                            items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
-                            valueProperty().bindBidirectional(viewModel.consumeFromProperty)
-                        }
-                        button(viewModel.consumeButtonText) {
-                            action { viewModel.consumeButtonClick() }
-                            prefWidth = 80.0
-                        }
-                        button("Clear") { action { viewModel.clear() } }
-                        spacing = 5.0
+                        left = hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_LEFT; spacing = 5.0 }
                         paddingAll = 5.0
-                        alignment = Pos.CENTER_RIGHT
                     }
-                    tableview(viewModel.records) {
+
+                    tableview<RecordViewModel> {
                         column("Time", RecordViewModel::timestampProperty).minWidth(200.0)
                         column("Key", RecordViewModel::keyProperty).minWidth(200.0)
                         column("Value", RecordViewModel::valueProperty).minWidth(200.0)
                         prefHeight = 600.0 //todo: remove hardcoded and retrieve
+                        itemsProperty().set(
+                                SortedFilteredList(viewModel.records).apply {
+                                    filterWhen(searchItem) { p, i -> i.keyProperty.value.contains(p) || i.valueProperty.value.contains(p)}
+                                }.filteredItems
+                        )
                     }
                 }
                 spacing = 5.0
-            }
-            tab("Producer") {
-
-            }
-            tab("Settings") {
-
             }
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
         }
