@@ -99,5 +99,7 @@ task packageApp(type: Exec) {
             '-d', '.',
             '--name', 'Insulator',
             '--java-options', "'--enable-preview'",
-            '--app-version', '0.1'
+            '--app-version', '0.1',
+            '--icon', './assets/icon.icns'
+            //todo: fix for windows '--icon', './assets/icon.ico'
 }

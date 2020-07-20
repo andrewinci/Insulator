@@ -69,7 +69,6 @@ class TopicView : View() {
                             prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(2).minus(20.0))
                             enableTextWrap()
                         }
-                        prefHeight = 600.0 //todo: remove hardcoded and retrieve
                         itemsProperty().set(
                                 SortedFilteredList(viewModel.records).apply {
                                     filterWhen(searchItem) { p, i -> i.keyProperty.value.contains(p) || i.valueProperty.value.contains(p)}
