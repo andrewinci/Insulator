@@ -33,7 +33,7 @@ val kafkaModule = module {
 
         // Consumers
         scoped<Consumer<Any, Any>>() { KafkaConsumer<Any, Any>(get<Properties>()) }
-        scoped<Consumer<Any, Any>>(named("avroConsumer")) {
+        factory<Consumer<Any, Any>>(named("avroConsumer")) {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
             KafkaConsumer<Any, Any>(properties)
