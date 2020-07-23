@@ -72,7 +72,9 @@ class TopicView : View() {
                         itemsProperty().set(
                                 SortedFilteredList(viewModel.records).apply {
                                     filterWhen(searchItem) { p, i -> i.keyProperty.value.contains(p) || i.valueProperty.value.contains(p)}
-                                }.filteredItems
+                                }.sortedItems.also {
+                                    it.comparatorProperty().bind(this.comparatorProperty())
+                                }
                         )
                         selectionModel.selectionMode = SelectionMode.SINGLE
                         onDoubleClick {
