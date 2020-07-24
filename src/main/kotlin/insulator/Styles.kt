@@ -1,61 +1,220 @@
 package insulator
 
+import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.effect.Blend
+import javafx.scene.effect.DropShadow
+import javafx.scene.layout.Background
+import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
+import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import tornadofx.*
 
 
 class Styles : Stylesheet() {
+    //this effect is not supported by tornadofx and it will set the effect to null
+    private val nullEffect = Blend()
+    private val defaultPadding = 15.0.px
+
     companion object {
-        // Define our styles
+        // Titles
         val h1 by cssclass()
         val h2 by cssclass()
+        val h3 by cssclass()
 
-        val card by cssclass()
-        val mainViewLeftPane by cssclass()
-        val mainViewTopPane by cssclass()
+        // Views
+        val clusterListView by cssclass()
+        val clusterView by cssclass()
 
-        // Define our colors
-        val mainColor by cssclass()
+        // Components
+        val topBarMenu by cssclass()
+        val subtitle by cssclass()
+        val topBarMenuShadow by cssclass()
+        val sidebar by cssclass()
+        val sidebarItem by cssclass()
 
-        val dangerColor = c("#a94442")
-        val hoverColor = c("#d49942")
+        // colors
+        val mainColor = c(249, 140, 60)
+        val mainColorDark = c(159, 69, 20)
+        val lightGray = c("#ccc")
+        val darkGray = c("#666")
     }
-
 
     init {
         h1 {
-            fontSize = 25.px
+            fontSize = 30.px
             fontWeight = FontWeight.EXTRA_BOLD
-            // padding = box(5.0.px, 0.0.px, 5.0.px, 0.0.px)
+            textFill = mainColor
         }
         h2 {
             fontSize = 20.px
             fontWeight = FontWeight.EXTRA_BOLD
-           // padding = box(5.0.px, 0.0.px, 5.0.px, 0.0.px)
+            // padding = box(5.0.px, 0.0.px, 5.0.px, 0.0.px)
         }
-        mainColor {
-            accentColor = Color.DARKORANGE
-            textFill = Color.DARKORANGE
+        h3 {
+            fontSize = 12.px
+            textFill = darkGray
         }
-        card {
-            backgroundColor = MultiValue(arrayOf(Paint.valueOf("white")))
-            backgroundRadius = multi(box(10.0.px))
-            backgroundInsets = multi(box(4.0.px))
-            minHeight = 100.px
+        // main
+        topBarMenu {
+            translateY = -defaultPadding
+            borderInsets = multi(box(-defaultPadding, -defaultPadding, 0.px, -defaultPadding))
             spacing = 5.px
-            padding = box(10.0.px)
-        }
-        mainViewLeftPane {
-            minWidth = 250.px
-            maxWidth = 250.px
-            alignment = Pos.TOP_CENTER
-        }
-        mainViewTopPane {
-            padding = box(2.0.px)
             alignment = Pos.CENTER_LEFT
+            borderColor = multi(box(lightGray))
+            prefHeight = 60.0.px
+            and(subtitle){prefHeight = 70.0.px}
         }
+        topBarMenuShadow {
+            translateY = -defaultPadding
+            prefHeight = 0.0.px
+            borderColor = multi(box(lightGray))
+            effect = DropShadow(1.0, 0.0, +1.0, lightGray)
+            borderInsets = multi(box(0.0.px, -defaultPadding))
+        }
+        sidebar {
+            prefWidth = 250.0.px
+            backgroundColor = multi(Color.WHITE)
+            borderInsets = multi(box(-defaultPadding, 0.px, -defaultPadding, -defaultPadding))
+            borderColor = multi(box(lightGray))
+            padding = box(-defaultPadding, 0.px,0.px,0.px)
+        }
+        sidebarItem {
+            and(hover) {
+                backgroundColor = multi(mainColor)
+            }
+            minHeight = 50.0.px
+            borderInsets = multi(box(-defaultPadding, 0.px, 0.px, -defaultPadding))
+            padding = box(defaultPadding)
+        }
+        // cluster
+        clusterView {
+            prefWidth = 600.px
+        }
+        clusterListView {
+            listView {
+                prefHeight = 330.0.px
+                listCell {
+                    prefHeight = 80.0.px
+                    button {
+                        // settings button
+                        backgroundColor = multi(Color.TRANSPARENT)
+                        prefHeight = 40.0.px
+                        prefWidth = 40.0.px
+                        and(hover) {
+                            backgroundColor = multi(mainColorDark)
+                            backgroundRadius = multi(box(50.0.px))
+                        }
+                    }
+                    and(even) { backgroundColor = multi(Color.TRANSPARENT) }
+                    and(odd) { backgroundColor = multi(Color.TRANSPARENT) }
+                    and(hover) {
+                        backgroundColor = multi(mainColor)
+                    }
+                }
+            }
+        }
+
+        root {
+            padding = box(defaultPadding)
+            font = Font.font("Helvetica", 10.0)
+            backgroundColor = multi(Color.WHITE)
+
+            field {
+                font = Font.font("Helvetica", 10.0)
+            }
+
+            textField {
+                backgroundRadius = multi(box(0.0.px))
+                backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, (0).px, (-1).px))
+                backgroundColor = multi(mainColor, Color.WHITE, c("eee"))
+                and(focused) {
+                    backgroundRadius = multi(box(0.0.px))
+                    backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, (0).px, (-2).px))
+                    backgroundColor = multi(mainColorDark, Color.WHITE, c("ddd"))
+                }
+            }
+
+            button {
+                padding = box(10.0.px)
+                textFill = mainColor
+                backgroundColor = multi(Color.TRANSPARENT)
+                and(hover) {
+                    backgroundColor = multi(mainColorDark)
+                    backgroundRadius = multi(box(2.0.px))
+                }
+            }
+
+            checkBox {
+                box {
+                    focusColor = Color.WHITE
+                    backgroundInsets = multi(box(0.0.px))
+                    backgroundColor = multi(Color.WHITE)
+                    borderRadius = multi(box(0.0.px))
+                    borderInsets = multi(box(1.0.px))
+                    borderColor = multi(box(mainColor))
+                }
+            }
+
+            listView {
+                focusColor = Color.WHITE
+                borderColor = multi(box(Color.WHITE))
+                backgroundInsets = multi(box(0.0.px))
+                and(focused) {
+                    borderRadius = multi(box(30.0.px))
+                    backgroundInsets = multi(box(0.0.px))
+                }
+                listCell {
+                    padding = box(10.0.px)
+                    borderRadius = multi(box(30.0.px))
+                    label{textFill = Color.BLACK}
+                    and(even) { backgroundColor = multi(Color.TRANSPARENT) }
+                    and(odd) { backgroundColor = multi(Color.TRANSPARENT) }
+                    and(hover) {
+                        backgroundColor = multi(mainColor)
+                    }
+                }
+            }
+
+            tableView{
+                borderColor = multi(box(Color.WHITE))
+                focusColor = Color.WHITE
+                and(focused) {
+                    backgroundInsets = multi(box(0.0.px))
+                }
+                columnHeaderBackground {
+                    backgroundColor = multi(Color.TRANSPARENT)
+                }
+                columnHeader {
+                    backgroundColor = multi(Color.TRANSPARENT)
+                    label{
+                        textFill = mainColor
+                        fontSize = 15.px
+                        fontWeight = FontWeight.EXTRA_BOLD
+                    }
+
+                }
+            }
+            tableRowCell{
+                and(selected){
+                    backgroundColor = multi(mainColor)
+                }
+            }
+
+            comboBox{
+                borderColor = multi(box(Color.WHITE))
+                focusColor = Color.WHITE
+                backgroundColor = multi(Color.TRANSPARENT)
+                and(focused) {
+                    backgroundInsets = multi(box(0.0.px))
+                }
+                indexedCell{
+                    textFill = mainColorDark
+                }
+            }
+        }
+
     }
 }

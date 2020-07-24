@@ -29,7 +29,7 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     val consumeButtonText = SimpleStringProperty(CONSUME)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.Beginning.name)
     
-    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.name)
+    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.Avro.name)
 
     fun consumeButtonClick() {
         if (consumeButtonText.value == CONSUME) {

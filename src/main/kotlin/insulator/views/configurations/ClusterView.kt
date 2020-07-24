@@ -8,8 +8,9 @@ class ClusterView : View() {
     private val viewModel: ClusterViewModel by inject()
 
     override val root = form {
+        addClass(Styles.clusterView)
         fieldset {
-            label("Cluster connection") { addClass(Styles.h2) }
+            label("Cluster connection") { addClass(Styles.h1) }
             field("Cluster name") { textfield(viewModel.nameProperty).required() }
             field("Endpoint (url:port)") { textfield(viewModel.endpointProperty).required() }
             fieldset {
@@ -22,12 +23,12 @@ class ClusterView : View() {
             }
             fieldset {
                 disableWhen(viewModel.useSSLProperty)
-                field("Use SASL (ConfluenceCloud)") { checkbox(property = viewModel.useSaslProperty) }
+                field("Use SASL") { checkbox(property = viewModel.useSaslProperty) }
                 field("Username") { textfield(viewModel.saslUsernameProperty).requiredWhen(viewModel.useSaslProperty) }
                 field("Password") { textfield(viewModel.saslPasswordProperty).requiredWhen(viewModel.useSaslProperty) }
             }
             fieldset {
-                label("Schema registry") { addClass(Styles.h2) }
+                label("Schema registry") { addClass(Styles.h1) }
                 field("Endpoint") { textfield(viewModel.schemaRegistryEndpointProperty) }
                 field("Username") { textfield(viewModel.schemaRegistryUsernameProperty) }
                 field("Password") { textfield(viewModel.schemaRegistryPasswordProperty) }

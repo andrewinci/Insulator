@@ -5,7 +5,7 @@ import insulator.di.GlobalConfiguration
 import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
-import insulator.views.common.ICON_SETTINGS
+import insulator.views.common.ICON_SETTINGS_SVG
 import insulator.views.main.MainView
 import javafx.event.EventHandler
 import javafx.geometry.Pos
@@ -18,18 +18,18 @@ class ListClusterView : View("Insulator") {
 
     private val viewModel: ListClusterViewModel by inject()
 
-    override val root = vbox(alignment = Pos.CENTER, spacing = 15) {
-        label("Clusters") { addClass(Styles.h1, Styles.mainColor) }
+    override val root = vbox(spacing = 15) {
+        label("Clusters") { addClass(Styles.h1) }
         listview(viewModel.clustersProperty) {
             cellFormat { cluster ->
                 graphic = borderpane {
-                    center = vbox {
-                        label(cluster.name) { addClass(Styles.h1) }
-                        label(cluster.endpoint)
+                    center = vbox(alignment = Pos.CENTER_LEFT) {
+                        label(cluster.name) { addClass(Styles.h2) }
+                        label(cluster.endpoint){ addClass(Styles.h3) }
                     }
                     right = vbox(alignment = Pos.CENTER) {
                         button {
-                            graphic = imageview(Image(ICON_SETTINGS, 20.0, 20.0, true, true))
+                            graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
                             onMouseClicked = EventHandler {
                                 val scope = Scope()
                                 setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
@@ -37,7 +37,7 @@ class ListClusterView : View("Insulator") {
                             }
                         }
                     }
-                    maxHeight = 50.0
+                    maxHeight = 80.0
                 }
                 onMouseClicked = EventHandler {
                     GlobalConfiguration.currentCluster = cluster
@@ -48,11 +48,15 @@ class ListClusterView : View("Insulator") {
                 }
             }
         }
-        button {
-            text = "Add new cluster"
-            action { find<ClusterView>().openWindow() }
+        hbox(alignment = Pos.CENTER_RIGHT){
+            button {
+                alignment = Pos.CENTER_RIGHT
+                text = "Add new cluster"
+                action { find<ClusterView>().openWindow() }
+            }
         }
-        paddingAll = 10.0
+
+        addClass(Styles.clusterListView)
     }
 
     override fun onDock() {

@@ -10,13 +10,12 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.*
 
-class ListSchemaView : View() {
+class ListSchemaView : View("Schema registry") {
 
     private val viewModel: ListSchemaViewModel by inject()
     private val searchItem = SimpleStringProperty()
 
     override val root = vbox {
-        label("Schema registry") { addClass(Styles.h1, Styles.mainColor) }
         hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_RIGHT; spacing = 5.0 }
         listview<String> {
             cellFormat {
@@ -39,6 +38,5 @@ class ListSchemaView : View() {
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }
-        addClass(Styles.card)
     }
 }

@@ -9,20 +9,19 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.*
 
-class ListTopicView : View() {
+class ListTopicView : View("Topics") {
 
     private val viewModel: ListTopicViewModel by inject()
     private val searchItem = SimpleStringProperty()
 
     override val root = vbox {
-        label("Topics") { addClass(Styles.h1, Styles.mainColor) }
         hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_RIGHT; spacing = 5.0 }
         listview<TopicViewModel> {
             cellFormat {
                 graphic = label(it.nameProperty)
             }
-            onDoubleClick {
-                if (this.selectedItem == null) return@onDoubleClick
+            onLeftClick {
+                if (this.selectedItem == null) return@onLeftClick
                 val scope = Scope()
                 tornadofx.setInScope(this.selectedItem!!, scope)
                 find<TopicView>(scope).openWindow()
@@ -37,6 +36,5 @@ class ListTopicView : View() {
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }
-        addClass(Styles.card)
     }
 }
