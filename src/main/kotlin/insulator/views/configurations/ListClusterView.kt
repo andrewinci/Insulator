@@ -11,6 +11,7 @@ import insulator.views.main.MainView
 import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.image.Image
+import javafx.scene.layout.BorderPane
 import tornadofx.*
 import tornadofx.label
 import tornadofx.vbox
@@ -23,23 +24,7 @@ class ListClusterView : View("Insulator") {
         label("Clusters") { addClass(Styles.h1) }
         listview(viewModel.clustersProperty) {
             cellFormat { cluster ->
-                graphic = borderpane {
-                    center = vbox(alignment = Pos.CENTER_LEFT) {
-                        label(cluster.name) { addClass(Styles.h2) }
-                        label(cluster.endpoint){ addClass(Styles.h3) }
-                    }
-                    right = vbox(alignment = Pos.CENTER) {
-                        button {
-                            graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
-                            onMouseClicked = EventHandler {
-                                val scope = Scope()
-                                setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
-                                find<ClusterView>(scope).openWindow()
-                            }
-                        }
-                    }
-                    maxHeight = 80.0
-                }
+                graphic = buildClusterCell(cluster)
                 onMouseClicked = EventHandler {
                     GlobalConfiguration.currentCluster = cluster
                     val scope = Scope()
@@ -58,8 +43,27 @@ class ListClusterView : View("Insulator") {
                 action { find<ClusterView>(scope).openWindow() }
             }
         }
+    }
 
-        addClass(Styles.clusterListView)
+    private fun buildClusterCell(cluster: Cluster): BorderPane {
+        return borderpane {
+            maxHeight = 80.0
+            center = vbox(alignment = Pos.CENTER_LEFT) {
+                label(cluster.name) { addClass(Styles.h2) }
+                label(cluster.endpoint) { addClass(Styles.h3) }
+            }
+            right = vbox(alignment = Pos.CENTER) {
+                button {
+                    addClass(Styles.iconButton)
+                    graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
+                    onMouseClicked = EventHandler {
+                        val scope = Scope()
+                        setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
+                        find<ClusterView>(scope).openWindow()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDock() {

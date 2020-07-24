@@ -8,7 +8,6 @@ class ClusterView : View() {
     private val viewModel: ClusterViewModel by inject()
 
     override val root = form {
-        addClass(Styles.clusterView)
         fieldset {
             label("Cluster connection") { addClass(Styles.h1) }
             field("Cluster name") { textfield(viewModel.nameProperty).required() }
@@ -46,6 +45,13 @@ class ClusterView : View() {
                 }
             }
         }
+        prefWidth = 600.0
+    }
+
+    override fun onDock() {
+        val clusterName = viewModel.nameProperty.value
+        title = if (clusterName.isNullOrEmpty()) "New cluster" else clusterName
+        super.onDock()
     }
 
 }

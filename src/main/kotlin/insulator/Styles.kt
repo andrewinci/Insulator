@@ -24,18 +24,15 @@ class Styles : Stylesheet() {
         val h2 by cssclass()
         val h3 by cssclass()
 
-        // Views
-        val clusterListView by cssclass()
-        val clusterView by cssclass()
-
         // Components
         val topBarMenu by cssclass()
         val subtitle by cssclass()
         val topBarMenuShadow by cssclass()
         val sidebar by cssclass()
         val sidebarItem by cssclass()
+        val iconButton by cssclass()
 
-        // colors
+        // Colors
         val mainColor = c(249, 140, 60)
         val mainColorDark = c(159, 69, 20)
         val lightGray = c("#ccc")
@@ -51,7 +48,6 @@ class Styles : Stylesheet() {
         h2 {
             fontSize = 20.px
             fontWeight = FontWeight.EXTRA_BOLD
-            // padding = box(5.0.px, 0.0.px, 5.0.px, 0.0.px)
         }
         h3 {
             fontSize = 12.px
@@ -65,7 +61,7 @@ class Styles : Stylesheet() {
             alignment = Pos.CENTER_LEFT
             borderColor = multi(box(lightGray))
             prefHeight = 60.0.px
-            and(subtitle){prefHeight = 70.0.px}
+            and(subtitle) { prefHeight = 70.0.px }
         }
         topBarMenuShadow {
             translateY = -defaultPadding
@@ -79,53 +75,27 @@ class Styles : Stylesheet() {
             backgroundColor = multi(Color.WHITE)
             borderInsets = multi(box(-defaultPadding, 0.px, -defaultPadding, -defaultPadding))
             borderColor = multi(box(lightGray))
-            padding = box(-defaultPadding, 0.px,0.px,0.px)
+            padding = box(-defaultPadding, 0.px, 0.px, 0.px)
+            alignment = Pos.TOP_CENTER
         }
         sidebarItem {
-            and(hover) {
-                backgroundColor = multi(mainColor)
-            }
+            and(hover) { backgroundColor = multi(mainColor) }
             minHeight = 50.0.px
             borderInsets = multi(box(-defaultPadding, 0.px, 0.px, -defaultPadding))
             padding = box(defaultPadding)
-        }
-        // cluster
-        clusterView {
-            prefWidth = 600.px
-        }
-        clusterListView {
-            listView {
-                prefHeight = 330.0.px
-                listCell {
-                    prefHeight = 80.0.px
-                    button {
-                        // settings button
-                        backgroundColor = multi(Color.TRANSPARENT)
-                        prefHeight = 40.0.px
-                        prefWidth = 40.0.px
-                        and(hover) {
-                            backgroundColor = multi(mainColorDark)
-                            backgroundRadius = multi(box(50.0.px))
-                        }
-                    }
-                    and(even) { backgroundColor = multi(Color.TRANSPARENT) }
-                    and(odd) { backgroundColor = multi(Color.TRANSPARENT) }
-                    and(hover) {
-                        backgroundColor = multi(mainColor)
-                    }
-                }
-            }
+            imageView { insets(0.0, 15.0, 0.0, 0.0) }
         }
 
         root {
             padding = box(defaultPadding)
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(Color.WHITE)
-
             field {
                 font = Font.font("Helvetica", 10.0)
             }
-
+            box {
+                spacing = 30.0.px
+            }
             textField {
                 backgroundRadius = multi(box(0.0.px))
                 backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, (0).px, (-1).px))
@@ -144,6 +114,9 @@ class Styles : Stylesheet() {
                 and(hover) {
                     backgroundColor = multi(mainColorDark)
                     backgroundRadius = multi(box(2.0.px))
+                }
+                and(iconButton) {
+                    backgroundRadius = multi(box(100.0.px))
                 }
             }
 
@@ -169,7 +142,7 @@ class Styles : Stylesheet() {
                 listCell {
                     padding = box(10.0.px)
                     borderRadius = multi(box(30.0.px))
-                    label{textFill = Color.BLACK}
+                    label { textFill = Color.BLACK }
                     and(even) { backgroundColor = multi(Color.TRANSPARENT) }
                     and(odd) { backgroundColor = multi(Color.TRANSPARENT) }
                     and(hover) {
@@ -178,7 +151,7 @@ class Styles : Stylesheet() {
                 }
             }
 
-            tableView{
+            tableView {
                 borderColor = multi(box(Color.WHITE))
                 focusColor = Color.WHITE
                 and(focused) {
@@ -189,7 +162,7 @@ class Styles : Stylesheet() {
                 }
                 columnHeader {
                     backgroundColor = multi(Color.TRANSPARENT)
-                    label{
+                    label {
                         textFill = mainColor
                         fontSize = 15.px
                         fontWeight = FontWeight.EXTRA_BOLD
@@ -197,20 +170,20 @@ class Styles : Stylesheet() {
 
                 }
             }
-            tableRowCell{
-                and(selected){
+            tableRowCell {
+                and(selected) {
                     backgroundColor = multi(mainColor)
                 }
             }
 
-            comboBox{
+            comboBox {
                 borderColor = multi(box(Color.WHITE))
                 focusColor = Color.WHITE
                 backgroundColor = multi(Color.TRANSPARENT)
                 and(focused) {
                     backgroundInsets = multi(box(0.0.px))
                 }
-                indexedCell{
+                indexedCell {
                     textFill = mainColorDark
                 }
             }

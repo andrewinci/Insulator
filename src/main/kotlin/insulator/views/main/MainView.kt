@@ -2,6 +2,7 @@ package insulator.views.main
 
 import insulator.Styles
 import insulator.di.GlobalConfiguration
+import insulator.lib.configuration.ConfigurationRepo
 import insulator.views.common.*
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
@@ -41,10 +42,11 @@ class MainView : View("Insulator") {
             top = vbox {
                 hbox {
                     button {
+                        addClass(Styles.iconButton)
                         graphic = SVGIcon(ICON_MENU_SVG, 20.0, Color.BLACK)
-                        action { showSidebar.set(!showSidebar.value) } }
+                        action { showSidebar.set(!showSidebar.value) }
+                    }
                     label(currentTitle) { addClass(Styles.h1) }
-                    prefHeight = 60.0
                     addClass(Styles.topBarMenu)
                 }
                 hbox { addClass(Styles.topBarMenuShadow) }
@@ -56,15 +58,10 @@ class MainView : View("Insulator") {
             isPickOnBounds = false
             padding = insets(-15.0, 0.0)
             vbox {
-                alignment = Pos.TOP_CENTER
                 addClass(Styles.sidebar)
-                anchorpaneConstraints {
-                    bottomAnchor = 0
-                    leftAnchor = 0
-                    topAnchor = 60.0
-                }
+                anchorpaneConstraints { bottomAnchor = 0; leftAnchor = 0; topAnchor = 60.0 }
                 boundsInParent
-                padding = Insets.EMPTY
+
                 menuItem("Topics", ICON_TOPICS) { currentViewProperty.set(find<ListTopicView>()) }
                 menuItem("Schema Registry", ICON_REGISTRY) {
                     if (GlobalConfiguration.currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
@@ -78,11 +75,7 @@ class MainView : View("Insulator") {
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
             hbox(spacing = 5.0) {
-                imageview(Image(icon)){
-                    fitHeight = 30.0;
-                    fitWidth = 30.0;
-                    insets(0.0, 15.0, 0.0, 0.0)
-                }
+                imageview(Image(icon)) { fitHeight = 30.0; fitWidth = 30.0; }
                 label(name) { addClass(Styles.h2) }
                 onMouseClicked = EventHandler { onClick(); showSidebar.set(false) }
                 addClass(Styles.sidebarItem)
@@ -91,6 +84,7 @@ class MainView : View("Insulator") {
     override fun onDock() {
         super.onDock()
         setWindowMinSize(800.0, 800.0)
+        title = GlobalConfiguration.currentCluster.name
     }
 }
 
