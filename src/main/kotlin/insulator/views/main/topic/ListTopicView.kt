@@ -20,8 +20,8 @@ class ListTopicView : View("Topics") {
             cellFormat {
                 graphic = label(it.nameProperty)
             }
-            onLeftClick {
-                if (this.selectedItem == null) return@onLeftClick
+            onDoubleClick {
+                if (this.selectedItem == null) return@onDoubleClick
                 val scope = Scope()
                 tornadofx.setInScope(this.selectedItem!!, scope)
                 find<TopicView>(scope).openWindow()

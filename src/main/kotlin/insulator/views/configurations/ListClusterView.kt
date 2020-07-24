@@ -2,6 +2,7 @@ package insulator.views.configurations
 
 import insulator.Styles
 import insulator.di.GlobalConfiguration
+import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
@@ -52,7 +53,9 @@ class ListClusterView : View("Insulator") {
             button {
                 alignment = Pos.CENTER_RIGHT
                 text = "Add new cluster"
-                action { find<ClusterView>().openWindow() }
+                val scope = Scope()
+                setInScope(ClusterViewModel(ClusterModel(Cluster.Empty)), scope)
+                action { find<ClusterView>(scope).openWindow() }
             }
         }
 
