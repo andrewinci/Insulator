@@ -46,7 +46,7 @@ class TopicView : View() {
         center = vbox(spacing = 2.0) {
             borderpane {
                 left = button(viewModel.consumeButtonText) { action { viewModel.consumeButtonClick() }; prefWidth = 80.0 }
-                center = hbox(alignment = Pos.CENTER){
+                center = hbox(alignment = Pos.CENTER) {
                     label("from")
                     combobox<String> {
                         items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
@@ -101,12 +101,9 @@ class TopicView : View() {
             }
 
     override fun onDock() {
-        currentWindow?.setOnCloseRequest {
-            viewModel.stop()
-        }
+        currentWindow?.setOnCloseRequest { viewModel.stop() }
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
-        viewModel.loadDetails()
         super.onDock()
     }
 }

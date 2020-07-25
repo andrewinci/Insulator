@@ -16,7 +16,8 @@ import tornadofx.*
 private const val CONSUME = "Consume"
 private const val STOP = "Stop"
 
-class TopicViewModel(private val topicName: String) : ViewModel() {
+class TopicViewModel(topicName: String) : ViewModel() {
+
 
     private val adminApi: AdminApi = getInstanceNow()
     private val consumer: Consumer = getInstanceNow()
@@ -25,11 +26,23 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     val internalProperty = SimpleBooleanProperty()
     val partitionsProperty = SimpleIntegerProperty()
     val messageCountProperty = SimpleLongProperty()
-    val records: ObservableList<RecordViewModel> = FXCollections.observableList<RecordViewModel>(emptyList())
+
+    val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
+
     val consumeButtonText = SimpleStringProperty(CONSUME)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.Beginning.name)
-    
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.Avro.name)
+
+    init {
+        adminApi.describeTopic(topicName).unsafeRunAsync { topic ->
+            topic.map {
+                nameProperty.set(it.first().name)
+                internalProperty.set(it.first().internal ?: false)
+                partitionsProperty.set(it.first().partitions ?: -1)
+                messageCountProperty.set(it.first().messageCount ?: -1)
+            }
+        }
+    }
 
     fun consumeButtonClick() {
         if (consumeButtonText.value == CONSUME) {
@@ -53,14 +66,4 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
         consumer.start(nameProperty.value, from, valueFormat) { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
     }
 
-    fun loadDetails() {
-        adminApi.describeTopic(topicName).unsafeRunAsync { topic ->
-            topic.map {
-                nameProperty.set(it.first().name)
-                internalProperty.set(it.first().internal ?: false)
-                partitionsProperty.set(it.first().partitions ?: -1)
-                messageCountProperty.set(it.first().messageCount ?: -1)
-            }
-        }
-    }
 }

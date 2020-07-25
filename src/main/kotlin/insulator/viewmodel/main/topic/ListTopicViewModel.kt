@@ -8,10 +8,9 @@ import tornadofx.*
 class ListTopicViewModel : ViewModel() {
     private val adminApi: AdminApi by di()
 
-    fun listTopics(): ObservableList<TopicViewModel> =
+    fun listTopics(): ObservableList<String> =
             adminApi.listTopics()
-                    .map { it.map { topic -> TopicViewModel(topic) } }
                     .unsafeRunSync()
-                    .sortedBy { it.nameProperty.value }
-                    .let { FXCollections.observableList(it)}
+                    .sortedBy { it }
+                    .let { FXCollections.observableList(it) }
 }
