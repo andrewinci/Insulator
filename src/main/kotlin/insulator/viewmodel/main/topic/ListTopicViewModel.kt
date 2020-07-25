@@ -13,5 +13,5 @@ class ListTopicViewModel : ViewModel() {
                     .map { it.map { topic -> TopicViewModel(topic) } }
                     .unsafeRunSync()
                     .sortedBy { it.nameProperty.value }
-                    .let { FXCollections.observableArrayList(it)}
+                    .let { FXCollections.observableList(it)}
 }

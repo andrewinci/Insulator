@@ -2,6 +2,7 @@ package insulator.views.main.schemaregistry
 
 import insulator.Styles
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
+import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty
@@ -15,7 +16,7 @@ class ListSchemaView : View("Schema registry") {
     private val viewModel: ListSchemaViewModel by inject()
     private val searchItem = SimpleStringProperty()
 
-    override val root = vbox(spacing = 5.0)  {
+    override val root = vbox(spacing = 5.0) {
         hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_RIGHT; spacing = 5.0 }
         listview<String> {
             cellFormat {
@@ -24,13 +25,13 @@ class ListSchemaView : View("Schema registry") {
             onDoubleClick {
                 if (this.selectedItem == null) return@onDoubleClick
                 val scope = Scope()
-//                tornadofx.setInScope(this.selectedItem!!, scope)
-//                find<TopicView>(scope).openWindow()
+                tornadofx.setInScope(viewModel.getSchema(this.selectedItem!!), scope)
+                find<SchemaView>(scope).openWindow()
             }
             runAsync {
                 itemsProperty().set(
                         SortedFilteredList(viewModel.listSchemas()).apply {
-                            filterWhen(searchItem) { p, i -> i.contains(p) }
+                            filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
                         }.filteredItems
                 )
             }

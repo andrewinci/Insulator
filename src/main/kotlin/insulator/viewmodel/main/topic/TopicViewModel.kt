@@ -25,7 +25,7 @@ class TopicViewModel(private val topicName: String) : ViewModel() {
     val internalProperty = SimpleBooleanProperty()
     val partitionsProperty = SimpleIntegerProperty()
     val messageCountProperty = SimpleLongProperty()
-    val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
+    val records: ObservableList<RecordViewModel> = FXCollections.observableList<RecordViewModel>(emptyList())
     val consumeButtonText = SimpleStringProperty(CONSUME)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.Beginning.name)
     

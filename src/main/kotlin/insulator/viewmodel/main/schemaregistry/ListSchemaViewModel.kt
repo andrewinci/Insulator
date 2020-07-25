@@ -8,6 +8,10 @@ import tornadofx.*
 class ListSchemaViewModel : ViewModel() {
     private val schemaRegistryClient: SchemaRegistry by di()
     fun listSchemas(): ObservableList<String> {
-        return FXCollections.observableArrayList(schemaRegistryClient.getAllSubjects())
+        return FXCollections.observableList(schemaRegistryClient.getAllSubjects().toList())
+    }
+
+    fun getSchema(subject: String) : SchemaViewModel {
+        return SchemaViewModel(subject, schemaRegistryClient.getSchema(subject))
     }
 }
