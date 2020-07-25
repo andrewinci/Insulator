@@ -65,7 +65,7 @@ class MainView : View("Insulator") {
                 menuItem("Topics", ICON_TOPICS) { currentViewProperty.set(find<ListTopicView>()) }
                 menuItem("Schema Registry", ICON_REGISTRY) {
                     if (GlobalConfiguration.currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
-                    else alert(Alert.AlertType.WARNING, "Schema registry configuration not found")
+                    else alert(Alert.AlertType.WARNING, "Schema registry configuration not found", owner = currentWindow)
                 }
                 button("Change cluster") { action { replaceWith<ListClusterView>() } }
             }
@@ -75,7 +75,7 @@ class MainView : View("Insulator") {
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
             hbox(spacing = 5.0) {
-                imageview(Image(icon)) { fitHeight = 30.0; fitWidth = 30.0; }
+                imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
                 label(name) { addClass(Styles.h2) }
                 onMouseClicked = EventHandler { onClick(); showSidebar.set(false) }
                 addClass(Styles.sidebarItem)

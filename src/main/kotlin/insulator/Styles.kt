@@ -89,6 +89,7 @@ class Styles : Stylesheet() {
             minHeight = 50.0.px
             borderInsets = multi(box(-defaultPadding, 0.px, 0.px, -defaultPadding))
             padding = box(defaultPadding)
+            alignment = Pos.CENTER_LEFT
             imageView { insets(0.0, 15.0, 0.0, 0.0) }
         }
 

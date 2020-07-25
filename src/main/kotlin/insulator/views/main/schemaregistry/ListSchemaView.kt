@@ -15,7 +15,7 @@ class ListSchemaView : View("Schema registry") {
     private val viewModel: ListSchemaViewModel by inject()
     private val searchItem = SimpleStringProperty()
 
-    override val root = vbox {
+    override val root = vbox(spacing = 5.0)  {
         hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_RIGHT; spacing = 5.0 }
         listview<String> {
             cellFormat {
