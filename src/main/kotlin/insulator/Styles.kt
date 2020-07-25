@@ -4,9 +4,6 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.effect.Blend
 import javafx.scene.effect.DropShadow
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
@@ -31,29 +28,35 @@ class Styles : Stylesheet() {
         val sidebar by cssclass()
         val sidebarItem by cssclass()
         val iconButton by cssclass()
+        val alertButton by cssclass()
 
         // Colors
-        val mainColor = c(249, 140, 60)
-        val mainColorDark = c(159, 69, 20)
+        val mainColor = c("#FF9100")
+        val mainColorDark = c("D6670D")
+        val alertColor = c("#cc0016")
+        val alertColorDark = c("#960017")
         val lightGray = c("#ccc")
         val darkGray = c("#666")
     }
 
     init {
+
         h1 {
             fontSize = 30.px
             fontWeight = FontWeight.EXTRA_BOLD
             textFill = mainColor
         }
+
         h2 {
             fontSize = 20.px
             fontWeight = FontWeight.EXTRA_BOLD
         }
+
         h3 {
             fontSize = 12.px
             textFill = darkGray
         }
-        // main
+
         topBarMenu {
             translateY = -defaultPadding
             borderInsets = multi(box(-defaultPadding, -defaultPadding, 0.px, -defaultPadding))
@@ -63,6 +66,7 @@ class Styles : Stylesheet() {
             prefHeight = 60.0.px
             and(subtitle) { prefHeight = 70.0.px }
         }
+
         topBarMenuShadow {
             translateY = -defaultPadding
             prefHeight = 0.0.px
@@ -70,6 +74,7 @@ class Styles : Stylesheet() {
             effect = DropShadow(1.0, 0.0, +1.0, lightGray)
             borderInsets = multi(box(0.0.px, -defaultPadding))
         }
+
         sidebar {
             prefWidth = 250.0.px
             backgroundColor = multi(Color.WHITE)
@@ -78,6 +83,7 @@ class Styles : Stylesheet() {
             padding = box(-defaultPadding, 0.px, 0.px, 0.px)
             alignment = Pos.TOP_CENTER
         }
+
         sidebarItem {
             and(hover) { backgroundColor = multi(mainColor) }
             minHeight = 50.0.px
@@ -86,16 +92,37 @@ class Styles : Stylesheet() {
             imageView { insets(0.0, 15.0, 0.0, 0.0) }
         }
 
+        dialogPane {
+            headerPanel {
+                borderColor = multi(box(Color.WHITE))
+                backgroundColor = multi(Color.WHITE)
+                backgroundInsets = multi(box(0.0.px))
+                padding = box(0.0.px)
+            }
+            buttonBar {
+                padding = box(0.0.px, (-10.0).px, 0.0.px, 0.0.px)
+                cancel {
+                    textFill = alertColor
+                    and(hover) {
+                        textFill = Color.WHITE
+                        backgroundColor = multi(alertColor)
+                    }
+                }
+            }
+            maxHeight = 140.0.px
+            prefHeight = 140.0.px
+            minHeight = 140.0.px
+        }
+
         root {
             padding = box(defaultPadding)
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(Color.WHITE)
+
             field {
                 font = Font.font("Helvetica", 10.0)
             }
-            box {
-                spacing = 30.0.px
-            }
+
             textField {
                 backgroundRadius = multi(box(0.0.px))
                 backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, (0).px, (-1).px))
@@ -112,12 +139,18 @@ class Styles : Stylesheet() {
                 textFill = mainColor
                 backgroundColor = multi(Color.TRANSPARENT)
                 and(hover) {
-                    backgroundColor = multi(mainColorDark)
+                    textFill = Color.WHITE
+                    backgroundColor = multi(mainColor)
+                    and(alertButton) {
+                        textFill = Color.WHITE
+                        backgroundColor = multi(alertColor)
+                    }
                     backgroundRadius = multi(box(2.0.px))
                 }
                 and(iconButton) {
                     backgroundRadius = multi(box(100.0.px))
                 }
+                and(alertButton) { textFill = alertColor }
             }
 
             checkBox {
@@ -170,6 +203,7 @@ class Styles : Stylesheet() {
 
                 }
             }
+
             tableRowCell {
                 and(selected) {
                     backgroundColor = multi(mainColor)
@@ -180,12 +214,11 @@ class Styles : Stylesheet() {
                 borderColor = multi(box(Color.WHITE))
                 focusColor = Color.WHITE
                 backgroundColor = multi(Color.TRANSPARENT)
-                and(focused) {
-                    backgroundInsets = multi(box(0.0.px))
-                }
-                indexedCell {
-                    textFill = mainColorDark
-                }
+                and(focused) { backgroundInsets = multi(box(0.0.px)) }
+                indexedCell { textFill = mainColorDark }
+                arrowButton { backgroundColor = multi(Color.TRANSPARENT) }
+                arrow { backgroundColor = multi(Color.TRANSPARENT) }
+                listCell { and(hover) { textFill = Color.WHITE } }
             }
         }
 

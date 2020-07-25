@@ -59,6 +59,7 @@ class TopicView : View() {
                             valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
                         }
                     }
+                    region { minWidth = 10.0 }
                     button("Clear") { action { viewModel.clear() } }
                 }
                 right = searchBox(searchItem)

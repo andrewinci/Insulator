@@ -34,6 +34,10 @@ class ClusterViewModel(cluster: ClusterModel = ClusterModel()) : ItemViewModel<C
         configurationRepo.store(this.item.toClusterConfig())
                 .mapLeft { println("Unable to store the new configuration $it") }
     }
+
+    fun delete() {
+        configurationRepo.delete(this.item.toClusterConfig())
+    }
 }
 
 class ClusterModel(cluster: insulator.lib.configuration.model.Cluster? = null) {

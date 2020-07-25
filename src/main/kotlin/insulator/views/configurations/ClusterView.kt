@@ -2,10 +2,14 @@ package insulator.views.configurations
 
 import insulator.Styles
 import insulator.viewmodel.configurations.ClusterViewModel
+import javafx.geometry.Insets
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import tornadofx.*
 
 class ClusterView : View() {
     private val viewModel: ClusterViewModel by inject()
+    private val isNewCluster: Boolean by lazy { viewModel.nameProperty.value.isNullOrEmpty() }
 
     override val root = form {
         fieldset {
@@ -32,9 +36,30 @@ class ClusterView : View() {
                 field("Username") { textfield(viewModel.schemaRegistryUsernameProperty) }
                 field("Password") { textfield(viewModel.schemaRegistryPasswordProperty) }
             }
-            buttonbar {
-                button("Test connection") { isDisable = true }
-                button("Save") {
+            borderpane {
+                padding = Insets(0.0, 50.0, 0.0, 50.0)
+                left = button("Delete") {
+                    if (isNewCluster) isVisible = false
+                    addClass(Styles.alertButton)
+                    action {
+                        val closeWindow = {close()}
+                        alert(Alert.AlertType.WARNING,
+                                "The cluster \"${viewModel.nameProperty.value}\" will be removed.", null,
+                                ButtonType.CANCEL, ButtonType.OK,
+                                owner = currentWindow,
+                                actionFn = { buttonType ->
+                                    when (buttonType) {
+                                        ButtonType.OK -> {
+                                            viewModel.delete()
+                                            closeWindow()
+                                        }
+                                        else -> Unit
+                                    }
+                                })
+                    }
+
+                }
+                right = button("Save") {
                     enableWhen(viewModel.valid)
                     action {
                         viewModel.commit()
@@ -49,8 +74,7 @@ class ClusterView : View() {
     }
 
     override fun onDock() {
-        val clusterName = viewModel.nameProperty.value
-        title = if (clusterName.isNullOrEmpty()) "New cluster" else clusterName
+        title = if (isNewCluster) "New cluster" else viewModel.nameProperty.value
         super.onDock()
     }
 

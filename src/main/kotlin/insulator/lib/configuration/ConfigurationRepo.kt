@@ -22,6 +22,16 @@ class ConfigurationRepo(private val gson: Gson) {
                 }
     }
 
+    fun delete(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
+        (!getConfiguration()).clusters
+                .filterNotNull()
+                .map { it.guid to it }.filter { (guid, _) -> guid != cluster.guid}
+                .map { it.second }
+                .let { Configuration(it) }
+                .also { !store(it) }
+                .also { config -> callbacks.forEach { it(config) } }
+    }
+
     fun store(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
         (!getConfiguration()).clusters
                 .filterNotNull()
@@ -38,6 +48,7 @@ class ConfigurationRepo(private val gson: Gson) {
     }
 
     fun addNewClusterCallback(callback: (Configuration) -> Unit) = callbacks.add(callback)
+
 }
 
 class ConfigurationRepoException(message: String, base: Throwable) : Throwable(message, base)
