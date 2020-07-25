@@ -8,8 +8,11 @@ import tornadofx.*
 
 
 class SchemaViewModel(name: String, schema: String) : ViewModel() {
+
     private val gson: Gson by di()
+
     val nameProperty = SimpleStringProperty(name)
+
     val schemaProperty: StringProperty by lazy {
         val res = kotlin.runCatching { JsonParser.parseString(schema) }
                 .map { gson.toJson(it) }
