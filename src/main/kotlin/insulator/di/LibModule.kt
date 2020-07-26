@@ -2,6 +2,7 @@ package insulator.di
 
 import com.google.gson.GsonBuilder
 import insulator.lib.configuration.ConfigurationRepo
+import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.SchemaRegistry
@@ -25,4 +26,6 @@ val libModule = module {
     factory { AdminApi(clusterScopedGet(), clusterScopedGet()) }
     factory { Consumer() }
     factory { SchemaRegistry(clusterScopedGet()) }
+
+    single { JsonFormatter(get()) }
 }
