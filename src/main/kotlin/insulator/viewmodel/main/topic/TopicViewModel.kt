@@ -23,8 +23,8 @@ class TopicViewModel(topicName: String) : ViewModel() {
     private val consumer: Consumer = getInstanceNow()
 
     val nameProperty = SimpleStringProperty(topicName)
-    val internalProperty = SimpleBooleanProperty()
-    val partitionsProperty = SimpleIntegerProperty()
+    val isInternalProperty = SimpleBooleanProperty()
+    val partitionCountProperty = SimpleIntegerProperty()
     val messageCountProperty = SimpleLongProperty()
 
     val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
@@ -37,8 +37,8 @@ class TopicViewModel(topicName: String) : ViewModel() {
         adminApi.describeTopic(topicName).unsafeRunAsync { topic ->
             topic.map {
                 nameProperty.set(it.first().name)
-                internalProperty.set(it.first().internal ?: false)
-                partitionsProperty.set(it.first().partitions ?: -1)
+                isInternalProperty.set(it.first().isInternal ?: false)
+                partitionCountProperty.set(it.first().partitionCount ?: -1)
                 messageCountProperty.set(it.first().messageCount ?: -1)
             }
         }

@@ -32,8 +32,8 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
             Topic(
                     name = it.name(),
                     messageCount = recordCount.getOrDefault(it.name(), null),
-                    internal = it.isInternal,
-                    partitions = it.partitions().size
+                    isInternal = it.isInternal,
+                    partitionCount = it.partitions().size
             )
         }
     }

@@ -6,30 +6,29 @@ import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
-import insulator.views.common.keyValueLabel
 import insulator.views.common.searchBox
+import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
-import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
-import javafx.scene.control.TabPane
 import javafx.scene.control.TableView
 import javafx.scene.input.Clipboard
-import javafx.scene.input.ClipboardContent
 import javafx.scene.layout.Priority
 import tornadofx.*
+import java.util.concurrent.Callable
 
 
 class TopicView : View() {
 
     private val viewModel: TopicViewModel by inject()
     private val searchItem = SimpleStringProperty()
-    private val subtitleProperty by lazy {
-        val message = { count: Long -> "Message count: $count" }
-        val res = SimpleStringProperty(message(viewModel.messageCountProperty.value))
-        viewModel.messageCountProperty.onChange { res.value = message(it) }
-        res
+    private val subtitleProperty = SimpleStringProperty().also {
+        it.bind(Bindings.createStringBinding(Callable {
+            "Message count: ${viewModel.messageCountProperty.value} - " +
+                    "Is internal: ${viewModel.isInternalProperty.value} - " +
+                    "Partitions count: ${viewModel.partitionCountProperty.value}"
+        }, viewModel.messageCountProperty))
     }
 
     override val root = borderpane {
@@ -40,8 +39,6 @@ class TopicView : View() {
                 addClass(Styles.topBarMenu, Styles.subtitle)
             }
             hbox { addClass(Styles.topBarMenuShadow) }
-//            keyValueLabel("Internal topic", viewModel.internalProperty)
-//            keyValueLabel("Partitions count", viewModel.partitionsProperty)
         }
         center = vbox(spacing = 2.0) {
             borderpane {
