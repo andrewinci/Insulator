@@ -67,15 +67,15 @@ class Consumer {
     private fun assignPartitionByTime(consumer: Consumer<Any, Any>, partitions: List<TopicPartition>, time: Long) {
         consumer.offsetsForTimes(partitions.map { it to time }.toMap())
                 .forEach {
-                    if (it.value != null) consumer.seek(it.key, it.value.offset())
-                    else consumer.seekToEnd(partitions)
+                    when (val offset = it.value?.offset()) {
+                        null -> consumer.seekToEnd(listOf(it.key))
+                        else -> consumer.seek(it.key, offset)
+                    }
                 }
     }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
-        //todo: parse this thing
-        return Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
-    }
+    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> = Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
+
 }
 
 enum class ConsumeFrom {
