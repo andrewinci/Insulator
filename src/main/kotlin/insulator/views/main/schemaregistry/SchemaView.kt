@@ -5,10 +5,12 @@ import insulator.di.GlobalConfiguration
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
+import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.views.common.searchBox
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.input.Clipboard
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
@@ -41,11 +43,19 @@ class SchemaView : View("Schema registry") {
             scrollpane {
                 textflow {
                     children.bind(viewModel.schemaProperty) {
-                        val res = text(it.text){
+                        val res = text(it.text) {
                             fill = it.color
                             font = Font.font("Helvetica", it.fontWeight, 15.0)
                         }
                         res
+                    }
+                    contextMenu = contextmenu {
+                        item("Copy"){
+                            action {
+                                val content = Clipboard.getSystemClipboard()
+                                content.putString(viewModel.schemaProperty.joinToString(separator = "") { it.text })
+                            }
+                        }
                     }
                     background = Background(BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))
                     vgrow = Priority.ALWAYS
@@ -53,6 +63,7 @@ class SchemaView : View("Schema registry") {
                 vgrow = Priority.ALWAYS
             }
         }
+        addClass(Styles.view)
     }
 
     override fun onDock() {

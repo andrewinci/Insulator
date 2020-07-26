@@ -1,6 +1,7 @@
 package insulator.views.configurations
 
 import insulator.Styles
+import insulator.Styles.Companion.view
 import insulator.di.GlobalConfiguration
 import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.configurations.ClusterModel
@@ -43,6 +44,7 @@ class ListClusterView : View("Insulator") {
                 action { find<ClusterView>(scope).openWindow() }
             }
         }
+        addClass(view)
     }
 
     private fun buildClusterCell(cluster: Cluster): BorderPane {

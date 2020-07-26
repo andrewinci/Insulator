@@ -76,18 +76,24 @@ class TopicView : View() {
                     enableTextWrap()
                 }
                 itemsProperty().set(recordList())
-                selectionModel.selectionMode = SelectionMode.SINGLE
-                onDoubleClick {
-                    //todo: improve UX
-                    if (selectedItem !is RecordViewModel) return@onDoubleClick
-                    val content = Clipboard.getSystemClipboard()
-                    content.putString("${selectedItem!!.timestampProperty.value}\t" +
-                            "${selectedItem!!.keyProperty.value}\t" +
-                            selectedItem!!.valueProperty.value)
+                contextMenu = contextmenu {
+                    item("Copy") {
+                        action {
+                            if (selectedItem !is RecordViewModel) return@action
+                            Clipboard.getSystemClipboard().putString(selectedItem!!.toCsv())
+                        }
+                    }
+                    item("Copy all") {
+                        action {
+                            Clipboard.getSystemClipboard().putString(recordList().joinToString("\n") { it.toCsv() })
+                        }
+                    }
                 }
+                selectionModel.selectionMode = SelectionMode.SINGLE
                 vgrow = Priority.ALWAYS
             }
         }
+        addClass(Styles.view)
     }
 
     private fun TableView<RecordViewModel>.recordList() =
@@ -100,6 +106,12 @@ class TopicView : View() {
                 it.comparatorProperty().bind(this.comparatorProperty())
             }
 
+
+    private fun RecordViewModel.toCsv() = "${this.timestampProperty.value}\t" +
+            "${this.keyProperty.value}\t" +
+            this.valueProperty.value
+
+
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
         super.currentStage?.width = 800.0
@@ -107,3 +119,4 @@ class TopicView : View() {
         super.onDock()
     }
 }
+

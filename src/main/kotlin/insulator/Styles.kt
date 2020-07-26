@@ -29,6 +29,7 @@ class Styles : Stylesheet() {
         val sidebarItem by cssclass()
         val iconButton by cssclass()
         val alertButton by cssclass()
+        val view by cssclass()
 
         // Colors
         val mainColor = c("#FF9100")
@@ -134,8 +135,8 @@ class Styles : Stylesheet() {
             minHeight = 140.0.px
         }
 
+        view { padding = box(defaultPadding) }
         root {
-            padding = box(defaultPadding)
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(Color.WHITE)
 
@@ -239,6 +240,21 @@ class Styles : Stylesheet() {
                 arrowButton { backgroundColor = multi(Color.TRANSPARENT) }
                 arrow { backgroundColor = multi(Color.TRANSPARENT) }
                 listCell { and(hover) { textFill = Color.WHITE } }
+            }
+        }
+
+        contextMenu {
+            padding = box((0).px)
+            minWidth = 100.0.px
+            textFill = Color.BLACK
+            menuItem {
+                padding = box(10.0.px)
+                and(focused) {
+                    backgroundColor = multi(mainColor)
+                    label {
+                        textFill = Color.WHITE
+                    }
+                }
             }
         }
 

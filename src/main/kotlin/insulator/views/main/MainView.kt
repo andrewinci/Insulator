@@ -1,8 +1,8 @@
 package insulator.views.main
 
 import insulator.Styles
+import insulator.Styles.Companion.view
 import insulator.di.GlobalConfiguration
-import insulator.lib.configuration.ConfigurationRepo
 import insulator.views.common.*
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
@@ -12,8 +12,6 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.geometry.Insets
-import javafx.geometry.Pos
 import javafx.scene.Parent
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
@@ -70,7 +68,7 @@ class MainView : View("Insulator") {
                 button("Change cluster") { action { replaceWith<ListClusterView>() } }
             }
         }
-
+        addClass(view)
     }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =

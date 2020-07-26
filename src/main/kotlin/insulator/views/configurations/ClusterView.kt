@@ -71,6 +71,7 @@ class ClusterView : View() {
             }
         }
         prefWidth = 600.0
+        addClass(Styles.view)
     }
 
     override fun onDock() {
