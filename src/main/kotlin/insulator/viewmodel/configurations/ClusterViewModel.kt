@@ -6,8 +6,8 @@ import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.configuration.model.SslConfiguration
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
-import tornadofx.*
-import java.util.*
+import tornadofx.ItemViewModel
+import java.util.UUID
 
 class ClusterViewModel(cluster: ClusterModel = ClusterModel()) : ItemViewModel<ClusterModel>(cluster) {
 
@@ -32,7 +32,7 @@ class ClusterViewModel(cluster: ClusterModel = ClusterModel()) : ItemViewModel<C
 
     fun save() {
         configurationRepo.store(this.item.toClusterConfig())
-                .mapLeft { println("Unable to store the new configuration $it") }
+            .mapLeft { println("Unable to store the new configuration $it") }
     }
 
     fun delete() {
@@ -60,26 +60,26 @@ class ClusterModel(cluster: insulator.lib.configuration.model.Cluster? = null) {
     val schemaRegistryPasswordProperty = SimpleStringProperty(cluster?.schemaRegistryConfig?.password)
 
     fun toClusterConfig() =
-            insulator.lib.configuration.model.Cluster(
-                    guid = this.guid,
-                    name = this.nameProperty.value,
-                    endpoint = this.endpointProperty.value,
-                    useSSL = this.useSSLProperty.value,
-                    sslConfiguration = SslConfiguration(
-                            sslTruststoreLocation = this.sslTruststoreLocationProperty.value,
-                            sslTruststorePassword = this.sslTruststorePasswordProperty.value,
-                            sslKeystoreLocation = this.sslKeystoreLocationProperty.value,
-                            sslKeyStorePassword = this.sslKeyStorePasswordProperty.value
-                    ),
-                    useSasl = this.useSaslProperty.value,
-                    saslConfiguration = SaslConfiguration(
-                            saslUsername = this.saslUsernameProperty.value,
-                            saslPassword = this.saslPasswordProperty.value
-                    ),
-                    schemaRegistryConfig = SchemaRegistryConfiguration(
-                            endpoint = this.schemaRegistryEndpointProperty.value,
-                            username = this.schemaRegistryUsernameProperty.value,
-                            password = this.schemaRegistryPasswordProperty.value
-                    )
+        insulator.lib.configuration.model.Cluster(
+            guid = this.guid,
+            name = this.nameProperty.value,
+            endpoint = this.endpointProperty.value,
+            useSSL = this.useSSLProperty.value,
+            sslConfiguration = SslConfiguration(
+                sslTruststoreLocation = this.sslTruststoreLocationProperty.value,
+                sslTruststorePassword = this.sslTruststorePasswordProperty.value,
+                sslKeystoreLocation = this.sslKeystoreLocationProperty.value,
+                sslKeyStorePassword = this.sslKeyStorePasswordProperty.value
+            ),
+            useSasl = this.useSaslProperty.value,
+            saslConfiguration = SaslConfiguration(
+                saslUsername = this.saslUsernameProperty.value,
+                saslPassword = this.saslPasswordProperty.value
+            ),
+            schemaRegistryConfig = SchemaRegistryConfiguration(
+                endpoint = this.schemaRegistryEndpointProperty.value,
+                username = this.schemaRegistryUsernameProperty.value,
+                password = this.schemaRegistryPasswordProperty.value
             )
+        )
 }

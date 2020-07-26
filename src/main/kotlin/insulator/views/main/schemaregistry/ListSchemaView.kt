@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListSchemaView : View("Schema registry") {
 
@@ -26,9 +26,9 @@ class ListSchemaView : View("Schema registry") {
             }
             runAsync {
                 itemsProperty().set(
-                        SortedFilteredList(viewModel.listSchemas()).apply {
-                            filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
-                        }.filteredItems
+                    SortedFilteredList(viewModel.listSchemas()).apply {
+                        filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+                    }.filteredItems
                 )
             }
 

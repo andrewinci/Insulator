@@ -12,22 +12,24 @@ import java.lang.Exception
 class JsonFormatter(private val gson: Gson) {
 
     fun formatJsonString(json: String) = kotlin.runCatching { gson.fromJson(json, JsonObject::class.java) }
-            .map { format(it) }
-            .fold({ it.right() }, { it.left() })
-
+        .map { format(it) }
+        .fold({ it.right() }, { it.left() })
 
     private fun format(json: JsonElement, indentCount: Int = 1): Collection<Token> {
         val indent = Token.Symbol("".padStart(indentCount * 2, ' '))
         return when {
             json.isJsonPrimitive -> listOf(Token.Value(json.asJsonPrimitive.toString()))
-            json.isJsonObject -> listOf(Token.Symbol("{"), Token.NEWLINE, indent)
-                    .plus(json.asJsonObject.entrySet()
+            json.isJsonObject ->
+                listOf(Token.Symbol("{"), Token.NEWLINE, indent)
+                    .plus(
+                        json.asJsonObject.entrySet()
                             .map { (key, value) -> listOf(Token.Key(key), Token.COLON).plus(format(value, indentCount + 1)) }
                             .reduce { a, b -> a.plus(Token.COMMA).plus(Token.NEWLINE).plus(indent).plus(b) }
                     )
                     .plus(Token.NEWLINE).plus(indent).plus(Token.Symbol("}")).toList()
 
-            json.isJsonArray -> listOf(Token.Symbol("["))
+            json.isJsonArray ->
+                listOf(Token.Symbol("["))
                     .plus(json.asJsonArray.map { format(it, indentCount + 1) }.reduce { a, b -> a.plus(Token.COMMA).plus(b) })
                     .plus(Token.Symbol("]"))
             json.isJsonNull -> listOf(Token.Value("null"))

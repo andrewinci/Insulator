@@ -14,9 +14,9 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
         val topics = admin.listTopics()
         val consumers = admin.listConsumerGroups()
         return ClusterOverview(
-                brokerCount = nodes.get().size,
-                topicsCount = topics.names().get().size,
-                consumerGroupsCount = consumers.all().get().size
+            brokerCount = nodes.get().size,
+            topicsCount = topics.names().get().size,
+            consumerGroupsCount = consumers.all().get().size
         )
     }
 
@@ -25,25 +25,24 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
     fun describeTopic(vararg topicNames: String) = IO {
         val topicDescriptions = admin.describeTopics(topicNames.toList()).all().get().values
         val recordCount = topicDescriptions
-                .map { it.name() to it.toTopicPartitions() }
-                .map { (name, partitions) -> name to consumer.endOffsets(partitions).values.sum() - consumer.beginningOffsets(partitions).values.sum() }
-                .toMap()
+            .map { it.name() to it.toTopicPartitions() }
+            .map { (name, partitions) -> name to consumer.endOffsets(partitions).values.sum() - consumer.beginningOffsets(partitions).values.sum() }
+            .toMap()
         topicDescriptions.map {
             Topic(
-                    name = it.name(),
-                    messageCount = recordCount.getOrDefault(it.name(), null),
-                    isInternal = it.isInternal,
-                    partitionCount = it.partitions().size
+                name = it.name(),
+                messageCount = recordCount.getOrDefault(it.name(), null),
+                isInternal = it.isInternal,
+                partitionCount = it.partitions().size
             )
         }
     }
 
     private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
-
 }
 
 data class ClusterOverview(
-        val brokerCount: Int,
-        val topicsCount: Int,
-        val consumerGroupsCount: Int
+    val brokerCount: Int,
+    val topicsCount: Int,
+    val consumerGroupsCount: Int
 )

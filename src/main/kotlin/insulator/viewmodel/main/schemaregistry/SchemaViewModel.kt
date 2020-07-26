@@ -1,6 +1,5 @@
 package insulator.viewmodel.main.schemaregistry
 
-import com.google.gson.JsonObject
 import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Subject
@@ -9,8 +8,8 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import tornadofx.*
-
+import tornadofx.ViewModel
+import tornadofx.onChange
 
 class SchemaViewModel(schema: Subject) : ViewModel() {
 

@@ -11,11 +11,10 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent
 
-
 inline fun <reified T> clusterScopedGet(qualifier: Qualifier? = null) = KoinJavaComponent
-        .getKoin()
-        .getOrCreateScope(GlobalConfiguration.currentCluster.guid.toString(), named("clusterScope"))
-        .get<T>(qualifier)
+    .getKoin()
+    .getOrCreateScope(GlobalConfiguration.currentCluster.guid.toString(), named("clusterScope"))
+    .get<T>(qualifier)
 
 val libModule = module {
 

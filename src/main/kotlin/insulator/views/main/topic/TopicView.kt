@@ -1,9 +1,10 @@
 package insulator.views.main.topic
 
-import insulator.Styles
 import insulator.di.GlobalConfiguration
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
+import insulator.styles.Controls
+import insulator.styles.Titles
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.searchBox
@@ -15,30 +16,34 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableView
 import javafx.scene.input.Clipboard
 import javafx.scene.layout.Priority
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.Callable
-
 
 class TopicView : View() {
 
     private val viewModel: TopicViewModel by inject()
     private val searchItem = SimpleStringProperty()
     private val subtitleProperty = SimpleStringProperty().also {
-        it.bind(Bindings.createStringBinding(Callable {
-            "Message count: ${viewModel.messageCountProperty.value} - " +
-                    "Is internal: ${viewModel.isInternalProperty.value} - " +
-                    "Partitions count: ${viewModel.partitionCountProperty.value}"
-        }, viewModel.messageCountProperty))
+        it.bind(
+            Bindings.createStringBinding(
+                Callable {
+                    "Message count: ${viewModel.messageCountProperty.value} - " +
+                        "Is internal: ${viewModel.isInternalProperty.value} - " +
+                        "Partitions count: ${viewModel.partitionCountProperty.value}"
+                },
+                viewModel.messageCountProperty
+            )
+        )
     }
 
     override val root = borderpane {
         top = vbox {
             vbox {
-                label(viewModel.nameProperty.value) { addClass(Styles.h1) }
-                label(subtitleProperty) { addClass(Styles.h3) }
-                addClass(Styles.topBarMenu, Styles.subtitle)
+                label(viewModel.nameProperty.value) { addClass(Titles.h1) }
+                label(subtitleProperty) { addClass(Titles.h3) }
+                addClass(Controls.topBarMenu, Titles.subtitle)
             }
-            hbox { addClass(Styles.topBarMenuShadow) }
+            hbox { addClass(Controls.topBarMenuShadow) }
         }
         center = vbox(spacing = 2.0) {
             borderpane {
@@ -90,24 +95,22 @@ class TopicView : View() {
                 vgrow = Priority.ALWAYS
             }
         }
-        addClass(Styles.view)
+        addClass(Controls.view)
     }
 
     private fun TableView<RecordViewModel>.recordList() =
-            SortedFilteredList(viewModel.records).apply {
-                filterWhen(searchItem) { p, i ->
-                    i.keyProperty.value?.toLowerCase()?.contains(p.toLowerCase()) ?: false ||
-                            i.valueProperty.value.toLowerCase().contains(p.toLowerCase())
-                }
-            }.sortedItems.also {
-                it.comparatorProperty().bind(this.comparatorProperty())
+        SortedFilteredList(viewModel.records).apply {
+            filterWhen(searchItem) { p, i ->
+                i.keyProperty.value?.toLowerCase()?.contains(p.toLowerCase()) ?: false ||
+                    i.valueProperty.value.toLowerCase().contains(p.toLowerCase())
             }
-
+        }.sortedItems.also {
+            it.comparatorProperty().bind(this.comparatorProperty())
+        }
 
     private fun RecordViewModel.toCsv() = "${this.timestampProperty.value}\t" +
-            "${this.keyProperty.value}\t" +
-            this.valueProperty.value
-
+        "${this.keyProperty.value}\t" +
+        this.valueProperty.value
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
@@ -116,4 +119,3 @@ class TopicView : View() {
         super.onDock()
     }
 }
-

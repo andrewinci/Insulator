@@ -9,9 +9,8 @@ class SchemaRegistry(private val client: SchemaRegistryClient) {
 
     fun getSubject(subject: String): Subject {
         val versions = client.getAllVersions(subject)
-                .map { client.getByVersion(subject, it, false) }
-                .map { Schema(it.schema, it.version) }
+            .map { client.getByVersion(subject, it, false) }
+            .map { Schema(it.schema, it.version) }
         return Subject(subject, versions)
     }
-
 }

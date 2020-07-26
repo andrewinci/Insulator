@@ -13,7 +13,7 @@ import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import java.util.*
+import java.util.Properties
 
 val kafkaModule = module {
 
@@ -25,8 +25,8 @@ val kafkaModule = module {
             val config = GlobalConfiguration.currentCluster.schemaRegistryConfig
             val restService = RestService(config?.endpoint)
             val credentials = mapOf(
-                    "basic.auth.credentials.source" to "USER_INFO",
-                    "basic.auth.user.info" to "${config?.username}:${config?.password}"
+                "basic.auth.credentials.source" to "USER_INFO",
+                "basic.auth.user.info" to "${config?.username}:${config?.password}"
             )
             CachedSchemaRegistryClient(restService, 1000, credentials)
         }
@@ -39,7 +39,6 @@ val kafkaModule = module {
             KafkaConsumer<Any, Any>(properties)
         }
     }
-
 
     // Properties
     factory {
@@ -57,14 +56,17 @@ val kafkaModule = module {
                 put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL")
                 put(SaslConfigs.SASL_MECHANISM, "PLAIN")
                 put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, SslConfigs.DEFAULT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM)
-                put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule " +
-                        "required username=\"${cluster.saslConfiguration?.saslUsername}\"   password=\"${cluster.saslConfiguration?.saslPassword}\";")
+                put(
+                    SaslConfigs.SASL_JAAS_CONFIG,
+                    "org.apache.kafka.common.security.plain.PlainLoginModule " +
+                        "required username=\"${cluster.saslConfiguration?.saslUsername}\"   password=\"${cluster.saslConfiguration?.saslPassword}\";"
+                )
             }
             if (cluster.isSchemaRegistryConfigured()) {
                 with(cluster.schemaRegistryConfig!!) {
                     put("schema.registry.url", endpoint)
                     put("basic.auth.credentials.source", "USER_INFO")
-                    put("basic.auth.user.info", "${username}:${password}")
+                    put("basic.auth.user.info", "$username:$password")
                 }
             }
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)

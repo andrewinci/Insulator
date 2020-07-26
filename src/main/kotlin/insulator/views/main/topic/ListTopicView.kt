@@ -1,12 +1,12 @@
 package insulator.views.main.topic
 
-import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.viewmodel.main.topic.ListTopicViewModel
+import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.searchBox
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListTopicView : View("Topics") {
 
@@ -25,9 +25,9 @@ class ListTopicView : View("Topics") {
             }
             runAsync {
                 itemsProperty().set(
-                        SortedFilteredList(viewModel.listTopics()).apply {
-                            filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
-                        }.filteredItems
+                    SortedFilteredList(viewModel.listTopics()).apply {
+                        filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+                    }.filteredItems
                 )
             }
             selectionModel.selectionMode = SelectionMode.SINGLE

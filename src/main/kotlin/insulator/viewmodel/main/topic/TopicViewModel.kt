@@ -11,13 +11,12 @@ import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import tornadofx.*
+import tornadofx.ViewModel
 
 private const val CONSUME = "Consume"
 private const val STOP = "Stop"
 
 class TopicViewModel(topicName: String) : ViewModel() {
-
 
     private val adminApi: AdminApi = getInstanceNow()
     private val consumer: Consumer = getInstanceNow()
@@ -49,13 +48,13 @@ class TopicViewModel(topicName: String) : ViewModel() {
             consumeButtonText.value = STOP
             clear()
             consume(
-                    from = ConsumeFrom.valueOf(consumeFromProperty.value),
-                    valueFormat = DeserializationFormat.valueOf(deserializeValueProperty.value))
+                from = ConsumeFrom.valueOf(consumeFromProperty.value),
+                valueFormat = DeserializationFormat.valueOf(deserializeValueProperty.value)
+            )
         } else {
             consumeButtonText.value = CONSUME
             consumer.stop()
         }
-
     }
 
     fun clear() = records.clear()
@@ -65,5 +64,4 @@ class TopicViewModel(topicName: String) : ViewModel() {
         if (consumer.isRunning()) return
         consumer.start(nameProperty.value, from, valueFormat) { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
     }
-
 }

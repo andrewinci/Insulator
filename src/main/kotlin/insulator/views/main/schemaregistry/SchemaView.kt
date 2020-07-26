@@ -1,13 +1,9 @@
 package insulator.views.main.schemaregistry
 
-import insulator.Styles
-import insulator.di.GlobalConfiguration
-import insulator.lib.kafka.ConsumeFrom
-import insulator.lib.kafka.DeserializationFormat
+import insulator.styles.Controls
+import insulator.styles.Theme
+import insulator.styles.Titles
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
-import insulator.viewmodel.main.topic.RecordViewModel
-import insulator.views.common.searchBox
-import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.input.Clipboard
@@ -15,22 +11,20 @@ import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.Priority
-import javafx.scene.paint.Color
 import javafx.scene.text.Font
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class SchemaView : View("Schema registry") {
 
     private val viewModel: SchemaViewModel by inject()
 
-
     override val root = borderpane {
         top = vbox {
             vbox {
-                label(viewModel.nameProperty.value) { addClass(Styles.h1) }
-                addClass(Styles.topBarMenu)
+                label(viewModel.nameProperty.value) { addClass(Titles.h1) }
+                addClass(Controls.topBarMenu)
             }
-            hbox { addClass(Styles.topBarMenuShadow) }
+            hbox { addClass(Controls.topBarMenuShadow) }
         }
         center = vbox(spacing = 2.0) {
             hbox(alignment = Pos.CENTER_LEFT) {
@@ -50,20 +44,20 @@ class SchemaView : View("Schema registry") {
                         res
                     }
                     contextMenu = contextmenu {
-                        item("Copy"){
+                        item("Copy") {
                             action {
                                 val content = Clipboard.getSystemClipboard()
                                 content.putString(viewModel.schemaProperty.joinToString(separator = "") { it.text })
                             }
                         }
                     }
-                    background = Background(BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))
+                    background = Background(BackgroundFill(Theme.backgroundColor, CornerRadii.EMPTY, Insets.EMPTY))
                     vgrow = Priority.ALWAYS
                 }
                 vgrow = Priority.ALWAYS
             }
         }
-        addClass(Styles.view)
+        addClass(Controls.view)
     }
 
     override fun onDock() {

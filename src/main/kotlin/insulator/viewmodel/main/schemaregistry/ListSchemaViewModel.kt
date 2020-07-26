@@ -3,7 +3,7 @@ package insulator.viewmodel.main.schemaregistry
 import insulator.lib.kafka.SchemaRegistry
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import tornadofx.*
+import tornadofx.ViewModel
 
 class ListSchemaViewModel : ViewModel() {
 
@@ -13,7 +13,7 @@ class ListSchemaViewModel : ViewModel() {
         return FXCollections.observableList(schemaRegistryClient.getAllSubjects().toList())
     }
 
-    fun getSchema(subject: String) : SchemaViewModel {
+    fun getSchema(subject: String): SchemaViewModel {
         return SchemaViewModel(schemaRegistryClient.getSubject(subject))
     }
 }

@@ -1,14 +1,14 @@
 package insulator.lib.kafka
 
-import org.apache.kafka.clients.admin.AdminClient
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 import io.mockk.mockk
+import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
-import java.util.*
+import java.util.Properties
 
 class AdminApiTest : StringSpec({
-    "Test happy path"{
+    "Test happy path" {
         with(AdminApiTestFixture()) {
             // arrange
             val adminClient = AdminClient.create(properties)

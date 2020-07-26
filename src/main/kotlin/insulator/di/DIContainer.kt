@@ -3,8 +3,9 @@ package insulator.di
 import kafkaModule
 import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
-import tornadofx.*
 import tornadofx.DIContainer
+import tornadofx.FX
+import tornadofx.getInstance
 import kotlin.reflect.KClass
 
 class DIContainer : KoinComponent, DIContainer {

@@ -1,11 +1,12 @@
 package insulator.views.configurations
 
-import insulator.Styles
+import insulator.styles.Controls
+import insulator.styles.Titles
 import insulator.viewmodel.configurations.ClusterViewModel
 import javafx.geometry.Insets
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ClusterView : View() {
     private val viewModel: ClusterViewModel by inject()
@@ -13,7 +14,7 @@ class ClusterView : View() {
 
     override val root = form {
         fieldset {
-            label("Cluster connection") { addClass(Styles.h1) }
+            label("Cluster connection") { addClass(Titles.h1) }
             field("Cluster name") { textfield(viewModel.nameProperty).required() }
             field("Endpoint (url:port)") { textfield(viewModel.endpointProperty).required() }
             fieldset {
@@ -31,7 +32,7 @@ class ClusterView : View() {
                 field("Password") { textfield(viewModel.saslPasswordProperty).requiredWhen(viewModel.useSaslProperty) }
             }
             fieldset {
-                label("Schema registry") { addClass(Styles.h1) }
+                label("Schema registry") { addClass(Titles.h1) }
                 field("Endpoint") { textfield(viewModel.schemaRegistryEndpointProperty) }
                 field("Username") { textfield(viewModel.schemaRegistryUsernameProperty) }
                 field("Password") { textfield(viewModel.schemaRegistryPasswordProperty) }
@@ -40,24 +41,25 @@ class ClusterView : View() {
                 padding = Insets(0.0, 50.0, 0.0, 50.0)
                 left = button("Delete") {
                     if (isNewCluster) isVisible = false
-                    addClass(Styles.alertButton)
+                    addClass(Controls.alertButton)
                     action {
-                        val closeWindow = {close()}
-                        alert(Alert.AlertType.WARNING,
-                                "The cluster \"${viewModel.nameProperty.value}\" will be removed.", null,
-                                ButtonType.CANCEL, ButtonType.OK,
-                                owner = currentWindow,
-                                actionFn = { buttonType ->
-                                    when (buttonType) {
-                                        ButtonType.OK -> {
-                                            viewModel.delete()
-                                            closeWindow()
-                                        }
-                                        else -> Unit
+                        val closeWindow = { close() }
+                        alert(
+                            Alert.AlertType.WARNING,
+                            "The cluster \"${viewModel.nameProperty.value}\" will be removed.", null,
+                            ButtonType.CANCEL, ButtonType.OK,
+                            owner = currentWindow,
+                            actionFn = { buttonType ->
+                                when (buttonType) {
+                                    ButtonType.OK -> {
+                                        viewModel.delete()
+                                        closeWindow()
                                     }
-                                })
+                                    else -> Unit
+                                }
+                            }
+                        )
                     }
-
                 }
                 right = button("Save") {
                     enableWhen(viewModel.valid)
@@ -71,12 +73,11 @@ class ClusterView : View() {
             }
         }
         prefWidth = 600.0
-        addClass(Styles.view)
+        addClass(Controls.view)
     }
 
     override fun onDock() {
         title = if (isNewCluster) "New cluster" else viewModel.nameProperty.value
         super.onDock()
     }
-
 }

@@ -5,7 +5,6 @@ import insulator.di.clusterScopedGet
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
-import org.joda.time.Minutes
 import org.koin.core.qualifier.named
 import java.time.Duration
 import java.time.Instant
@@ -40,8 +39,8 @@ class Consumer {
                 val records = consumer.poll(Duration.ofSeconds(1))
                 if (records.isEmpty) continue
                 records.toList()
-                        .map { parse(it) }
-                        .forEach { (k, v, t) -> callback(k, v, t) }
+                    .map { parse(it) }
+                    .forEach { (k, v, t) -> callback(k, v, t) }
             }
         }
     }
@@ -66,16 +65,15 @@ class Consumer {
 
     private fun assignPartitionByTime(consumer: Consumer<Any, Any>, partitions: List<TopicPartition>, time: Long) {
         consumer.offsetsForTimes(partitions.map { it to time }.toMap())
-                .forEach {
-                    when (val offset = it.value?.offset()) {
-                        null -> consumer.seekToEnd(listOf(it.key))
-                        else -> consumer.seek(it.key, offset)
-                    }
+            .forEach {
+                when (val offset = it.value?.offset()) {
+                    null -> consumer.seekToEnd(listOf(it.key))
+                    else -> consumer.seek(it.key, offset)
                 }
+            }
     }
 
     private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> = Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
-
 }
 
 enum class ConsumeFrom {

@@ -1,9 +1,11 @@
 package insulator.views.main
 
-import insulator.Styles
-import insulator.Styles.Companion.view
 import insulator.di.GlobalConfiguration
-import insulator.views.common.*
+import insulator.styles.Controls
+import insulator.styles.Titles
+import insulator.views.common.ICON_MENU_SVG
+import insulator.views.common.ICON_REGISTRY
+import insulator.views.common.ICON_TOPICS
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
@@ -16,8 +18,7 @@ import javafx.scene.Parent
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
-import tornadofx.*
-
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainView : View("Insulator") {
 
@@ -40,14 +41,14 @@ class MainView : View("Insulator") {
             top = vbox {
                 hbox {
                     button {
-                        addClass(Styles.iconButton)
+                        addClass(Controls.iconButton)
                         graphic = SVGIcon(ICON_MENU_SVG, 20.0, Color.BLACK)
                         action { showSidebar.set(!showSidebar.value) }
                     }
-                    label(currentTitle) { addClass(Styles.h1) }
-                    addClass(Styles.topBarMenu)
+                    label(currentTitle) { addClass(Titles.h1) }
+                    addClass(Controls.topBarMenu)
                 }
-                hbox { addClass(Styles.topBarMenuShadow) }
+                hbox { addClass(Controls.topBarMenuShadow) }
             }
             centerProperty().bind(currentCenter)
         }
@@ -56,7 +57,7 @@ class MainView : View("Insulator") {
             isPickOnBounds = false
             padding = insets(-15.0, 0.0)
             vbox {
-                addClass(Styles.sidebar)
+                addClass(Controls.sidebar)
                 anchorpaneConstraints { bottomAnchor = 0; leftAnchor = 0; topAnchor = 60.0 }
                 boundsInParent
 
@@ -68,16 +69,16 @@ class MainView : View("Insulator") {
                 button("Change cluster") { action { replaceWith<ListClusterView>() } }
             }
         }
-        addClass(view)
+        addClass(Controls.view)
     }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
-            hbox(spacing = 5.0) {
-                imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
-                label(name) { addClass(Styles.h2) }
-                onMouseClicked = EventHandler { onClick(); showSidebar.set(false) }
-                addClass(Styles.sidebarItem)
-            }
+        hbox(spacing = 5.0) {
+            imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
+            label(name) { addClass(Titles.h2) }
+            onMouseClicked = EventHandler { onClick(); showSidebar.set(false) }
+            addClass(Controls.sidebarItem)
+        }
 
     override fun onDock() {
         super.onDock()
@@ -85,4 +86,3 @@ class MainView : View("Insulator") {
         title = GlobalConfiguration.currentCluster.name
     }
 }
-
