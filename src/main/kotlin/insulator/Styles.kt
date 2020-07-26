@@ -114,6 +114,7 @@ class Styles : Stylesheet() {
         }
 
         dialogPane {
+            padding = box(defaultPadding)
             headerPanel {
                 borderColor = multi(box(Color.WHITE))
                 backgroundColor = multi(Color.WHITE)
@@ -136,6 +137,7 @@ class Styles : Stylesheet() {
         }
 
         view { padding = box(defaultPadding) }
+
         root {
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(Color.WHITE)
