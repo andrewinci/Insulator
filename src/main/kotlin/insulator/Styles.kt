@@ -93,6 +93,25 @@ class Styles : Stylesheet() {
             imageView { insets(0.0, 15.0, 0.0, 0.0) }
         }
 
+        scrollPane {
+            focusColor = Color.WHITE
+            borderWidth = multi(box(0.0.px))
+            borderColor = multi(box(Color.WHITE))
+            backgroundInsets = multi(box(0.0.px))
+            backgroundColor = multi(Color.WHITE)
+            and(focused) { backgroundInsets = multi(box(0.0.px)) }
+            viewport {
+                borderColor = multi(box(Color.WHITE))
+                backgroundInsets = multi(box(0.0.px))
+                backgroundColor = multi(Color.WHITE)
+            }
+            corner {
+                borderColor = multi(box(Color.WHITE))
+                backgroundInsets = multi(box(0.0.px))
+                backgroundColor = multi(Color.WHITE)
+            }
+        }
+
         dialogPane {
             headerPanel {
                 borderColor = multi(box(Color.WHITE))

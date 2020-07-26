@@ -1,10 +1,6 @@
 package insulator.views.main.schemaregistry
 
-import insulator.Styles
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
-import insulator.viewmodel.main.schemaregistry.SchemaViewModel
-import insulator.viewmodel.main.topic.TopicViewModel
-import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
