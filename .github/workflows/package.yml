@@ -1,22 +1,25 @@
-name: CI
+name: Release
 
 on:
   push:
-    branches: [ master ]
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    # branches: [ master ]
 
 jobs:
+
   build-deb:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
         java-version: 14
         java-package: jdk
-    
+
     - name: Gradle package
       run: "./gradlew :packageApp"
 
@@ -25,19 +28,18 @@ jobs:
         name: insulator-debian
         path: insulator*.deb
 
-      
   build-mac:
     runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
         java-version: 14
         java-package: jdk
-    
+
     - name: Gradle package
       run: "./gradlew :packageApp"
     
@@ -46,19 +48,18 @@ jobs:
         name: insulator-macos
         path: Insulator*.dmg
 
-  
   build-win:
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
         java-version: 14
         java-package: jdk
-    
+
     - name: Gradle package
       run: "./gradlew :packageApp"
     
@@ -66,3 +67,70 @@ jobs:
       with:
         name: insulator-win
         path: Insulator*.exe
+
+  build:
+    name: Upload Release Asset
+    runs-on: ubuntu-latest
+    needs: [build-deb, build-mac, build-win]
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Download mac asset from previous jobs
+        uses: actions/download-artifact@v2
+        with:
+          name: insulator-macos
+      - name: Zip artifact
+        run: |
+          zip --junk-paths insulator-mac Insulator-*.dmg
+      - name: Upload mac os release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./insulator-mac.zip
+          asset_name: insulator-mac.zip
+          asset_content_type: application/zip
+
+      - name: Download win asset from previous jobs
+        uses: actions/download-artifact@v2
+        with:
+          name: insulator-win
+      - name: Zip artifact
+        run: |
+          zip --junk-paths insulator-win Insulator-*.exe
+      - name: Upload win release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./insulator-win.zip
+          asset_name: insulator-win.zip
+          asset_content_type: application/zip
+
+      - name: Download debian asset from previous jobs
+        uses: actions/download-artifact@v2
+        with:
+          name: insulator-debian
+      - name: Zip artifact
+        run: |
+          zip --junk-paths insulator-debian insulator*.deb
+      - name: Upload debian release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./insulator-debian.zip
+          asset_name: insulator-debian.zip
+          asset_content_type: application/zip
