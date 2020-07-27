@@ -39,11 +39,14 @@ class JsonFormatterTest : FunSpec({
         // arrange
         val sut = JsonFormatter(Gson())
         // act
-        val res = sut.formatJsonString("""{
+        val res = sut.formatJsonString(
+            """{
 "int": 1, "double": 1.1, "string": "A string",
 "bool": false, "empty": null, "array": [ {}, "", null, false], 
 "nested": {"nested2": {"nested3": {}}}
-}""".trimMargin(), false)
+}""".trimMargin(),
+            false
+        )
         // assert
         res.isRight() shouldBe true
     }

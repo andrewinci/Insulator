@@ -5,6 +5,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.9'
     id 'com.adarshr.test-logger' version '2.0.0'
     id "com.github.johnrengelman.shadow" version "6.0.0"
+    id "org.jlleitschuh.gradle.ktlint" version "9.3.0"
 }
 
 repositories {
@@ -97,7 +98,6 @@ import org.gradle.internal.os.OperatingSystem;
 task packageApp(type: Exec) {
     group = 'jpackage'
     dependsOn 'shadowJar'
-
     def command = [ 'jpackage',
                     '--input', './build/libs',
                     '--main-jar', 'insulator-all.jar',
