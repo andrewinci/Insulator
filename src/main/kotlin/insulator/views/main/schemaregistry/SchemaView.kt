@@ -1,5 +1,6 @@
 package insulator.views.main.schemaregistry
 
+import insulator.lib.jsonhelper.Token
 import insulator.styles.Controls
 import insulator.styles.Theme
 import insulator.styles.Titles
@@ -11,6 +12,7 @@ import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -38,8 +40,12 @@ class SchemaView : View("Schema registry") {
                 textflow {
                     children.bind(viewModel.schemaProperty) {
                         val res = text(it.text) {
-                            fill = it.color
-                            font = Font.font("Helvetica", it.fontWeight, 15.0)
+                            fill = when (it) {
+                                is Token.Symbol -> Color.GRAY
+                                is Token.Key -> Color.BLUE
+                                is Token.Value -> Color.GREEN
+                            }
+                            font = Font.font("Helvetica", 15.0)
                         }
                         res
                     }

@@ -2,6 +2,9 @@ package insulator.lib.configuration
 
 import com.google.gson.Gson
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.configuration.model.Configuration
+import io.kotest.assertions.arrow.either.shouldBeLeft
+import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import java.io.File
@@ -9,7 +12,7 @@ import java.util.UUID
 import kotlin.random.Random
 
 class ConfigurationRepoTest : FunSpec({
-    
+
     beforeTest {
         // clean up previous tests
         File(".").walk()
@@ -24,7 +27,7 @@ class ConfigurationRepoTest : FunSpec({
         // act
         val res = sut.getConfiguration()
         // assert
-        res.isRight() shouldBe true
+        res shouldBeRight Configuration(clusters = emptyList())
         File(testConfig).exists() shouldBe true
     }
 
@@ -36,7 +39,7 @@ class ConfigurationRepoTest : FunSpec({
         // act
         val res = sut.getConfiguration()
         // assert
-        res.isLeft() shouldBe true
+        res shouldBeLeft {}
     }
 
     test("delete a cluster from the configuration") {
@@ -48,7 +51,7 @@ class ConfigurationRepoTest : FunSpec({
         // act
         val res = sut.delete(Cluster(testCluster, "", ""))
         // assert
-        res.isRight() shouldBe true
+        res shouldBeRight Unit
         File(testConfig).readText().replace("\n", "").replace(" ", "") shouldBe "{\"clusters\":[]}"
     }
 
@@ -61,7 +64,7 @@ class ConfigurationRepoTest : FunSpec({
         // act
         val res = sut.delete(Cluster(UUID.randomUUID(), "", ""))
         // assert
-        res.isRight() shouldBe true
+        res shouldBeRight Unit
         File(testConfig).readText() shouldBe expectedConfig
     }
 
@@ -73,10 +76,9 @@ class ConfigurationRepoTest : FunSpec({
         // act
         val res = sut.store(Cluster(uuid, "", ""))
         // assert
-        res.isRight() shouldBe true
-        ConfigurationRepo(Gson(), testConfig)
-            .getConfiguration()
-            .map{ it.clusters.first().guid shouldBe uuid}
+        res shouldBeRight Unit
+        ConfigurationRepo(Gson(), testConfig).getConfiguration() shouldBeRight
+            Configuration(clusters = listOf(Cluster(uuid, "", "")))
     }
 
     afterTest {

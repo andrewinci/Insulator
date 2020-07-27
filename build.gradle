@@ -63,6 +63,7 @@ dependencies {
     testImplementation group: 'io.kotest', name: 'kotest-property-jvm', version: "$kotest_version"
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"
     testImplementation group: 'io.kotest', name: 'kotest-runner-console-jvm', version: "$kotest_version"
+    testImplementation group: 'io.kotest', name: 'kotest-assertions-arrow', version: "$kotest_version"
 
     testImplementation group: 'io.mockk', name: 'mockk', version: '1.9'
 
