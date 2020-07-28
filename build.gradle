@@ -77,13 +77,9 @@ application {
     mainClassName = 'insulator.AppKt'
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
+compileKotlin { kotlinOptions.jvmTarget = "1.8" }
 
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
+compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 
 jar {
     manifest {
@@ -92,6 +88,7 @@ jar {
         )
     }
 }
+
 import org.gradle.internal.os.OperatingSystem;
 
 task packageApp(type: Exec) {
@@ -122,6 +119,6 @@ tasks.jacocoTestReport {
     }
 }
 
-tasks.check.doLast{
+tasks.check.doLast {
     tasks.jacocoTestReport
 }
