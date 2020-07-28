@@ -6,6 +6,8 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/darka91/insulator/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/darka91/insulator?targetFile=build.gradle)
 ![Release](https://github.com/darka91/insulator/workflows/Release/badge.svg)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=darka91/insulator)](https://dependabot.com)
+
 
 Insulator is a tool to help development of kafka based applications.
 
