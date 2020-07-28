@@ -30,7 +30,7 @@ class TopicViewModel(topicName: String) : ViewModel() {
     val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
 
     val consumeButtonText = SimpleStringProperty(CONSUME)
-    val consumeFromProperty = SimpleStringProperty(ConsumeFrom.Today.name)
+    val consumeFromProperty = SimpleStringProperty(ConsumeFrom.LastDay.name)
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.Avro.name)
 
     init {

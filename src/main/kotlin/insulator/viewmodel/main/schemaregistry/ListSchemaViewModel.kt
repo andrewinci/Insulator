@@ -9,11 +9,11 @@ class ListSchemaViewModel : ViewModel() {
 
     private val schemaRegistryClient: SchemaRegistry by di()
 
-    fun listSchemas(): ObservableList<String> {
-        return FXCollections.observableList(schemaRegistryClient.getAllSubjects().toList())
-    }
+    fun listSchemas(): ObservableList<String> = schemaRegistryClient.getAllSubjects()
+        .map { FXCollections.observableList(it.toList()) }
+        .fold({ throw it }, { it })
 
-    fun getSchema(subject: String): SchemaViewModel {
-        return SchemaViewModel(schemaRegistryClient.getSubject(subject))
-    }
+    fun getSchema(subject: String) = schemaRegistryClient.getSubject(subject)
+        .map { SchemaViewModel(it) }
+        .fold({ throw it }, { it })
 }

@@ -59,8 +59,12 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
                 val time = Instant.now().minus(Duration.ofMinutes(30)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
             }
-            ConsumeFrom.Today -> {
+            ConsumeFrom.LastDay -> {
                 val time = Instant.now().minus(Duration.ofDays(1)).toEpochMilli()
+                assignPartitionByTime(consumer, partitions, time)
+            }
+            ConsumeFrom.LastWeek -> {
+                val time = Instant.now().minus(Duration.ofDays(7)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
             }
         }
@@ -82,8 +86,9 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
 enum class ConsumeFrom {
     Now,
     LastHour,
-    Today,
-    Beginning
+    LastDay,
+    Beginning,
+    LastWeek
 }
 
 enum class DeserializationFormat {
