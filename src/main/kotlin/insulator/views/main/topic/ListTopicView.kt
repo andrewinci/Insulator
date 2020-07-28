@@ -23,13 +23,11 @@ class ListTopicView : View("Topics") {
                 tornadofx.setInScope(TopicViewModel(this.selectedItem!!), scope)
                 find<TopicView>(scope).openWindow()
             }
-            runAsync {
-                itemsProperty().set(
-                    SortedFilteredList(viewModel.listTopics()).apply {
-                        filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
-                    }.filteredItems
-                )
-            }
+            itemsProperty().set(
+                SortedFilteredList(viewModel.topicList).apply {
+                    filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+                }.filteredItems
+            )
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }

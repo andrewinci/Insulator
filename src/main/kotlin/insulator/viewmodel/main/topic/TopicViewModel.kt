@@ -1,6 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import insulator.di.getInstanceNow
+import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
@@ -33,13 +34,11 @@ class TopicViewModel(topicName: String) : ViewModel() {
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.Avro.name)
 
     init {
-        adminApi.describeTopic(topicName).unsafeRunAsync { topic ->
-            topic.map {
-                nameProperty.set(it.first().name)
-                isInternalProperty.set(it.first().isInternal ?: false)
-                partitionCountProperty.set(it.first().partitionCount ?: -1)
-                messageCountProperty.set(it.first().messageCount ?: -1)
-            }
+        adminApi.describeTopic(topicName).map {
+            nameProperty.set(it.first().name)
+            isInternalProperty.set(it.first().isInternal ?: false)
+            partitionCountProperty.set(it.first().partitionCount ?: -1)
+            messageCountProperty.set(it.first().messageCount ?: -1)
         }
     }
 
