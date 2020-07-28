@@ -114,6 +114,7 @@ class TopicView : View() {
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
+        titleProperty.bind(viewModel.nameProperty)
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
         super.onDock()
