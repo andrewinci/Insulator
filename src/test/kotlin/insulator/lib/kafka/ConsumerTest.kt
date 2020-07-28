@@ -1,5 +1,6 @@
 package insulator.lib.kafka
 
+import insulator.lib.configuration.model.Cluster
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.delay
@@ -10,7 +11,6 @@ import org.apache.kafka.common.PartitionInfo
 import org.apache.kafka.common.TopicPartition
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 class ConsumerTest : FunSpec({
@@ -22,7 +22,7 @@ class ConsumerTest : FunSpec({
     test("start happy path") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer()
+        val sut = Consumer(Cluster.Empty)
         // act
         sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
         // assert
@@ -34,7 +34,7 @@ class ConsumerTest : FunSpec({
     test("start happy path - now") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer()
+        val sut = Consumer(Cluster.Empty)
         // act
         sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
         // assert
@@ -46,7 +46,7 @@ class ConsumerTest : FunSpec({
     test("isRunning") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer()
+        val sut = Consumer(Cluster.Empty)
         // act
         sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
         // assert
@@ -57,7 +57,7 @@ class ConsumerTest : FunSpec({
 
     test("stop if not running") {
         // arrange
-        val sut = Consumer()
+        val sut = Consumer(Cluster.Empty)
         // act/assert
         sut.stop()
     }
@@ -66,7 +66,7 @@ class ConsumerTest : FunSpec({
 })
 
 val testConsumerFixture = module {
-    scope(named("clusterScope")) {
+    scope<Cluster> {
         // Consumers
         scoped<org.apache.kafka.clients.consumer.Consumer<Any, Any>>() {
             MockConsumer<Any, Any>(OffsetResetStrategy.EARLIEST).also {

@@ -1,6 +1,5 @@
 package insulator.di
 
-import insulator.di.GlobalConfiguration
 import insulator.lib.configuration.model.Cluster
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
@@ -37,7 +36,7 @@ val kafkaModule = module {
         }
 
         // Consumers
-        scoped<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
+        factory<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
         factory<Consumer<Any, Any>>(named("avroConsumer")) {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
@@ -45,7 +44,7 @@ val kafkaModule = module {
         }
 
         // Properties
-        factory {
+        scoped {
             val cluster = get<Cluster>()
             val properties = Properties().apply {
                 put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.endpoint)
