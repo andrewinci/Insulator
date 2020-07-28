@@ -100,7 +100,7 @@ task packageApp(type: Exec) {
                    '-d', '.',
                    '--name', 'Insulator',
                    '--java-options', "'--enable-preview'",
-                   '--app-version', '0.1']
+                   '--app-version', "${System.getenv().get("RELEASE_VERSION") ?: "0.0.0"}"]
     if (OperatingSystem.current().isWindows()) {
         command.addAll('--icon', './assets/icon.ico')
     } else if (OperatingSystem.current().isMacOsX()) {

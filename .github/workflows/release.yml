@@ -12,16 +12,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
         java-version: 14
         java-package: jdk
-
+    - uses: olegtarasov/get-tag@v2
+      id: tagName
     - name: Gradle package
       run: "./gradlew check packageApp"
-
+      env:
+        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - uses: actions/upload-artifact@v2
       with:
         name: insulator-debian
@@ -29,19 +30,19 @@ jobs:
 
   build-mac:
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
         java-version: 14
         java-package: jdk
-
+    - uses: olegtarasov/get-tag@v2
+      id: tagName
     - name: Gradle package
       run: "./gradlew check packageApp"
-    
+      env:
+        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - uses: actions/upload-artifact@v2
       with:
         name: insulator-macos
@@ -49,19 +50,19 @@ jobs:
 
   build-win:
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
         java-version: 14
         java-package: jdk
-
+    - uses: olegtarasov/get-tag@v2
+      id: tagName
     - name: Gradle package
       run: "./gradlew check packageApp"
-    
+      env:
+        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - uses: actions/upload-artifact@v2
       with:
         name: insulator-win
@@ -81,7 +82,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           draft: false
-          prerelease: false
+          prerelease: true
 
       - name: Download mac asset from previous jobs
         uses: actions/download-artifact@v2
