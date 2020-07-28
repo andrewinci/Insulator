@@ -41,11 +41,14 @@ val kafkaModule = module {
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
             KafkaConsumer<Any, Any>(properties)
         }
+
         // Properties
         factory {
-            val cluster: Cluster = get()
+            val cluster = get<Cluster>()
             val properties = Properties().apply {
                 put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.endpoint)
+                put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000)
+                put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 1000)
                 if (cluster.useSSL) {
                     put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, "PKCS12")
                     put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, "SSL")
@@ -69,9 +72,9 @@ val kafkaModule = module {
                         put("basic.auth.credentials.source", "USER_INFO")
                         put("basic.auth.user.info", "$username:$password")
                     }
+                    put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
+                    put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
                 }
-                put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
-                put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
             }
             properties
         }
