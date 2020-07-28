@@ -1,16 +1,19 @@
 package insulator.lib.kafka
 
 import arrow.core.Tuple3
-import insulator.di.clusterScopedGet
+import insulator.lib.configuration.model.Cluster
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import org.koin.core.qualifier.named
+import org.koin.ext.scope
 import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
 
-class Consumer {
+class Consumer(private val cluster: Cluster) : KoinComponent {
 
     private var threadLoop: Thread? = null
     private var running = false
@@ -18,8 +21,8 @@ class Consumer {
     fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (String?, String, Long) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
         val consumer: Consumer<Any, Any> = when (valueFormat) {
-            DeserializationFormat.Avro -> clusterScopedGet(named("avroConsumer"))
-            DeserializationFormat.String -> clusterScopedGet()
+            DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
+            DeserializationFormat.String -> cluster.scope.get()
         }
         initializeConsumer(consumer, topic, from)
         running = true
