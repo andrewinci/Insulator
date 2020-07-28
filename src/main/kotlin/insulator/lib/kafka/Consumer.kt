@@ -80,7 +80,8 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
             }
     }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> = Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
+    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> =
+        Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
 }
 
 enum class ConsumeFrom {
