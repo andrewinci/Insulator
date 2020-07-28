@@ -1,3 +1,5 @@
+package insulator.di
+
 import insulator.di.GlobalConfiguration
 import insulator.lib.configuration.model.Cluster
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
@@ -47,8 +49,8 @@ val kafkaModule = module {
             val cluster = get<Cluster>()
             val properties = Properties().apply {
                 put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.endpoint)
-                put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 1000)
-                put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 1000)
+                put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000)
+                put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 30000)
                 if (cluster.useSSL) {
                     put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, "PKCS12")
                     put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, "SSL")

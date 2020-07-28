@@ -34,7 +34,7 @@ class TopicViewModel(topicName: String) : ViewModel() {
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.Avro.name)
 
     init {
-        adminApi.describeTopic(topicName).map {
+        adminApi.describeTopic(topicName).get().map {
             nameProperty.set(it.first().name)
             isInternalProperty.set(it.first().isInternal ?: false)
             partitionCountProperty.set(it.first().partitionCount ?: -1)
