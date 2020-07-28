@@ -1,4 +1,5 @@
-import insulator.di.GlobalConfiguration
+package insulator.di
+
 import insulator.lib.configuration.model.Cluster
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
@@ -35,17 +36,20 @@ val kafkaModule = module {
         }
 
         // Consumers
-        scoped<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
+        factory<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
         factory<Consumer<Any, Any>>(named("avroConsumer")) {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
             KafkaConsumer<Any, Any>(properties)
         }
+
         // Properties
-        factory {
-            val cluster: Cluster = get()
+        scoped {
+            val cluster = get<Cluster>()
             val properties = Properties().apply {
                 put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.endpoint)
+                put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000)
+                put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 30000)
                 if (cluster.useSSL) {
                     put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, "PKCS12")
                     put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, "SSL")
@@ -69,9 +73,9 @@ val kafkaModule = module {
                         put("basic.auth.credentials.source", "USER_INFO")
                         put("basic.auth.user.info", "$username:$password")
                     }
+                    put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
+                    put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
                 }
-                put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
-                put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
             }
             properties
         }

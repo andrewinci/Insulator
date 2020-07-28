@@ -1,7 +1,6 @@
 package insulator.di
 
 import insulator.lib.configuration.model.Cluster
-import kafkaModule
 import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
 import org.koin.core.get

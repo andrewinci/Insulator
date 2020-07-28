@@ -1,16 +1,27 @@
 package insulator.lib.kafka
 
+import arrow.core.Either
+import arrow.core.extensions.fx
+import insulator.lib.helpers.toEither
 import insulator.lib.kafka.model.Schema
 import insulator.lib.kafka.model.Subject
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 
 class SchemaRegistry(private val client: SchemaRegistryClient) {
-    fun getAllSubjects(): Collection<String> = client.allSubjects.sorted()
+    fun getAllSubjects(): Either<Throwable, Collection<String>> =
+        client.runCatching { allSubjects.sorted() }.toEither()
 
-    fun getSubject(subject: String): Subject {
-        val versions = client.getAllVersions(subject)
-            .map { client.getByVersion(subject, it, false) }
-            .map { Schema(it.schema, it.version) }
-        return Subject(subject, versions)
-    }
+    fun getSubject(subject: String) =
+        Either.fx<Throwable, Subject> {
+            val versions = !client.runCatching { getAllVersions(subject) }.toEither()
+            Subject(
+                subject,
+                versions
+                    .map { !getByVersion(subject, it) }
+                    .map { Schema(it.schema, it.version) }
+            )
+        }
+
+    private fun getByVersion(subject: String, version: Int) =
+        client.runCatching { getByVersion(subject, version, false) }.toEither()
 }
