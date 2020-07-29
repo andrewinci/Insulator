@@ -4,6 +4,7 @@ import insulator.di.currentCluster
 import insulator.styles.Controls
 import insulator.styles.Titles
 import insulator.viewmodel.main.MainViewModel
+import insulator.views.common.ICON_CONSUMER_GROUPS
 import insulator.views.common.ICON_MENU_SVG
 import insulator.views.common.ICON_REGISTRY
 import insulator.views.common.ICON_TOPICS
@@ -40,7 +41,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
             vbox {
                 menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class.java) }
                 menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class.java) }
-                menuItem("Consumer groups", ICON_TOPICS) { viewModel.setCurrentView(ListConsumerGroupView::class.java>) }
+                menuItem("Consumer groups", ICON_CONSUMER_GROUPS) { viewModel.setCurrentView(ListConsumerGroupView::class.java>) }
                 button("Change cluster") { action { viewModel.toggleSidebar(); replaceWith<ListClusterView>() } }
 
                 addClass(Controls.sidebar)
