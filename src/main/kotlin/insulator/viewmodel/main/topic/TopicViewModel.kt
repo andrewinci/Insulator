@@ -31,7 +31,7 @@ class TopicViewModel(topicName: String) : ViewModel() {
 
     val consumeButtonText = SimpleStringProperty(CONSUME)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.LastDay.name)
-    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.Avro.name)
+    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.name)
 
     init {
         adminApi.describeTopic(topicName).get().map {
