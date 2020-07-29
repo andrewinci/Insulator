@@ -36,7 +36,11 @@ val kafkaModule = module {
         }
 
         // Consumers
-        factory<Consumer<Any, Any>> { KafkaConsumer<Any, Any>(get<Properties>()) }
+        factory<Consumer<Any, Any>> {
+            val properties = get<Properties>()
+            properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+            KafkaConsumer<Any, Any>(properties)
+        }
         factory<Consumer<Any, Any>>(named("avroConsumer")) {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
@@ -73,9 +77,8 @@ val kafkaModule = module {
                         put("basic.auth.credentials.source", "USER_INFO")
                         put("basic.auth.user.info", "$username:$password")
                     }
-                    put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
-                    put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
                 }
+                put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
             }
             properties
         }

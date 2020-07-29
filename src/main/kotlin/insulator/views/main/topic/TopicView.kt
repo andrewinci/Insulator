@@ -1,6 +1,6 @@
 package insulator.views.main.topic
 
-import insulator.di.GlobalConfiguration
+import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.styles.Controls
@@ -21,6 +21,7 @@ import java.util.concurrent.Callable
 
 class TopicView : View() {
 
+    private val cluster: Cluster by di()
     private val viewModel: TopicViewModel by inject()
     private val searchItem = SimpleStringProperty()
     private val subtitleProperty = SimpleStringProperty().also {
@@ -54,8 +55,9 @@ class TopicView : View() {
                         items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
                         valueProperty().bindBidirectional(viewModel.consumeFromProperty)
                     }
-                    if (GlobalConfiguration.currentCluster.isSchemaRegistryConfigured()) {
+                    if (cluster.isSchemaRegistryConfigured()) {
                         label("value format")
+                        viewModel.deserializeValueProperty.value = DeserializationFormat.Avro.toString()
                         combobox<String> {
                             items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
                             valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
