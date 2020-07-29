@@ -9,6 +9,7 @@ import insulator.views.common.ICON_REGISTRY
 import insulator.views.common.ICON_TOPICS
 import insulator.views.common.InsulatorView
 import insulator.views.configurations.ListClusterView
+import insulator.views.main.consumergroup.ListConsumerGroupView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.event.EventHandler
@@ -37,8 +38,9 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
         anchorpane {
             vbox {
-                menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class) }
-                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class) }
+                menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class.java) }
+                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class.java) }
+                menuItem("Consumer groups", ICON_TOPICS) { viewModel.setCurrentView(ListConsumerGroupView::class.java>) }
                 button("Change cluster") { action { viewModel.toggleSidebar(); replaceWith<ListClusterView>() } }
 
                 addClass(Controls.sidebar)
