@@ -1,6 +1,9 @@
 package insulator.lib.kafka
 
+import insulator.lib.kafka.model.ConsumerGroup
+import insulator.lib.kafka.model.ConsumerGroupMember
 import insulator.lib.kafka.model.Topic
+import insulator.lib.kafka.model.TopicPartitionLag
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
@@ -9,11 +12,16 @@ import io.mockk.mockk
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.Config
 import org.apache.kafka.clients.admin.ConfigEntry
+import org.apache.kafka.clients.admin.ConsumerGroupDescription
 import org.apache.kafka.clients.admin.DescribeConfigsResult
 import org.apache.kafka.clients.admin.DescribeTopicsResult
 import org.apache.kafka.clients.admin.ListTopicsResult
+import org.apache.kafka.clients.admin.MemberAssignment
+import org.apache.kafka.clients.admin.MemberDescription
 import org.apache.kafka.clients.admin.TopicDescription
 import org.apache.kafka.clients.consumer.Consumer
+import org.apache.kafka.clients.consumer.OffsetAndMetadata
+import org.apache.kafka.common.ConsumerGroupState
 import org.apache.kafka.common.KafkaFuture
 import org.apache.kafka.common.Node
 import org.apache.kafka.common.TopicPartition
@@ -114,5 +122,38 @@ class AdminApiTest : FunSpec({
         val res = sut.createTopics(Topic("name", null, 2, null, 1, true))
         // asssert
         res.get() shouldBeRight {}
+    }
+
+    test("describeConsumerGroup happy path") {
+        // arrange
+        val topicName = "topic1"
+        val (consumerGroupOffset, partitionEndOffset) = Pair(1L, 5L)
+        val consumerGroupDescription = mockk<ConsumerGroupDescription> {
+            every { groupId() } returns "consumerGroup"
+            every { state() } returns ConsumerGroupState.COMPLETING_REBALANCE
+            every { members() } returns listOf(MemberDescription("member", "clientId", "host", MemberAssignment(setOf(TopicPartition(topicName, 1)))))
+        }
+        val kafkaAdminClientMock = mockk<AdminClient> {
+            every { listConsumerGroupOffsets(any()) } returns mockk {
+                every { partitionsToOffsetAndMetadata() } returns
+                    KafkaFuture.completedFuture(mapOf(TopicPartition(topicName, 1) to OffsetAndMetadata(consumerGroupOffset)))
+            }
+            every { describeConsumerGroups(any()) } returns mockk {
+                every { all() } returns
+                    KafkaFuture.completedFuture(mapOf("consumerGroup" to consumerGroupDescription))
+            }
+        }
+        val consumerMock = mockk<Consumer<Any, Any>> {
+            every { endOffsets(any()) } returns mapOf(TopicPartition("1", 1) to partitionEndOffset)
+        }
+        val sut = AdminApi(kafkaAdminClientMock, consumerMock)
+        // act
+        val res = sut.describeConsumerGroup(topicName)
+        // assert
+        res.get() shouldBeRight ConsumerGroup(
+            "consumerGroup",
+            ConsumerGroupState.COMPLETING_REBALANCE,
+            listOf(ConsumerGroupMember("clientId", listOf(TopicPartitionLag(topic = "topic1", partition = 1, lag = partitionEndOffset - consumerGroupOffset))))
+        )
     }
 })
