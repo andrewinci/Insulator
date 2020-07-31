@@ -1,13 +1,11 @@
 # Insulator
 
-
 ![CI](https://github.com/darka91/insulator/workflows/CI/badge.svg)
-[![codecov](https://codecov.io/gh/darka91/insulator/branch/master/graph/badge.svg?token=70FXB1QXTI)](https://codecov.io/gh/darka91/insulator)
-[![Known Vulnerabilities](https://snyk.io/test/github/darka91/insulator/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/darka91/insulator?targetFile=build.gradle)
+[![codecov](https://codecov.io/gh/darka91/insulator/branch/master/graph/badge.svg?token=70FXB1QXTI)](https://codecov.io/gh/darka91/Insulator)
+[![Known Vulnerabilities](https://snyk.io/test/github/darka91/Insulator/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/darka91/Insulator?targetFile=build.gradle)
 ![Release](https://github.com/darka91/insulator/workflows/Release/badge.svg)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=darka91/insulator)](https://dependabot.com)
-
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=darka91/Insulator)](https://dependabot.com)
 
 Insulator is a tool to help development of kafka based applications.
 
@@ -22,4 +20,3 @@ The latest version supports the following features:
 - Consumer with Avro deserialization and seek
 - List subjects in schema registry
 - Show all schema version for a certain subject
-
