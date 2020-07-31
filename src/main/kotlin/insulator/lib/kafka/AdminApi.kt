@@ -18,7 +18,6 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.config.ConfigResource
-import org.apache.kafka.common.config.TopicConfig
 import java.util.concurrent.CompletableFuture
 
 class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) {
@@ -62,7 +61,7 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
     fun listConsumerGroups() = admin.listConsumerGroups().all().toCompletableFuture()
         .map { consumerGroup -> consumerGroup.map { it.groupId() } }
 
-    fun describeConsumerGroup(groupId: String) =
+    fun describeConsumerGroup(groupId: String): CompletableFuture<Either<Throwable, ConsumerGroup>> =
         admin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().toCompletableFuture()
             .thenCombineAsync(admin.describeConsumerGroups(listOf(groupId)).all().toCompletableFuture().map { it.values.first() }) { partitionToOffset, description ->
                 Either.fx<Throwable, ConsumerGroup> {

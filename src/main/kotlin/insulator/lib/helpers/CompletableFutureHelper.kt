@@ -1,6 +1,7 @@
 package insulator.lib.helpers
 
 import arrow.core.Either
+import arrow.core.Option
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right

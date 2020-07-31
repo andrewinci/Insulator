@@ -102,7 +102,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         adminApi.describeTopic(topicName).completeOnFXThread {
             nameProperty.set(it.name)
             isInternalProperty.set(it.isInternal ?: false)
-            partitionCountProperty.set(it.partitionCount)
+            partitionCountProperty.set(it.partitionCount ?: -1)
             messageCountProperty.set(it.messageCount ?: -1)
             isCompactedProperty.set(it.isCompacted)
         }

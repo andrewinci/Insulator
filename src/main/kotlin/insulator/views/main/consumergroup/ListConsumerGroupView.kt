@@ -1,5 +1,6 @@
 package insulator.views.main.consumergroup
 
+import insulator.viewmodel.main.consumergroup.ConsumerGroupViewModel
 import insulator.viewmodel.main.consumergroup.ListConsumerGroupViewModel
 import insulator.views.common.searchBox
 import javafx.beans.property.SimpleStringProperty
@@ -17,10 +18,10 @@ class ListConsumerGroupView : View("Consumer groups") {
         listview<String> {
             cellFormat { graphic = label(it) }
             onDoubleClick {
-//                if (this.selectedItem == null) return@onDoubleClick
-//                val scope = Scope()
-//                tornadofx.setInScope(TopicViewModel(this.selectedItem!!), scope)
-//                find<TopicView>(scope).openWindow()
+                if (this.selectedItem == null) return@onDoubleClick
+                val scope = Scope()
+                tornadofx.setInScope(ConsumerGroupViewModel(this.selectedItem!!), scope)
+                find<ConsumerGroupView>(scope).openWindow()
             }
             itemsProperty().set(
                 SortedFilteredList(viewModel.consumerGroupList).apply {
