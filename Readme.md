@@ -20,3 +20,10 @@ The latest version supports the following features:
 - Consumer with Avro deserialization and seek
 - List subjects in schema registry
 - Show all schema version for a certain subject
+
+## Development
+
+### Linux
+
+The gradle task`packageApp` requires `binutils` and `fakeroot`.
+

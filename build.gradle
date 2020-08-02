@@ -107,7 +107,7 @@ task packageApp(type: Exec) {
         command.addAll('--icon', './assets/icon.ico', '--win-dir-chooser', '--win-menu')
     } else if (OperatingSystem.current().isMacOsX()) {
         command.addAll('--icon', './assets/icon.icns')
-    } else command.addAll('--icon', './assets/icon.png')
+    } else command.addAll('--icon', './assets/icon.png', '--linux-shortcut')
 
     commandLine(command)
 }
