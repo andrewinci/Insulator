@@ -77,4 +77,19 @@ class AdminApiTest : FunSpec({
         // assert
         res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5, 1), Topic("topic2", false, 2, 5, 1))
     }
+
+    test("Create topic happy path") {
+        // arrange
+        val kafkaAdminClientMock = mockk<AdminClient> {
+            every { createTopics(any()) } returns mockk {
+                every { all() } returns KafkaFuture.completedFuture(null)
+            }
+        }
+        val consumerMock = mockk<Consumer<Any, Any>>()
+        val sut = AdminApi(kafkaAdminClientMock, consumerMock)
+        // act
+        val res = sut.createTopics(Topic("name", null, 2, null, 1))
+        // asssert
+        res.get() shouldBeRight {}
+    }
 })
