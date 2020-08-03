@@ -13,8 +13,26 @@ class CreateTopicView : View() {
         fieldset {
             label("Create topic") { addClass(Titles.h1) }
             field("Topic name") { textfield(viewModel.nameProperty).required() }
-            field("Number of partitions") { textfield(viewModel.partitionCountProperty).required() }
-            field("Replication factory") { textfield(viewModel.replicationFactorProperty).required() }
+            field("Number of partitions") {
+                textfield(viewModel.partitionCountProperty) {
+                    filterInput { it.controlNewText.isInt() }
+                    validator {
+                        ValidationMessage("",
+                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error)
+                    }
+                    required()
+                }
+            }
+            field("Replication factory") {
+                textfield(viewModel.replicationFactorProperty) {
+                    filterInput { it.controlNewText.isInt() }
+                    validator {
+                        ValidationMessage("",
+                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error)
+                    }
+                    required()
+                }
+            }
         }
 
         borderpane {
