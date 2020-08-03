@@ -31,7 +31,7 @@ class ListSchemaView : View("Schema registry") {
                     }.filteredItems
                 )
             }
-
+            placeholder = label("No schema found")
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }
