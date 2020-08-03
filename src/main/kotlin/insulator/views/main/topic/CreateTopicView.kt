@@ -17,8 +17,10 @@ class CreateTopicView : View() {
                 textfield(viewModel.partitionCountProperty) {
                     filterInput { it.controlNewText.isInt() }
                     validator {
-                        ValidationMessage("",
-                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error)
+                        ValidationMessage(
+                            "",
+                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error
+                        )
                     }
                     required()
                 }
@@ -27,8 +29,10 @@ class CreateTopicView : View() {
                 textfield(viewModel.replicationFactorProperty) {
                     filterInput { it.controlNewText.isInt() }
                     validator {
-                        ValidationMessage("",
-                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error)
+                        ValidationMessage(
+                            "",
+                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error
+                        )
                     }
                     required()
                 }

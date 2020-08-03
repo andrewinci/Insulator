@@ -12,6 +12,7 @@ import org.apache.kafka.clients.admin.ListTopicsResult
 import org.apache.kafka.clients.admin.TopicDescription
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.common.KafkaFuture
+import org.apache.kafka.common.Node
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.TopicPartitionInfo
 import java.util.HashSet
@@ -53,6 +54,7 @@ class AdminApiTest : FunSpec({
         // arrange
         val partition = mockk<TopicPartitionInfo> {
             every { partition() } returns 0
+            every { replicas() } returns listOf(Node(1, "", 1))
         }
         val describeTopicResultMock = mockk<DescribeTopicsResult> {
             every { all() } returns KafkaFuture.completedFuture(
@@ -73,6 +75,6 @@ class AdminApiTest : FunSpec({
         // act
         val res = sut.describeTopic("topic1", "topic2")
         // assert
-        res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5, ), Topic("topic2", false, 2, 5, ))
+        res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5, 1), Topic("topic2", false, 2, 5, 1))
     }
 })
