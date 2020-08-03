@@ -73,6 +73,6 @@ class AdminApiTest : FunSpec({
         // act
         val res = sut.describeTopic("topic1", "topic2")
         // assert
-        res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5), Topic("topic2", false, 2, 5))
+        res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5, ), Topic("topic2", false, 2, 5, ))
     }
 })

@@ -31,7 +31,7 @@ class Root : Stylesheet() {
             }
 
             button {
-                padding = box(10.0.px)
+                padding = box(5.0.px)
                 textFill = Theme.mainColor
                 backgroundColor = multi(Color.TRANSPARENT)
                 and(hover) {

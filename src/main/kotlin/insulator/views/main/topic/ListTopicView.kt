@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.viewmodel.main.topic.CreateTopicViewModel
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.searchBox
@@ -13,30 +14,35 @@ class ListTopicView : View("Topics") {
     private val viewModel: ListTopicViewModel by inject()
     private val searchItem = SimpleStringProperty()
 
-    override val root = borderpane {
-        top = borderpane {
-            left = hbox { button("New topic") }
-            right = searchBox(searchItem)
-
-        }
-        center = vbox(spacing = 5.0) {
-            listview<String> {
-                cellFormat { graphic = label(it) }
-                onDoubleClick {
-                    if (this.selectedItem == null) return@onDoubleClick
-                    val scope = Scope()
-                    tornadofx.setInScope(TopicViewModel(this.selectedItem!!), scope)
-                    find<TopicView>(scope).openWindow()
+    override val root = vbox(spacing = 5.0) {
+        borderpane {
+            left = hbox {
+                button("Create topic") {
+                    action {
+                        val scope = Scope()
+                        setInScope(CreateTopicViewModel(), scope)
+                        find<CreateTopicView>(scope).openWindow()
+                    }
                 }
-                itemsProperty().set(
-                        SortedFilteredList(viewModel.topicList).apply {
-                            filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
-                        }.filteredItems
-                )
-                placeholder = label("No topic found")
-                selectionModel.selectionMode = SelectionMode.SINGLE
-                vgrow = Priority.ALWAYS
             }
+            right = searchBox(searchItem)
+        }
+        listview<String> {
+            cellFormat { graphic = label(it) }
+            onDoubleClick {
+                if (this.selectedItem == null) return@onDoubleClick
+                val scope = Scope()
+                tornadofx.setInScope(TopicViewModel(this.selectedItem!!), scope)
+                find<TopicView>(scope).openWindow()
+            }
+            itemsProperty().set(
+                SortedFilteredList(viewModel.topicList).apply {
+                    filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+                }.filteredItems
+            )
+            placeholder = label("No topic found")
+            selectionModel.selectionMode = SelectionMode.SINGLE
+            vgrow = Priority.ALWAYS
         }
     }
 }
