@@ -119,7 +119,7 @@ class Controls : Stylesheet() {
         view { padding = box(defaultPadding) }
 
         contextMenu {
-            padding = box((0).px)
+            padding = box(0.px)
             minWidth = 100.0.px
             textFill = Color.BLACK
             menuItem {
