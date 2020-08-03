@@ -12,6 +12,8 @@ import insulator.views.main.MainView
 import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
+import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListClusterView : View("Insulator") {
@@ -27,8 +29,7 @@ class ListClusterView : View("Insulator") {
                     GlobalConfiguration.currentCluster = cluster
                     val scope = Scope()
                     setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
-                    find<MainView>(scope).openWindow(owner = null)
-                    close()
+                    replaceWith(find<MainView>(scope))
                 }
             }
         }
@@ -36,9 +37,11 @@ class ListClusterView : View("Insulator") {
             button {
                 alignment = Pos.CENTER_RIGHT
                 text = "Add new cluster"
-                val scope = Scope()
-                setInScope(ClusterViewModel(ClusterModel(Cluster.Empty)), scope)
-                action { find<ClusterView>(scope).openWindow() }
+                action {
+                    val scope = Scope()
+                    setInScope(ClusterViewModel(ClusterModel(Cluster.empty())), scope)
+                    find<ClusterView>(scope).openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                }
             }
         }
         addClass(Controls.view)
@@ -58,7 +61,7 @@ class ListClusterView : View("Insulator") {
                     onMouseClicked = EventHandler {
                         val scope = Scope()
                         setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
-                        find<ClusterView>(scope).openWindow()
+                        find<ClusterView>(scope).openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
                     }
                 }
             }
@@ -67,8 +70,8 @@ class ListClusterView : View("Insulator") {
 
     override fun onDock() {
         super.onDock()
-        setWindowMinSize(380.0, 500.0)
-        setWindowMaxSize(380.0, 500.0)
+        super.currentStage?.width = 380.0
+        super.currentStage?.height = 500.0
         super.currentStage?.resizableProperty()?.value = false
     }
 }

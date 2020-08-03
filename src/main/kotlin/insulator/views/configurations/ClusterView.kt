@@ -66,7 +66,6 @@ class ClusterView : View() {
                     action {
                         viewModel.commit()
                         viewModel.save()
-                        viewModel.rollback()
                         close()
                     }
                 }
@@ -77,7 +76,8 @@ class ClusterView : View() {
     }
 
     override fun onDock() {
-        title = if (isNewCluster) "New cluster" else viewModel.nameProperty.value
         super.onDock()
+        title = if (isNewCluster) "New cluster" else viewModel.nameProperty.value
+
     }
 }

@@ -19,22 +19,15 @@ class CreateTopicView : View() {
 
         borderpane {
             padding = Insets(0.0, 50.0, 0.0, 50.0)
-            left = button("Ignore") {
-                addClass(Controls.alertButton)
-                action { close() }
-            }
             right = button("Create") {
                 enableWhen(viewModel.valid)
                 action {
                     viewModel.commit()
                     viewModel.save()
-                    viewModel.rollback()
                     close()
                 }
             }
         }
-
-        prefWidth = 600.0
         addClass(Controls.view)
     }
 }

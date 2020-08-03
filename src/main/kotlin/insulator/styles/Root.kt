@@ -44,6 +44,7 @@ class Root : Stylesheet() {
                     backgroundRadius = multi(box(2.0.px))
                 }
                 and(Controls.iconButton) {
+                    padding = box(12.0.px)
                     backgroundRadius = multi(box(100.0.px))
                     and(hover) { backgroundColor = multi(Theme.mainColorDark) }
                 }

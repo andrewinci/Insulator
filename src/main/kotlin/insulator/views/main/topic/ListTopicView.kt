@@ -7,6 +7,8 @@ import insulator.views.common.searchBox
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
+import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListTopicView : View("Topics") {
@@ -21,7 +23,9 @@ class ListTopicView : View("Topics") {
                     action {
                         val scope = Scope()
                         setInScope(CreateTopicViewModel(), scope)
-                        find<CreateTopicView>(scope).openWindow()
+                        find<CreateTopicView>(scope).also {
+                            it.whenUndockedOnce { viewModel.refresh() }
+                        }.openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
                     }
                 }
             }
