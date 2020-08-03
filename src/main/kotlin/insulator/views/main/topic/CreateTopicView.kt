@@ -4,6 +4,7 @@ import insulator.styles.Controls
 import insulator.styles.Titles
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import javafx.geometry.Insets
+import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class CreateTopicView : View() {
@@ -45,8 +46,10 @@ class CreateTopicView : View() {
                 enableWhen(viewModel.valid)
                 action {
                     viewModel.commit()
-                    viewModel.save()
-                    close()
+                    viewModel.save().fold(
+                        { close() },
+                        { alert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") }
+                    )
                 }
             }
         }

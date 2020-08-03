@@ -1,5 +1,6 @@
 package insulator.viewmodel.main.topic
 
+import arrow.core.Option
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.model.Topic
 import javafx.beans.property.SimpleIntegerProperty
@@ -14,9 +15,8 @@ class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : Ite
     val partitionCountProperty = bind { item?.partitionCountProperty }
     val replicationFactorProperty = bind { item?.replicationFactorProperty }
 
-    fun save() {
-        admin.createTopics(this.item.toTopic()).get()
-    }
+    fun save(): Option<Throwable> = admin.createTopics(this.item.toTopic()).get()
+        .fold({ Option.just(it) }, { Option.empty() })
 }
 
 class CreateTopicModel(topic: Topic? = null) {

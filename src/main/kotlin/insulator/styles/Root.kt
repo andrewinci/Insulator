@@ -21,11 +21,11 @@ class Root : Stylesheet() {
 
             textField {
                 backgroundRadius = multi(box(0.0.px))
-                backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, (0).px, (-1).px))
+                backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, 0.px, (-1).px))
                 backgroundColor = multi(Theme.mainColor, Theme.backgroundColor, c("eee"))
                 and(focused) {
                     backgroundRadius = multi(box(0.0.px))
-                    backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, (0).px, (-2).px))
+                    backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, 0.px, (-2).px))
                     backgroundColor = multi(Theme.mainColorDark, Theme.backgroundColor, c("ddd"))
                 }
             }
