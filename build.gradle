@@ -45,7 +45,7 @@ dependencies {
     // Kafka
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '5.5.1-ce'
     compile group: 'io.confluent', name: 'kafka-schema-registry', version: '5.5.1'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
 
 
     // Avro
@@ -104,10 +104,10 @@ task packageApp(type: Exec) {
                    '--java-options', "'--enable-preview'",
                    '--app-version', "${System.getenv().get("RELEASE_VERSION") ?: "0.0.0"}"]
     if (OperatingSystem.current().isWindows()) {
-        command.addAll('--icon', './assets/icon.ico')
+        command.addAll('--icon', './assets/icon.ico', '--win-dir-chooser', '--win-menu')
     } else if (OperatingSystem.current().isMacOsX()) {
         command.addAll('--icon', './assets/icon.icns')
-    } else command.addAll('--icon', './assets/icon.png')
+    } else command.addAll('--icon', './assets/icon.png', '--linux-shortcut')
 
     commandLine(command)
 }
