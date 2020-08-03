@@ -15,7 +15,7 @@ class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : Ite
     val replicationFactorProperty = bind { item?.replicationFactorProperty }
 
     fun save() {
-        admin.createTopics(this.item.toTopic()).get() // todo: handle error
+        admin.createTopics(this.item.toTopic()).get()
     }
 }
 
@@ -27,7 +27,7 @@ class CreateTopicModel(topic: Topic? = null) {
     fun toTopic() = Topic(
         name = nameProperty.value,
         partitionCount = partitionCountProperty.value,
-        replicationFactor = replicationFactorProperty.value.toShort(), // todo: check size in validation
+        replicationFactor = replicationFactorProperty.value.toShort(),
         isInternal = null,
         messageCount = null
     )
