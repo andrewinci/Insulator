@@ -3,5 +3,7 @@ build
 .gradle
 .insulator.config
 .DS_Store
-Insulator-0.1.dmg
+*.dmg
+*.exe
+*.deb
 out
