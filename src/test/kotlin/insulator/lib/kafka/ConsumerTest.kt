@@ -22,7 +22,7 @@ class ConsumerTest : FunSpec({
     test("start happy path") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer(Cluster.Empty)
+        val sut = Consumer(Cluster.empty())
         // act
         sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
         // assert
@@ -34,7 +34,7 @@ class ConsumerTest : FunSpec({
     test("start happy path - now") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer(Cluster.Empty)
+        val sut = Consumer(Cluster.empty())
         // act
         sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
         // assert
@@ -46,7 +46,7 @@ class ConsumerTest : FunSpec({
     test("isRunning") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer(Cluster.Empty)
+        val sut = Consumer(Cluster.empty())
         // act
         sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
         // assert
@@ -57,7 +57,7 @@ class ConsumerTest : FunSpec({
 
     test("stop if not running") {
         // arrange
-        val sut = Consumer(Cluster.Empty)
+        val sut = Consumer(Cluster.empty())
         // act/assert
         sut.stop()
     }

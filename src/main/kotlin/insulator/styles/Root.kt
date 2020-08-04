@@ -31,7 +31,7 @@ class Root : Stylesheet() {
             }
 
             button {
-                padding = box(10.0.px)
+                padding = box(5.0.px)
                 textFill = Theme.mainColor
                 backgroundColor = multi(Color.TRANSPARENT)
                 and(hover) {
@@ -44,6 +44,7 @@ class Root : Stylesheet() {
                     backgroundRadius = multi(box(2.0.px))
                 }
                 and(Controls.iconButton) {
+                    padding = box(12.0.px)
                     backgroundRadius = multi(box(100.0.px))
                     and(hover) { backgroundColor = multi(Theme.mainColorDark) }
                 }

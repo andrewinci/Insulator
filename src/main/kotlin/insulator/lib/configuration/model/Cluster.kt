@@ -15,7 +15,7 @@ data class Cluster(
 
     val schemaRegistryConfig: SchemaRegistryConfiguration? = null
 ) {
-    companion object { val Empty = Cluster(UUID.randomUUID(), "", "") }
+    companion object { fun empty() = Cluster(UUID.randomUUID(), "", "") }
     fun isSchemaRegistryConfigured() = schemaRegistryConfig?.endpoint != null
 }
 

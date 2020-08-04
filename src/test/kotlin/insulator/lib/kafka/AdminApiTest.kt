@@ -7,13 +7,18 @@ import io.kotest.core.spec.style.FunSpec
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.kafka.clients.admin.AdminClient
+import org.apache.kafka.clients.admin.Config
+import org.apache.kafka.clients.admin.ConfigEntry
+import org.apache.kafka.clients.admin.DescribeConfigsResult
 import org.apache.kafka.clients.admin.DescribeTopicsResult
 import org.apache.kafka.clients.admin.ListTopicsResult
 import org.apache.kafka.clients.admin.TopicDescription
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.common.KafkaFuture
+import org.apache.kafka.common.Node
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.TopicPartitionInfo
+import org.apache.kafka.common.config.ConfigResource
 import java.util.HashSet
 
 class AdminApiTest : FunSpec({
@@ -53,17 +58,22 @@ class AdminApiTest : FunSpec({
         // arrange
         val partition = mockk<TopicPartitionInfo> {
             every { partition() } returns 0
+            every { replicas() } returns listOf(Node(1, "", 1))
         }
         val describeTopicResultMock = mockk<DescribeTopicsResult> {
             every { all() } returns KafkaFuture.completedFuture(
                 mapOf(
-                    "topic1" to TopicDescription("topic1", true, listOf(partition)),
                     "topic2" to TopicDescription("topic2", false, listOf(partition, partition))
                 )
             )
         }
+        val resource = ConfigResource(ConfigResource.Type.TOPIC, "topic2")
+        val describeConfigsMock = mockk<DescribeConfigsResult> {
+            every { values() } returns mapOf(resource to KafkaFuture.completedFuture(Config(listOf(ConfigEntry("cleanup.policy", "compact")))))
+        }
         val kafkaAdminClientMock = mockk<AdminClient> {
             every { describeTopics(any<Collection<String>>()) } returns describeTopicResultMock
+            every { describeConfigs(any()) } returns describeConfigsMock
         }
         val consumerMock = mockk<Consumer<Any, Any>> {
             every { endOffsets(any()) } returns mapOf(TopicPartition("1", 1) to 5L)
@@ -71,8 +81,38 @@ class AdminApiTest : FunSpec({
         }
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
-        val res = sut.describeTopic("topic1", "topic2")
+        val res = sut.describeTopic("topic2")
         // assert
-        res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5), Topic("topic2", false, 2, 5))
+        res.get() shouldBeRight Topic("topic2", false, 2, 5, 1, true)
+    }
+
+    test("Create topic happy path") {
+        // arrange
+        val kafkaAdminClientMock = mockk<AdminClient> {
+            every { createTopics(any()) } returns mockk {
+                every { all() } returns KafkaFuture.completedFuture(null)
+            }
+        }
+        val consumerMock = mockk<Consumer<Any, Any>>()
+        val sut = AdminApi(kafkaAdminClientMock, consumerMock)
+        // act
+        val res = sut.createTopics(Topic("name", null, 2, null, 1, false))
+        // asssert
+        res.get() shouldBeRight {}
+    }
+
+    test("Create compacted topic happy path") {
+        // arrange
+        val kafkaAdminClientMock = mockk<AdminClient> {
+            every { createTopics(any()) } returns mockk {
+                every { all() } returns KafkaFuture.completedFuture(null)
+            }
+        }
+        val consumerMock = mockk<Consumer<Any, Any>>()
+        val sut = AdminApi(kafkaAdminClientMock, consumerMock)
+        // act
+        val res = sut.createTopics(Topic("name", null, 2, null, 1, true))
+        // asssert
+        res.get() shouldBeRight {}
     }
 })

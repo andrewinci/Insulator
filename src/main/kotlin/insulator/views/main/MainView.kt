@@ -82,7 +82,8 @@ class MainView : View("Insulator") {
 
     override fun onDock() {
         super.onDock()
-        setWindowMinSize(800.0, 800.0)
+        super.currentStage?.width = 800.0
+        super.currentStage?.height = 800.0
         title = GlobalConfiguration.currentCluster.name
     }
 }
