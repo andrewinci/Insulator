@@ -26,4 +26,3 @@ The latest version supports the following features:
 ### Linux
 
 The gradle task`packageApp` requires `binutils` and `fakeroot`.
-
