@@ -30,7 +30,8 @@ class TopicView : View() {
                 Callable {
                     "Message count: ${viewModel.messageCountProperty.value} - " +
                         "Is internal: ${viewModel.isInternalProperty.value} - " +
-                        "Partitions count: ${viewModel.partitionCountProperty.value}"
+                        "Partitions count: ${viewModel.partitionCountProperty.value} - " +
+                        "Compacted: ${viewModel.isCompactedProperty.value}"
                 },
                 viewModel.messageCountProperty
             )

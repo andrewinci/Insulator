@@ -1,7 +1,6 @@
 package insulator.viewmodel.main.topic
 
 import insulator.di.getInstanceNow
-import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
@@ -26,6 +25,7 @@ class TopicViewModel(topicName: String) : ViewModel() {
     val isInternalProperty = SimpleBooleanProperty()
     val partitionCountProperty = SimpleIntegerProperty()
     val messageCountProperty = SimpleLongProperty()
+    val isCompactedProperty = SimpleBooleanProperty()
 
     val records: ObservableList<RecordViewModel> = FXCollections.observableArrayList<RecordViewModel>()
 
@@ -35,10 +35,11 @@ class TopicViewModel(topicName: String) : ViewModel() {
 
     init {
         adminApi.describeTopic(topicName).get().map {
-            nameProperty.set(it.first().name)
-            isInternalProperty.set(it.first().isInternal ?: false)
-            partitionCountProperty.set(it.first().partitionCount ?: -1)
-            messageCountProperty.set(it.first().messageCount ?: -1)
+            nameProperty.set(it.name)
+            isInternalProperty.set(it.isInternal ?: false)
+            partitionCountProperty.set(it.partitionCount)
+            messageCountProperty.set(it.messageCount ?: -1)
+            isCompactedProperty.set(it.isCompacted)
         }
     }
 

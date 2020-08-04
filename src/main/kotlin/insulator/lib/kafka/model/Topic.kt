@@ -5,5 +5,10 @@ data class Topic(
     val isInternal: Boolean? = null,
     val partitionCount: Int = 0,
     val messageCount: Long?,
-    val replicationFactor: Short = 0
+    val replicationFactor: Short = 0,
+    val isCompacted: Boolean
+)
+
+data class TopicConfiguration(
+    val isCompacted: Boolean
 )

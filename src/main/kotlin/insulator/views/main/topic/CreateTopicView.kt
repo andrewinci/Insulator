@@ -38,6 +38,7 @@ class CreateTopicView : View() {
                     required()
                 }
             }
+            field("Compacted") { checkbox(property = viewModel.isCompactedProperty) }
         }
 
         borderpane {

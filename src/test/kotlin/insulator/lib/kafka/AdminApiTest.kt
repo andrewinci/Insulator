@@ -75,7 +75,7 @@ class AdminApiTest : FunSpec({
         // act
         val res = sut.describeTopic("topic1", "topic2")
         // assert
-        res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5, 1), Topic("topic2", false, 2, 5, 1))
+        res.get() shouldBeRight listOf(Topic("topic1", true, 1, 5, 1,), Topic("topic2", false, 2, 5, 1,))
     }
 
     test("Create topic happy path") {
@@ -88,7 +88,7 @@ class AdminApiTest : FunSpec({
         val consumerMock = mockk<Consumer<Any, Any>>()
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
-        val res = sut.createTopics(Topic("name", null, 2, null, 1))
+        val res = sut.createTopics(Topic("name", null, 2, null, 1,))
         // asssert
         res.get() shouldBeRight {}
     }
