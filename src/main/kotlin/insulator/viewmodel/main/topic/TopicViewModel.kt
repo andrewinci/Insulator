@@ -64,4 +64,8 @@ class TopicViewModel(topicName: String) : ViewModel() {
         if (consumer.isRunning()) return
         consumer.start(nameProperty.value, from, valueFormat) { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
     }
+
+    fun delete() {
+        TODO("Not yet implemented")
+    }
 }
