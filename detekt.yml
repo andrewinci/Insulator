@@ -16,11 +16,11 @@ processors:
   active: true
   exclude:
     - 'DetektProgressListener'
-  # - 'FunctionCountProcessor'
-  # - 'PropertyCountProcessor'
-  # - 'ClassCountProcessor'
-  # - 'PackageCountProcessor'
-  # - 'KtFileCountProcessor'
+   - 'FunctionCountProcessor'
+   - 'PropertyCountProcessor'
+   - 'ClassCountProcessor'
+   - 'PackageCountProcessor'
+   - 'KtFileCountProcessor'
 
 console-reports:
   active: true
@@ -34,7 +34,7 @@ console-reports:
 output-reports:
   active: true
   exclude:
-  # - 'TxtOutputReport'
+   - 'TxtOutputReport'
   # - 'XmlOutputReport'
   # - 'HtmlOutputReport'
 
