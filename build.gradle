@@ -6,7 +6,7 @@ plugins {
     id 'com.adarshr.test-logger' version '2.1.0'
     id "com.github.johnrengelman.shadow" version "6.0.0"
     id "org.jlleitschuh.gradle.ktlint" version "9.3.0"
-    id "io.gitlab.arturbosch.detekt" version "1.11.0-RC1"
+    id "io.gitlab.arturbosch.detekt" version "1.10.0"
     id 'jacoco'
 }
 
@@ -124,4 +124,10 @@ tasks.jacocoTestReport {
 
 tasks.check.doLast {
     tasks.jacocoTestReport
+}
+
+detekt {
+    toolVersion = "1.10.0"
+    config = files("./detekt.yml")
+    buildUponDefaultConfig = true
 }

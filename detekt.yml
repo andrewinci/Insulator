@@ -2,41 +2,33 @@ build:
   maxIssues: 0
   excludeCorrectable: false
   weights:
-    # complexity: 2
-    # LongParameterList: 1
-    # style: 1
-    # comments: 1
+    complexity: 2
+    LongParameterList: 1
+    style: 1
+    comments: 1
 
 config:
   validation: true
-  # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
   excludes: ''
 
 processors:
   active: true
   exclude:
     - 'DetektProgressListener'
-   - 'FunctionCountProcessor'
-   - 'PropertyCountProcessor'
-   - 'ClassCountProcessor'
-   - 'PackageCountProcessor'
-   - 'KtFileCountProcessor'
+    - 'FunctionCountProcessor'
+    - 'PropertyCountProcessor'
+    - 'ClassCountProcessor'
+    - 'PackageCountProcessor'
+    - 'KtFileCountProcessor'
 
 console-reports:
   active: true
   exclude:
-     - 'ProjectStatisticsReport'
-     - 'ComplexityReport'
-     - 'NotificationReport'
-  #  - 'FindingsReport'
-     - 'FileBasedFindingsReport'
-
-output-reports:
-  active: true
-  exclude:
-   - 'TxtOutputReport'
-  # - 'XmlOutputReport'
-  # - 'HtmlOutputReport'
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+    - 'FindingsReport'
+    - 'FileBasedFindingsReport'
 
 comments:
   active: true
@@ -639,8 +631,6 @@ style:
     active: false
     excludeAnnotatedClasses: []
     allowVars: false
-  UseEmptyCounterpart:
-    active: false
   UseIfInsteadOfWhen:
     active: false
   UseRequire:
