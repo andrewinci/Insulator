@@ -37,7 +37,9 @@ class ListTopicView : View("Topics") {
                 if (this.selectedItem == null) return@onDoubleClick
                 val scope = Scope()
                 tornadofx.setInScope(TopicViewModel(this.selectedItem!!), scope)
-                find<TopicView>(scope).openWindow()
+                find<TopicView>(scope).also {
+                    it.whenUndockedOnce { viewModel.refresh() }
+                }.openWindow()
             }
             itemsProperty().set(
                 SortedFilteredList(viewModel.topicList).apply {

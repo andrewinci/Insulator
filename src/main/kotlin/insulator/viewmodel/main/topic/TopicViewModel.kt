@@ -43,7 +43,10 @@ class TopicViewModel(topicName: String) : ViewModel() {
         }
     }
 
-    fun consumeButtonClick() {
+    fun clear() = records.clear()
+    fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
+    fun delete() = adminApi.deleteTopic(this.nameProperty.value)
+    fun consume() {
         if (consumeButtonText.value == CONSUME) {
             consumeButtonText.value = STOP
             clear()
@@ -57,15 +60,8 @@ class TopicViewModel(topicName: String) : ViewModel() {
         }
     }
 
-    fun clear() = records.clear()
-    fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
-
     private fun consume(from: ConsumeFrom, valueFormat: DeserializationFormat) {
         if (consumer.isRunning()) return
         consumer.start(nameProperty.value, from, valueFormat) { k, v, t -> this.records.add(RecordViewModel(k, v, t)) }
-    }
-
-    fun delete() {
-        TODO("Not yet implemented")
     }
 }

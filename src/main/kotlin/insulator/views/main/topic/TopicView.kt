@@ -43,7 +43,7 @@ class TopicView : View() {
     override val root = borderpane {
         top = vbox {
             vbox {
-                hbox(spacing=5.0, alignment = Pos.CENTER_LEFT) {
+                hbox(spacing = 10.0, alignment = Pos.CENTER_LEFT) {
                     label(viewModel.nameProperty.value) { addClass(Titles.h1) }
                     button("Delete") {
                         addClass(Controls.alertButton)
@@ -75,7 +75,7 @@ class TopicView : View() {
         center = vbox(spacing = 2.0) {
             borderpane {
                 left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                    button(viewModel.consumeButtonText) { action { viewModel.consumeButtonClick() }; prefWidth = 80.0 }
+                    button(viewModel.consumeButtonText) { action { viewModel.consume() }; prefWidth = 80.0 }
                     label("from")
                     combobox<String> {
                         items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
