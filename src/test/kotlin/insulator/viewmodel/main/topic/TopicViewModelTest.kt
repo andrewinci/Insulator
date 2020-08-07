@@ -17,37 +17,11 @@ import kotlin.reflect.KClass
 
 class TopicViewModelTest : FunSpec({
 
-    val consumerMock = mockk<Consumer> {
-        every { start(any(), any(), any(), any()) } answers {
-            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
-            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
-            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
-        }
-        every { stop() } just runs
-        every { isRunning() } returns false
-    }
-
-    val adminApiMock = mockk<AdminApi> {
-        every { describeTopic(any()) } returns CompletableFuture.completedFuture(Topic("Topic name").right())
-        every { deleteTopic(any()) } returns CompletableFuture.completedFuture(null.right())
-    }
-
-    beforeTest {
-        FX.dicontainer = object : DIContainer {
-            @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
-            override fun <T : Any> getInstance(type: KClass<T>): T {
-                return when (type.java) {
-                    AdminApi::class.java -> adminApiMock
-                    Consumer::class.java -> consumerMock
-                    else -> throw Throwable("Missing dependency")
-                } as T
-            }
-        }
-    }
+    val topicName = "topic-name"
 
     test("clear remove all records from the list") {
         // arrange
-        val sut = TopicViewModel("topic-name")
+        val sut = TopicViewModel(topicName)
         sut.records.add(mockk())
         // act
         sut.clear()
@@ -57,14 +31,14 @@ class TopicViewModelTest : FunSpec({
 
     test("stop an already stopped consumer is ignored") {
         // arrange
-        val sut = TopicViewModel("topic-name")
+        val sut = TopicViewModel(topicName)
         // act
         sut.stop()
     }
 
     test("delete call the deleteTopic function from lib with the topic name") {
         // arrange
-        val sut = TopicViewModel("topic-name")
+        val sut = TopicViewModel(topicName)
         // act
         sut.delete()
         // assert
@@ -72,11 +46,35 @@ class TopicViewModelTest : FunSpec({
 
     test("consume") {
         // arrange
-        val sut = TopicViewModel("topic-name")
+        val sut = TopicViewModel(topicName)
         // act
         sut.consume()
         delay(1000)
         // assert
         sut.records.count() shouldBe 3
+    }
+
+    beforeTest {
+        FX.dicontainer = object : DIContainer {
+            @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
+            override fun <T : Any> getInstance(type: KClass<T>): T {
+                return when (type.java) {
+                    AdminApi::class.java -> mockk<AdminApi> {
+                        every { describeTopic(any()) } returns CompletableFuture.completedFuture(Topic("Topic name").right())
+                        every { deleteTopic(any()) } returns CompletableFuture.completedFuture(null.right())
+                    }
+                    Consumer::class.java -> mockk<Consumer> {
+                        every { start(any(), any(), any(), any()) } answers {
+                            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
+                            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
+                            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
+                        }
+                        every { stop() } just runs
+                        every { isRunning() } returns false
+                    }
+                    else -> throw IllegalArgumentException("Missing dependency")
+                } as T
+            }
+        }
     }
 })
