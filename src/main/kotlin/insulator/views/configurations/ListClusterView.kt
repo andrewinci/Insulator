@@ -1,6 +1,6 @@
 package insulator.views.configurations
 
-import insulator.di.GlobalConfiguration
+import insulator.di.currentCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.styles.Controls
 import insulator.styles.Titles
@@ -26,7 +26,7 @@ class ListClusterView : View("Insulator") {
             cellFormat { cluster ->
                 graphic = buildClusterCell(cluster)
                 onMouseClicked = EventHandler {
-                    GlobalConfiguration.currentCluster = cluster
+                    currentCluster = cluster
                     val scope = Scope()
                     setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
                     replaceWith(find<MainView>(scope))

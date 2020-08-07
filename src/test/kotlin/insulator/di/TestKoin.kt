@@ -10,7 +10,7 @@ import java.util.UUID
 class TestKoin : StringSpec({
 
     "Test koin modules" {
-        GlobalConfiguration.currentCluster = Cluster(
+        currentCluster = Cluster(
             UUID.randomUUID(), "test", "127.0.0.1:9092",
             schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
         )

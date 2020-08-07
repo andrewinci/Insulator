@@ -19,7 +19,7 @@ import java.util.Properties
 
 val kafkaModule = module {
 
-    factory { GlobalConfiguration.currentCluster }
+    factory { currentCluster }
 
     scope<Cluster> {
         // Kafka
