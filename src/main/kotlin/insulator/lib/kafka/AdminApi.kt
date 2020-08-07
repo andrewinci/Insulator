@@ -18,6 +18,7 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.config.ConfigResource
+import org.apache.kafka.common.config.TopicConfig
 import java.util.concurrent.CompletableFuture
 
 class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) {
@@ -80,10 +81,6 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
 
     private fun getLag(partition: TopicPartition, currentOffset: OffsetAndMetadata?) =
         consumer.endOffsets(mutableListOf(partition)).values.first() - (currentOffset?.offset() ?: 0)
-
-//    fun alterConsumerGroupOffset(consumerGroupId: String) =
-//        admin.listConsumerGroupOffsets("123").partitionsToOffsetAndMetadata()
-//        admin.alterConsumerGroupOffsets(consumerGroupId, mapOf(TopicPartition("name", 1) to OffsetAndMetadata()))
 
     private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
 
