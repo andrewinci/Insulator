@@ -1,6 +1,6 @@
 package insulator.views.main
 
-import insulator.di.GlobalConfiguration
+import insulator.di.currentCluster
 import insulator.styles.Controls
 import insulator.styles.Titles
 import insulator.views.common.ICON_MENU_SVG
@@ -63,7 +63,7 @@ class MainView : View("Insulator") {
 
                 menuItem("Topics", ICON_TOPICS) { currentViewProperty.set(find<ListTopicView>()) }
                 menuItem("Schema Registry", ICON_REGISTRY) {
-                    if (GlobalConfiguration.currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
+                    if (currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
                     else alert(Alert.AlertType.WARNING, "Schema registry configuration not found", owner = currentWindow)
                 }
                 button("Change cluster") { action { replaceWith<ListClusterView>() } }
@@ -84,6 +84,6 @@ class MainView : View("Insulator") {
         super.onDock()
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
-        title = GlobalConfiguration.currentCluster.name
+        title = currentCluster.name
     }
 }
