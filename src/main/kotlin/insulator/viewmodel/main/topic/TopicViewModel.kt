@@ -45,7 +45,7 @@ class TopicViewModel(topicName: String) : ViewModel() {
 
     fun clear() = records.clear()
     fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
-    fun delete() = adminApi.deleteTopic(this.nameProperty.value)
+    fun delete() = adminApi.deleteTopic(this.nameProperty.value).get()
     fun consume() {
         if (consumeButtonText.value == CONSUME) {
             consumeButtonText.value = STOP
