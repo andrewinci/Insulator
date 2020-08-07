@@ -12,6 +12,8 @@ import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableView
 import javafx.scene.input.Clipboard
@@ -41,7 +43,30 @@ class TopicView : View() {
     override val root = borderpane {
         top = vbox {
             vbox {
-                label(viewModel.nameProperty.value) { addClass(Titles.h1) }
+                hbox(spacing = 10.0, alignment = Pos.CENTER_LEFT) {
+                    label(viewModel.nameProperty.value) { addClass(Titles.h1) }
+                    button("Delete") {
+                        addClass(Controls.alertButton)
+                        action {
+                            val closeWindow = { close() }
+                            alert(
+                                Alert.AlertType.WARNING,
+                                "The topic \"${viewModel.nameProperty.value}\" will be removed.", null,
+                                ButtonType.CANCEL, ButtonType.OK,
+                                owner = currentWindow,
+                                actionFn = { buttonType ->
+                                    when (buttonType) {
+                                        ButtonType.OK -> {
+                                            viewModel.delete()
+                                            closeWindow()
+                                        }
+                                        else -> Unit
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
                 label(subtitleProperty) { addClass(Titles.h3) }
                 addClass(Controls.topBarMenu, Titles.subtitle)
             }
@@ -49,8 +74,8 @@ class TopicView : View() {
         }
         center = vbox(spacing = 2.0) {
             borderpane {
-                left = button(viewModel.consumeButtonText) { action { viewModel.consumeButtonClick() }; prefWidth = 80.0 }
-                center = hbox(alignment = Pos.CENTER) {
+                left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
+                    button(viewModel.consumeButtonText) { action { viewModel.consume() }; prefWidth = 80.0 }
                     label("from")
                     combobox<String> {
                         items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())

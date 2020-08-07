@@ -43,7 +43,10 @@ class TopicViewModel(topicName: String) : ViewModel() {
         }
     }
 
-    fun consumeButtonClick() {
+    fun clear() = records.clear()
+    fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
+    fun delete() = adminApi.deleteTopic(this.nameProperty.value).get()
+    fun consume() {
         if (consumeButtonText.value == CONSUME) {
             consumeButtonText.value = STOP
             clear()
@@ -56,9 +59,6 @@ class TopicViewModel(topicName: String) : ViewModel() {
             consumer.stop()
         }
     }
-
-    fun clear() = records.clear()
-    fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
 
     private fun consume(from: ConsumeFrom, valueFormat: DeserializationFormat) {
         if (consumer.isRunning()) return

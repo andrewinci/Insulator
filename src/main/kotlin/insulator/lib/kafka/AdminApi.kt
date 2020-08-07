@@ -52,6 +52,8 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
             }
         ).all().toCompletableFuture()
 
+    fun deleteTopic(topicName: String) = admin.deleteTopics(listOf(topicName)).all().toCompletableFuture()
+
     private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
 
     private fun compactedConfig(isCompacted: Boolean): String =
