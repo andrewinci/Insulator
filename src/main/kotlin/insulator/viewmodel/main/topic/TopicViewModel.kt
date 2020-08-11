@@ -1,6 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import insulator.di.getInstanceNow
+import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
@@ -34,7 +35,7 @@ class TopicViewModel(topicName: String) : ViewModel() {
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.name)
 
     init {
-        adminApi.describeTopic(topicName).get().map {
+        adminApi.describeTopic(topicName).runOnFXThread {
             nameProperty.set(it.name)
             isInternalProperty.set(it.isInternal ?: false)
             partitionCountProperty.set(it.partitionCount)
