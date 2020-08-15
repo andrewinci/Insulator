@@ -1,21 +1,20 @@
 package insulator.viewmodel.configurations
 
-import arrow.core.flatMap
-import arrow.core.right
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
+import insulator.viewmodel.common.InsulatorViewModel
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import tornadofx.ViewModel
 
-class ListClusterViewModel : ViewModel() {
+class ListClusterViewModel : InsulatorViewModel() {
 
     private val configurationRepo: ConfigurationRepo by di()
 
     val clustersProperty: ObservableList<Cluster> by lazy {
         configurationRepo.addNewClusterCallback { new -> with(clustersProperty) { clear(); addAll(new.clusters) } }
-        configurationRepo.getConfiguration()
-            .flatMap { FXCollections.observableArrayList(it.clusters).right() }
-            .fold({ throw it }, { it })
+        FXCollections.observableArrayList(
+            configurationRepo.getConfiguration()
+                .fold({ error.set(it); emptyList<Cluster>() }, { it.clusters })
+        )
     }
 }

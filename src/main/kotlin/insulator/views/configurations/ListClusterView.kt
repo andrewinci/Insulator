@@ -8,6 +8,7 @@ import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.common.ICON_SETTINGS_SVG
+import insulator.views.common.InsulatorView
 import insulator.views.main.MainView
 import javafx.event.EventHandler
 import javafx.geometry.Pos
@@ -16,9 +17,7 @@ import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class ListClusterView : View("Insulator") {
-
-    private val viewModel: ListClusterViewModel by inject()
+class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClusterViewModel::class) {
 
     override val root = vbox(spacing = 15) {
         label("Clusters") { addClass(Titles.h1) }
@@ -73,5 +72,10 @@ class ListClusterView : View("Insulator") {
         super.currentStage?.width = 380.0
         super.currentStage?.height = 500.0
         super.currentStage?.resizableProperty()?.value = false
+    }
+
+    override fun onError() {
+        // we can't continue without the list of clusters
+        close()
     }
 }
