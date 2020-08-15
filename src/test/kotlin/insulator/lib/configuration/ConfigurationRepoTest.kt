@@ -2,6 +2,9 @@ package insulator.lib.configuration
 
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
+import insulator.lib.configuration.model.SaslConfiguration
+import insulator.lib.configuration.model.SchemaRegistryConfiguration
+import insulator.lib.configuration.model.SslConfiguration
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
@@ -80,6 +83,25 @@ class ConfigurationRepoTest : FunSpec({
         res shouldBeRight Unit
         ConfigurationRepo(json, testConfig).getConfiguration() shouldBeRight
             Configuration(clusters = listOf(Cluster(uuid, "", "")))
+    }
+
+    test("store a new cluster 2") {
+        // arrange
+        val testConfig = "./insulator.test.${Random.nextLong()}"
+        val sut = ConfigurationRepo(json, testConfig)
+        val uuid = UUID.randomUUID()
+        // act
+        val res = sut.store(
+            Cluster(
+                uuid, "", "", true,
+                SslConfiguration("", "", "", ""), true,
+                SaslConfiguration("", ""),
+                SchemaRegistryConfiguration("", "", "")
+            )
+        )
+        // assert
+        res shouldBeRight Unit
+        ConfigurationRepo(json, testConfig).getConfiguration() shouldBeRight {}
     }
 
     afterTest {
