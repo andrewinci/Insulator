@@ -9,7 +9,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import kotlin.reflect.KClass
 
 class ListClusterViewModelTest : FunSpec({

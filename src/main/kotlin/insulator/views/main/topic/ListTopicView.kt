@@ -3,7 +3,9 @@ package insulator.views.main.topic
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
+import insulator.views.common.InsulatorView
 import insulator.views.common.searchBox
+import insulator.views.configurations.ListClusterView
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
@@ -11,9 +13,8 @@ import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class ListTopicView : View("Topics") {
+class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewModel::class) {
 
-    private val viewModel: ListTopicViewModel by inject()
     private val searchItem = SimpleStringProperty()
 
     override val root = vbox(spacing = 5.0) {
@@ -50,5 +51,9 @@ class ListTopicView : View("Topics") {
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }
+    }
+
+    override fun onError(throwable: Throwable) {
+        replaceWith<ListClusterView>()
     }
 }
