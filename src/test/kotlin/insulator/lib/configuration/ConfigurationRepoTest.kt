@@ -1,18 +1,22 @@
 package insulator.lib.configuration
 
-import com.google.gson.Gson
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
+import insulator.lib.configuration.model.SaslConfiguration
+import insulator.lib.configuration.model.SchemaRegistryConfiguration
+import insulator.lib.configuration.model.SslConfiguration
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import java.io.File
 import java.util.UUID
 import kotlin.random.Random
 
 class ConfigurationRepoTest : FunSpec({
-
+    val json = Json(JsonConfiguration.Stable)
     beforeTest {
         // clean up previous tests
         File(".").walk()
@@ -23,7 +27,7 @@ class ConfigurationRepoTest : FunSpec({
     test("getConfiguration the first time create the config file") {
         // arrange
         val testConfig = "./insulator.test.${Random.nextLong()}"
-        val sut = ConfigurationRepo(Gson(), testConfig)
+        val sut = ConfigurationRepo(json, testConfig)
         // act
         val res = sut.getConfiguration()
         // assert
@@ -35,7 +39,7 @@ class ConfigurationRepoTest : FunSpec({
         // arrange
         val testConfig = "./insulator.test.${Random.nextLong()}"
         File(testConfig).writeText("Wrong content")
-        val sut = ConfigurationRepo(Gson(), testConfig)
+        val sut = ConfigurationRepo(json, testConfig)
         // act
         val res = sut.getConfiguration()
         // assert
@@ -45,7 +49,7 @@ class ConfigurationRepoTest : FunSpec({
     test("delete a cluster from the configuration") {
         // arrange
         val testConfig = "./insulator.test.${Random.nextLong()}"
-        val sut = ConfigurationRepo(Gson(), testConfig)
+        val sut = ConfigurationRepo(json, testConfig)
         val testCluster = UUID.randomUUID()
         sut.store(Cluster(testCluster, "Test", ""))
         // act
@@ -58,7 +62,7 @@ class ConfigurationRepoTest : FunSpec({
     test("delete a cluster never added") {
         // arrange
         val testConfig = "./insulator.test.${Random.nextLong()}"
-        val sut = ConfigurationRepo(Gson(), testConfig)
+        val sut = ConfigurationRepo(json, testConfig)
         sut.store(Cluster(UUID.randomUUID(), "Test", ""))
         val expectedConfig = File(testConfig).readText()
         // act
@@ -71,14 +75,33 @@ class ConfigurationRepoTest : FunSpec({
     test("store a new cluster") {
         // arrange
         val testConfig = "./insulator.test.${Random.nextLong()}"
-        val sut = ConfigurationRepo(Gson(), testConfig)
+        val sut = ConfigurationRepo(json, testConfig)
         val uuid = UUID.randomUUID()
         // act
         val res = sut.store(Cluster(uuid, "", ""))
         // assert
         res shouldBeRight Unit
-        ConfigurationRepo(Gson(), testConfig).getConfiguration() shouldBeRight
+        ConfigurationRepo(json, testConfig).getConfiguration() shouldBeRight
             Configuration(clusters = listOf(Cluster(uuid, "", "")))
+    }
+
+    test("store a new cluster 2") {
+        // arrange
+        val testConfig = "./insulator.test.${Random.nextLong()}"
+        val sut = ConfigurationRepo(json, testConfig)
+        val uuid = UUID.randomUUID()
+        // act
+        val res = sut.store(
+            Cluster(
+                uuid, "", "", true,
+                SslConfiguration("", "", "", ""), true,
+                SaslConfiguration("", ""),
+                SchemaRegistryConfiguration("", "", "")
+            )
+        )
+        // assert
+        res shouldBeRight Unit
+        ConfigurationRepo(json, testConfig).getConfiguration() shouldBeRight {}
     }
 
     afterTest {

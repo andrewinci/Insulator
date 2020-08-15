@@ -1,16 +1,19 @@
 package insulator.lib.jsonhelper
 
-import com.google.gson.Gson
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 
 class JsonFormatterTest : FunSpec({
 
+    val json = Json(JsonConfiguration.Stable)
+
     test("format json return a right collection") {
         // arrange
-        val sut = JsonFormatter(Gson())
+        val sut = JsonFormatter(json)
         // act
         val res = sut.formatJsonString("This is not a json")
         // assert
@@ -19,7 +22,7 @@ class JsonFormatterTest : FunSpec({
 
     test("format empty object") {
         // arrange
-        val sut = JsonFormatter(Gson())
+        val sut = JsonFormatter(json)
         // act
         val res = sut.formatJsonString("{}")
         // assert
@@ -28,7 +31,7 @@ class JsonFormatterTest : FunSpec({
 
     test("format empty object without indent") {
         // arrange
-        val sut = JsonFormatter(Gson())
+        val sut = JsonFormatter(json)
         // act
         val res = sut.formatJsonString("{}", false)
         // assert
@@ -37,7 +40,7 @@ class JsonFormatterTest : FunSpec({
 
     test("format generic object without indent") {
         // arrange
-        val sut = JsonFormatter(Gson())
+        val sut = JsonFormatter(json)
         // act
         val res = sut.formatJsonString(
             """{
