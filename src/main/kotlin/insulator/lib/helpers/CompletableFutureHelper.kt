@@ -1,7 +1,6 @@
 package insulator.lib.helpers
 
 import arrow.core.Either
-import arrow.core.Option
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
@@ -28,16 +27,11 @@ fun <A, B> CompletableFuture<Either<Throwable, A>>.flatMap(f: (A) -> Either<Thro
 fun <A, B> CompletableFuture<Either<Throwable, A>>.fold(ifLeft: (Throwable) -> B, ifRight: (A) -> B):
     CompletableFuture<B> = this.thenApply { it.fold(ifLeft, ifRight) }
 
-fun <A> CompletableFuture<Either<Throwable, A>>.runOnFXThread(f: (A) -> Unit): CompletableFuture<Option<Throwable>> {
-    val result = CompletableFuture<Option<Throwable>>()
-    this.thenApply {
-        Platform.runLater {
-            it.runCatching { map(f) }
-                .fold({ result.complete(Option.empty()) }, { result.complete(Option.just(it)) })
-        }
-    }
+fun <A, B> CompletableFuture<Either<Throwable, A>>.runOnFXThread(f: (A) -> B): CompletableFuture<Either<Throwable, B>> {
+    val result = CompletableFuture<Either<Throwable, B>>()
+    this.thenApply { Platform.runLater { result.complete(it.map { f(it) }) } }
     return result
 }
 
-fun CompletableFuture<Option<Throwable>>.handleErrorWith(f: (Throwable) -> Unit): CompletableFuture<Unit> =
-    this.thenApply { it.fold({ Unit }, f) }
+fun <A> CompletableFuture<Either<Throwable, A>>.handleErrorWith(f: (Throwable) -> Unit): CompletableFuture<Unit> =
+    this.thenApply { result -> result.fold({ f(it) }, { }) }

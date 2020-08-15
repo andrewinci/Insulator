@@ -26,7 +26,7 @@ class CreateTopicView : View() {
                     required()
                 }
             }
-            field("Replication factory") {
+            field("Replication factor") {
                 textfield(viewModel.replicationFactorProperty) {
                     filterInput { it.controlNewText.isInt() }
                     validator {

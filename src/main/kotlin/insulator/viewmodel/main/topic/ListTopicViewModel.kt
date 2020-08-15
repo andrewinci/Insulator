@@ -16,15 +16,14 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     init { refresh() }
 
-    fun refresh() {
-        adminApi.listTopics()
-            .map { it.sorted() }
-            .runOnFXThread {
-                topicList.clear()
-                topicList.addAll(it)
-            }
-            .handleErrorWith {
-                error.set(it)
-            }
-    }
+    fun refresh() = adminApi
+        .listTopics()
+        .map { it.sorted() }
+        .runOnFXThread {
+            topicList.clear()
+            topicList.addAll(it)
+        }
+        .handleErrorWith {
+            error.set(it)
+        }
 }

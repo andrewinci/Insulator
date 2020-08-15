@@ -14,6 +14,8 @@ import kotlin.reflect.KClass
 
 class ListClusterViewModelTest : FunSpec({
 
+    val errorMessage = "Example error"
+
     test("Show an error if unable to retrieve the configuration") {
         // arrange
         val sut = ListClusterViewModel()
@@ -21,7 +23,7 @@ class ListClusterViewModelTest : FunSpec({
         val clusters = sut.clustersProperty
         // assert
         clusters.size shouldBe 0
-        sut.error.value!!.message shouldBe "Example error"
+        sut.error.value!!.message shouldBe errorMessage
     }
 
     beforeTest {
@@ -30,7 +32,7 @@ class ListClusterViewModelTest : FunSpec({
             override fun <T : Any> getInstance(type: KClass<T>): T = when (type.java) {
                 ConfigurationRepo::class.java -> mockk<ConfigurationRepo> {
                     every { addNewClusterCallback(any()) } just runs
-                    every { getConfiguration() } returns ConfigurationRepoException("Example error", Throwable()).left()
+                    every { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
                 }
                 else -> throw IllegalArgumentException("Missing dependency")
             } as T
