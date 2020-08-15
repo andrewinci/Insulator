@@ -5,12 +5,12 @@ import arrow.core.extensions.fx
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
-import com.google.gson.Gson
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
+import kotlinx.serialization.json.Json
 import java.io.File
 
-class ConfigurationRepo(private val gson: Gson, private val configPath: String = "${System.getProperty("user.home")}/.insulator.config") {
+class ConfigurationRepo(private val json: Json, private val configPath: String = "${System.getProperty("user.home")}/.insulator.config") {
 
     private val callbacks = ArrayList<(Configuration) -> Unit>()
 
@@ -19,7 +19,7 @@ class ConfigurationRepo(private val gson: Gson, private val configPath: String =
         return kotlin.runCatching { File(configPath).readText() }
             .fold({ it.right() }, { ConfigurationRepoException("Unable to load the file", it).left() })
             .flatMap {
-                gson.runCatching { fromJson<Configuration>(it, Configuration::class.java) }
+                json.runCatching { parse(Configuration.serializer(), it) }
                     .fold({ it.right() }, { ConfigurationRepoException("Unable to load the configurations", it).left() })
             }
     }
@@ -34,18 +34,17 @@ class ConfigurationRepo(private val gson: Gson, private val configPath: String =
     }
 
     fun store(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
-        (!getConfiguration()).clusters
+        val configuration = (!getConfiguration()).clusters
             .map { it.guid to it }.toMap().plus(cluster.guid to cluster)
             .map { it.value }
             .let { Configuration(it) }
-            .also { !store(it) }
-            .also { config -> callbacks.forEach { it(config) } }
+        !store(configuration)
+        callbacks.forEach { it(configuration) }
     }
 
-    private fun store(configuration: Configuration) = Either.fx<ConfigurationRepoException, Unit> {
-        kotlin.runCatching { File(configPath).writeText(gson.toJson(configuration)) }
-            .fold({ right() }, { ConfigurationRepoException("Unable to store the configuration", it).left() })
-    }
+    private fun store(configuration: Configuration) = kotlin.runCatching {
+        File(configPath).writeText(json.stringify(Configuration.serializer(), configuration))
+    }.fold({ right() }, { ConfigurationRepoException("Unable to store the configuration", it).left() })
 
     fun addNewClusterCallback(callback: (Configuration) -> Unit) = callbacks.add(callback)
 }
