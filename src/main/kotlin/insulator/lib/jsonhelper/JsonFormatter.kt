@@ -2,14 +2,16 @@ package insulator.lib.jsonhelper
 
 import arrow.core.left
 import arrow.core.right
-import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import java.lang.Exception
 
-class JsonFormatter(private val gson: Gson) {
+class JsonFormatter(private val json: Json) {
 
-    fun formatJsonString(json: String, indent: Boolean = true) = kotlin.runCatching { gson.fromJson(json, JsonObject::class.java) }
+    fun formatJsonString(jsonString: String, indent: Boolean = true) = json.runCatching { parseJson(jsonString) }
         .map { InternalFormatter(indent).format(it, 1) }
         .fold({ it.right() }, { it.left() })
 
@@ -17,25 +19,23 @@ class JsonFormatter(private val gson: Gson) {
         @OptIn(ExperimentalStdlibApi::class)
         fun format(json: JsonElement, level: Int = 1): Collection<Token> {
             val newLine = if (indent) Token.Symbol("\n") else Token.Symbol(" ")
-            return when {
-                json.isJsonPrimitive -> listOf(Token.Value(json.asJsonPrimitive.toString()))
-                json.isJsonObject ->
+            return when (json) {
+                is JsonPrimitive -> listOf(Token.Value(json.primitive.toString()))
+                is JsonObject ->
                     listOf(Token.Symbol("{"), newLine, indent(level))
                         .asSequence()
                         .plus(
-                            json.asJsonObject.entrySet()
+                            json.jsonObject.entries
                                 .map { (key, value) -> listOf(Token.Key(key), Token.COLON).plus(format(value, level + 1)) }
                                 .reduceOrNull { a, b -> a.plus(Token.COMMA).plus(newLine).plus(indent(level)).plus(b) }
                                 ?: emptyList()
                         )
                         .plus(newLine).plus(indent(level - 1)).plus(Token.Symbol("}")).toList()
-
-                json.isJsonArray ->
+                is JsonArray ->
                     listOf(Token.Symbol("["))
-                        .plus(json.asJsonArray.map { format(it, level + 1) }.reduce { a, b -> a.plus(Token.COMMA).plus(b) })
+                        .plus(json.jsonArray.map { format(it, level + 1) }.reduce { a, b -> a.plus(Token.COMMA).plus(b) })
                         .plus(Token.Symbol("]"))
-                json.isJsonNull -> listOf(Token.Value("null"))
-                else -> throw Exception("Unable to parse")
+                else -> if (json.isNull) listOf(Token.Value("null")) else throw Exception("Unable to parse")
             }
         }
 

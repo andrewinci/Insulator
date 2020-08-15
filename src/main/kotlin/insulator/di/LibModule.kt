@@ -1,6 +1,5 @@
 package insulator.di
 
-import com.google.gson.GsonBuilder
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter
@@ -15,7 +14,6 @@ val libModule = module {
 
     // Configurations
     single { Json(JsonConfiguration.Stable) }
-    single { GsonBuilder().setPrettyPrinting().create() }
     single { ConfigurationRepo(get()) }
     single { JsonFormatter(get()) }
 
