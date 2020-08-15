@@ -74,7 +74,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         super.currentStage?.resizableProperty()?.value = false
     }
 
-    override fun onError() {
+    override fun onError(throwable: Throwable) {
         // we can't continue without the list of clusters
         close()
     }

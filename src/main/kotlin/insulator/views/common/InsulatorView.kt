@@ -10,13 +10,13 @@ abstract class InsulatorView<T : InsulatorViewModel>(title: String, kClass: KCla
         find(kClass, scope = scope)
     }
 
-    abstract fun onError()
+    abstract fun onError(throwable: Throwable)
 
     override fun onDock() {
         val handleError: (Throwable?) -> Unit = {
             if (it != null) {
                 alert(Alert.AlertType.WARNING, it.message ?: it.toString())
-                onError()
+                onError(it)
             }
         }
         if (viewModel.error.value != null) handleError(viewModel.error.value)
