@@ -58,7 +58,7 @@ dependencies {
     testImplementation group: 'org.koin', name: 'koin-test', version: "$koin_version"
 
     // Json
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '0.20.0'
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '0.20.0-1.4.0-dev-5730'
 
     // Kotest
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5-jvm', version: "$kotest_version"
