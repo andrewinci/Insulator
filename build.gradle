@@ -48,7 +48,6 @@ dependencies {
     compile group: 'io.confluent', name: 'kafka-schema-registry', version: '5.5.1'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
 
-
     // Avro
     compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '5.5.1'
 
@@ -67,6 +66,8 @@ dependencies {
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"
     testImplementation group: 'io.kotest', name: 'kotest-runner-console-jvm', version: "$kotest_version"
     testImplementation group: 'io.kotest', name: 'kotest-assertions-arrow', version: "$kotest_version"
+
+    testCompile group: 'org.testfx', name: 'testfx-junit5', version: "4.0.16-alpha"
 
     testImplementation group: 'io.mockk', name: 'mockk', version: '1.10.0'
 

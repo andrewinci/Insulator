@@ -46,7 +46,9 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
         File(configPath).writeText(json.stringify(Configuration.serializer(), configuration))
     }.fold({ right() }, { ConfigurationRepoException("Unable to store the configuration", it).left() })
 
-    fun addNewClusterCallback(callback: (Configuration) -> Unit) = callbacks.add(callback)
+    fun addNewClusterCallback(callback: (Configuration) -> Unit) {
+        callbacks.add(callback)
+    }
 }
 
 class ConfigurationRepoException(message: String, base: Throwable) : Throwable(message, base)
