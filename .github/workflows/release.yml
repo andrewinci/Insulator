@@ -17,10 +17,12 @@ jobs:
       with:
         java-version: 14
         java-package: jdk
+    - name: Install xvfb for headless tests
+      run: sudo apt-get install xvfb
     - uses: olegtarasov/get-tag@v2
       id: tagName
     - name: Gradle package
-      run: "./gradlew check packageApp"
+      run: "xvfb-run --auto-servernum ./gradlew check packageApp"
       env:
         RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - uses: actions/upload-artifact@v2

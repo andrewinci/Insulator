@@ -26,11 +26,15 @@ jobs:
 
       - name: Codecov upload
         run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
+
   build-deb:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install xvfb for headless tests
+      run: sudo apt-get install xvfb
 
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
@@ -39,7 +43,7 @@ jobs:
         java-package: jdk
 
     - name: Run tests
-      run: "./gradlew check"
+      run: "xvfb-run --auto-servernum ./gradlew check"
 
   build-win:
     runs-on: windows-latest
