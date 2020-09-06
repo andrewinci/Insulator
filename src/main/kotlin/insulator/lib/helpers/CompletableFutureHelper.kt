@@ -27,9 +27,11 @@ fun <A, B> CompletableFuture<Either<Throwable, A>>.flatMap(f: (A) -> Either<Thro
 fun <A, B> CompletableFuture<Either<Throwable, A>>.fold(ifLeft: (Throwable) -> B, ifRight: (A) -> B):
     CompletableFuture<B> = this.thenApply { it.fold(ifLeft, ifRight) }
 
-fun <A, B> CompletableFuture<Either<Throwable, A>>.runOnFXThread(f: (A) -> B): CompletableFuture<Either<Throwable, B>> {
+fun <T> T.runOnFXThread(f: T.() -> Unit) = Platform.runLater { this.apply(f) }
+
+fun <A, B> CompletableFuture<Either<Throwable, A>>.completeOnFXThread(f: (A) -> B): CompletableFuture<Either<Throwable, B>> {
     val result = CompletableFuture<Either<Throwable, B>>()
-    this.thenApply { Platform.runLater { result.complete(it.map { f(it) }) } }
+    this.thenApply { result.runOnFXThread { complete(it.map { f(it) }) } }
     return result
 }
 

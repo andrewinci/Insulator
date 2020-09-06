@@ -1,8 +1,8 @@
 package insulator.viewmodel.main.topic
 
+import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
 import insulator.lib.helpers.map
-import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.collections.FXCollections
@@ -19,7 +19,7 @@ class ListTopicViewModel : InsulatorViewModel() {
     fun refresh() = adminApi
         .listTopics()
         .map { it.sorted() }
-        .runOnFXThread {
+        .completeOnFXThread {
             topicList.clear()
             topicList.addAll(it)
         }

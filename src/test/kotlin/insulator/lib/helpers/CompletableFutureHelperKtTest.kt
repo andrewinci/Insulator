@@ -15,7 +15,7 @@ class CompletableFutureHelperKtTest : FunSpec({
         val cf = CompletableFuture<Either<Throwable, Int>>()
         cf.complete(1.right())
         // act
-        val res = cf.runOnFXThread {
+        val res = cf.completeOnFXThread {
             it + 1
         }
         // assert

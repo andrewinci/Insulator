@@ -10,6 +10,7 @@ import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.searchBox
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
@@ -26,19 +27,18 @@ class TopicView : View() {
     private val cluster: Cluster by di()
     private val viewModel: TopicViewModel by inject()
     private val searchItem = SimpleStringProperty()
-    private val subtitleProperty = SimpleStringProperty().also {
-        it.bind(
-            Bindings.createStringBinding(
-                Callable {
-                    "Message count: ${viewModel.messageCountProperty.value} - " +
-                        "Is internal: ${viewModel.isInternalProperty.value} - " +
-                        "Partitions count: ${viewModel.partitionCountProperty.value} - " +
-                        "Compacted: ${viewModel.isCompactedProperty.value}"
-                },
-                viewModel.messageCountProperty
-            )
-        )
-    }
+    private val messageConsumedCountProperty: ObservableValue<Number> = Bindings.size(viewModel.records)
+    private val subtitleProperty = Bindings.createStringBinding(
+        Callable {
+            "Message count: ${messageConsumedCountProperty.value}/${viewModel.messageCountProperty.value} - " +
+                "Is internal: ${viewModel.isInternalProperty.value} - " +
+                "Partitions count: ${viewModel.partitionCountProperty.value} - " +
+                "Compacted: ${viewModel.isCompactedProperty.value}"
+        },
+        messageConsumedCountProperty,
+        viewModel.isCompactedProperty,
+        viewModel.messageCountProperty
+    )
 
     override val root = borderpane {
         top = vbox {
