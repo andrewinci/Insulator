@@ -24,7 +24,7 @@ class ConsumerTest : FunSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty())
         // act
-        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
+        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
         // assert
         delay(200)
         sut.stop()
@@ -36,7 +36,7 @@ class ConsumerTest : FunSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty())
         // act
-        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
+        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
         // assert
         delay(200)
         sut.stop()
@@ -48,7 +48,7 @@ class ConsumerTest : FunSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty())
         // act
-        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { _, v, _ -> messages.add(v) }
+        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
         // assert
         sut.isRunning() shouldBe true
         sut.stop()
