@@ -1,5 +1,6 @@
 package insulator.viewmodel.main.topic
 
+import arrow.core.Tuple3
 import arrow.core.right
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.Consumer
@@ -65,9 +66,9 @@ class TopicViewModelTest : FunSpec({
                     }
                     Consumer::class.java -> mockk<Consumer> {
                         every { start(any(), any(), any(), any()) } answers {
-                            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
-                            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
-                            lastArg<(String?, String, Long) -> Unit>()("1", "2", 3)
+                            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+                            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+                            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
                         }
                         every { stop() } just runs
                         every { isRunning() } returns false

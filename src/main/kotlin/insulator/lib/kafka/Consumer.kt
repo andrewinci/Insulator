@@ -18,7 +18,7 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
     private var threadLoop: Thread? = null
     private var running = false
 
-    fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (String?, String, Long) -> Unit) {
+    fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
         val consumer: Consumer<Any, Any> = when (valueFormat) {
             DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
@@ -36,14 +36,12 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
         threadLoop?.join()
     }
 
-    private fun loop(consumer: Consumer<Any, Any>, callback: (String?, String, Long) -> Unit) {
+    private fun loop(consumer: Consumer<Any, Any>, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
         threadLoop = thread {
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
                 if (records.isEmpty) continue
-                records.toList()
-                    .map { parse(it) }
-                    .forEach { (k, v, t) -> callback(k, v, t) }
+                callback(records.toList().map { parse(it) })
             }
         }
     }
