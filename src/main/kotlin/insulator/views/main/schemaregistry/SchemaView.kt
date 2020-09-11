@@ -5,8 +5,11 @@ import insulator.styles.Controls
 import insulator.styles.Theme
 import insulator.styles.Titles
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
+import javafx.event.EventTarget
 import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import javafx.scene.input.Clipboard
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
@@ -22,8 +25,9 @@ class SchemaView : View("Schema registry") {
 
     override val root = borderpane {
         top = vbox {
-            vbox {
+            hbox {
                 label(viewModel.nameProperty.value) { addClass(Titles.h1) }
+                deleteButton()
                 addClass(Controls.topBarMenu)
             }
             hbox { addClass(Controls.topBarMenuShadow) }
@@ -64,6 +68,30 @@ class SchemaView : View("Schema registry") {
             }
         }
         addClass(Controls.view)
+    }
+
+    private fun EventTarget.deleteButton() = apply {
+        button("Delete") {
+            addClass(Controls.alertButton)
+            action {
+                val closeWindow = { close() }
+                alert(
+                    Alert.AlertType.WARNING,
+                    "All versions of the schema \"${viewModel.nameProperty.value}\" will be removed.", null,
+                    ButtonType.CANCEL, ButtonType.OK,
+                    owner = currentWindow,
+                    actionFn = { buttonType ->
+                        when (buttonType) {
+                            ButtonType.OK -> {
+                                viewModel.delete()
+                                closeWindow()
+                            }
+                            else -> Unit
+                        }
+                    }
+                )
+            }
+        }
     }
 
     override fun onDock() {

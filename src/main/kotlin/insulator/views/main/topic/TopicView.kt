@@ -12,6 +12,7 @@ import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
+import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
@@ -45,27 +46,7 @@ class TopicView : View() {
             vbox {
                 hbox(spacing = 10.0, alignment = Pos.CENTER_LEFT) {
                     label(viewModel.nameProperty.value) { addClass(Titles.h1) }
-                    button("Delete") {
-                        addClass(Controls.alertButton)
-                        action {
-                            val closeWindow = { close() }
-                            alert(
-                                Alert.AlertType.WARNING,
-                                "The topic \"${viewModel.nameProperty.value}\" will be removed.", null,
-                                ButtonType.CANCEL, ButtonType.OK,
-                                owner = currentWindow,
-                                actionFn = { buttonType ->
-                                    when (buttonType) {
-                                        ButtonType.OK -> {
-                                            viewModel.delete()
-                                            closeWindow()
-                                        }
-                                        else -> Unit
-                                    }
-                                }
-                            )
-                        }
-                    }
+                    deleteButton()
                 }
                 label(subtitleProperty) { addClass(Titles.h3) }
                 addClass(Controls.topBarMenu, Titles.subtitle)
@@ -124,6 +105,30 @@ class TopicView : View() {
             }
         }
         addClass(Controls.view)
+    }
+
+    private fun EventTarget.deleteButton() = apply {
+        button("Delete") {
+            addClass(Controls.alertButton)
+            action {
+                val closeWindow = { close() }
+                alert(
+                    Alert.AlertType.WARNING,
+                    "The topic \"${viewModel.nameProperty.value}\" will be removed.", null,
+                    ButtonType.CANCEL, ButtonType.OK,
+                    owner = currentWindow,
+                    actionFn = { buttonType ->
+                        when (buttonType) {
+                            ButtonType.OK -> {
+                                viewModel.delete()
+                                closeWindow()
+                            }
+                            else -> Unit
+                        }
+                    }
+                )
+            }
+        }
     }
 
     private fun TableView<RecordViewModel>.recordList() =

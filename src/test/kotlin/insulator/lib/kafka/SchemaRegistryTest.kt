@@ -8,7 +8,7 @@ import io.mockk.mockk
 
 class SchemaRegistryTest : FunSpec({
 
-    test("getAllSubjects") {
+    test("happy path getAllSubjects") {
         // arrange
         val subjects = listOf("subject1", "subject2")
         val mockSchema = mockk<SchemaRegistryClient> {
@@ -21,7 +21,7 @@ class SchemaRegistryTest : FunSpec({
         res shouldBeRight subjects
     }
 
-    test("getSubject") {
+    test("happy path getSubject") {
         // arrange
         val mockSchema = mockk<SchemaRegistryClient> {
             every { getAllVersions(any()) } returns listOf(1, 2, 3)
@@ -34,6 +34,18 @@ class SchemaRegistryTest : FunSpec({
         val sut = SchemaRegistry(mockSchema)
         // act
         val res = sut.getSubject("subject1")
+        // assert
+        res shouldBeRight { }
+    }
+
+    test("happy path deleteSubject") {
+        // arrange
+        val mockSchema = mockk<SchemaRegistryClient> {
+            every { deleteSubject(any()) } returns listOf(1)
+        }
+        val sut = SchemaRegistry(mockSchema)
+        // act
+        val res = sut.deleteSubject("subject1")
         // assert
         res shouldBeRight { }
     }

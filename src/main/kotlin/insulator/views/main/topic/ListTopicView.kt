@@ -24,9 +24,8 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
                     action {
                         val scope = Scope()
                         setInScope(CreateTopicViewModel(), scope)
-                        find<CreateTopicView>(scope).also {
-                            it.whenUndockedOnce { viewModel.refresh() }
-                        }.openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                        find<CreateTopicView>(scope).also { it.whenUndockedOnce { viewModel.refresh() } }
+                            .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
                     }
                 }
             }
@@ -38,9 +37,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
                 if (this.selectedItem == null) return@onDoubleClick
                 val scope = Scope()
                 tornadofx.setInScope(TopicViewModel(this.selectedItem!!), scope)
-                find<TopicView>(scope).also {
-                    it.whenUndockedOnce { viewModel.refresh() }
-                }.openWindow()
+                find<TopicView>(scope).also { it.whenUndockedOnce { viewModel.refresh() } }.openWindow()
             }
             itemsProperty().set(
                 SortedFilteredList(viewModel.topicList).apply {
