@@ -9,32 +9,23 @@ import insulator.views.common.ICON_TOPICS
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
+import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.scene.Parent
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import java.util.concurrent.Callable
 
 class MainView : View("Insulator") {
 
     private val showSidebar = SimpleBooleanProperty(false)
-    private val currentCenter = SimpleObjectProperty<Parent>()
-    private val currentTitle = SimpleStringProperty()
-    private val currentViewProperty = SimpleObjectProperty<View>().also { currentView ->
-        currentView.onChange {
-            currentTitle.value = currentView.value.title
-            currentCenter.value = currentView.value.root
-        }
-    }
-
-    init {
-        currentViewProperty.value = find<ListTopicView>()
-    }
+    private val currentViewProperty = SimpleObjectProperty<View>().also { it.value = find<ListTopicView>() }
+    private val currentCenter = Bindings.createObjectBinding(Callable { currentViewProperty.value.root }, currentViewProperty)
+    private val currentTitle = Bindings.createStringBinding(Callable { currentViewProperty.value.title }, currentViewProperty)
 
     override val root = stackpane {
         borderpane {
