@@ -1,8 +1,8 @@
 package insulator.viewmodel.main.consumergroup
 
 import insulator.di.getInstanceNow
+import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
-import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -19,7 +19,7 @@ class ConsumerGroupViewModel(consumerGroupId: String) : ViewModel() {
 
     init {
         adminApi.describeConsumerGroup(consumerGroupId)
-            .runOnFXThread {
+            .completeOnFXThread {
                 val sorted = it.members
                     .map { it.clientId to it.topicPartitions }
                     .map { (memberName, topicPartitions) ->

@@ -2,6 +2,7 @@ package insulator.viewmodel.main
 
 import insulator.di.currentCluster
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.main.consumergroup.ListConsumerGroupView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.beans.binding.Bindings
@@ -29,6 +30,7 @@ class MainViewModel : InsulatorViewModel() {
             if (currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
             else alert(Alert.AlertType.WARNING, "Schema registry configuration not found"); Unit
         }
-        else -> error.set(Throwable("UI: Unable to navigate to ${clazz.qualifiedName}"))
+        ListConsumerGroupView::class.java -> currentViewProperty.set(find<ListConsumerGroupView>())
+        else -> error.set(Throwable("UI: Unable to navigate to ${clazz.name}"))
     }
 }
