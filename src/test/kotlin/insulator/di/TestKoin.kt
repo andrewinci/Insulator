@@ -11,7 +11,9 @@ class TestKoin : StringSpec({
 
     "Test koin modules" {
         currentCluster = Cluster(
-            UUID.randomUUID(), "test", "127.0.0.1:9092",
+            UUID.randomUUID(),
+            "test",
+            "127.0.0.1:9092",
             schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
         )
         koinApplication {

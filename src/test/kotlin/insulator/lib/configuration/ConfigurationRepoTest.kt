@@ -93,8 +93,12 @@ class ConfigurationRepoTest : FunSpec({
         // act
         val res = sut.store(
             Cluster(
-                uuid, "", "", true,
-                SslConfiguration("", "", "", ""), true,
+                uuid,
+                "",
+                "",
+                true,
+                SslConfiguration("", "", "", ""),
+                true,
                 SaslConfiguration("", ""),
                 SchemaRegistryConfiguration("", "", "")
             )

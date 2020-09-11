@@ -77,8 +77,10 @@ class SchemaView : View("Schema registry") {
                 val closeWindow = { close() }
                 alert(
                     Alert.AlertType.WARNING,
-                    "All versions of the schema \"${viewModel.nameProperty.value}\" will be removed.", null,
-                    ButtonType.CANCEL, ButtonType.OK,
+                    "All versions of the schema \"${viewModel.nameProperty.value}\" will be removed.",
+                    null,
+                    ButtonType.CANCEL,
+                    ButtonType.OK,
                     owner = currentWindow,
                     actionFn = { buttonType ->
                         when (buttonType) {
