@@ -1,7 +1,7 @@
 package insulator.lib.configuration
 
 import arrow.core.Either
-import arrow.core.extensions.fx
+import arrow.core.computations.either
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
@@ -24,7 +24,7 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
             }
     }
 
-    fun delete(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
+    fun delete(cluster: Cluster) = either.eager<ConfigurationRepoException, Unit> {
         (!getConfiguration()).clusters
             .map { it.guid to it }.filter { (guid, _) -> guid != cluster.guid }
             .map { it.second }
@@ -33,7 +33,7 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
             .also { config -> callbacks.forEach { it(config) } }
     }
 
-    fun store(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
+    fun store(cluster: Cluster) = either.eager<ConfigurationRepoException, Unit> {
         val configuration = (!getConfiguration()).clusters
             .map { it.guid to it }.toMap().plus(cluster.guid to cluster)
             .map { it.value }

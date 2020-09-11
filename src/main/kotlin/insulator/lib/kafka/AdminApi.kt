@@ -50,7 +50,7 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
                 NewTopic(it.name, it.partitionCount, it.replicationFactor)
                     .configs(mapOf(TopicConfig.CLEANUP_POLICY_CONFIG to compactedConfig(it.isCompacted)))
             }
-        ).all().toCompletableFuture()
+        ).all().thenApply { Unit }.toCompletableFuture()
 
     fun deleteTopic(topicName: String) = admin.deleteTopics(listOf(topicName)).all().toCompletableFuture()
 

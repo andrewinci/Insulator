@@ -1,7 +1,7 @@
 package insulator.lib.kafka
 
 import arrow.core.Either
-import arrow.core.extensions.fx
+import arrow.core.computations.either
 import arrow.core.left
 import arrow.core.right
 import insulator.lib.helpers.toEither
@@ -19,7 +19,7 @@ class SchemaRegistry(private val client: SchemaRegistryClient) {
         client.runCatching { allSubjects.sorted() }.toEither()
 
     fun getSubject(subject: String) =
-        Either.fx<Throwable, Subject> {
+        either.eager<Throwable, Subject> {
             val versions = !client.runCatching { getAllVersions(subject) }.toEither()
             Subject(
                 subject,

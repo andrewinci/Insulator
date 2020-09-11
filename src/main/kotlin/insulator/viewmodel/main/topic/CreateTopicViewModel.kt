@@ -1,6 +1,6 @@
 package insulator.viewmodel.main.topic
 
-import arrow.core.Option
+import arrow.core.Either
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.model.Topic
 import javafx.beans.property.SimpleBooleanProperty
@@ -17,8 +17,7 @@ class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : Ite
     val replicationFactorProperty = bind { item?.replicationFactorProperty }
     val isCompactedProperty = bind { item?.isCompactedProperty }
 
-    fun save(): Option<Throwable> = admin.createTopics(this.item.toTopic()).get()
-        .fold({ Option.just(it) }, { Option.empty() })
+    fun save(): Either<Throwable, Unit> = admin.createTopics(this.item.toTopic()).get()
 }
 
 class CreateTopicModel(topic: Topic? = null) {

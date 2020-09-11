@@ -48,8 +48,8 @@ class CreateTopicView : View() {
                 action {
                     viewModel.commit()
                     viewModel.save().fold(
-                        { close() },
-                        { alert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") }
+                        { alert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") },
+                        { close() }
                     )
                 }
             }
