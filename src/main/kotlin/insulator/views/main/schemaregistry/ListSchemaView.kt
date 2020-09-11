@@ -22,11 +22,11 @@ class ListSchemaView : View("Schema registry") {
                 if (this.selectedItem == null) return@onDoubleClick
                 val scope = Scope()
                 tornadofx.setInScope(viewModel.getSchema(this.selectedItem!!), scope)
-                find<SchemaView>(scope).openWindow()
+                find<SchemaView>(scope).also { it.whenUndockedOnce { viewModel.refresh() } }.openWindow()
             }
             runAsync {
                 itemsProperty().set(
-                    SortedFilteredList(viewModel.listSchemas()).apply {
+                    SortedFilteredList(viewModel.listSchema).apply {
                         filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
                     }.filteredItems
                 )

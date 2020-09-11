@@ -83,7 +83,7 @@ class SchemaView : View("Schema registry") {
                     actionFn = { buttonType ->
                         when (buttonType) {
                             ButtonType.OK -> {
-                                //todo: actually remove the schema
+                                viewModel.delete()
                                 closeWindow()
                             }
                             else -> Unit
