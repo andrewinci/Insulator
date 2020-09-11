@@ -114,8 +114,10 @@ class TopicView : View() {
                 val closeWindow = { close() }
                 alert(
                     Alert.AlertType.WARNING,
-                    "The topic \"${viewModel.nameProperty.value}\" will be removed.", null,
-                    ButtonType.CANCEL, ButtonType.OK,
+                    "The topic \"${viewModel.nameProperty.value}\" will be removed.",
+                    null,
+                    ButtonType.CANCEL,
+                    ButtonType.OK,
                     owner = currentWindow,
                     actionFn = { buttonType ->
                         when (buttonType) {

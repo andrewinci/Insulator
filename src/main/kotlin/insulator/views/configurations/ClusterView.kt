@@ -46,8 +46,10 @@ class ClusterView : View() {
                         val closeWindow = { close() }
                         alert(
                             Alert.AlertType.WARNING,
-                            "The cluster \"${viewModel.nameProperty.value}\" will be removed.", null,
-                            ButtonType.CANCEL, ButtonType.OK,
+                            "The cluster \"${viewModel.nameProperty.value}\" will be removed.",
+                            null,
+                            ButtonType.CANCEL,
+                            ButtonType.OK,
                             owner = currentWindow,
                             actionFn = { buttonType ->
                                 when (buttonType) {
