@@ -10,8 +10,14 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.runs
+import io.mockk.unmockkAll
+import io.mockk.verify
+import javafx.collections.FXCollections
+import javafx.scene.input.Clipboard
 import kotlinx.coroutines.delay
+import org.testfx.api.FxToolkit
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.KClass
@@ -47,12 +53,48 @@ class TopicViewModelTest : FunSpec({
 
     test("consume") {
         // arrange
+        FxToolkit.registerPrimaryStage()
         val sut = TopicViewModel(topicName)
         // act
         sut.consume()
         delay(1000)
         // assert
         sut.records.count() shouldBe 3
+    }
+
+    test("copy single element happy path") {
+        // arrange
+        val mockClipboard = mockk<Clipboard>(relaxed = true)
+        unmockkAll()
+        mockkStatic(Clipboard::class)
+        every { Clipboard.getSystemClipboard() } returns mockClipboard
+        val sut = TopicViewModel(topicName)
+        sut.selectedItem.set(RecordViewModel("key", "value", 1599913230000L))
+        // act
+        sut.copySelectedRecordToClipboard()
+        // assert
+        verify(exactly = 1) { mockClipboard.putString("2020-09-12 12:20:30\tkey\tvalue") }
+    }
+
+    test("copy all happy path") {
+        // arrange
+        val mockClipboard = mockk<Clipboard>(relaxed = true)
+        unmockkAll()
+        mockkStatic(Clipboard::class)
+        every { Clipboard.getSystemClipboard() } returns mockClipboard
+        val sut = TopicViewModel(topicName)
+        sut.filteredRecords.set(
+            FXCollections.observableList(
+                listOf(
+                    RecordViewModel("key1", "value1", 1599913230000L),
+                    RecordViewModel("key2", "value2", 1599913230000L)
+                )
+            )
+        )
+        // act
+        sut.copyAllRecordsToClipboard()
+        // assert
+        verify(exactly = 1) { mockClipboard.putString("2020-09-12 12:20:30\tkey1\tvalue1\n2020-09-12 12:20:30\tkey2\tvalue2") }
     }
 
     beforeTest {
