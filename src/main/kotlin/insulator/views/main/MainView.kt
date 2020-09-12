@@ -11,16 +11,11 @@ import insulator.views.common.InsulatorView
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
-import javafx.beans.binding.Bindings
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.Callable
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 

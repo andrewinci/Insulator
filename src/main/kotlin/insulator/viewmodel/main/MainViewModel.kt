@@ -8,7 +8,7 @@ import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.control.Alert
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.Callable
 
 class MainViewModel : InsulatorViewModel() {

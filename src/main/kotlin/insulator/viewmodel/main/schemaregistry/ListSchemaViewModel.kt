@@ -8,7 +8,7 @@ import insulator.views.main.schemaregistry.SchemaView
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListSchemaViewModel : InsulatorViewModel() {
 
@@ -45,7 +45,8 @@ class ListSchemaViewModel : InsulatorViewModel() {
                     find<SchemaView>(scope)
                         .also { view -> view.whenUndockedOnce { refresh() } }
                         .openWindow()
-                })
+                }
+            )
     }
 }
 

@@ -5,12 +5,10 @@ import insulator.styles.Controls
 import insulator.styles.Theme
 import insulator.styles.Titles
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
-import javafx.event.EventTarget
+import insulator.views.common.confirmationButton
 import javafx.geometry.Insets
 import javafx.geometry.Pos
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
-import javafx.scene.input.Clipboard
+import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
@@ -27,7 +25,10 @@ class SchemaView : View("Schema registry") {
         top = vbox {
             hbox {
                 label(viewModel.nameProperty.value) { addClass(Titles.h1) }
-                deleteButton()
+                confirmationButton("delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
+                    viewModel.delete()
+                    close()
+                }
                 addClass(Controls.topBarMenu)
             }
             hbox { addClass(Controls.topBarMenuShadow) }
@@ -41,58 +42,29 @@ class SchemaView : View("Schema registry") {
                 }
             }
             scrollpane {
-                textflow {
-                    children.bind(viewModel.schemaProperty) {
-                        val res = text(it.text) {
-                            fill = when (it) {
-                                is Token.Symbol -> Color.GRAY
-                                is Token.Key -> Color.BLUE
-                                is Token.Value -> Color.GREEN
-                            }
-                            font = Font.font("Helvetica", 15.0)
-                        }
-                        res
-                    }
-                    contextMenu = contextmenu {
-                        item("Copy") {
-                            action {
-                                val content = Clipboard.getSystemClipboard()
-                                content.putString(viewModel.schemaProperty.joinToString(separator = "") { it.text })
-                            }
-                        }
-                    }
-                    background = Background(BackgroundFill(Theme.backgroundColor, CornerRadii.EMPTY, Insets.EMPTY))
-                    vgrow = Priority.ALWAYS
-                }
+                schemaContent()
                 vgrow = Priority.ALWAYS
             }
         }
         addClass(Controls.view)
     }
 
-    private fun EventTarget.deleteButton() = apply {
-        button("Delete") {
-            addClass(Controls.alertButton)
-            action {
-                val closeWindow = { close() }
-                alert(
-                    Alert.AlertType.WARNING,
-                    "All versions of the schema \"${viewModel.nameProperty.value}\" will be removed.",
-                    null,
-                    ButtonType.CANCEL,
-                    ButtonType.OK,
-                    owner = currentWindow,
-                    actionFn = { buttonType ->
-                        when (buttonType) {
-                            ButtonType.OK -> {
-                                viewModel.delete()
-                                closeWindow()
-                            }
-                            else -> Unit
-                        }
+    private fun ScrollPane.schemaContent() = apply {
+        textflow {
+            children.bind(viewModel.schemaProperty) {
+                val res = text(it.text) {
+                    fill = when (it) {
+                        is Token.Symbol -> Color.GRAY
+                        is Token.Key -> Color.BLUE
+                        is Token.Value -> Color.GREEN
                     }
-                )
+                    font = Font.font("Helvetica", 15.0)
+                }
+                res
             }
+            contextMenu = contextmenu { item("Copy") { action { viewModel.copySchemaToClipboard() } } }
+            background = Background(BackgroundFill(Theme.backgroundColor, CornerRadii.EMPTY, Insets.EMPTY))
+            vgrow = Priority.ALWAYS
         }
     }
 

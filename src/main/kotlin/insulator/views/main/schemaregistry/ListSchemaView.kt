@@ -6,7 +6,6 @@ import insulator.views.common.InsulatorView
 import insulator.views.configurations.ListClusterView
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
-import javafx.scene.control.Alert
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports

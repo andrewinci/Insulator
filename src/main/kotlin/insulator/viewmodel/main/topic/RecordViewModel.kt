@@ -11,4 +11,8 @@ class RecordViewModel(key: String?, value: String, timestamp: Long) {
     val timestampProperty = SimpleStringProperty(dateTimeFormatter.format(Instant.ofEpochMilli(timestamp)))
     val keyProperty = SimpleStringProperty(key)
     val valueProperty = SimpleStringProperty(value)
+
+    fun toCsv() = "${this.timestampProperty.value}\t" +
+        "${this.keyProperty.value}\t" +
+        this.valueProperty.value
 }

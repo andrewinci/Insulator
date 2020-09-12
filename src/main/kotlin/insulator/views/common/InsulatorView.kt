@@ -5,9 +5,9 @@ import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import kotlin.reflect.KClass
 
-abstract class InsulatorView<T : InsulatorViewModel>(title: String, kClass: KClass<T>) : View(title) {
+abstract class InsulatorView<T : InsulatorViewModel>(title: String? = null, viewModelClazz: KClass<T>) : View(title) {
     protected val viewModel: T by lazy {
-        find(kClass, scope = scope)
+        find(viewModelClazz, scope = scope)
     }
 
     abstract fun onError(throwable: Throwable)

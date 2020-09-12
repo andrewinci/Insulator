@@ -3,9 +3,8 @@ package insulator.views.configurations
 import insulator.styles.Controls
 import insulator.styles.Titles
 import insulator.viewmodel.configurations.ClusterViewModel
+import insulator.views.common.confirmationButton
 import javafx.geometry.Insets
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ClusterView : View() {
@@ -39,29 +38,9 @@ class ClusterView : View() {
             }
             borderpane {
                 padding = Insets(0.0, 50.0, 0.0, 50.0)
-                left = button("Delete") {
-                    if (isNewCluster) isVisible = false
-                    addClass(Controls.alertButton)
-                    action {
-                        val closeWindow = { close() }
-                        alert(
-                            Alert.AlertType.WARNING,
-                            "The cluster \"${viewModel.nameProperty.value}\" will be removed.",
-                            null,
-                            ButtonType.CANCEL,
-                            ButtonType.OK,
-                            owner = currentWindow,
-                            actionFn = { buttonType ->
-                                when (buttonType) {
-                                    ButtonType.OK -> {
-                                        viewModel.delete()
-                                        closeWindow()
-                                    }
-                                    else -> Unit
-                                }
-                            }
-                        )
-                    }
+                left = confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
+                    viewModel.delete()
+                    close()
                 }
                 right = button("Save") {
                     enableWhen(viewModel.valid)

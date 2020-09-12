@@ -9,8 +9,8 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import tornadofx.ViewModel
-import tornadofx.onChange
+import javafx.scene.input.Clipboard
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class SchemaViewModel(schema: Subject) : ViewModel() {
     private val formatter: JsonFormatter by di()
@@ -32,4 +32,8 @@ class SchemaViewModel(schema: Subject) : ViewModel() {
     }
 
     fun delete() = schemaRegistry.deleteSubject(nameProperty.value)
+
+    fun copySchemaToClipboard() {
+        Clipboard.getSystemClipboard().putString(schemaProperty.joinToString(separator = "") { it.text })
+    }
 }
