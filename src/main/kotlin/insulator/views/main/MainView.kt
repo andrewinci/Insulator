@@ -3,9 +3,11 @@ package insulator.views.main
 import insulator.di.currentCluster
 import insulator.styles.Controls
 import insulator.styles.Titles
+import insulator.viewmodel.main.MainViewModel
 import insulator.views.common.ICON_MENU_SVG
 import insulator.views.common.ICON_REGISTRY
 import insulator.views.common.ICON_TOPICS
+import insulator.views.common.InsulatorView
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
@@ -20,7 +22,7 @@ import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.Callable
 
-class MainView : View("Insulator") {
+class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
     private val showSidebar = SimpleBooleanProperty(false)
     private val currentViewProperty = SimpleObjectProperty<View>().also { it.value = find<ListTopicView>() }
@@ -44,21 +46,22 @@ class MainView : View("Insulator") {
             centerProperty().bind(currentCenter)
         }
         anchorpane {
-            visibleWhen(showSidebar)
-            isPickOnBounds = false
-            padding = insets(-15.0, 0.0)
             vbox {
-                addClass(Controls.sidebar)
-                anchorpaneConstraints { bottomAnchor = 0; leftAnchor = 0; topAnchor = 60.0 }
-                boundsInParent
-
                 menuItem("Topics", ICON_TOPICS) { currentViewProperty.set(find<ListTopicView>()) }
                 menuItem("Schema Registry", ICON_REGISTRY) {
                     if (currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
                     else alert(Alert.AlertType.WARNING, "Schema registry configuration not found", owner = currentWindow)
                 }
                 button("Change cluster") { action { replaceWith<ListClusterView>() } }
+
+                addClass(Controls.sidebar)
+                anchorpaneConstraints { bottomAnchor = 0; leftAnchor = 0; topAnchor = 60.0 }
+                boundsInParent
             }
+
+            visibleWhen(showSidebar)
+            isPickOnBounds = false
+            padding = insets(-15.0, 0.0)
         }
         addClass(Controls.view)
     }
@@ -76,5 +79,9 @@ class MainView : View("Insulator") {
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
         title = currentCluster.name
+    }
+
+    override fun onError(throwable: Throwable) {
+        replaceWith<ListClusterView>()
     }
 }
