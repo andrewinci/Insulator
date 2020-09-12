@@ -2,6 +2,8 @@ package insulator.viewmodel.main.topic
 
 import arrow.core.Tuple3
 import arrow.core.right
+import helper.configureDi
+import helper.configureFXFramework
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.model.Topic
@@ -17,10 +19,8 @@ import io.mockk.verify
 import javafx.collections.FXCollections
 import javafx.scene.input.Clipboard
 import kotlinx.coroutines.delay
-import org.testfx.api.FxToolkit
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.CompletableFuture
-import kotlin.reflect.KClass
 
 class TopicViewModelTest : FunSpec({
 
@@ -53,7 +53,6 @@ class TopicViewModelTest : FunSpec({
 
     test("consume") {
         // arrange
-        FxToolkit.registerPrimaryStage()
         val sut = TopicViewModel(topicName)
         // act
         sut.consume()
@@ -98,26 +97,21 @@ class TopicViewModelTest : FunSpec({
     }
 
     beforeTest {
-        FX.dicontainer = object : DIContainer {
-            @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
-            override fun <T : Any> getInstance(type: KClass<T>): T {
-                return when (type.java) {
-                    AdminApi::class.java -> mockk<AdminApi> {
-                        every { describeTopic(any()) } returns CompletableFuture.completedFuture(Topic("Topic name").right())
-                        every { deleteTopic(any()) } returns CompletableFuture.completedFuture(null.right())
-                    }
-                    Consumer::class.java -> mockk<Consumer> {
-                        every { start(any(), any(), any(), any()) } answers {
-                            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                        }
-                        every { stop() } just runs
-                        every { isRunning() } returns false
-                    }
-                    else -> throw IllegalArgumentException("Missing dependency")
-                } as T
+        configureFXFramework()
+        configureDi(
+            AdminApi::class to mockk<AdminApi> {
+                every { describeTopic(any()) } returns CompletableFuture.completedFuture(Topic("Topic name").right())
+                every { deleteTopic(any()) } returns CompletableFuture.completedFuture(null.right())
+            },
+            Consumer::class to mockk<Consumer> {
+                every { start(any(), any(), any(), any()) } answers {
+                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+                }
+                every { stop() } just runs
+                every { isRunning() } returns false
             }
-        }
+        )
     }
 })

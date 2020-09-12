@@ -1,6 +1,8 @@
 package insulator.viewmodel.configurations
 
 import arrow.core.left
+import helper.configureDi
+import helper.configureFXFramework
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.ConfigurationRepoException
 import io.kotest.core.spec.style.FunSpec
@@ -9,8 +11,6 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import tornadofx.* // ktlint-disable no-wildcard-imports
-import kotlin.reflect.KClass
 
 class ListClusterViewModelTest : FunSpec({
 
@@ -27,15 +27,12 @@ class ListClusterViewModelTest : FunSpec({
     }
 
     beforeTest {
-        FX.dicontainer = object : DIContainer {
-            @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
-            override fun <T : Any> getInstance(type: KClass<T>): T = when (type.java) {
-                ConfigurationRepo::class.java -> mockk<ConfigurationRepo> {
-                    every { addNewClusterCallback(any()) } just runs
-                    every { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
-                }
-                else -> throw IllegalArgumentException("Missing dependency")
-            } as T
-        }
+        configureFXFramework()
+        configureDi(
+            ConfigurationRepo::class to mockk<ConfigurationRepo> {
+                every { addNewClusterCallback(any()) } just runs
+                every { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
+            }
+        )
     }
 })
