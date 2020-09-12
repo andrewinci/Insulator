@@ -23,7 +23,7 @@ data class Cluster(
         fun empty() = Cluster(UUID.randomUUID(), "", "")
     }
 
-    fun isSchemaRegistryConfigured() = schemaRegistryConfig?.endpoint != null
+    fun isSchemaRegistryConfigured() = !schemaRegistryConfig?.endpoint.isNullOrEmpty()
 }
 
 @Serializable

@@ -24,11 +24,6 @@ import java.util.concurrent.Callable
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
-    private val showSidebar = SimpleBooleanProperty(false)
-    private val currentViewProperty = SimpleObjectProperty<View>().also { it.value = find<ListTopicView>() }
-    private val currentCenter = Bindings.createObjectBinding(Callable { currentViewProperty.value.root }, currentViewProperty)
-    private val currentTitle = Bindings.createStringBinding(Callable { currentViewProperty.value.title }, currentViewProperty)
-
     override val root = stackpane {
         borderpane {
             top = vbox {
@@ -36,22 +31,19 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                     button {
                         addClass(Controls.iconButton)
                         graphic = SVGIcon(ICON_MENU_SVG, 20.0, Color.BLACK)
-                        action { showSidebar.set(!showSidebar.value) }
+                        action { viewModel.toggleSidebar() }
                     }
-                    label(currentTitle) { addClass(Titles.h1) }
+                    label(viewModel.currentTitle) { addClass(Titles.h1) }
                     addClass(Controls.topBarMenu)
                 }
                 hbox { addClass(Controls.topBarMenuShadow) }
             }
-            centerProperty().bind(currentCenter)
+            centerProperty().bind(viewModel.currentCenter)
         }
         anchorpane {
             vbox {
-                menuItem("Topics", ICON_TOPICS) { currentViewProperty.set(find<ListTopicView>()) }
-                menuItem("Schema Registry", ICON_REGISTRY) {
-                    if (currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
-                    else alert(Alert.AlertType.WARNING, "Schema registry configuration not found", owner = currentWindow)
-                }
+                menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class.java) }
+                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class.java) }
                 button("Change cluster") { action { replaceWith<ListClusterView>() } }
 
                 addClass(Controls.sidebar)
@@ -59,7 +51,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 boundsInParent
             }
 
-            visibleWhen(showSidebar)
+            visibleWhen(viewModel.showSidebar)
             isPickOnBounds = false
             padding = insets(-15.0, 0.0)
         }
@@ -70,7 +62,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         hbox(spacing = 5.0) {
             imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
             label(name) { addClass(Titles.h2) }
-            onMouseClicked = EventHandler { onClick(); showSidebar.set(false) }
+            onMouseClicked = EventHandler { onClick(); viewModel.toggleSidebar() }
             addClass(Controls.sidebarItem)
         }
 
