@@ -4,6 +4,7 @@ import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.SchemaRegistry
 import insulator.lib.kafka.model.Subject
+import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.property.Property
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
@@ -12,7 +13,7 @@ import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class SchemaViewModel(schema: Subject) : ViewModel() {
+class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
     private val formatter: JsonFormatter by di()
     private val schemaRegistry: SchemaRegistry by di()
 
@@ -22,6 +23,10 @@ class SchemaViewModel(schema: Subject) : ViewModel() {
     val schemaProperty: ObservableList<Token> = FXCollections.observableArrayList<Token>()
 
     init {
+        refresh()
+    }
+
+    private fun refresh() {
         selectedVersionProperty.onChange { version ->
             val schemaVersion = schema.schemas.first { it.version == version }.schema
             val res = formatter.formatJsonString(schemaVersion)
