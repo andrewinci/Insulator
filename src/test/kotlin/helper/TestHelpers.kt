@@ -16,7 +16,7 @@ fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
     }
 }
 
-fun cleanupDi(){
+fun cleanupDi() {
     FX.dicontainer = null
 }
 
