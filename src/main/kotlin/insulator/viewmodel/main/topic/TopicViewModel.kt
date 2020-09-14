@@ -32,8 +32,6 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     private val consumer: Consumer = getInstanceNow()
     val cluster: Cluster by di()
 
-    init { refresh() }
-
     private val isInternalProperty = SimpleBooleanProperty()
     private val partitionCountProperty = SimpleIntegerProperty()
     private val messageCountProperty = SimpleLongProperty()
@@ -68,6 +66,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         messageCountProperty
     )
 
+    init { refresh() }
     fun clear() = records.clear()
     fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
     fun delete() {

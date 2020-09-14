@@ -2,6 +2,7 @@ package insulator.viewmodel.main.topic
 
 import arrow.core.Tuple3
 import arrow.core.right
+import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
 import insulator.lib.kafka.AdminApi
@@ -96,7 +97,7 @@ class TopicViewModelTest : FunSpec({
         verify(exactly = 1) { mockClipboard.putString("2020-09-12 12:20:30\tkey1\tvalue1\n2020-09-12 12:20:30\tkey2\tvalue2") }
     }
 
-    beforeTest {
+    beforeSpec {
         configureFXFramework()
         configureDi(
             AdminApi::class to mockk<AdminApi> {
@@ -113,5 +114,9 @@ class TopicViewModelTest : FunSpec({
                 every { isRunning() } returns false
             }
         )
+    }
+
+    afterSpec {
+        cleanupFXFramework()
     }
 })

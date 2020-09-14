@@ -1,5 +1,7 @@
 package insulator.viewmodel.main
 
+import arrow.core.right
+import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
 import insulator.di.currentCluster
@@ -45,7 +47,13 @@ class MainViewModelTest : FunSpec({
         configureFXFramework()
         configureDi(
             AdminApi::class to mockk<AdminApi>(relaxed = true),
-            SchemaRegistry::class to mockk<SchemaRegistry>(relaxed = true)
+            SchemaRegistry::class to mockk<SchemaRegistry>(relaxed = true) {
+                every { getAllSubjects() } returns listOf("").right()
+            }
         )
+    }
+
+    afterTest {
+        cleanupFXFramework()
     }
 })

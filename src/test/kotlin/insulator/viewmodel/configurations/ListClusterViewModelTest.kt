@@ -1,6 +1,7 @@
 package insulator.viewmodel.configurations
 
 import arrow.core.left
+import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
 import insulator.lib.configuration.ConfigurationRepo
@@ -34,5 +35,9 @@ class ListClusterViewModelTest : FunSpec({
                 every { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
             }
         )
+    }
+
+    afterTest {
+        cleanupFXFramework()
     }
 })

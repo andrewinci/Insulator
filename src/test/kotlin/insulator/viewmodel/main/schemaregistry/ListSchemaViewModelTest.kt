@@ -33,6 +33,7 @@ class ListSchemaViewModelTest : FunSpec({
         // act
         val schemas = sut.listSchema
         // assert
+        waitFXThread()
         schemas.size shouldBe 2
         sut.error.value shouldBe null
     }
@@ -58,7 +59,6 @@ class ListSchemaViewModelTest : FunSpec({
         sut.runOnFXThread { showSchema() }
         // assert
         waitFXThread()
-        sut.listSchema.size shouldBe 2
         verify(exactly = 1) { schemaRegistry.second.getSubject(targetSubject) }
         sut.error.value shouldBe null
     }
@@ -73,7 +73,6 @@ class ListSchemaViewModelTest : FunSpec({
         sut.runOnFXThread { showSchema() }
         // assert
         waitFXThread()
-        sut.listSchema.size shouldBe 2
         verify(exactly = 1) { schemaRegistry.second.getSubject(targetSubject) }
         sut.error.value shouldBe LoadSchemaError(errorMessage)
     }

@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore
 import kotlin.reflect.KClass
 
 fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
+    if (FX.dicontainer != null) throw TestHelperError("DI already configured")
     FX.dicontainer = object : DIContainer {
         @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
         override fun <T : Any> getInstance(type: KClass<T>): T =
@@ -22,6 +23,7 @@ fun configureFXFramework() {
 
 fun cleanupFXFramework() {
     FxToolkit.cleanupStages()
+    FX.dicontainer = null
 }
 
 fun waitFXThread() {
@@ -29,3 +31,5 @@ fun waitFXThread() {
     Platform.runLater { semaphore.release() }
     semaphore.acquire()
 }
+
+class TestHelperError(message: String) : Throwable(message)

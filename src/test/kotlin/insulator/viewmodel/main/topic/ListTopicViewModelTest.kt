@@ -1,6 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import arrow.core.left
+import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
 import insulator.lib.kafka.AdminApi
@@ -32,5 +33,8 @@ class ListTopicViewModelTest : FunSpec({
                 every { listTopics() } returns CompletableFuture.completedFuture(Throwable(errorMessage).left())
             }
         )
+    }
+    afterTest {
+        cleanupFXFramework()
     }
 })
