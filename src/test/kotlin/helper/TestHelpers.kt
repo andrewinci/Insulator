@@ -16,6 +16,10 @@ fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
     }
 }
 
+fun cleanupDi(){
+    FX.dicontainer = null
+}
+
 fun configureFXFramework() {
     val stage = FxToolkit.registerPrimaryStage()
     FX.setPrimaryStage(stage = stage)
@@ -23,7 +27,7 @@ fun configureFXFramework() {
 
 fun cleanupFXFramework() {
     FxToolkit.cleanupStages()
-    FX.dicontainer = null
+    cleanupDi()
 }
 
 fun waitFXThread() {
