@@ -15,10 +15,6 @@ import org.koin.dsl.module
 
 class ConsumerTest : FunSpec({
 
-    beforeTest {
-        startKoin { modules(testConsumerFixture) }
-    }
-
     test("start happy path") {
         // arrange
         val messages = mutableListOf<String>()
@@ -62,19 +58,34 @@ class ConsumerTest : FunSpec({
         sut.stop()
     }
 
-    afterTest { stopKoin() }
+    lateinit var fixture: TestConsumerFixture
+    beforeTest {
+        fixture = TestConsumerFixture()
+        startKoin { modules(fixture.koinModule) }
+    }
+
+    afterTest {
+        stopKoin()
+        fixture.mockConsumer.close()
+    }
 })
 
-val testConsumerFixture = module {
-    scope<Cluster> {
-        // Consumers
-        scoped<org.apache.kafka.clients.consumer.Consumer<Any, Any>>() {
-            MockConsumer<Any, Any>(OffsetResetStrategy.EARLIEST).also {
-                val topicName = "testTopic"
-                it.updatePartitions(topicName, listOf(PartitionInfo(topicName, 0, null, null, null)))
-                it.updateBeginningOffsets(mapOf(TopicPartition(topicName, 0) to 0L))
-                it.assign(listOf(TopicPartition(topicName, 0)))
-                it.addRecord(ConsumerRecord(topicName, 0, 0L, "key", "value"))
+class TestConsumerFixture {
+
+    val mockConsumer = MockConsumer<Any, Any>(OffsetResetStrategy.EARLIEST).also {
+        val topicName = "testTopic"
+        it.updatePartitions(topicName, listOf(PartitionInfo(topicName, 0, null, null, null)))
+        it.updateBeginningOffsets(mapOf(TopicPartition(topicName, 0) to 0L))
+        it.updateEndOffsets(mapOf(TopicPartition(topicName, 0) to 1L))
+        it.assign(listOf(TopicPartition(topicName, 0)))
+        it.addRecord(ConsumerRecord(topicName, 0, 0L, "key", "value"))
+    }
+
+    val koinModule = module {
+        scope<Cluster> {
+            // Consumers
+            scoped<org.apache.kafka.clients.consumer.Consumer<Any, Any>>() {
+                mockConsumer
             }
         }
     }

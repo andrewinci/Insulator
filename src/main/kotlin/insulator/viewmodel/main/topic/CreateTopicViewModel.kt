@@ -10,7 +10,7 @@ import tornadofx.ItemViewModel
 
 class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : ItemViewModel<CreateTopicModel>(cluster) {
 
-    val admin: AdminApi by di()
+    private val admin: AdminApi by di()
 
     val nameProperty = bind { item?.nameProperty }
     val partitionCountProperty = bind { item?.partitionCountProperty }

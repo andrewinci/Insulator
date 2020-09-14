@@ -3,38 +3,21 @@ package insulator.views.main
 import insulator.di.currentCluster
 import insulator.styles.Controls
 import insulator.styles.Titles
+import insulator.viewmodel.main.MainViewModel
 import insulator.views.common.ICON_MENU_SVG
 import insulator.views.common.ICON_REGISTRY
 import insulator.views.common.ICON_TOPICS
+import insulator.views.common.InsulatorView
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.scene.Parent
-import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class MainView : View("Insulator") {
-
-    private val showSidebar = SimpleBooleanProperty(false)
-    private val currentCenter = SimpleObjectProperty<Parent>()
-    private val currentTitle = SimpleStringProperty()
-    private val currentViewProperty = SimpleObjectProperty<View>().also { currentView ->
-        currentView.onChange {
-            currentTitle.value = currentView.value.title
-            currentCenter.value = currentView.value.root
-        }
-    }
-
-    init {
-        currentViewProperty.value = find<ListTopicView>()
-    }
+class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
     override val root = stackpane {
         borderpane {
@@ -43,31 +26,29 @@ class MainView : View("Insulator") {
                     button {
                         addClass(Controls.iconButton)
                         graphic = SVGIcon(ICON_MENU_SVG, 20.0, Color.BLACK)
-                        action { showSidebar.set(!showSidebar.value) }
+                        action { viewModel.toggleSidebar() }
                     }
-                    label(currentTitle) { addClass(Titles.h1) }
+                    label(viewModel.currentTitle) { addClass(Titles.h1) }
                     addClass(Controls.topBarMenu)
                 }
                 hbox { addClass(Controls.topBarMenuShadow) }
             }
-            centerProperty().bind(currentCenter)
+            centerProperty().bind(viewModel.currentCenter)
         }
         anchorpane {
-            visibleWhen(showSidebar)
-            isPickOnBounds = false
-            padding = insets(-15.0, 0.0)
             vbox {
+                menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class.java) }
+                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class.java) }
+                button("Change cluster") { action { replaceWith<ListClusterView>() } }
+
                 addClass(Controls.sidebar)
                 anchorpaneConstraints { bottomAnchor = 0; leftAnchor = 0; topAnchor = 60.0 }
                 boundsInParent
-
-                menuItem("Topics", ICON_TOPICS) { currentViewProperty.set(find<ListTopicView>()) }
-                menuItem("Schema Registry", ICON_REGISTRY) {
-                    if (currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
-                    else alert(Alert.AlertType.WARNING, "Schema registry configuration not found", owner = currentWindow)
-                }
-                button("Change cluster") { action { replaceWith<ListClusterView>() } }
             }
+
+            visibleWhen(viewModel.showSidebar)
+            isPickOnBounds = false
+            padding = insets(-15.0, 0.0)
         }
         addClass(Controls.view)
     }
@@ -76,7 +57,7 @@ class MainView : View("Insulator") {
         hbox(spacing = 5.0) {
             imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
             label(name) { addClass(Titles.h2) }
-            onMouseClicked = EventHandler { onClick(); showSidebar.set(false) }
+            onMouseClicked = EventHandler { onClick(); viewModel.toggleSidebar() }
             addClass(Controls.sidebarItem)
         }
 
@@ -85,5 +66,9 @@ class MainView : View("Insulator") {
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
         title = currentCluster.name
+    }
+
+    override fun onError(throwable: Throwable) {
+        replaceWith<ListClusterView>()
     }
 }
