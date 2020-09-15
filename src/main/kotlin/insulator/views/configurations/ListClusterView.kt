@@ -51,6 +51,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
     private fun buildClusterCell(cluster: Cluster): BorderPane {
         return borderpane {
             maxHeight = 80.0
+            maxWidth = 375.0
             center = vbox(alignment = Pos.CENTER_LEFT) {
                 label(cluster.name) { addClass(Titles.h2) }
                 label(cluster.endpoint) { addClass(Titles.h3) }
