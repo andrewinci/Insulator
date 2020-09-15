@@ -4,6 +4,7 @@ import arrow.core.extensions.either.applicativeError.handleError
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.common.StringScope
 import insulator.views.main.schemaregistry.SchemaView
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -40,11 +41,13 @@ class ListSchemaViewModel : InsulatorViewModel() {
             .fold(
                 { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) },
                 {
-                    val scope = Scope()
-                    tornadofx.setInScope(it, scope)
-                    find<SchemaView>(scope)
-                        .also { view -> view.whenUndockedOnce { refresh() } }
-                        .openWindow()
+                    StringScope(it.nameProperty.value)
+                        .withComponent(it)
+                        .let {
+                            find<SchemaView>(it)
+                                .also { view -> view.whenUndockedOnce { refresh() } }
+                                .openWindow()
+                        }
                 }
             )
     }
