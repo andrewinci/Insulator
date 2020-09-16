@@ -4,6 +4,7 @@ import insulator.viewmodel.main.topic.CreateTopicViewModel
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
+import insulator.views.common.StringScope
 import insulator.views.common.searchBox
 import insulator.views.configurations.ListClusterView
 import javafx.beans.property.SimpleStringProperty
@@ -22,10 +23,11 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
             left = hbox {
                 button("Create topic") {
                     action {
-                        val scope = Scope()
-                        setInScope(CreateTopicViewModel(), scope)
-                        find<CreateTopicView>(scope).also { it.whenUndockedOnce { viewModel.refresh() } }
-                            .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                        with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
+                            find<CreateTopicView>(this).also {
+                                it.whenUndockedOnce { viewModel.refresh(); this.close() }
+                            }.openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                        }
                     }
                 }
             }
@@ -35,9 +37,9 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
             cellFormat { graphic = label(it) }
             onDoubleClick {
                 if (this.selectedItem == null) return@onDoubleClick
-                val scope = Scope()
-                tornadofx.setInScope(TopicViewModel(this.selectedItem!!), scope)
-                find<TopicView>(scope).also { it.whenUndockedOnce { viewModel.refresh() } }.openWindow()
+                with(StringScope(this.selectedItem!!).withComponent(TopicViewModel(this.selectedItem!!))) {
+                    find<TopicView>(this).also { it.whenUndockedOnce { viewModel.refresh() } }.openWindow()
+                }
             }
             itemsProperty().set(
                 SortedFilteredList(viewModel.topicList).apply {

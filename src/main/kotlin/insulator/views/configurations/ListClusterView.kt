@@ -9,6 +9,7 @@ import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.common.ICON_SETTINGS_SVG
 import insulator.views.common.InsulatorView
+import insulator.views.common.StringScope
 import insulator.views.main.MainView
 import javafx.event.EventHandler
 import javafx.geometry.Pos
@@ -26,9 +27,9 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                 graphic = buildClusterCell(cluster)
                 onMouseClicked = EventHandler {
                     currentCluster = cluster
-                    val scope = Scope()
-                    setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
-                    replaceWith(find<MainView>(scope))
+                    StringScope("Cluster-${cluster.guid}")
+                        .withComponent(ClusterViewModel(ClusterModel(cluster)))
+                        .let { replaceWith(find<MainView>(it)) }
                 }
             }
         }
@@ -37,9 +38,10 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                 alignment = Pos.CENTER_RIGHT
                 text = "Add new cluster"
                 action {
-                    val scope = Scope()
-                    setInScope(ClusterViewModel(ClusterModel(Cluster.empty())), scope)
-                    find<ClusterView>(scope).openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                    val clusterScope = StringScope("CreateNewCluster")
+                        .withComponent(ClusterViewModel(ClusterModel(Cluster.empty())))
+                    find<ClusterView>(clusterScope).also { it.whenUndockedOnce { clusterScope.close() } }
+                        .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
                 }
             }
         }
@@ -58,9 +60,9 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                     addClass(Controls.iconButton)
                     graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
                     onMouseClicked = EventHandler {
-                        val scope = Scope()
-                        setInScope(ClusterViewModel(ClusterModel(cluster)), scope)
-                        find<ClusterView>(scope).openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                        StringScope("Cluster-${cluster.guid}")
+                            .withComponent(ClusterViewModel(ClusterModel(cluster)))
+                            .let { find<ClusterView>(it).openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL) }
                     }
                 }
             }
