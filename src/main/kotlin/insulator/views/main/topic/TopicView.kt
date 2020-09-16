@@ -90,14 +90,14 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
             bindSelected(viewModel.selectedItem)
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
+            prefWidth = 800.0
+            prefHeight = 800.0
         }
     }
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
         titleProperty.bind(viewModel.nameProperty)
-        super.currentStage?.width = 800.0
-        super.currentStage?.height = 800.0
         super.onDock()
     }
 

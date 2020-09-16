@@ -5,6 +5,7 @@ import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.StringScope
+import insulator.views.common.customOpenWindow
 import insulator.views.main.schemaregistry.SchemaView
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -46,7 +47,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
                         .let {
                             find<SchemaView>(it)
                                 .also { view -> view.whenUndockedOnce { refresh() } }
-                                .openWindow()
+                                .customOpenWindow()
                         }
                 }
             )
