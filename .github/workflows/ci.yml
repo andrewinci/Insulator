@@ -11,31 +11,24 @@ on:
 jobs:
   build-mac:
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Setup Java JDK
         uses: actions/setup-java@v1.3.0
         with:
           java-version: 14
           java-package: jdk
-
       - name: Run tests
         run: "./gradlew check jacocoTestReport"
-      
       - name: Codecov upload
         run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
 
   build-deb:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Install xvfb for headless tests
       run: sudo apt-get install xvfb
-
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
@@ -47,15 +40,12 @@ jobs:
 
   build-win:
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
         java-version: 14
         java-package: jdk
-
     - name: Run tests
       run: "./gradlew check"
