@@ -47,6 +47,8 @@ class SchemaView : View("Schema registry") {
             }
         }
         addClass(Controls.view)
+        prefWidth = 800.0
+        prefHeight = 800.0
     }
 
     private fun ScrollPane.schemaContent() = apply {
@@ -69,8 +71,8 @@ class SchemaView : View("Schema registry") {
     }
 
     override fun onDock() {
-        super.currentStage?.width = 800.0
-        super.currentStage?.height = 800.0
+//        super.currentStage?.width = 800.0
+//        super.currentStage?.height = 800.0
         title = viewModel.nameProperty.value
         super.onDock()
     }

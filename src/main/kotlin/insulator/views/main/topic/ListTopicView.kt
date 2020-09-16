@@ -5,6 +5,7 @@ import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.common.StringScope
+import insulator.views.common.customOpenWindow
 import insulator.views.common.searchBox
 import insulator.views.configurations.ListClusterView
 import javafx.beans.property.SimpleStringProperty
@@ -26,7 +27,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
                         with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
                             find<CreateTopicView>(this).also {
                                 it.whenUndockedOnce { viewModel.refresh(); this.close() }
-                            }.openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                            }.customOpenWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
                         }
                     }
                 }
@@ -38,7 +39,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
             onDoubleClick {
                 if (this.selectedItem == null) return@onDoubleClick
                 with(StringScope(this.selectedItem!!).withComponent(TopicViewModel(this.selectedItem!!))) {
-                    find<TopicView>(this).also { it.whenUndockedOnce { viewModel.refresh() } }.openWindow()
+                    find<TopicView>(this).also { it.whenUndockedOnce { viewModel.refresh() } }.customOpenWindow()
                 }
             }
             itemsProperty().set(
