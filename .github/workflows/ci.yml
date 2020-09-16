@@ -23,6 +23,9 @@ jobs:
 
       - name: Run tests
         run: "./gradlew check jacocoTestReport"
+      
+      - name: Codecov upload
+        run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
 
   build-deb:
     runs-on: ubuntu-latest
@@ -41,9 +44,6 @@ jobs:
 
     - name: Run tests
       run: "xvfb-run --auto-servernum ./gradlew check"
-
-    - name: Codecov upload
-      run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
 
   build-win:
     runs-on: windows-latest
