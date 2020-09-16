@@ -138,6 +138,15 @@ class Root : Stylesheet() {
                 arrow { backgroundColor = multi(Color.TRANSPARENT) }
                 listCell { and(hover) { textFill = Theme.backgroundColor } }
             }
+            treeView {
+                borderColor = multi(box(Theme.backgroundColor))
+                focusColor = Theme.backgroundColor
+                backgroundColor = multi(Color.TRANSPARENT)
+            }
+            treeCell {
+                textFill = Theme.darkGray
+                backgroundColor = multi(Color.TRANSPARENT)
+            }
         }
     }
 }
