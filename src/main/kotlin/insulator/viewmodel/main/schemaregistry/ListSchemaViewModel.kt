@@ -47,7 +47,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
                         .let {
                             find<SchemaView>(it)
                                 .also { view -> view.whenUndockedOnce { refresh() } }
-                                .customOpenWindow()
+                                .customOpenWindow(owner = null)
                         }
                 }
             )
