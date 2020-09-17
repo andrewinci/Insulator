@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.di.currentCluster
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
@@ -38,8 +39,8 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
             cellFormat { graphic = label(it) }
             onDoubleClick {
                 if (this.selectedItem == null) return@onDoubleClick
-                with(StringScope(this.selectedItem!!).withComponent(TopicViewModel(this.selectedItem!!))) {
-                    find<TopicView>(this).also { it.whenUndockedOnce { viewModel.refresh() } }.customOpenWindow()
+                with(StringScope("$currentCluster-${this.selectedItem!!}").withComponent(TopicViewModel(this.selectedItem!!))) {
+                    find<TopicView>(this).also { it.whenUndockedOnce { viewModel.refresh() } }.customOpenWindow(owner = null)
                 }
             }
             itemsProperty().set(

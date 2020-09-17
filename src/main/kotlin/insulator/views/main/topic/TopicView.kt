@@ -9,12 +9,14 @@ import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.common.confirmationButton
 import insulator.views.common.searchBox
+import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import java.util.concurrent.Callable
 
 class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
 
@@ -97,7 +99,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
-        titleProperty.bind(viewModel.nameProperty)
+        titleProperty.bind(Bindings.createStringBinding(Callable { "${viewModel.cluster.name}  ${viewModel.nameProperty.value}" }, viewModel.nameProperty))
         super.onDock()
     }
 
