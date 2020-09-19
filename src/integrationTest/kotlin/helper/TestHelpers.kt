@@ -1,9 +1,7 @@
 package helper
 
-import javafx.application.Platform
 import org.testfx.api.FxToolkit
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.Semaphore
 import kotlin.reflect.KClass
 
 fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
@@ -28,12 +26,6 @@ fun configureFXFramework() {
 fun cleanupFXFramework() {
     FxToolkit.cleanupStages()
     cleanupDi()
-}
-
-fun waitFXThread() {
-    val semaphore = Semaphore(0)
-    Platform.runLater { semaphore.release() }
-    semaphore.acquire()
 }
 
 class TestHelperError(message: String) : Throwable(message)
