@@ -75,6 +75,4 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
         titleProperty.bind(Bindings.createStringBinding(Callable { "${viewModel.cluster.name}  ${viewModel.nameProperty.value}" }, viewModel.nameProperty))
         super.onDock()
     }
-
-    override fun onError(throwable: Throwable) {}
 }

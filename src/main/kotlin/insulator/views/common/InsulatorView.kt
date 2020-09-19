@@ -10,7 +10,7 @@ abstract class InsulatorView<T : InsulatorViewModel>(title: String? = null, view
         find(viewModelClazz, scope = scope)
     }
 
-    abstract fun onError(throwable: Throwable)
+    open fun onError(throwable: Throwable) {}
 
     override fun onDock() {
         val handleError: (Throwable?) -> Unit = {

@@ -14,9 +14,9 @@ import tornadofx.UIComponent
 import tornadofx.launch
 import kotlin.system.exitProcess
 
-class Insulator : App(ListClusterView::class, Theme::class, Titles::class, Root::class, Controls::class){
+class Insulator : App(ListClusterView::class, Theme::class, Titles::class, Root::class, Controls::class) {
     override fun createPrimaryScene(view: UIComponent): Scene {
-        FX.primaryStage.setOnCloseRequest { stop()  }
+        FX.primaryStage.setOnCloseRequest { stop() }
         return super.createPrimaryScene(view)
     }
     override fun stop() {
