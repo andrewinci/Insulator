@@ -18,8 +18,9 @@ fun UIComponent.customOpenWindow(
     owner: Window? = currentWindow,
     resizable: Boolean? = null
 ): Stage? {
-    if (modalStage != null && !modalStage!!.isShowing) {
+    if (modalStage != null) {
         modalStage!!.show()
+        modalStage!!.toFront()
         return modalStage
     }
     modalStage = Stage(stageStyle)
@@ -44,7 +45,6 @@ fun UIComponent.customOpenWindow(
 
         val primaryStage = FX.getPrimaryStage(scope)
         if (primaryStage != null) icons += primaryStage.icons
-
         hookGlobalShortcuts()
         onBeforeShow()
         setOnShown {
