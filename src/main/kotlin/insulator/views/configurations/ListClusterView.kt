@@ -16,6 +16,7 @@ import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
 import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClusterViewModel::class) {
@@ -41,7 +42,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                     val clusterScope = StringScope("CreateNewCluster")
                         .withComponent(ClusterViewModel(ClusterModel(Cluster.empty())))
                     find<ClusterView>(clusterScope).also { it.whenUndockedOnce { clusterScope.close() } }
-                        .customOpenWindow(modality = Modality.WINDOW_MODAL)
+                        .customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
                 }
             }
         }
@@ -61,7 +62,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                     onMouseClicked = EventHandler {
                         StringScope("Cluster-${cluster.guid}")
                             .withComponent(ClusterViewModel(ClusterModel(cluster)))
-                            .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL) }
+                            .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
                     }
                 }
             }

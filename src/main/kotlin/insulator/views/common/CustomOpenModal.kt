@@ -13,7 +13,7 @@ import kotlin.reflect.full.memberProperties
 // PATCH: https://github.com/edvin/tornadofx/issues/928
 @JvmOverloads
 fun UIComponent.customOpenWindow(
-    stageStyle: StageStyle = StageStyle.UTILITY,
+    stageStyle: StageStyle = StageStyle.DECORATED,
     modality: Modality = Modality.NONE,
     owner: Window? = currentWindow,
     resizable: Boolean? = null
