@@ -1,5 +1,6 @@
 package insulator.viewmodel.main.schemaregistry
 
+import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.SchemaRegistry
@@ -14,6 +15,7 @@ import javafx.scene.input.Clipboard
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
+    val cluster: Cluster by di()
     private val formatter: JsonFormatter by di()
     private val schemaRegistry: SchemaRegistry by di()
 
