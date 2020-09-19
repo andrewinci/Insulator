@@ -53,7 +53,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
             maxHeight = 80.0
             maxWidth = 375.0
             center = vbox(alignment = Pos.CENTER_LEFT) {
-                label(cluster.name) { addClass(Titles.h2) }
+                label(cluster.name) { id = "label-cluster-name-${cluster.guid}"; addClass(Titles.h2) }
                 label(cluster.endpoint) { addClass(Titles.h3) }
             }
             right = vbox(alignment = Pos.CENTER) {

@@ -7,6 +7,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "6.0.0"
     id "org.jlleitschuh.gradle.ktlint" version "9.4.0"
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.3.72'
+    id "org.unbroken-dome.test-sets" version "3.0.1"
     id 'jacoco'
 }
 
@@ -70,28 +71,19 @@ dependencies {
     testCompile group: 'org.testfx', name: 'testfx-junit5', version: "4.0.16-alpha"
 
     testImplementation group: 'io.mockk', name: 'mockk', version: '1.10.0'
-
 }
 
-test {
-    useJUnitPlatform()
-}
+testSets { integrationTest }
 
-application {
-    mainClassName = 'insulator.AppKt'
-}
+tasks.withType(Test) { useJUnitPlatform() }
+
+application { mainClassName = 'insulator.AppKt' }
 
 compileKotlin { kotlinOptions.jvmTarget = "1.8" }
 
 compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'insulator.AppKt'
-        )
-    }
-}
+jar { manifest { attributes('Main-Class': 'insulator.AppKt') } }
 
 import org.gradle.internal.os.OperatingSystem;
 
@@ -123,6 +115,8 @@ tasks.jacocoTestReport {
     }
 }
 
-tasks.check.doLast {
-    tasks.jacocoTestReport
-}
+project.integrationTest { outputs.upToDateWhen { false } }
+
+check.dependsOn test
+check.dependsOn integrationTest
+check.doLast { tasks.jacocoTestReport }
