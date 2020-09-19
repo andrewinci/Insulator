@@ -1,10 +1,11 @@
-package insulator
+package insulator.integrationtest
 
 import arrow.core.right
 import helper.cleanupFXFramework
 import helper.configureFXFramework
 import helper.configureIntegrationDi
 import helper.waitPrimaryStage
+import insulator.Insulator
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
@@ -20,7 +21,7 @@ import org.testfx.api.FxAssert
 import org.testfx.matcher.control.LabeledMatchers
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class InsulatorTest : FunSpec({
+class ListClusterTest : FunSpec({
 
     test("Insulator start successfully showing the list of clusters") {
         // arrange
