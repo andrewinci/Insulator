@@ -19,7 +19,7 @@ fun UIComponent.customOpenWindow(
     resizable: Boolean? = null
 ): Stage? {
     if (modalStage != null) {
-        with(modalStage!!){
+        with(modalStage!!) {
             isIconified = false
             show()
             toFront()
