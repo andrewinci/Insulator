@@ -1,4 +1,4 @@
-package helper
+package insulator.integrationtest.helper
 
 import javafx.stage.Stage
 import org.testfx.api.FxToolkit

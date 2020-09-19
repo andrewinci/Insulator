@@ -1,11 +1,11 @@
 package insulator.integrationtest
 
 import arrow.core.right
-import helper.cleanupFXFramework
-import helper.configureFXFramework
-import helper.configureIntegrationDi
-import helper.waitPrimaryStage
 import insulator.Insulator
+import insulator.integrationtest.helper.cleanupFXFramework
+import insulator.integrationtest.helper.configureFXFramework
+import insulator.integrationtest.helper.configureIntegrationDi
+import insulator.integrationtest.helper.waitPrimaryStage
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
