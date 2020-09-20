@@ -2,14 +2,9 @@ package insulator.integrationtest
 
 import arrow.core.right
 import insulator.Insulator
-import insulator.integrationtest.helper.TestCluster
-import insulator.integrationtest.helper.cleanupFXFramework
-import insulator.integrationtest.helper.configureFXFramework
-import insulator.integrationtest.helper.configureIntegrationDi
-import insulator.integrationtest.helper.waitPrimaryStage
+import insulator.integrationtest.helper.IntegrationTestContext
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Configuration
-import insulator.lib.helpers.runOnFXThread
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -18,41 +13,35 @@ import io.mockk.mockk
 import io.mockk.runs
 import javafx.scene.control.Label
 import javafx.stage.Stage
-import org.testfx.api.FxRobot
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import org.testfx.util.WaitForAsyncUtils.waitForFxEvents
+import tornadofx.FX
 
 class ListTopicTest : FunSpec({
 
     test("Show the list of topic") {
-        TestCluster().use { cluster ->
+        IntegrationTestContext().use { context ->
             // arrange
-            val sut = Insulator()
             val topicPrefix = "test-topic"
             val topics = (1..10).map { "$topicPrefix$it" }
-            topics.forEach { cluster.createTopics(it) }
-            configureIntegrationDi(
+            topics.forEach { context.createTopics(it) }
+            context.configureDi(
                 ConfigurationRepo::class to mockk<ConfigurationRepo> {
                     every { addNewClusterCallback(any()) } just runs
                     every { getConfiguration() } returns
-                        Configuration(clusters = listOf(cluster.clusterConfiguration)).right()
+                        Configuration(clusters = listOf(context.clusterConfiguration)).right()
                 }
             )
-            with(FxRobot()) {
-                // act
-                sut.runOnFXThread { start(FX.getPrimaryStage()!!) }
-                val scene = waitPrimaryStage().scene
-                // click on the local cluster to show the list of topics
-                clickOn("#label-cluster-name-${cluster.clusterConfiguration.guid}")
-                sleep(1000) // wait a bit to load the list of topics
 
-                // assert
-                val labels = lookup<Label> { it.text.startsWith(topicPrefix) }.queryAll<Label>()
-                (scene.window as Stage).title shouldBe cluster.clusterConfiguration.name
-                labels.map { it.text }.toSet() shouldBe topics.toSet()
-            }
+            // act
+            context.startApp(Insulator::class.java)
+            // click on the local cluster to show the list of topics
+            context.clickOn("#label-cluster-name-${context.clusterConfiguration.guid}")
+            waitForFxEvents()
+
+            // assert
+            val labels = context.lookup<Label> { it.text.startsWith(topicPrefix) }.queryAll<Label>()
+            (FX.primaryStage.scene.window as Stage).title shouldBe context.clusterConfiguration.name
+            labels.map { it.text }.toSet() shouldBe topics.toSet()
         }
     }
-
-    beforeTest { configureFXFramework() }
-    afterTest { cleanupFXFramework() }
 })
