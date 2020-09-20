@@ -36,7 +36,7 @@ class ListClusterTest : FunSpec({
 
             // assert
             (FX.primaryStage.scene.window as Stage).title shouldBe "Insulator"
-            FxAssert.verifyThat("#label-cluster-name-${cluster.guid}", LabeledMatchers.hasText(cluster.name))
+            FxAssert.verifyThat("#cluster-${cluster.guid} .label", LabeledMatchers.hasText(cluster.name))
         }
     }
 })

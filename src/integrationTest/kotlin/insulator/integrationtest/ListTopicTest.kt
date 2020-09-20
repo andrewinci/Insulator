@@ -35,13 +35,13 @@ class ListTopicTest : FunSpec({
             // act
             context.startApp(Insulator::class.java)
             // click on the local cluster to show the list of topics
-            context.clickOn("#label-cluster-name-${context.clusterConfiguration.guid}")
+            context.clickOn("#cluster-${context.clusterConfiguration.guid}")
             waitForFxEvents()
 
             // assert
-            val labels = context.lookup<Label> { it.text.startsWith(topicPrefix) }.queryAll<Label>()
             (FX.primaryStage.scene.window as Stage).title shouldBe context.clusterConfiguration.name
-            labels.map { it.text }.toSet() shouldBe topics.toSet()
+            context.lookup<Label> { it.text.startsWith(topicPrefix) }.queryAll<Label>()
+                .map { it.text }.toSet() shouldBe topics.toSet()
         }
     }
 })
