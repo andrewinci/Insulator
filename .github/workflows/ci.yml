@@ -40,6 +40,8 @@ jobs:
 
     - name: Run integration tests
       run: "xvfb-run --auto-servernum ./gradlew integrationTest"
+      env:
+        _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw"
 
   build-win:
     runs-on: windows-latest
