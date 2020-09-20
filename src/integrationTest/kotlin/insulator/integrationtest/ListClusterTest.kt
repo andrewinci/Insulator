@@ -13,8 +13,10 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import javafx.scene.Node
+import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.stage.Stage
+import javafx.stage.Window
 import org.testfx.api.FxAssert
 import org.testfx.matcher.control.LabeledMatchers
 import org.testfx.util.WaitForAsyncUtils.waitForFxEvents
@@ -54,16 +56,20 @@ class ListClusterTest : FunSpec({
             it.startApp(Insulator::class.java)
             // click "Create new cluster"
             it.clickOn("#button-create-cluster"); waitForFxEvents()
+            val textFields = it.lookup(".text-field").queryAll<TextField>().iterator()
+            // click cluster name text-field
+            it.clickOn(textFields.next())
             // set the name of the new cluster
             it.write(clusterName); waitForFxEvents()
-            // tab and write the endpoint
-            it.type(KeyCode.TAB); waitForFxEvents()
+            // click endpoint  text-field
+            it.clickOn(textFields.next()); waitForFxEvents()
+            // write the endpoint
             it.write(endpoint); waitForFxEvents()
             // save
             it.clickOn("#button-save-cluster"); waitForFxEvents()
 
             // assert
-            it.sleep(2000) // wait a bit to refresh the UI in CI
+            Window.getWindows().size shouldBe 1
             FxAssert.verifyThat(".cluster .h2", LabeledMatchers.hasText(clusterName))
             FxAssert.verifyThat(".cluster .h3", LabeledMatchers.hasText(endpoint))
         }
