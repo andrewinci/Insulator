@@ -7,19 +7,18 @@ import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Configuration
 import insulator.lib.helpers.runOnFXThread
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import javafx.scene.control.Label
 import javafx.stage.Stage
+import javafx.stage.WindowEvent
 import org.testfx.util.WaitForAsyncUtils.waitForFxEvents
 import tornadofx.FX
 
 class CloseAllWindowsTest : FunSpec({
 
-    test("Show the list of topic") {
+    test("Close application when the main one is closed") {
         IntegrationTestContext().use { context ->
             // arrange
             val topicPrefix = "test-topic"
@@ -48,10 +47,12 @@ class CloseAllWindowsTest : FunSpec({
             context.doubleClickOn("#topic-$topicPrefix-2"); waitForFxEvents()
 
             // close main window
-            (FX.primaryStage.scene.window as Stage).runOnFXThread { close() }; waitForFxEvents()
+            (FX.primaryStage.scene.window as Stage).runOnFXThread {
+                fireEvent(WindowEvent(this, WindowEvent.WINDOW_CLOSE_REQUEST))
+            }; waitForFxEvents()
 
             // assert
-            context.listWindows().size shouldBe 0
+            // FX.getApplication() shouldBe null
         }
     }
 })

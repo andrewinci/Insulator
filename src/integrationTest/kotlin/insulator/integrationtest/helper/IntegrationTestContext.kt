@@ -68,8 +68,8 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Cl
 
     override fun close() {
         kafka.close()
-        FxToolkit.cleanupStages()
-        FxToolkit.cleanupApplication(FX.application)
+        kotlin.runCatching { FxToolkit.cleanupStages() }
+        kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         FX.dicontainer = null
         stopKoin()
     }

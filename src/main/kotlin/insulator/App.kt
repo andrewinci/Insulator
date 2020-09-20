@@ -7,6 +7,8 @@ import insulator.styles.Theme
 import insulator.styles.Titles
 import insulator.views.configurations.ListClusterView
 import javafx.scene.Scene
+import javafx.stage.Stage
+import javafx.stage.Window
 import tornadofx.App
 import tornadofx.FX
 import tornadofx.UIComponent
@@ -20,8 +22,10 @@ class Insulator : App(ListClusterView::class, Theme::class, Titles::class, Root:
     }
 
     override fun stop() {
+        Window.getWindows().map { it as? Stage }
+            .filter { it != FX.primaryStage }
+            .forEach { it?.close() }
         super.stop()
-        // todo: close all windows
     }
 }
 
