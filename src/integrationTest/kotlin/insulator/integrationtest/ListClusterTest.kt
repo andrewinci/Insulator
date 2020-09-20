@@ -63,6 +63,7 @@ class ListClusterTest : FunSpec({
             it.clickOn("#button-save-cluster"); waitForFxEvents()
 
             // assert
+            it.sleep(2000) // wait a bit to refresh the UI in CI
             FxAssert.verifyThat(".cluster .h2", LabeledMatchers.hasText(clusterName))
             FxAssert.verifyThat(".cluster .h3", LabeledMatchers.hasText(endpoint))
         }
