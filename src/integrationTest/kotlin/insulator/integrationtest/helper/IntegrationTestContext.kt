@@ -95,13 +95,13 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true, createSchemaReg
     }
 
     override fun close() {
-        kafka.close()
-        schemaRegistry.close()
         kotlin.runCatching { FxToolkit.cleanupStages() }
         kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         FX.dicontainer = null
         stopKoin()
         deleteConfig()
+        kafka.close()
+        schemaRegistry.close()
     }
 }
 

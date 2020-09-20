@@ -17,28 +17,28 @@ import org.testfx.util.WaitForAsyncUtils.waitForFxEvents
 class ListTopicTest : FunSpec({
 
     test("Show the list of topic") {
-        IntegrationTestContext(createKafkaCluster = true, createSchemaRegistry = false).use { context ->
+        IntegrationTestContext(createKafkaCluster = true, createSchemaRegistry = false).use {
             // arrange
             val topicPrefix = "test-topic"
-            val topics = (1..10).map { "$topicPrefix$it" }
-            topics.forEach { context.createTopics(it) }
-            context.configureDi(
+            val topics = (1..10).map { n -> "$topicPrefix$n" }
+            topics.forEach { name -> it.createTopics(name) }
+            it.configureDi(
                 ConfigurationRepo::class to mockk<ConfigurationRepo> {
                     every { addNewClusterCallback(any()) } just runs
                     every { getConfiguration() } returns
-                        Configuration(clusters = listOf(context.clusterConfiguration)).right()
+                        Configuration(clusters = listOf(it.clusterConfiguration)).right()
                 }
             )
 
             // act
-            context.startApp(Insulator::class.java)
+            it.startApp(Insulator::class.java)
             // click on the local cluster to show the list of topics
-            context.clickOn(".cluster")
+            it.clickOn(".cluster")
             waitForFxEvents()
 
             // assert
-            context.lookup<Label> { it.text.startsWith(topicPrefix) }.queryAll<Label>()
-                .map { it.text }.toSet() shouldBe topics.toSet()
+            it.lookup<Label> { label -> label.text.startsWith(topicPrefix) }.queryAll<Label>()
+                .map { label -> label.text }.toSet() shouldBe topics.toSet()
         }
     }
 })

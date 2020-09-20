@@ -17,7 +17,7 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
     override val root = vbox(spacing = 5.0) {
         searchBox(searchItem).also { shortcut("CTRL+F") { it.requestFocus() } }
         listview<String> {
-            cellFormat { graphic = label(it) }
+            cellFormat { graphic = label(it) { id = "schema-$it" } }
             onDoubleClick { viewModel.showSchema() }
             itemsProperty().set(
                 SortedFilteredList(viewModel.listSchema).apply {
