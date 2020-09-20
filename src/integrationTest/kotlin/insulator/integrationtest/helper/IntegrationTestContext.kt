@@ -1,6 +1,10 @@
 package insulator.integrationtest.helper
 
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.configuration.model.SchemaRegistryConfiguration
+import io.confluent.kafka.schemaregistry.avro.AvroSchema
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
+import io.confluent.kafka.schemaregistry.client.rest.RestService
 import javafx.application.Application
 import javafx.stage.Stage
 import org.apache.kafka.clients.admin.AdminClient
@@ -16,18 +20,26 @@ import java.io.Closeable
 import java.io.File
 import kotlin.reflect.KClass
 
-class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Closeable {
+class IntegrationTestContext(createKafkaCluster: Boolean = true, createSchemaRegistry: Boolean = true) : FxRobot(), Closeable {
     private val mockUserHome = System.getProperty("java.io.tmpdir")
     private val kafka = KafkaContainer()
+    private val schemaRegistry = SchemaRegistryContainer().withKafka(kafka)
     lateinit var clusterConfiguration: Cluster
 
     init {
         System.setProperty("user.home", mockUserHome)
-
         if (createKafkaCluster) {
             kafka.start()
             kafka.waitingFor(Wait.forListeningPort())
-            clusterConfiguration = Cluster.empty().copy(name = "Test local cluster", endpoint = kafka.bootstrapServers)
+            clusterConfiguration = Cluster.empty().copy(
+                name = "Test local cluster",
+                endpoint = kafka.bootstrapServers,
+                schemaRegistryConfig = if (createSchemaRegistry) {
+                    schemaRegistry.start()
+                    schemaRegistry.waitingFor(Wait.forListeningPort())
+                    SchemaRegistryConfiguration(schemaRegistry.endpoint)
+                } else null
+            )
         }
     }
 
@@ -38,6 +50,12 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Cl
             ).toProperties()
         )
         admin.createTopics(name.map { NewTopic(it, 3, 1) })
+    }
+
+    fun createSchema(name: String, content: String) {
+        val restService = RestService(schemaRegistry.endpoint)
+        val client = CachedSchemaRegistryClient(restService, 1000)
+        client.register(name, AvroSchema(content))
     }
 
     fun startApp(applicationClass: Class<out Application>) {
@@ -78,6 +96,7 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Cl
 
     override fun close() {
         kafka.close()
+        schemaRegistry.close()
         kotlin.runCatching { FxToolkit.cleanupStages() }
         kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         FX.dicontainer = null

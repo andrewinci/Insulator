@@ -12,14 +12,12 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import javafx.scene.control.Label
-import javafx.stage.Stage
 import org.testfx.util.WaitForAsyncUtils.waitForFxEvents
-import tornadofx.FX
 
 class ListTopicTest : FunSpec({
 
     test("Show the list of topic") {
-        IntegrationTestContext().use { context ->
+        IntegrationTestContext(createKafkaCluster = true, createSchemaRegistry = false).use { context ->
             // arrange
             val topicPrefix = "test-topic"
             val topics = (1..10).map { "$topicPrefix$it" }
@@ -39,7 +37,6 @@ class ListTopicTest : FunSpec({
             waitForFxEvents()
 
             // assert
-            (FX.primaryStage.scene.window as Stage).title shouldBe context.clusterConfiguration.name
             context.lookup<Label> { it.text.startsWith(topicPrefix) }.queryAll<Label>()
                 .map { it.text }.toSet() shouldBe topics.toSet()
         }

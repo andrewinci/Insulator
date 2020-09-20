@@ -37,9 +37,9 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
         anchorpane {
             vbox {
-                menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class) }
-                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class) }
-                button("Change cluster") { action { viewModel.toggleSidebar(); replaceWith<ListClusterView>() } }
+                menuItem("Topics", ICON_TOPICS, "menu-item-topic") { viewModel.setCurrentView(ListTopicView::class.java) }
+                menuItem("Schema Registry", ICON_REGISTRY, "menu-item-schema-registry") { viewModel.setCurrentView(ListSchemaView::class.java) }
+                button("Change cluster") { id = "menu-item-change-cluster"; action { viewModel.toggleSidebar(); replaceWith<ListClusterView>() } }
 
                 addClass(Controls.sidebar)
                 anchorpaneConstraints { bottomAnchor = 0; leftAnchor = 0; topAnchor = 60.0 }
@@ -53,8 +53,9 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         addClass(Controls.view)
     }
 
-    private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
+    private fun EventTarget.menuItem(name: String, icon: String, id: String, onClick: () -> Unit) =
         hbox(spacing = 5.0) {
+            this.id = id
             imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
             label(name) { addClass(Titles.h2) }
             onMouseClicked = EventHandler { onClick(); viewModel.toggleSidebar() }
