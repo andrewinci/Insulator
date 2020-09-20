@@ -63,6 +63,7 @@ class ListClusterTest : FunSpec({
             it.clickOn("#button-save-cluster"); waitForFxEvents()
 
             // assert
+            it.sleep(2000) // delay due CI
             FxAssert.verifyThat(".cluster .h2", LabeledMatchers.hasText(clusterName))
             FxAssert.verifyThat(".cluster .h3", LabeledMatchers.hasText(endpoint))
         }
@@ -84,6 +85,7 @@ class ListClusterTest : FunSpec({
             it.type(KeyCode.ENTER); waitForFxEvents()
 
             // assert
+            it.sleep(2000) // delay due CI
             it.lookup(".cluster .h2").tryQuery<Node>().isEmpty shouldBe true
         }
     }

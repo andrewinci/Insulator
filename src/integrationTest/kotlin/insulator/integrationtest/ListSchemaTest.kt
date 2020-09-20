@@ -64,10 +64,12 @@ class ListSchemaTest : FunSpec({
             it.clickOn(".icon-button"); waitForFxEvents()
             // select schema registry
             it.clickOn("#menu-item-schema-registry"); waitForFxEvents()
+            it.sleep(2000) // delay due CI
             // open the first schema
             it.doubleClickOn("#schema-$schemaPrefix-1"); waitForFxEvents()
 
             // assert
+            it.sleep(2000) // delay due CI
             Window.getWindows().size shouldBe 2
         }
     }
