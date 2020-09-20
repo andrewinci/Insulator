@@ -29,12 +29,10 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Cl
     }
 
     fun createTopics(vararg name: String) {
-        // create topics
         val admin = AdminClient.create(
             mapOf(
                 AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG to kafka.bootstrapServers
-            )
-                .toProperties()
+            ).toProperties()
         )
         admin.createTopics(name.map { NewTopic(it, 3, 1) })
     }

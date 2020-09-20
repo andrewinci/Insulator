@@ -38,6 +38,9 @@ jobs:
     - name: Run tests
       run: "xvfb-run --auto-servernum ./gradlew check"
 
+    - name: Run integration tests
+      run: "xvfb-run --auto-servernum ./gradlew integrationTest"
+
   build-win:
     runs-on: windows-latest
     steps:

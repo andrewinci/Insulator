@@ -122,5 +122,4 @@ tasks.jacocoTestReport {
 project.integrationTest { outputs.upToDateWhen { false } }
 
 check.dependsOn test
-check.dependsOn integrationTest
 check.doLast { tasks.jacocoTestReport }
