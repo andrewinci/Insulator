@@ -5,7 +5,9 @@ import insulator.styles.Controls
 import insulator.styles.Theme
 import insulator.styles.Titles
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
+import insulator.views.common.InsulatorView
 import insulator.views.common.confirmationButton
+import javafx.beans.binding.Bindings
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
@@ -16,10 +18,9 @@ import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import java.util.concurrent.Callable
 
-class SchemaView : View("Schema registry") {
-
-    private val viewModel: SchemaViewModel by inject()
+class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewModel::class) {
 
     override val root = borderpane {
         top = vbox {
@@ -71,9 +72,7 @@ class SchemaView : View("Schema registry") {
     }
 
     override fun onDock() {
-//        super.currentStage?.width = 800.0
-//        super.currentStage?.height = 800.0
-        title = viewModel.nameProperty.value
+        titleProperty.bind(Bindings.createStringBinding(Callable { "${viewModel.cluster.name}  ${viewModel.nameProperty.value}" }, viewModel.nameProperty))
         super.onDock()
     }
 }

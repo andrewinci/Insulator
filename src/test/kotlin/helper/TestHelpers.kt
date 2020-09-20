@@ -1,6 +1,7 @@
 package helper
 
 import javafx.application.Platform
+import org.koin.core.context.stopKoin
 import org.testfx.api.FxToolkit
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.Semaphore
@@ -18,6 +19,7 @@ fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
 
 fun cleanupDi() {
     FX.dicontainer = null
+    stopKoin()
 }
 
 fun configureFXFramework() {

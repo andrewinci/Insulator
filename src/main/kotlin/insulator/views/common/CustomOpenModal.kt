@@ -13,13 +13,17 @@ import kotlin.reflect.full.memberProperties
 // PATCH: https://github.com/edvin/tornadofx/issues/928
 @JvmOverloads
 fun UIComponent.customOpenWindow(
-    stageStyle: StageStyle = StageStyle.UTILITY,
+    stageStyle: StageStyle = StageStyle.DECORATED,
     modality: Modality = Modality.NONE,
     owner: Window? = currentWindow,
     resizable: Boolean? = null
 ): Stage? {
-    if (modalStage != null && !modalStage!!.isShowing) {
-        modalStage!!.show()
+    if (modalStage != null) {
+        with(modalStage!!) {
+            isIconified = false
+            show()
+            toFront()
+        }
         return modalStage
     }
     modalStage = Stage(stageStyle)
@@ -44,7 +48,6 @@ fun UIComponent.customOpenWindow(
 
         val primaryStage = FX.getPrimaryStage(scope)
         if (primaryStage != null) icons += primaryStage.icons
-
         hookGlobalShortcuts()
         onBeforeShow()
         setOnShown {

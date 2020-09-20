@@ -16,6 +16,7 @@ import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
 import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClusterViewModel::class) {
@@ -41,7 +42,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                     val clusterScope = StringScope("CreateNewCluster")
                         .withComponent(ClusterViewModel(ClusterModel(Cluster.empty())))
                     find<ClusterView>(clusterScope).also { it.whenUndockedOnce { clusterScope.close() } }
-                        .customOpenWindow(modality = Modality.WINDOW_MODAL)
+                        .customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
                 }
             }
         }
@@ -50,11 +51,10 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     private fun buildClusterCell(cluster: Cluster): BorderPane {
         return borderpane {
-            maxHeight = 80.0
-            maxWidth = 375.0
+            id = "cluster-${cluster.guid}"
             center = vbox(alignment = Pos.CENTER_LEFT) {
-                label(cluster.name) { id = "label-cluster-name-${cluster.guid}"; addClass(Titles.h2) }
-                label(cluster.endpoint) { addClass(Titles.h3) }
+                label(cluster.name) { addClass(Titles.h2) }
+                label(cluster.endpoint) { addClass(Titles.h3); maxWidth = 260.0 }
             }
             right = vbox(alignment = Pos.CENTER) {
                 button {
@@ -63,7 +63,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                     onMouseClicked = EventHandler {
                         StringScope("Cluster-${cluster.guid}")
                             .withComponent(ClusterViewModel(ClusterModel(cluster)))
-                            .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL) }
+                            .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
                     }
                 }
             }

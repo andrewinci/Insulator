@@ -36,7 +36,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
             right = searchBox(searchItem)
         }
         listview<String> {
-            cellFormat { graphic = label(it) }
+            cellFormat { graphic = label(it) { id = "topic-$it" } }
             onDoubleClick {
                 if (this.selectedItem == null) return@onDoubleClick
                 with(StringScope("$currentCluster-${this.selectedItem!!}").withComponent(TopicViewModel(this.selectedItem!!))) {
