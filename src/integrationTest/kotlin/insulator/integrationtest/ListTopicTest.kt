@@ -35,7 +35,7 @@ class ListTopicTest : FunSpec({
             // act
             context.startApp(Insulator::class.java)
             // click on the local cluster to show the list of topics
-            context.clickOn("#cluster-${context.clusterConfiguration.guid}")
+            context.clickOn(".cluster")
             waitForFxEvents()
 
             // assert

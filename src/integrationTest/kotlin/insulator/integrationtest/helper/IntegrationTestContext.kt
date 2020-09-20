@@ -13,14 +13,17 @@ import org.testfx.api.FxRobot
 import org.testfx.api.FxToolkit
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.io.Closeable
+import java.io.File
 import kotlin.reflect.KClass
 
 class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Closeable {
-
+    private val mockUserHome = System.getProperty("java.io.tmpdir")
     private val kafka = KafkaContainer()
     lateinit var clusterConfiguration: Cluster
 
     init {
+        System.setProperty("user.home", mockUserHome)
+
         if (createKafkaCluster) {
             kafka.start()
             kafka.waitingFor(Wait.forListeningPort())
@@ -66,12 +69,18 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Cl
         throw TestHelperError("Timeout waiting for primary stage to show up")
     }
 
+    private fun deleteConfig() {
+        val configPath = File("$mockUserHome.insulator.config")
+        if (configPath.exists()) configPath.delete()
+    }
+
     override fun close() {
         kafka.close()
         kotlin.runCatching { FxToolkit.cleanupStages() }
         kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         FX.dicontainer = null
         stopKoin()
+        deleteConfig()
     }
 }
 

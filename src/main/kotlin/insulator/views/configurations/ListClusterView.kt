@@ -39,6 +39,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         }
         hbox(alignment = Pos.CENTER_RIGHT) {
             button {
+                id = "button-create-cluster"
                 alignment = Pos.CENTER_RIGHT
                 text = "Add new cluster"
                 action {
@@ -54,7 +55,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     private fun buildClusterCell(cluster: Cluster): BorderPane {
         return borderpane {
-            id = "cluster-${cluster.guid}"
+            addClass("cluster")
             center = vbox(alignment = Pos.CENTER_LEFT) {
                 label(cluster.name) { addClass(Titles.h2) }
                 label(cluster.endpoint) { addClass(Titles.h3); maxWidth = 260.0 }

@@ -43,6 +43,7 @@ class ClusterView : View() {
                     close()
                 }
                 right = button("Save") {
+                    id = "button-save-cluster"
                     enableWhen(viewModel.valid)
                     action {
                         viewModel.commit()

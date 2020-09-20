@@ -7,6 +7,7 @@ import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Configuration
 import insulator.lib.helpers.runOnFXThread
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -35,7 +36,7 @@ class CloseAllWindowsTest : FunSpec({
             // act
             context.startApp(Insulator::class.java)
             // click on the local cluster to show the list of topics
-            context.clickOn("#cluster-${context.clusterConfiguration.guid}")
+            context.clickOn(".cluster")
             waitForFxEvents()
 
             // open the test-topic-1 view
@@ -52,7 +53,7 @@ class CloseAllWindowsTest : FunSpec({
             }; waitForFxEvents()
 
             // assert
-            // FX.getApplication() shouldBe null
+            FX.getApplication() shouldBe null
         }
     }
 })
