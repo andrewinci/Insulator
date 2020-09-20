@@ -6,6 +6,7 @@ import insulator.di.DIContainer
 import insulator.lib.helpers.runOnFXThread
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldNotBe
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -25,6 +26,8 @@ class InsulatorTest : FunSpec({
             sut.start(FX.primaryStage)
             // assert
             FX.primaryStage.onCloseRequestProperty().value shouldNotBe null
+            // cleanup
+            sut.stop()
         }
     }
 
@@ -45,6 +48,7 @@ class InsulatorTest : FunSpec({
             mockWindows.forEach {
                 verify(exactly = 1) { it.close() }
             }
+            clearAllMocks()
         }
     }
 
@@ -52,5 +56,7 @@ class InsulatorTest : FunSpec({
         FX.dicontainer = DIContainer()
         configureFXFramework()
     }
-    afterTest { cleanupFXFramework() }
+    afterTest {
+        cleanupFXFramework()
+    }
 })
