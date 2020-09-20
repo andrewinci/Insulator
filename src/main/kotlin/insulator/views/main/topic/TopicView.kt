@@ -55,6 +55,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
                         items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
                         valueProperty().bindBidirectional(viewModel.consumeFromProperty)
                     }
+                    viewModel.deserializeValueProperty.set(DeserializationFormat.String.name)
                     if (viewModel.cluster.isSchemaRegistryConfigured()) {
                         viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
                         label("value format")
