@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
+import javafx.scene.Node
 import javafx.scene.input.KeyCode
 import javafx.stage.Stage
 import org.testfx.api.FxAssert
@@ -54,17 +55,36 @@ class ListClusterTest : FunSpec({
             // click "Create new cluster"
             it.clickOn("#button-create-cluster"); waitForFxEvents()
             // set the name of the new cluster
-            it.write(clusterName)
+            it.write(clusterName); waitForFxEvents()
             // tab and write the endpoint
-            it.type(KeyCode.TAB)
-            it.write(endpoint)
+            it.type(KeyCode.TAB); waitForFxEvents()
+            it.write(endpoint); waitForFxEvents()
             // save
             it.clickOn("#button-save-cluster"); waitForFxEvents()
 
             // assert
-            (FX.primaryStage.scene.window as Stage).title shouldBe "Insulator"
             FxAssert.verifyThat(".cluster .h2", LabeledMatchers.hasText(clusterName))
             FxAssert.verifyThat(".cluster .h3", LabeledMatchers.hasText(endpoint))
+        }
+    }
+
+    test("Delete a cluster update the list in the main view") {
+        IntegrationTestContext(false).use {
+            // arrange
+            it.configureDi()
+            it.getInstance(ConfigurationRepo::class).store(cluster = Cluster.empty().copy(name = "DeleteMe"))
+
+            // act
+            it.startApp(Insulator::class.java)
+            // click on the cluster settings
+            it.clickOn(".cluster .icon-button"); waitForFxEvents()
+            // click on the delete button
+            it.clickOn(".alert-button"); waitForFxEvents()
+            // enter on the warning dialog
+            it.type(KeyCode.ENTER); waitForFxEvents()
+
+            // assert
+            it.lookup(".cluster .h2").tryQuery<Node>().isEmpty shouldBe true
         }
     }
 })

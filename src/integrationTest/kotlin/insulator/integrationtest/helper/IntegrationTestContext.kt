@@ -57,6 +57,8 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true) : FxRobot(), Cl
         }
     }
 
+    fun <T : Any> getInstance(clazz: KClass<T>): T = FX.dicontainer!!.getInstance(clazz)
+
     private fun waitPrimaryStage(limit: Int = 20): Stage {
         repeat(limit) {
             val primaryStage = FX.getPrimaryStage()
