@@ -69,7 +69,6 @@ class ListSchemaTest : FunSpec({
             it.doubleClickOn("#schema-$schemaPrefix-1"); waitForFxEvents()
 
             // assert
-            it.sleep(2000) // delay due CI
             Window.getWindows().size shouldBe 2
         }
     }
