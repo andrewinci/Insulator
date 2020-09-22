@@ -1,17 +1,10 @@
 package insulator.integrationtest
 
-import arrow.core.right
 import insulator.Insulator
 import insulator.integrationtest.helper.IntegrationTestContext
-import insulator.lib.configuration.ConfigurationRepo
-import insulator.lib.configuration.model.Configuration
 import insulator.lib.helpers.runOnFXThread
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.runs
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
 import org.testfx.util.WaitForAsyncUtils.waitForFxEvents
@@ -25,13 +18,7 @@ class CloseAllWindowsTest : FunSpec({
             val topicPrefix = "test-topic"
             val topics = (1..10).map { "$topicPrefix-$it" }
             topics.forEach { context.createTopics(it) }
-            context.configureDi(
-                ConfigurationRepo::class to mockk<ConfigurationRepo> {
-                    every { addNewClusterCallback(any()) } just runs
-                    every { getConfiguration() } returns
-                        Configuration(clusters = listOf(context.clusterConfiguration)).right()
-                }
-            )
+            context.configureDi(context.clusterConfiguration)
 
             // act
             context.startApp(Insulator::class.java)

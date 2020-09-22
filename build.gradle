@@ -126,6 +126,7 @@ tasks.jacocoTestReport {
 }
 
 project.integrationTest { outputs.upToDateWhen { false } }
+jacocoIntegrationTestReport.dependsOn integrationTest
 
 check.dependsOn test
 check.doLast { tasks.jacocoTestReport }

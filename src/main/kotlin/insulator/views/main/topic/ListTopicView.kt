@@ -24,6 +24,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
         borderpane {
             left = hbox {
                 button("Create topic") {
+                    id = "button-create-topic"
                     action {
                         with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
                             find<CreateTopicView>(this).also {

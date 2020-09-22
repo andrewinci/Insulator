@@ -1,5 +1,6 @@
 package insulator.integrationtest.helper
 
+import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
@@ -66,15 +67,11 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true, createSchemaReg
         waitPrimaryStage()
     }
 
-    fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
+    fun configureDi(vararg cluster: Cluster) {
         if (FX.dicontainer != null) throw TestHelperError("DI already configured")
-        FX.dicontainer = object : DIContainer {
-            val main = insulator.di.DIContainer()
-
-            @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
-            override fun <T : Any> getInstance(type: KClass<T>): T =
-                dependencyMap.toMap()[type] as? T ?: main.getInstance(type)
-        }
+        FX.dicontainer = insulator.di.DIContainer()
+        val configurationRepo = getInstance(ConfigurationRepo::class)
+        cluster.forEach { configurationRepo.store(it) }
     }
 
     fun <T : Any> getInstance(clazz: KClass<T>): T = FX.dicontainer!!.getInstance(clazz)

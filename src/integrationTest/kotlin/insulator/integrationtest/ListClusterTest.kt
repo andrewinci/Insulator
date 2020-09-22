@@ -1,17 +1,11 @@
 package insulator.integrationtest
 
-import arrow.core.right
 import insulator.Insulator
 import insulator.integrationtest.helper.IntegrationTestContext
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
-import insulator.lib.configuration.model.Configuration
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.runs
 import javafx.scene.Node
 import javafx.scene.control.TextField
 import javafx.stage.Stage
@@ -27,13 +21,7 @@ class ListClusterTest : FunSpec({
         IntegrationTestContext(false).use {
             // arrange
             val cluster = Cluster.empty().copy(name = "Test cluster", endpoint = "endpoint")
-            it.configureDi(
-                ConfigurationRepo::class to mockk<ConfigurationRepo> {
-                    every { addNewClusterCallback(any()) } just runs
-                    every { getConfiguration() } returns
-                        Configuration(clusters = listOf(cluster)).right()
-                }
-            )
+            it.configureDi(cluster)
 
             // act
             it.startApp(Insulator::class.java)
@@ -55,7 +43,7 @@ class ListClusterTest : FunSpec({
             it.startApp(Insulator::class.java)
             // click "Create new cluster"
             it.clickOn("#button-create-cluster"); waitForFxEvents()
-            val textFields = it.lookup(".text-field").queryAll<TextField>().iterator()
+            val textFields = it.lookup(".form .text-field").queryAll<TextField>().iterator()
             // click cluster name text-field
             it.clickOn(textFields.next())
             // set the name of the new cluster

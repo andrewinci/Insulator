@@ -1,14 +1,9 @@
 package insulator.integrationtest
 
-import arrow.core.right
 import insulator.Insulator
 import insulator.integrationtest.helper.IntegrationTestContext
-import insulator.lib.configuration.ConfigurationRepo
-import insulator.lib.configuration.model.Configuration
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
 import javafx.scene.control.Label
 import javafx.stage.Window
 import org.testfx.util.WaitForAsyncUtils.waitForFxEvents
@@ -21,12 +16,7 @@ class ListSchemaTest : FunSpec({
             val schemaPrefix = "test-schema"
             val schemas = (1..10).map { n -> "$schemaPrefix$n" }
             schemas.forEach { name -> it.createSchema(name, schemaSample) }
-            it.configureDi(
-                ConfigurationRepo::class to mockk<ConfigurationRepo>(relaxed = true) {
-                    every { getConfiguration() } returns
-                        Configuration(clusters = listOf(it.clusterConfiguration)).right()
-                }
-            )
+            it.configureDi(it.clusterConfiguration)
 
             // act
             it.startApp(Insulator::class.java)
@@ -49,12 +39,7 @@ class ListSchemaTest : FunSpec({
             val schemaPrefix = "test-schema"
             val schemas = (1..10).map { "$schemaPrefix-$it" }
             schemas.forEach { name -> it.createSchema(name, schemaSample) }
-            it.configureDi(
-                ConfigurationRepo::class to mockk<ConfigurationRepo>(relaxed = true) {
-                    every { getConfiguration() } returns
-                        Configuration(clusters = listOf(it.clusterConfiguration)).right()
-                }
-            )
+            it.configureDi(it.clusterConfiguration)
 
             // act
             it.startApp(Insulator::class.java)
