@@ -6,6 +6,7 @@ import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.rest.RestService
 import javafx.application.Application
+import javafx.scene.control.Button
 import javafx.stage.Stage
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
@@ -14,6 +15,7 @@ import org.koin.core.context.stopKoin
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testfx.api.FxRobot
+import org.testfx.api.FxRobotInterface
 import org.testfx.api.FxToolkit
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.io.Closeable
@@ -90,7 +92,7 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true, createSchemaReg
     }
 
     private fun deleteConfig() {
-        val configPath = File("$mockUserHome.insulator.config")
+        val configPath = File("$mockUserHome/.insulator.config")
         if (configPath.exists()) configPath.delete()
     }
 
@@ -103,6 +105,11 @@ class IntegrationTestContext(createKafkaCluster: Boolean = true, createSchemaReg
         kafka.close()
         schemaRegistry.close()
     }
+
+    fun clickOkOnDialog(): FxRobotInterface = lookup(".dialog-pane.alert").lookup(".button")
+        .lookup<Button> { btn -> btn.text == "OK" }
+        .queryButton()
+        .let { clickOn(it) }
 }
 
 class TestHelperError(message: String) : Throwable(message)

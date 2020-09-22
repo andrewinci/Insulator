@@ -14,7 +14,6 @@ import io.mockk.mockk
 import io.mockk.runs
 import javafx.scene.Node
 import javafx.scene.control.TextField
-import javafx.scene.input.KeyCode
 import javafx.stage.Stage
 import javafx.stage.Window
 import org.testfx.api.FxAssert
@@ -87,8 +86,8 @@ class ListClusterTest : FunSpec({
             it.clickOn(".cluster .icon-button"); waitForFxEvents()
             // click on the delete button
             it.clickOn(".alert-button"); waitForFxEvents()
-            // enter on the warning dialog
-            it.type(KeyCode.ENTER); waitForFxEvents()
+            // press Ok on the warning dialog
+            it.clickOkOnDialog(); waitForFxEvents()
 
             // assert
             it.lookup(".cluster .h2").tryQuery<Node>().isEmpty shouldBe true
