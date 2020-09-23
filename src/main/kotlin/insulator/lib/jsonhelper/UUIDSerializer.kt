@@ -1,19 +1,20 @@
 package insulator.lib.jsonhelper
 
-import kotlinx.serialization.Decoder
-import kotlinx.serialization.Encoder
+
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.PrimitiveDescriptor
-import kotlinx.serialization.PrimitiveKind
-import kotlinx.serialization.SerialDescriptor
 import kotlinx.serialization.Serializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import java.util.UUID
 
 @Serializer(forClass = UUID::class)
 class UUIDSerializer : KSerializer<UUID> {
 
     override val descriptor: SerialDescriptor
-        get() = PrimitiveDescriptor("UUID", PrimitiveKind.STRING)
+        get() = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: UUID) =
         encoder.encodeString(value.toString())

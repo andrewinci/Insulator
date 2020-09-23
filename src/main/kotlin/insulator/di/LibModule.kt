@@ -13,7 +13,7 @@ import org.koin.dsl.module
 val libModule = module {
 
     // Configurations
-    single { Json(JsonConfiguration.Stable) }
+    single { Json {} }
     single { ConfigurationRepo(get()) }
     single { JsonFormatter(get()) }
 
