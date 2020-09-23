@@ -19,7 +19,7 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
         return kotlin.runCatching { File(configPath).readText() }
             .fold({ it.right() }, { ConfigurationRepoException("Unable to load the file", it).left() })
             .flatMap {
-                json.runCatching { parse(Configuration.serializer(), it) }
+                json.runCatching { decodeFromString(Configuration.serializer(), it) }
                     .fold({ it.right() }, { ConfigurationRepoException("Unable to load the configurations", it).left() })
             }
     }
@@ -43,7 +43,7 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
     }
 
     private fun store(configuration: Configuration) = kotlin.runCatching {
-        File(configPath).writeText(json.stringify(Configuration.serializer(), configuration))
+        File(configPath).writeText(json.encodeToString(Configuration.serializer(), configuration))
     }.fold({ right() }, { ConfigurationRepoException("Unable to store the configuration", it).left() })
 
     fun addNewClusterCallback(callback: (Configuration) -> Unit) {

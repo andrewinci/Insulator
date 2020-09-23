@@ -5,13 +5,14 @@ import arrow.core.right
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import java.lang.Exception
 
 class JsonFormatter(private val json: Json) {
 
-    fun formatJsonString(jsonString: String, indent: Boolean = true) = json.runCatching { parseJson(jsonString) }
+    fun formatJsonString(jsonString: String, indent: Boolean = true) = json.runCatching { parseToJsonElement(jsonString) }
         .map { InternalFormatter(indent).format(it, 1) }
         .fold({ it.right() }, { it.left() })
 
@@ -20,12 +21,12 @@ class JsonFormatter(private val json: Json) {
         fun format(json: JsonElement, level: Int = 1): Collection<Token> {
             val newLine = if (indent) Token.Symbol("\n") else Token.Symbol(" ")
             return when (json) {
-                is JsonPrimitive -> listOf(Token.Value(json.primitive.toString()))
+                is JsonPrimitive -> listOf(Token.Value(json.toString()))
                 is JsonObject ->
                     listOf(Token.Symbol("{"), newLine, indent(level))
                         .asSequence()
                         .plus(
-                            json.jsonObject.entries
+                            json.entries
                                 .map { (key, value) -> listOf(Token.Key(key), Token.COLON).plus(format(value, level + 1)) }
                                 .reduceOrNull { a, b -> a.plus(Token.COMMA).plus(newLine).plus(indent(level)).plus(b) }
                                 ?: emptyList()
@@ -33,9 +34,9 @@ class JsonFormatter(private val json: Json) {
                         .plus(newLine).plus(indent(level - 1)).plus(Token.Symbol("}")).toList()
                 is JsonArray ->
                     listOf(Token.Symbol("["))
-                        .plus(json.jsonArray.map { format(it, level + 1) }.reduce { a, b -> a.plus(Token.COMMA).plus(b) })
+                        .plus(json.map { format(it, level + 1) }.reduce { a, b -> a.plus(Token.COMMA).plus(b) })
                         .plus(Token.Symbol("]"))
-                else -> if (json.isNull) listOf(Token.Value("null")) else throw Exception("Unable to parse")
+                else -> if (json is JsonNull) listOf(Token.Value("null")) else throw Exception("Unable to parse")
             }
         }
 

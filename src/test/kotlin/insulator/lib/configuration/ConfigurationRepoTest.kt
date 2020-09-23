@@ -10,13 +10,12 @@ import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import java.io.File
 import java.util.UUID
 import kotlin.random.Random
 
 class ConfigurationRepoTest : FunSpec({
-    val json = Json(JsonConfiguration.Stable)
+    val json = Json {}
     beforeTest {
         // clean up previous tests
         File(".").walk()

@@ -5,11 +5,10 @@ import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 
 class JsonFormatterTest : FunSpec({
 
-    val json = Json(JsonConfiguration.Stable)
+    val json = Json {}
 
     test("format json return a right collection") {
         // arrange

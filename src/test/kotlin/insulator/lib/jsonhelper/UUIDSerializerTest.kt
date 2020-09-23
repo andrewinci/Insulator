@@ -5,12 +5,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import java.util.UUID
 
 class UUIDSerializerTest : FunSpec({
 
-    val json = Json(JsonConfiguration.Stable)
+    val json = Json {}
 
     test("descriptor") {
         // arrange
@@ -24,7 +23,7 @@ class UUIDSerializerTest : FunSpec({
         val uuid = UUID.randomUUID()
         val testObject = Test(uuid)
         // act
-        val res = json.stringify(Test.serializer(), testObject)
+        val res = json.encodeToString(Test.serializer(), testObject)
         // assert
         res shouldBe "{\"uuid\":\"$uuid\"}"
     }
@@ -33,7 +32,7 @@ class UUIDSerializerTest : FunSpec({
         // arrange
         val uuid = UUID.randomUUID()
         // act
-        val res = json.parse(Test.serializer(), "{\"uuid\":\"$uuid\"}")
+        val res = json.decodeFromString(Test.serializer(), "{\"uuid\":\"$uuid\"}")
         // assert
         res shouldBe Test(uuid)
     }
