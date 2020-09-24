@@ -13,6 +13,10 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         fieldset {
             label(viewModel.topicName) { addClass(Titles.h1) }
             field("Key") { textfield(viewModel.keyProperty) }
+            label(viewModel.validationError) {
+                prefHeight = 30.0
+                isWrapText = true
+            }
             field("Value") { textarea(viewModel.valueProperty) }
         }
         borderpane {
