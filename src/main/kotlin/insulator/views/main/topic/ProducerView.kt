@@ -11,11 +11,6 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerViewModel::class, title = "Producer") {
 
-    private val recordTextArea = TextArea().apply {
-        textProperty().bindBidirectional(viewModel.valueProperty)
-        vgrow = Priority.ALWAYS
-    }
-
     override val root = borderpane {
         top = vbox {
             hbox {
@@ -35,7 +30,6 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
                     }
                 }
             }
-            label("Value")
             recordTextArea.attachTo(this)
             borderpane {
                 paddingAll = 20.0
@@ -49,5 +43,10 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         addClass(Controls.view)
         prefWidth = 800.0
         prefHeight = 800.0
+    }
+
+    private val recordTextArea = TextArea().apply {
+        textProperty().bindBidirectional(viewModel.valueProperty)
+        vgrow = Priority.ALWAYS
     }
 }

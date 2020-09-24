@@ -119,32 +119,6 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
         }
     }
 
-    test("Convert json only to avro - union type default branch") {
-        // arrange
-        val schema =
-            """
-            {
-              "type": "record", 
-              "name": "value_test_schema", 
-              "namespace": "com.mycorp.mynamespace",
-              "fields": [{
-                  "name": "test", 
-                  "type": ["null", "double"], 
-                  "default": null
-                }]
-            }
-            """.trimIndent()
-        val sampleJson =
-            """{ }"""
-        val sut = JsonToAvroConverter()
-        // act
-        val result = sut.convert(sampleJson, schema)
-        // assert
-        result shouldBeRight {
-            it.get("test") shouldBe null
-        }
-    }
-
     test("Convert json to avro - union - logical type - left branch") {
         // arrange
         val schema =

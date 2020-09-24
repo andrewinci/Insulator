@@ -24,7 +24,7 @@ class JsonToAvroConverter() {
                 parsed.right()
             } else JsonToAvroException("Generated record is invalid, check the schema").left()
         } catch (jsonException: JsonProcessingException) {
-            Throwable("Invalid json").left() // todo: refactor
+            Throwable("Invalid json").left()
         } catch (ex: Throwable) {
             ex.left()
         }
@@ -79,8 +79,8 @@ class JsonToAvroConverter() {
         }
 
     private fun parseArray(fieldSchema: Schema, jsonValue: Any?): Any {
-        if (jsonValue !is ArrayList<*>) throw JsonToAvroException("Expecting \"${fieldSchema.name}\" with type array of \"${fieldSchema.elementType.name}\"")
-        return jsonValue.map { parseRecord(fieldSchema.elementType, it as Map<*, *>) }.toList()
+        if (jsonValue !is ArrayList<*>) throw JsonToAvroException("Expecting array of \"${fieldSchema.elementType.name}\" but got $jsonValue")
+        return jsonValue.map { parseField(fieldSchema.elementType, it) }.toList()
     }
 
     private fun parseUnion(fieldSchema: Schema, jsonValue: Any?): Any? {
@@ -94,12 +94,12 @@ class JsonToAvroConverter() {
     private fun parseEnum(fieldSchema: Schema, jsonValue: Any?): GenericData.EnumSymbol {
         val symbols = fieldSchema.enumSymbols
         return if (jsonValue == null || jsonValue.toString() !in symbols)
-            throw JsonToAvroException("Expecting \"${fieldSchema.name}\" with type Enum [${symbols.joinToString(", ")}]")
+            throw JsonToAvroException("Expecting enum [${symbols.joinToString(", ")}]")
         else GenericData.EnumSymbol(fieldSchema, jsonValue)
     }
 
     private fun parseBytes(fieldSchema: Schema, jsonValue: Any?): ByteBuffer? {
-        if (jsonValue == null) throw JsonToAvroException("Expecting \"${fieldSchema.name}\" with type bytes")
+        if (jsonValue == null) throw JsonToAvroException("Expecting bytes but got \"${jsonValue}\"")
         if (jsonValue is Double && fieldSchema.logicalType.name == "decimal")
             return Conversions.DecimalConversion().toBytes(jsonValue.toBigDecimal(), fieldSchema, fieldSchema.logicalType)
         return when (jsonValue) {
@@ -107,16 +107,15 @@ class JsonToAvroConverter() {
             is String ->
                 if (!jsonValue.toLowerCase().startsWith("0x")) throw Throwable("Invalid $jsonValue, BYTES value need to start with 0x")
                 else ByteBuffer.wrap(DatatypeConverter.parseHexBinary(jsonValue.substring(2)))
-            else -> throw JsonToAvroException("Invalid binary number $jsonValue")
+            else -> throw JsonToAvroException("Expecting binary number but got $jsonValue")
         }
     }
 
     private fun parseFloat(fieldSchema: Schema, jsonValue: Any?) =
         when (jsonValue) {
-            null -> throw JsonToAvroException("Expecting \"${fieldSchema.name}\" with type float")
             is Double -> jsonValue.toFloat()
             is Float -> jsonValue
-            else -> throw JsonToAvroException("Invalid float number $jsonValue")
+            else -> throw JsonToAvroException("Expecting float but got $jsonValue")
         }
 }
 

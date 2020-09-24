@@ -40,6 +40,15 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
         center = vbox(spacing = 2.0) {
             borderpane {
                 left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
+                    button("Produce") {
+                        action {
+                            with(StringScope(viewModel.topicName).withComponent(ProducerViewModel(viewModel.topicName))) {
+                                find<ProducerView>(this).customOpenWindow(owner = null)
+                            }
+                        }
+                        prefWidth = 80.0
+                        addClass(Controls.blueButton)
+                    }
                     button(viewModel.consumeButtonText) { action { viewModel.consume() }; prefWidth = 80.0 }
                     label("from")
                     combobox<String> {
@@ -55,14 +64,6 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
                     }
                     region { minWidth = 10.0 }
                     button("Clear") { action { viewModel.clear() } }
-                    button("Produce") {
-                        action {
-                            with(StringScope(viewModel.topicName).withComponent(ProducerViewModel(viewModel.topicName))) {
-                                find<ProducerView>(this).customOpenWindow(owner = null)
-                            }
-                        }
-                        addClass(Controls.alertButton)
-                    }
                 }
                 right = searchBox(viewModel.searchItem)
             }

@@ -30,6 +30,22 @@ class Root : Stylesheet() {
                 }
             }
 
+            textArea {
+                backgroundRadius = multi(box(0.0.px))
+                backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, 0.px, (-1).px))
+                backgroundColor = multi(Theme.mainColor, Theme.backgroundColor, Theme.backgroundColor)
+                and(focused) {
+                    backgroundRadius = multi(box(0.0.px))
+                    backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, 0.px, (-2).px))
+                    backgroundColor = multi(Theme.mainColorDark, Theme.backgroundColor, Theme.backgroundColor)
+                }
+                content {
+                    backgroundRadius = multi(box(0.0.px))
+                    backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, 0.px, (-2).px))
+                    backgroundColor = multi(Theme.mainColorDark, Theme.backgroundColor, Theme.backgroundColor)
+                }
+            }
+
             button {
                 padding = box(5.0.px)
                 textFill = Theme.mainColor
@@ -41,6 +57,10 @@ class Root : Stylesheet() {
                         textFill = Theme.backgroundColor
                         backgroundColor = multi(Theme.alertColor)
                     }
+                    and(Controls.blueButton) {
+                        textFill = Theme.backgroundColor
+                        backgroundColor = multi(Theme.blueColor)
+                    }
                     backgroundRadius = multi(box(2.0.px))
                 }
                 and(Controls.iconButton) {
@@ -49,6 +69,7 @@ class Root : Stylesheet() {
                     and(hover) { backgroundColor = multi(Theme.mainColorDark) }
                 }
                 and(Controls.alertButton) { textFill = Theme.alertColor }
+                and(Controls.blueButton) { textFill = Theme.blueColor }
             }
 
             checkBox {

@@ -22,6 +22,7 @@ class Controls : Stylesheet() {
         val sidebarItem by cssclass()
         val iconButton by cssclass()
         val alertButton by cssclass()
+        val blueButton by cssclass()
         val view by cssclass()
     }
 
