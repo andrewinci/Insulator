@@ -43,4 +43,34 @@ class NestedJsonToAvroConverterTest : FunSpec({
             (it.get("testRecord") as GenericRecord).get("testString") shouldBe "string"
         }
     }
+
+    test("Convert json to avro - array of records types") {
+        // arrange
+        val schema =
+            """
+            {
+                "type": "record", 
+                "name": "value_test_schema", 
+                "namespace": "com.mycorp.mynamespace", 
+                "doc": "Sample schema to help you get started.", 
+                "fields": [{ 
+                "name": "testArray", 
+                  "type": {
+                    "type": "array", 
+                    "items": {
+                      "type": "record", 
+                      "name": "testObj", 
+                      "namespace": "com.mycorp.mynamespace", 
+                      "fields": [{ "name": "testString", "type":"string"}]
+                      }
+                  }
+              }]
+            }
+            """.trimIndent()
+        val sut = JsonToAvroConverter()
+        // act
+        val result = sut.convert("{ \"testArray\": [{\"testString\": \"value1\"},{\"testString\": \"value2\"}] }", schema)
+        // assert
+        result shouldBeRight {}
+    }
 })

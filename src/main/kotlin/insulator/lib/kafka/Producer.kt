@@ -26,10 +26,12 @@ class Producer(val cluster: Cluster, private val jsonAvroConverter: JsonToAvroCo
             .flatMap { avroProducer.runCatching { send(it) }.fold({ Unit.right() }, { it.left() }) }
 
     private fun getCachedSchema(topic: String) =
-        schemaCache.getOrPut(topic,
+        schemaCache.getOrPut(
+            topic,
             {
                 schemaRegistry.getSubject("$topic-value")
                     .map { it.schemas.maxByOrNull { s -> s.version }?.schema }
                     .flatMap { it?.right() ?: Throwable("Schema not found").left() }
-            })
+            }
+        )
 }

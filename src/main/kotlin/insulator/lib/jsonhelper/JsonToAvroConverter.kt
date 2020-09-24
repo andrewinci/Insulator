@@ -3,6 +3,7 @@ package insulator.lib.jsonhelper
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
@@ -22,6 +23,8 @@ class JsonToAvroConverter() {
             if (GenericData().validate(schema, parsed)) {
                 parsed.right()
             } else JsonToAvroException("Generated record is invalid, check the schema").left()
+        } catch (jsonException: JsonProcessingException) {
+            Throwable("Invalid json").left() // todo: refactor
         } catch (ex: Throwable) {
             ex.left()
         }
@@ -33,7 +36,7 @@ class JsonToAvroConverter() {
         val recordBuilder = GenericRecordBuilder(schema)
         schema.fields.forEach { fieldSchema ->
             val fieldName = fieldSchema.name()
-            if (fieldName !in jsonMap) throw JsonToAvroException("Expecting \"${fieldName}\" with type ${printType(fieldSchema)}")
+            if (fieldName !in jsonMap) throw JsonToAvroException("Expecting \"${fieldName}\" with type ${printType(fieldSchema)}", fieldName)
             val jsonValue = jsonMap[fieldName]
 
             recordBuilder.set(fieldSchema, parseField(fieldSchema.schema(), jsonValue))
@@ -49,10 +52,10 @@ class JsonToAvroConverter() {
             Schema.Type.BYTES -> "bytes (eg \"0x00\")"
             Schema.Type.ENUM -> "enum [${fieldSchema.schema().enumSymbols.joinToString(", ")}]"
             Schema.Type.UNION -> "union [${fieldSchema.schema().types.joinToString(", ") { it.name }}]"
+            Schema.Type.ARRAY -> "array of ${fieldSchema.schema().elementType.name}"
             else -> schema.type.name.toLowerCase()
         }
     }
-
 
     private fun parseField(fieldSchema: Schema, jsonValue: Any?): Any? {
         return when (fieldSchema.type) {
@@ -62,8 +65,22 @@ class JsonToAvroConverter() {
             Schema.Type.BYTES -> parseBytes(fieldSchema, jsonValue)
             Schema.Type.ENUM -> parseEnum(fieldSchema, jsonValue)
             Schema.Type.UNION -> parseUnion(fieldSchema, jsonValue)
+            Schema.Type.ARRAY -> parseArray(fieldSchema, jsonValue)
+            Schema.Type.LONG -> parseLong(jsonValue)
             else -> jsonValue
         }
+    }
+
+    private fun parseLong(jsonValue: Any?) =
+        when (jsonValue) {
+            is Long -> jsonValue
+            is Int -> jsonValue.toLong()
+            else -> throw JsonToAvroException("Expecting long but got ${jsonValue?.javaClass?.simpleName}")
+        }
+
+    private fun parseArray(fieldSchema: Schema, jsonValue: Any?): Any {
+        if (jsonValue !is ArrayList<*>) throw JsonToAvroException("Expecting \"${fieldSchema.name}\" with type array of \"${fieldSchema.elementType.name}\"")
+        return jsonValue.map { parseRecord(fieldSchema.elementType, it as Map<*, *>) }.toList()
     }
 
     private fun parseUnion(fieldSchema: Schema, jsonValue: Any?): Any? {
@@ -74,9 +91,9 @@ class JsonToAvroConverter() {
         throw JsonToAvroException("Expecting \"${fieldSchema.fields.first().name()}\" with type Union [${fieldSchema.types.joinToString(", ") { it.name }}]")
     }
 
-    private fun parseEnum(fieldSchema: Schema, jsonValue: Any?) {
+    private fun parseEnum(fieldSchema: Schema, jsonValue: Any?): GenericData.EnumSymbol {
         val symbols = fieldSchema.enumSymbols
-        if (jsonValue == null || jsonValue.toString() !in symbols)
+        return if (jsonValue == null || jsonValue.toString() !in symbols)
             throw JsonToAvroException("Expecting \"${fieldSchema.name}\" with type Enum [${symbols.joinToString(", ")}]")
         else GenericData.EnumSymbol(fieldSchema, jsonValue)
     }
@@ -103,4 +120,4 @@ class JsonToAvroConverter() {
         }
 }
 
-class JsonToAvroException(message: String) : Throwable(message)
+class JsonToAvroException(message: String, val nextField: String? = null) : Throwable(message)
