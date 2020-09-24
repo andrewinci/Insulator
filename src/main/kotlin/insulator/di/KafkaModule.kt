@@ -5,14 +5,19 @@ import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.rest.RestService
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
+import io.confluent.kafka.serializers.KafkaAvroSerializer
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.Producer
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.kafka.common.serialization.StringSerializer
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.Properties
@@ -39,12 +44,24 @@ val kafkaModule = module {
         factory<Consumer<Any, Any>> {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
-            KafkaConsumer<Any, Any>(properties)
+            KafkaConsumer(properties)
         }
         factory<Consumer<Any, Any>>(named("avroConsumer")) {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
-            KafkaConsumer<Any, Any>(properties)
+            KafkaConsumer(properties)
+        }
+
+        // Producers
+        scoped<Producer<Any, Any>> {
+            val properties = get<Properties>()
+            properties[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+            KafkaProducer(properties)
+        }
+        scoped<Producer<Any, Any>>(named("avroProducer")) {
+            val properties = get<Properties>()
+            properties[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
+            KafkaProducer(properties)
         }
 
         // Properties
@@ -79,6 +96,8 @@ val kafkaModule = module {
                     }
                 }
                 put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
+                put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+                put("auto.register.schemas", false)
             }
             properties
         }

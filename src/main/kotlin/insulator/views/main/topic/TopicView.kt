@@ -4,10 +4,13 @@ import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.styles.Controls
 import insulator.styles.Titles
+import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
+import insulator.views.common.StringScope
 import insulator.views.common.confirmationButton
+import insulator.views.common.customOpenWindow
 import insulator.views.common.searchBox
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
@@ -16,7 +19,6 @@ import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.Callable
 
 class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
 
@@ -53,6 +55,14 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
                     }
                     region { minWidth = 10.0 }
                     button("Clear") { action { viewModel.clear() } }
+                    button("Produce") {
+                        action {
+                            with(StringScope(viewModel.topicName).withComponent(ProducerViewModel(viewModel.topicName))) {
+                                find<ProducerView>(this).customOpenWindow(owner = null)
+                            }
+                        }
+                        addClass(Controls.alertButton)
+                    }
                 }
                 right = searchBox(viewModel.searchItem)
             }
@@ -99,7 +109,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
-        titleProperty.bind(Bindings.createStringBinding(Callable { "${viewModel.cluster.name}  ${viewModel.nameProperty.value}" }, viewModel.nameProperty))
+        titleProperty.bind(Bindings.createStringBinding({ "${viewModel.cluster.name}  ${viewModel.nameProperty.value}" }, viewModel.nameProperty))
         super.onDock()
     }
 
