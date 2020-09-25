@@ -25,9 +25,7 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val sc
                 parsed.right()
             } else JsonToAvroException("Generated record is invalid, check the schema").left()
         } catch (jsonException: JsonProcessingException) {
-            Throwable("Invalid json").left()
-        } catch (ex: Throwable) {
-            ex.left()
+            InvalidJsonException().left()
         }
     }
 
@@ -60,7 +58,7 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val sc
 
     private fun parseField(fieldSchema: Schema, jsonValue: Any?): Any? {
         return when (fieldSchema.type) {
-            Schema.Type.NULL -> if (jsonValue == null) null else throw Throwable("$jsonValue should be NULL")
+            Schema.Type.NULL -> if (jsonValue == null) null else throw JsonToAvroException("$jsonValue should be NULL")
             Schema.Type.RECORD -> parseRecord(fieldSchema, jsonValue as? Map<*, *>)
             Schema.Type.FLOAT -> parseFloat(fieldSchema, jsonValue)
             Schema.Type.BYTES -> parseBytes(fieldSchema, jsonValue)
@@ -106,7 +104,7 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val sc
         return when (jsonValue) {
             null -> null
             is String ->
-                if (!jsonValue.toLowerCase().startsWith("0x")) throw Throwable("Invalid $jsonValue, BYTES value need to start with 0x")
+                if (!jsonValue.toLowerCase().startsWith("0x")) throw JsonToAvroException("Invalid $jsonValue, BYTES value need to start with 0x")
                 else ByteBuffer.wrap(DatatypeConverter.parseHexBinary(jsonValue.substring(2)))
             else -> throw JsonToAvroException("Expecting binary number but got $jsonValue")
         }
@@ -121,3 +119,4 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val sc
 }
 
 class JsonToAvroException(message: String, val nextField: String? = null) : Throwable(message)
+class InvalidJsonException(message: String? = null) : Throwable(message)
