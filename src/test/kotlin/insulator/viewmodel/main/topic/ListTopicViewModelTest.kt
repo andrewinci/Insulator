@@ -1,6 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import arrow.core.left
+import arrow.core.right
 import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
@@ -15,24 +16,40 @@ class ListTopicViewModelTest : FunSpec({
 
     val errorMessage = "Example error"
 
-    test("topicList") {
+    test("topicList error on loading the list of topics") {
         // arrange
-        val sut = ListTopicViewModel()
-        // act
-        val res = sut.topicList
-        // assert
-        sut.refresh().get()
-        res.size shouldBe 0
-        sut.error.value!!.message shouldBe errorMessage
-    }
-
-    beforeTest {
-        configureFXFramework()
         configureDi(
             AdminApi::class to mockk<AdminApi> {
                 every { listTopics() } returns CompletableFuture.completedFuture(Throwable(errorMessage).left())
             }
         )
+        val sut = ListTopicViewModel()
+        // act
+        val res = sut.topicList
+        // assert
+        sut.refresh().get() // force and wait refresh
+        res.size shouldBe 0
+        sut.error.value!!.message shouldBe errorMessage
+    }
+
+    test("happy path") {
+        // arrange
+        configureDi(
+            AdminApi::class to mockk<AdminApi> {
+                every { listTopics() } returns CompletableFuture.completedFuture(listOf("tppic1", "topic2").right())
+            }
+        )
+        val sut = ListTopicViewModel()
+        // act
+        val res = sut.topicList
+        // assert
+        sut.refresh().get() // force and wait refresh
+        res.size shouldBe 2
+        sut.error.value shouldBe null
+    }
+
+    beforeTest {
+        configureFXFramework()
     }
     afterTest {
         cleanupFXFramework()
