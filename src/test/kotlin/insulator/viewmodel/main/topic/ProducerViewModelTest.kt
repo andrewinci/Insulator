@@ -6,7 +6,9 @@ import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.jsonhelper.JsonToAvroException
+import insulator.lib.kafka.AvroProducer
 import insulator.lib.kafka.Producer
 import insulator.lib.kafka.StringProducer
 import io.kotest.core.spec.style.FunSpec
@@ -33,6 +35,36 @@ class ProducerViewModelTest : FunSpec({
         // assert
         sut.validationErrorProperty.value shouldBe errorMessage
         sut.canSendProperty.value shouldBe false
+    }
+
+    test("send message without value fails") {
+        // arrange
+        configureDi(
+            Cluster::class to Cluster.empty(),
+            StringProducer::class to mockk<Producer> {
+                every { validate(any(), any()) } returns Unit.right()
+            }
+        )
+        val sut = ProducerViewModel("test-topic")
+        sut.valueProperty.set(null)
+        sut.keyProperty.set("test")
+        // act
+        sut.send()
+        // assert
+        sut.error.value shouldBe Exception("Invalid value. Value must be not empty")
+        sut.canSendProperty.value shouldBe false
+    }
+
+    test("Use avro producer if schema registry is configured") {
+        // arrange
+        configureDi(
+            Cluster::class to Cluster.empty().copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample")),
+            AvroProducer::class to mockk<Producer>()
+        )
+        // act
+        val sut = ProducerViewModel("test-topic")
+        // assert
+        sut.producerTypeProperty.value shouldBe "Avro Producer"
     }
 
     test("send message without key fails") {
