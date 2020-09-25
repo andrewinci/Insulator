@@ -14,5 +14,6 @@ class Theme : Stylesheet() {
         val alertColorDark = c("#960017")
         val lightGray = c("#ccc")
         val darkGray = c("#666")
+        val blueColor = Color.BLUE
     }
 }
