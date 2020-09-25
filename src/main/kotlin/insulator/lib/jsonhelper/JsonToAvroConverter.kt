@@ -6,6 +6,7 @@ import arrow.core.right
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.apache.avro.AvroRuntimeException
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Parser
@@ -34,6 +35,8 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
             InvalidJsonException().left()
         } catch (jsonToAvroException: JsonToAvroException) {
             jsonToAvroException.left()
+        } catch (avroRuntime: AvroRuntimeException) {
+            JsonToAvroException(avroRuntime.message).left()
         }
     }
 
@@ -107,7 +110,9 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
     private fun parseBytes(fieldSchema: Schema, jsonValue: Any?): ByteBuffer? {
         if (jsonValue == null) throw JsonToAvroException("Expecting ${printType(fieldSchema)} but got \"${jsonValue}\"")
         if (jsonValue is Double && fieldSchema.logicalType.name == "decimal")
-            return Conversions.DecimalConversion().toBytes(jsonValue.toBigDecimal(), fieldSchema, fieldSchema.logicalType)
+            return Conversions.DecimalConversion().runCatching {
+                toBytes(jsonValue.toBigDecimal(), fieldSchema, fieldSchema.logicalType)
+            }.fold({ it }, { throw JsonToAvroException("Invalid $jsonValue ${it.message}") })
         return when (jsonValue) {
             null -> null
             is String ->
@@ -125,6 +130,6 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
         }
 }
 
-class JsonToAvroException(message: String, val nextField: String? = null) : Throwable(message)
+class JsonToAvroException(message: String?, val nextField: String? = null) : Throwable(message)
 class InvalidJsonException(message: String? = null) : Throwable(message)
 class InvalidSchemaException(message: String? = null) : Throwable(message)

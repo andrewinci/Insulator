@@ -28,15 +28,19 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         center = vbox(spacing = 5.0) {
             label("Key")
             textfield(viewModel.keyProperty)
+            recordTextArea.attachTo(this)
             label(viewModel.validationErrorProperty) {
                 textFill = Color.RED
+                minHeight = 30.0
+                isWrapText = true
                 onDoubleClick {
-                    with(recordTextArea) {
-                        insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":")
+                    if (!viewModel.nextFieldProperty.value.isNullOrEmpty()) {
+                        with(recordTextArea) {
+                            insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":")
+                        }
                     }
                 }
             }
-            recordTextArea.attachTo(this)
             borderpane {
                 paddingAll = 20.0
                 right = button("Send") {
