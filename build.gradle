@@ -50,12 +50,11 @@ dependencies {
     kapt group: 'io.arrow-kt', name: 'arrow-meta', version: "$arrow_version"
 
     // Kafka
-    compile group: 'org.apache.kafka', name: 'kafka-clients', version: '5.5.1-ce'
+    compile group: 'org.apache.kafka', name: 'kafka-clients', version: '6.0.0-ce'
     compile group: 'io.confluent', name: 'kafka-schema-registry', version: '6.0.0'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
 
     // Avro
-    compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '5.5.1'
+    compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '6.0.0'
 
     // Koin
     implementation group: 'org.koin', name: 'koin-core', version: "$koin_version"
@@ -64,6 +63,7 @@ dependencies {
 
     // Json
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
 
     // Kotest
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"
