@@ -21,7 +21,6 @@ import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.LinkedList
-import java.util.concurrent.Callable
 
 private const val CONSUME = "Consume"
 private const val STOP = "Stop"
@@ -55,7 +54,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
     val searchItem = SimpleStringProperty()
     val subtitleProperty: ObservableValue<String> = Bindings.createStringBinding(
-        Callable {
+        {
             "Message count: ${messageConsumedCountProperty.value}/${messageCountProperty.value} - " +
                 "Is internal: ${isInternalProperty.value} - " +
                 "Partitions count: ${partitionCountProperty.value} - " +
@@ -67,6 +66,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     )
 
     init { refresh() }
+
     fun clear() = records.clear()
     fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
     fun delete() {

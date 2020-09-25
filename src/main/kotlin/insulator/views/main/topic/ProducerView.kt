@@ -4,12 +4,18 @@ import insulator.styles.Controls
 import insulator.styles.Titles
 import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.views.common.InsulatorView
+import javafx.beans.binding.Bindings
 import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerViewModel::class, title = "Producer") {
+class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerViewModel::class) {
+
+    private val recordTextArea = TextArea().apply {
+        textProperty().bindBidirectional(viewModel.valueProperty)
+        vgrow = Priority.ALWAYS
+    }
 
     override val root = borderpane {
         top = vbox {
@@ -22,7 +28,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         center = vbox(spacing = 5.0) {
             label("Key")
             textfield(viewModel.keyProperty)
-            label(viewModel.validationError) {
+            label(viewModel.validationErrorProperty) {
                 textFill = Color.RED
                 onDoubleClick {
                     with(recordTextArea) {
@@ -34,6 +40,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
             borderpane {
                 paddingAll = 20.0
                 right = button("Send") {
+                    enableWhen(viewModel.canSendProperty)
                     action {
                         viewModel.send()
                     }
@@ -45,8 +52,15 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         prefHeight = 800.0
     }
 
-    private val recordTextArea = TextArea().apply {
-        textProperty().bindBidirectional(viewModel.valueProperty)
-        vgrow = Priority.ALWAYS
+    override fun onDock() {
+        titleProperty.bind(
+            Bindings.createStringBinding(
+                {
+                    "${viewModel.cluster.name} ${viewModel.producerTypeProperty.value}"
+                },
+                viewModel.producerTypeProperty
+            )
+        )
+        super.onDock()
     }
 }

@@ -15,7 +15,7 @@ class ListTopicViewModelTest : FunSpec({
 
     val errorMessage = "Example error"
 
-    test("topicList") {
+    test("topicList error on loading the list of topics") {
         // arrange
         val sut = ListTopicViewModel()
         // act

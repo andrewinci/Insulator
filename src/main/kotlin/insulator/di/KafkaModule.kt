@@ -41,24 +41,24 @@ val kafkaModule = module {
         }
 
         // Consumers
-        factory<Consumer<Any, Any>> {
+        factory<Consumer<String, String>> {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
             KafkaConsumer(properties)
         }
-        factory<Consumer<Any, Any>>(named("avroConsumer")) {
+        factory<Consumer<String, Any>>(named("avroConsumer")) {
             val properties = get<Properties>()
             properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
             KafkaConsumer(properties)
         }
 
         // Producers
-        scoped<Producer<Any, Any>> {
+        scoped<Producer<String, String>> {
             val properties = get<Properties>()
             properties[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
             KafkaProducer(properties)
         }
-        scoped<Producer<Any, Any>>(named("avroProducer")) {
+        scoped<Producer<String, Any>>(named("avroProducer")) {
             val properties = get<Properties>()
             properties[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
             KafkaProducer(properties)
