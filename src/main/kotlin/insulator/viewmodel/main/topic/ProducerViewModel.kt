@@ -25,7 +25,9 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
     val valueProperty = SimpleStringProperty("{\n}")
     val canSendProperty: ObservableBooleanValue = Bindings.createBooleanBinding(
         { validationErrorProperty.value == null && !keyProperty.value.isNullOrEmpty() && !valueProperty.value.isNullOrEmpty() },
-        validationErrorProperty, keyProperty, valueProperty
+        validationErrorProperty,
+        keyProperty,
+        valueProperty
     )
 
     init {

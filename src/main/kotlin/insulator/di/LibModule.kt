@@ -1,5 +1,6 @@
 package insulator.di
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter
@@ -10,6 +11,7 @@ import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.SchemaRegistry
 import insulator.lib.kafka.StringProducer
 import kotlinx.serialization.json.Json
+import org.apache.avro.Schema
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -19,7 +21,9 @@ val libModule = module {
     single { Json {} }
     single { ConfigurationRepo(get()) }
     single { JsonFormatter(get()) }
-    single { JsonToAvroConverter() }
+    single { Schema.Parser() }
+    single { ObjectMapper() }
+    single { JsonToAvroConverter(get(), get()) }
 
     scope<Cluster> {
         factory { AdminApi(get(), get()) }

@@ -7,18 +7,19 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
+import org.apache.avro.Schema.Parser
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
 import java.nio.ByteBuffer
 import javax.xml.bind.DatatypeConverter
 
-class JsonToAvroConverter() {
+class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val schemaParser: Parser) {
 
     fun convert(jsonString: String, schemaString: String): Either<Throwable, GenericRecord> {
         return try {
-            val jsonMap = ObjectMapper().readValue(jsonString, Map::class.java)
-            val schema = Schema.Parser().parse(schemaString)
+            val jsonMap = objectMapper.readValue(jsonString, Map::class.java)
+            val schema = schemaParser.parse(schemaString)
             val parsed = parseRecord(schema, jsonMap)
             if (GenericData().validate(schema, parsed)) {
                 parsed.right()
