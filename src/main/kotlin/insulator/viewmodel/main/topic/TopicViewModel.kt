@@ -50,7 +50,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     val nameProperty = SimpleStringProperty(topicName)
     val consumeButtonText = SimpleStringProperty(CONSUME)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.LastDay.toString())
-    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.Avro.toString())
+    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.toString())
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
     val searchItem = SimpleStringProperty()
     val subtitleProperty: ObservableValue<String> = Bindings.createStringBinding(

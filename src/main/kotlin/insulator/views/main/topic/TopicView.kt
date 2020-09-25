@@ -56,6 +56,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
                         valueProperty().bindBidirectional(viewModel.consumeFromProperty)
                     }
                     if (viewModel.cluster.isSchemaRegistryConfigured()) {
+                        viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
                         label("value format")
                         combobox<String> {
                             items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
