@@ -1,5 +1,6 @@
 package insulator.lib.jsonhelper
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
@@ -12,7 +13,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
 
     test("Invalid json return left") {
         // arrange
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("invalid json", "{todo: fix schema}")
         // assert
@@ -51,7 +52,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
             "testString": "string"
         }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert(sampleJson, schema)
         // assert
@@ -84,7 +85,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
             """.trimIndent()
         val sampleJson =
             """{ "test": null}"""
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert(sampleJson, schema)
         // assert
@@ -110,7 +111,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
             """.trimIndent()
         val sampleJson =
             """{ "test": 1.232}"""
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert(sampleJson, schema)
         // assert
@@ -139,7 +140,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
                 }]
             }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("{ \"test\": null }", schema)
         // assert
@@ -168,7 +169,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
                 }]
             }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("{ \"test\": 1.34 }", schema)
         // assert
@@ -192,7 +193,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
               "fields": [{ "name": "testArray", "type": {"type" : "array", "items" : "string"} }]
             }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("{ \"testArray\": [\"str1\", \"str2\"] }", schema)
         // assert
@@ -213,7 +214,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
               "fields": [{ "name": "testArray", "type": {"type" : "array", "items" : "string"} }]
             }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("{ \"testArray\": [\"str1\", 1] }", schema)
         // assert
@@ -236,7 +237,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
                   "symbols" : ["WHITE", "BLUE", "GREEN", "RED", "BLACK"]} }]
             }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("{ \"testEnum\": \"WHITE\" }", schema)
         // assert
@@ -261,7 +262,7 @@ class UnnestedJsonToAvroConverterTest : FunSpec({
                   "symbols" : ["WHITE", "BLUE", "GREEN", "RED", "BLACK"]} }]
             }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("{ \"testEnum\": \"GRAY\" }", schema)
         // assert

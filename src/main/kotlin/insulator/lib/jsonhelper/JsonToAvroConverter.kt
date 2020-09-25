@@ -14,18 +14,20 @@ import org.apache.avro.generic.GenericRecordBuilder
 import java.nio.ByteBuffer
 import javax.xml.bind.DatatypeConverter
 
-class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val schemaParser: Parser) {
+class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
 
     fun convert(jsonString: String, schemaString: String): Either<Throwable, GenericRecord> {
         return try {
             val jsonMap = objectMapper.readValue(jsonString, Map::class.java)
-            val schema = schemaParser.parse(schemaString)
+            val schema = Parser().parse(schemaString)
             val parsed = parseRecord(schema, jsonMap)
             if (GenericData().validate(schema, parsed)) {
                 parsed.right()
             } else JsonToAvroException("Generated record is invalid, check the schema").left()
         } catch (jsonException: JsonProcessingException) {
             InvalidJsonException().left()
+        } catch (jsonToAvroException: JsonToAvroException) {
+            jsonToAvroException.left()
         }
     }
 

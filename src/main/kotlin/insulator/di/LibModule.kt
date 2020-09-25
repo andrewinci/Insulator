@@ -23,7 +23,7 @@ val libModule = module {
     single { JsonFormatter(get()) }
     single { Schema.Parser() }
     single { ObjectMapper() }
-    single { JsonToAvroConverter(get(), get()) }
+    single { JsonToAvroConverter(get()) }
 
     scope<Cluster> {
         factory { AdminApi(get(), get()) }

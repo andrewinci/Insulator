@@ -1,5 +1,6 @@
 package insulator.lib.jsonhelper
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -35,7 +36,7 @@ class NestedJsonToAvroConverterTest : FunSpec({
             """.trimIndent()
         val sampleJson =
             """{ "testRecord": { "testString": "string" }}""".trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert(sampleJson, schema)
         // assert
@@ -67,7 +68,7 @@ class NestedJsonToAvroConverterTest : FunSpec({
               }]
             }
             """.trimIndent()
-        val sut = JsonToAvroConverter()
+        val sut = JsonToAvroConverter(ObjectMapper())
         // act
         val result = sut.convert("{ \"testArray\": [{\"testString\": \"value1\"},{\"testString\": \"value2\"}] }", schema)
         // assert

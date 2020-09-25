@@ -20,7 +20,7 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
 
     val producerTypeProperty = SimpleStringProperty("")
     val nextFieldProperty = SimpleStringProperty("")
-    val validationErrorProperty = SimpleStringProperty("")
+    val validationErrorProperty = SimpleStringProperty(null)
     val keyProperty = SimpleStringProperty()
     val valueProperty = SimpleStringProperty("{\n}")
     val canSendProperty: ObservableBooleanValue = Bindings.createBooleanBinding(
@@ -39,17 +39,18 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
             producerTypeProperty.set("String Producer")
         }
         valueProperty.onChange { value ->
-            if (value == null) return@onChange
-            producer.validate(value, topicName).fold(
-                { error ->
-                    if (error is JsonToAvroException || validationErrorProperty.value == null) {
-                        validationErrorProperty.set(error.message)
-                    }
-                    val nextField = (error as? JsonToAvroException)?.nextField
-                    if (nextField != null) nextFieldProperty.value = nextField
-                },
-                { validationErrorProperty.set(null) }
-            )
+            if (value != null) {
+                producer.validate(value, topicName).fold(
+                    { error ->
+                        if (error is JsonToAvroException || validationErrorProperty.value == null) {
+                            validationErrorProperty.set(error.message)
+                        }
+                        val nextField = (error as? JsonToAvroException)?.nextField
+                        if (nextField != null) nextFieldProperty.value = nextField
+                    },
+                    { validationErrorProperty.set(null) }
+                )
+            }
         }
     }
 
