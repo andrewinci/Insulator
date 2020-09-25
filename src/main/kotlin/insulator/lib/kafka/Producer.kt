@@ -11,7 +11,7 @@ import org.apache.kafka.clients.producer.Producer as KafkaProducer
 
 interface Producer {
     fun validate(value: String, topic: String): Either<Throwable, Unit>
-    fun produce(topic: String, key: String, value: String): Either<Throwable, Unit>
+    fun send(topic: String, key: String, value: String): Either<Throwable, Unit>
 }
 
 class AvroProducer(
@@ -25,7 +25,7 @@ class AvroProducer(
     override fun validate(value: String, topic: String) =
         internalValidate(value, topic).flatMap { Unit.right() }
 
-    override fun produce(topic: String, key: String, value: String) =
+    override fun send(topic: String, key: String, value: String) =
         internalValidate(value, topic)
             .map { ProducerRecord(topic, key, it) }
             .flatMap { avroProducer.runCatching { send(it) }.fold({ Unit.right() }, { it.left() }) }
@@ -46,7 +46,7 @@ class AvroProducer(
 
 class StringProducer(private val stringProducer: KafkaProducer<String, String>) : Producer {
     override fun validate(value: String, topic: String) = Unit.right()
-    override fun produce(topic: String, key: String, value: String): Either<Throwable, Unit> {
+    override fun send(topic: String, key: String, value: String): Either<Throwable, Unit> {
         val record = ProducerRecord(topic, key, value)
         return stringProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })
     }

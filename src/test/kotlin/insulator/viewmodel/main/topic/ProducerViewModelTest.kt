@@ -59,7 +59,7 @@ class ProducerViewModelTest : FunSpec({
             Cluster::class to Cluster.empty(),
             StringProducer::class to mockk<Producer> {
                 every { validate(any(), any()) } returns Unit.right()
-                every { produce(any(), any(), any()) } returns Unit.right()
+                every { send(any(), any(), any()) } returns Unit.right()
             }
         )
         val sut = ProducerViewModel("test-topic")
@@ -78,7 +78,7 @@ class ProducerViewModelTest : FunSpec({
             Cluster::class to Cluster.empty(),
             StringProducer::class to mockk<Producer> {
                 every { validate(any(), any()) } returns Unit.right()
-                every { produce(any(), any(), any()) } returns Throwable("sample").left()
+                every { send(any(), any(), any()) } returns Throwable("sample").left()
             }
         )
         val sut = ProducerViewModel("test-topic")

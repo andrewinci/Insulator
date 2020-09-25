@@ -63,7 +63,7 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
             error.set(Exception("Invalid value. Value must be not empty"))
             return
         }
-        producer.produce(topicName, keyProperty.value, valueProperty.value)
+        producer.send(topicName, keyProperty.value, valueProperty.value)
             .handleError { error.set(it) }
     }
 }
