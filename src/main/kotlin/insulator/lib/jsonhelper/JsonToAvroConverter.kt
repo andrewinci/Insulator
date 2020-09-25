@@ -3,11 +3,13 @@ package insulator.lib.jsonhelper
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Parser
+import org.apache.avro.SchemaParseException
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
@@ -24,6 +26,10 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
             if (GenericData().validate(schema, parsed)) {
                 parsed.right()
             } else JsonToAvroException("Generated record is invalid, check the schema").left()
+        } catch (jsonException: SchemaParseException) {
+            InvalidSchemaException().left()
+        } catch (jsonException: JsonParseException) {
+            InvalidJsonException().left()
         } catch (jsonException: JsonProcessingException) {
             InvalidJsonException().left()
         } catch (jsonToAvroException: JsonToAvroException) {
@@ -37,7 +43,7 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
         val recordBuilder = GenericRecordBuilder(schema)
         schema.fields.forEach { fieldSchema ->
             val fieldName = fieldSchema.name()
-            if (fieldName !in jsonMap) throw JsonToAvroException("Expecting \"${fieldName}\" with type ${printType(fieldSchema)}", fieldName)
+            if (fieldName !in jsonMap) throw JsonToAvroException("Expecting \"${fieldName}\" with type ${printType(fieldSchema.schema())}", fieldName)
             val jsonValue = jsonMap[fieldName]
 
             recordBuilder.set(fieldSchema, parseField(fieldSchema.schema(), jsonValue))
@@ -45,22 +51,21 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
         return recordBuilder.build()
     }
 
-    private fun printType(fieldSchema: Schema.Field): String {
-        val schema = fieldSchema.schema()
+    private fun printType(schema: Schema): String {
         return when (schema.type) {
             Schema.Type.NULL -> "null"
-            Schema.Type.RECORD -> "record: ${schema.name}"
+            Schema.Type.RECORD -> "record \"${schema.name}\""
             Schema.Type.BYTES -> "bytes (eg \"0x00\")"
-            Schema.Type.ENUM -> "enum [${fieldSchema.schema().enumSymbols.joinToString(", ")}]"
-            Schema.Type.UNION -> "union [${fieldSchema.schema().types.joinToString(", ") { it.name }}]"
-            Schema.Type.ARRAY -> "array of ${fieldSchema.schema().elementType.name}"
+            Schema.Type.ENUM -> "enum [${schema.enumSymbols.joinToString(", ")}]"
+            Schema.Type.UNION -> "union [${schema.types.joinToString(", ") { it.name }}]"
+            Schema.Type.ARRAY -> "array of \"${schema.elementType.name}\""
             else -> schema.type.name.toLowerCase()
         }
     }
 
     private fun parseField(fieldSchema: Schema, jsonValue: Any?): Any? {
         return when (fieldSchema.type) {
-            Schema.Type.NULL -> if (jsonValue == null) null else throw JsonToAvroException("$jsonValue should be NULL")
+            Schema.Type.NULL -> if (jsonValue == null) null else throw JsonToAvroException("$jsonValue should be ${printType(fieldSchema)}")
             Schema.Type.RECORD -> parseRecord(fieldSchema, jsonValue as? Map<*, *>)
             Schema.Type.FLOAT -> parseFloat(fieldSchema, jsonValue)
             Schema.Type.BYTES -> parseBytes(fieldSchema, jsonValue)
@@ -80,7 +85,7 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
         }
 
     private fun parseArray(fieldSchema: Schema, jsonValue: Any?): Any {
-        if (jsonValue !is ArrayList<*>) throw JsonToAvroException("Expecting array of \"${fieldSchema.elementType.name}\" but got $jsonValue")
+        if (jsonValue !is ArrayList<*>) throw JsonToAvroException("Expecting ${printType(fieldSchema)} but got $jsonValue")
         return jsonValue.map { parseField(fieldSchema.elementType, it) }.toList()
     }
 
@@ -95,12 +100,12 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
     private fun parseEnum(fieldSchema: Schema, jsonValue: Any?): GenericData.EnumSymbol {
         val symbols = fieldSchema.enumSymbols
         return if (jsonValue == null || jsonValue.toString() !in symbols)
-            throw JsonToAvroException("Expecting enum [${symbols.joinToString(", ")}]")
+            throw JsonToAvroException("Expecting ${printType(fieldSchema)} but got $jsonValue")
         else GenericData.EnumSymbol(fieldSchema, jsonValue)
     }
 
     private fun parseBytes(fieldSchema: Schema, jsonValue: Any?): ByteBuffer? {
-        if (jsonValue == null) throw JsonToAvroException("Expecting bytes but got \"${jsonValue}\"")
+        if (jsonValue == null) throw JsonToAvroException("Expecting ${printType(fieldSchema)} but got \"${jsonValue}\"")
         if (jsonValue is Double && fieldSchema.logicalType.name == "decimal")
             return Conversions.DecimalConversion().toBytes(jsonValue.toBigDecimal(), fieldSchema, fieldSchema.logicalType)
         return when (jsonValue) {
@@ -108,7 +113,7 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
             is String ->
                 if (!jsonValue.toLowerCase().startsWith("0x")) throw JsonToAvroException("Invalid $jsonValue, BYTES value need to start with 0x")
                 else ByteBuffer.wrap(DatatypeConverter.parseHexBinary(jsonValue.substring(2)))
-            else -> throw JsonToAvroException("Expecting binary number but got $jsonValue")
+            else -> throw JsonToAvroException("Expecting binary but got $jsonValue")
         }
     }
 
@@ -116,9 +121,10 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper) {
         when (jsonValue) {
             is Double -> jsonValue.toFloat()
             is Float -> jsonValue
-            else -> throw JsonToAvroException("Expecting float but got $jsonValue")
+            else -> throw JsonToAvroException("Expecting ${printType(fieldSchema)} but got $jsonValue")
         }
 }
 
 class JsonToAvroException(message: String, val nextField: String? = null) : Throwable(message)
 class InvalidJsonException(message: String? = null) : Throwable(message)
+class InvalidSchemaException(message: String? = null) : Throwable(message)
