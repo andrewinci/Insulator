@@ -1,6 +1,7 @@
 package insulator.lib.jsonhelper.jsontoavro.fieldparser
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import insulator.lib.helpers.toEither
@@ -17,7 +18,6 @@ class ByteParser : JsonFieldParser<ByteBuffer> {
         if (fieldValue == null) return JsonInvalidFieldException(schema, fieldValue).left()
         return when (fieldValue) {
             is Double -> mapFromDecimal(fieldValue, schema)
-            is Float -> mapFromDecimal(fieldValue.toDouble(), schema)
             is String -> mapFromHex(fieldValue, schema)
             else -> JsonInvalidFieldException(schema, fieldValue).left()
         }
@@ -28,9 +28,14 @@ class ByteParser : JsonFieldParser<ByteBuffer> {
         else ByteBuffer.wrap(DatatypeConverter.parseHexBinary(fieldValue.substring(2))).right()
 
     private fun mapFromDecimal(fieldValue: Double, schema: Schema): Either<JsonFieldParsingException, ByteBuffer> {
-        if (schema.logicalType.name != "decimal") return JsonInvalidFieldException(schema, fieldValue).left()
-        return Conversions.DecimalConversion()
-            .runCatching { toBytes(fieldValue.toBigDecimal(), schema, schema.logicalType) }
-            .toEither { JsonInvalidFieldException(schema, fieldValue) }
+        if (schema.objectProps["logicalType"] != "decimal") return JsonFieldParsingException("Invalid $fieldValue, decimal value expected").left()
+        val scale = schema.objectProps["scale"] as? Int ?: 0
+        return fieldValue.toBigDecimal().runCatching { setScale(scale) }
+            .toEither { JsonFieldParsingException("Invalid decimal $fieldValue. Max scale must be $scale") }
+            .flatMap {
+                Conversions.DecimalConversion()
+                    .runCatching { toBytes(it, schema, schema.logicalType) }
+                    .toEither { JsonInvalidFieldException(schema, fieldValue) }
+            }
     }
 }
