@@ -5,6 +5,7 @@ import insulator.styles.Titles
 import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.views.common.InsulatorView
 import javafx.beans.binding.Bindings
+import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
@@ -18,6 +19,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
     }
 
     override val root = borderpane {
+        shortcut("CTRL+SPACE") { autoComplete() }
         top = vbox {
             hbox {
                 label(viewModel.topicName) { addClass(Titles.h1) }
@@ -29,17 +31,15 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
             label("Key")
             textfield(viewModel.keyProperty)
             recordTextArea.attachTo(this)
-            label(viewModel.validationErrorProperty) {
-                textFill = Color.RED
-                minHeight = 30.0
-                isWrapText = true
-                onDoubleClick {
-                    if (!viewModel.nextFieldProperty.value.isNullOrEmpty()) {
-                        with(recordTextArea) {
-                            insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":")
-                        }
-                    }
+            scrollpane {
+                label(viewModel.validationErrorProperty) {
+                    textFill = Color.RED
+                    isWrapText = true
+                    onDoubleClick { autoComplete() }
                 }
+                vbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+                minHeight = 15.0
+                maxHeight = 100.0
             }
             borderpane {
                 paddingAll = 20.0
@@ -54,6 +54,14 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         addClass(Controls.view)
         prefWidth = 800.0
         prefHeight = 800.0
+    }
+
+    private fun autoComplete() {
+        if (!viewModel.nextFieldProperty.value.isNullOrEmpty()) {
+            with(recordTextArea) {
+                insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":")
+            }
+        }
     }
 
     override fun onDock() {

@@ -1,7 +1,6 @@
 package insulator.lib.jsonhelper
 
-import arrow.core.left
-import arrow.core.right
+import insulator.lib.helpers.toEither
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -14,7 +13,7 @@ class JsonFormatter(private val json: Json) {
 
     fun formatJsonString(jsonString: String, indent: Boolean = true) = json.runCatching { parseToJsonElement(jsonString) }
         .map { InternalFormatter(indent).format(it, 1) }
-        .fold({ it.right() }, { it.left() })
+        .toEither()
 
     private class InternalFormatter(private val indent: Boolean = true) {
         @OptIn(ExperimentalStdlibApi::class)

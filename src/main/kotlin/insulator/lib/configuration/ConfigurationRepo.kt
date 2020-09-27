@@ -3,10 +3,9 @@ package insulator.lib.configuration
 import arrow.core.Either
 import arrow.core.extensions.fx
 import arrow.core.flatMap
-import arrow.core.left
-import arrow.core.right
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
+import insulator.lib.helpers.toEither
 import kotlinx.serialization.json.Json
 import java.io.File
 
@@ -17,10 +16,10 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
     fun getConfiguration(): Either<ConfigurationRepoException, Configuration> {
         if (!File(configPath).exists()) store(Configuration(emptyList()))
         return kotlin.runCatching { File(configPath).readText() }
-            .fold({ it.right() }, { ConfigurationRepoException("Unable to load the file", it).left() })
+            .toEither { ConfigurationRepoException("Unable to load the file", it) }
             .flatMap {
                 json.runCatching { decodeFromString(Configuration.serializer(), it) }
-                    .fold({ it.right() }, { ConfigurationRepoException("Unable to load the configurations", it).left() })
+                    .toEither { ConfigurationRepoException("Unable to load the configurations", it) }
             }
     }
 
@@ -44,7 +43,7 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
 
     private fun store(configuration: Configuration) = kotlin.runCatching {
         File(configPath).writeText(json.encodeToString(Configuration.serializer(), configuration))
-    }.fold({ right() }, { ConfigurationRepoException("Unable to store the configuration", it).left() })
+    }.toEither { ConfigurationRepoException("Unable to store the configuration", it) }
 
     fun addNewClusterCallback(callback: (Configuration) -> Unit) {
         callbacks.add(callback)

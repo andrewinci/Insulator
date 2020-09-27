@@ -9,7 +9,11 @@ import javafx.scene.control.ButtonType
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 fun EventTarget.searchBox(searchText: Property<String>) =
-    hbox { label("Search"); textfield(searchText) { minWidth = 200.0 }; alignment = Pos.CENTER_RIGHT; spacing = 5.0 }
+    hbox {
+        label("Search")
+        textfield(searchText) { minWidth = 200.0 }.also { it.parent.focusedProperty().addListener(ChangeListener { _, _, _ -> it.requestFocus() }) }
+        alignment = Pos.CENTER_RIGHT; spacing = 5.0
+    }
 
 fun EventTarget.confirmationButton(value: String, confirmationMessage: String, visible: Boolean = true, onOkAction: () -> Unit) =
     button(value) {

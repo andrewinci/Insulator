@@ -20,9 +20,9 @@ class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
     private val schemaRegistry: SchemaRegistry by di()
 
     val nameProperty = SimpleStringProperty(schema.subject)
-    val versionsProperty: ObservableList<Int> = FXCollections.observableArrayList<Int>(schema.schemas.map { it.version })
-    val selectedVersionProperty: Property<Int> = SimpleObjectProperty<Int>(-1)
-    val schemaProperty: ObservableList<Token> = FXCollections.observableArrayList<Token>()
+    val versionsProperty: ObservableList<Int> = FXCollections.observableArrayList(schema.schemas.map { it.version })
+    val selectedVersionProperty: Property<Int> = SimpleObjectProperty(-1)
+    val schemaProperty: ObservableList<Token> = FXCollections.observableArrayList()
 
     init {
         refresh()
