@@ -12,25 +12,28 @@ class FieldParser(
 
     private val simpleTypeParsers = simpleTypeParsersFactory.build()
     private val complexTypeParsers = complexTypeParsersFactory.build(this)
-
-    fun parseField(jsonValue: Any?, fieldSchema: Schema) = when (fieldSchema.type) {
+    private val parsersLookup = mapOf(
         // composed types
-        Schema.Type.RECORD -> complexTypeParsers.recordParser
-        Schema.Type.ARRAY -> complexTypeParsers.arrayParser
-        Schema.Type.UNION -> complexTypeParsers.unionParser
-        Schema.Type.BYTES -> complexTypeParsers.byteParser
-        Schema.Type.FIXED -> jsonFieldParser { _, _ -> JsonFieldParsingException("Avro FIXED type not supported").left() }
-        Schema.Type.MAP -> jsonFieldParser { _, _ -> JsonFieldParsingException("Avro MAP type not supported").left() }
+        Schema.Type.RECORD to complexTypeParsers.recordParser,
+        Schema.Type.ARRAY to complexTypeParsers.arrayParser,
+        Schema.Type.UNION to complexTypeParsers.unionParser,
+        Schema.Type.BYTES to complexTypeParsers.byteParser,
+        Schema.Type.FIXED to jsonFieldParser { _, _ -> JsonFieldParsingException("Avro FIXED type not supported").left() },
+        Schema.Type.MAP to jsonFieldParser { _, _ -> JsonFieldParsingException("Avro MAP type not supported").left() },
 
         // simple types
-        Schema.Type.STRING -> simpleTypeParsers.stringParser
-        Schema.Type.ENUM -> simpleTypeParsers.enumParser
-        Schema.Type.INT -> simpleTypeParsers.intParser
-        Schema.Type.LONG -> simpleTypeParsers.longParser
-        Schema.Type.FLOAT -> simpleTypeParsers.floatParser
-        Schema.Type.DOUBLE -> simpleTypeParsers.doubleParser
-        Schema.Type.BOOLEAN -> simpleTypeParsers.booleanParser
-        Schema.Type.NULL -> simpleTypeParsers.nullParser
-        else -> jsonFieldParser { _, _ -> JsonFieldParsingException("Null schema type").left() }
-    }.parse(jsonValue, fieldSchema)
+        Schema.Type.STRING to simpleTypeParsers.stringParser,
+        Schema.Type.ENUM to simpleTypeParsers.enumParser,
+        Schema.Type.INT to simpleTypeParsers.intParser,
+        Schema.Type.LONG to simpleTypeParsers.longParser,
+        Schema.Type.FLOAT to simpleTypeParsers.floatParser,
+        Schema.Type.DOUBLE to simpleTypeParsers.doubleParser,
+        Schema.Type.BOOLEAN to simpleTypeParsers.booleanParser,
+        Schema.Type.NULL to simpleTypeParsers.nullParser,
+    )
+
+    fun parseField(jsonValue: Any?, fieldSchema: Schema) = (
+        parsersLookup[fieldSchema.type]
+            ?: jsonFieldParser { _, _ -> JsonFieldParsingException("Null schema type").left() }
+        ).parse(jsonValue, fieldSchema)
 }
