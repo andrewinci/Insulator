@@ -73,7 +73,7 @@ dependencies {
 
     testCompile group: 'org.testfx', name: 'testfx-junit5', version: "$testfx_version"
 
-    testImplementation group: 'io.mockk', name: 'mockk', version: '1.10.0'
+    testImplementation group: 'io.mockk', name: 'mockk', version: '1.10.2'
 
     integrationTestImplementation group: 'org.testcontainers', name: 'kafka', version: "$testcontainer_version"
 }
