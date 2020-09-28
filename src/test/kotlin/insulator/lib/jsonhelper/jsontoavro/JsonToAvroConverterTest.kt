@@ -10,7 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.apache.avro.generic.GenericRecord
 
-class ConverterTest : FunSpec({
+class JsonToAvroConverterTest : FunSpec({
     test("return left if the json provided is invalid") {
         // arrange
         val sut = JsonToAvroConverter(ObjectMapper(), mockk(), mockk())

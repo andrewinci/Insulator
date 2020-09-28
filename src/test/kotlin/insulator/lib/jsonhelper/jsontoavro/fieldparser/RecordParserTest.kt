@@ -2,6 +2,7 @@ package insulator.lib.jsonhelper.jsontoavro.fieldparser
 
 import arrow.core.right
 import insulator.lib.jsonhelper.jsontoavro.JsonInvalidFieldException
+import insulator.lib.jsonhelper.jsontoavro.JsonMissingFieldException
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
@@ -48,6 +49,21 @@ class RecordParserTest : FunSpec({
         // assert
         res shouldBeLeft {
             it.shouldBeInstanceOf<JsonInvalidFieldException>()
+        }
+    }
+
+    test("record with a missing field") {
+        // arrange
+        val sut = RecordParser(
+            mockk() {
+                every { parseField(any(), any()) } returns "".right()
+            }
+        )
+        // act
+        val res = sut.parse(emptyMap<String, String>(), schema)
+        // assert
+        res shouldBeLeft {
+            it.shouldBeInstanceOf<JsonMissingFieldException>()
         }
     }
 })
