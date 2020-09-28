@@ -4,7 +4,8 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
-import insulator.lib.jsonhelper.JsonToAvroConverter
+import insulator.lib.helpers.toEither
+import insulator.lib.jsonhelper.jsontoavro.JsonToAvroConverter
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.Producer as KafkaProducer
@@ -28,10 +29,11 @@ class AvroProducer(
     override fun send(topic: String, key: String, value: String) =
         internalValidate(value, topic)
             .map { ProducerRecord(topic, key, it) }
-            .flatMap { avroProducer.runCatching { send(it) }.fold({ Unit.right() }, { it.left() }) }
+            .flatMap { avroProducer.runCatching { send(it) }.toEither() }
+            .map { Unit }
 
     private fun internalValidate(value: String, topic: String) =
-        getCachedSchema(topic).flatMap { jsonAvroConverter.convert(value, it) }
+        getCachedSchema(topic).flatMap { jsonAvroConverter.parse(jsonString = value, schemaString = it) }
 
     private fun getCachedSchema(topic: String) =
         schemaCache.getOrPut(

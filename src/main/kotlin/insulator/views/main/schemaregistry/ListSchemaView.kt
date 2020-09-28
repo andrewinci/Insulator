@@ -3,9 +3,9 @@ package insulator.views.main.schemaregistry
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
 import insulator.views.common.InsulatorView
+import insulator.views.common.searchBox
 import insulator.views.configurations.ListClusterView
 import javafx.beans.property.SimpleStringProperty
-import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
@@ -15,7 +15,7 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
     private val searchItem = SimpleStringProperty()
 
     override val root = vbox(spacing = 5.0) {
-        hbox { label("Search"); textfield(searchItem) { minWidth = 200.0 }; alignment = Pos.CENTER_RIGHT; spacing = 5.0 }
+        searchBox(searchItem).also { shortcut("CTRL+F") { it.requestFocus() } }
         listview<String> {
             cellFormat { graphic = label(it) }
             onDoubleClick { viewModel.showSchema() }

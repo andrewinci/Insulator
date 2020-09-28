@@ -3,7 +3,8 @@ package insulator.viewmodel.main.topic
 import arrow.core.extensions.either.applicativeError.handleError
 import insulator.di.getInstanceNow
 import insulator.lib.configuration.model.Cluster
-import insulator.lib.jsonhelper.JsonToAvroException
+import insulator.lib.jsonhelper.jsontoavro.JsonFieldParsingException
+import insulator.lib.jsonhelper.jsontoavro.JsonMissingFieldException
 import insulator.lib.kafka.AvroProducer
 import insulator.lib.kafka.Producer
 import insulator.lib.kafka.StringProducer
@@ -42,11 +43,9 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
             if (value != null) {
                 producer.validate(value, topicName).fold(
                     { error ->
-                        if (error is JsonToAvroException || validationErrorProperty.value == null) {
+                        if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
+                        if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
                             validationErrorProperty.set(error.message)
-                        }
-                        val nextField = (error as? JsonToAvroException)?.nextField
-                        if (nextField != null) nextFieldProperty.value = nextField
                     },
                     { validationErrorProperty.set(null) }
                 )

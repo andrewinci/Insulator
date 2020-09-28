@@ -1,7 +1,7 @@
 package insulator.lib.kafka
 
 import arrow.core.right
-import insulator.lib.jsonhelper.JsonToAvroConverter
+import insulator.lib.jsonhelper.jsontoavro.JsonToAvroConverter
 import insulator.lib.kafka.model.Schema
 import insulator.lib.kafka.model.Subject
 import io.kotest.assertions.arrow.either.shouldBeLeft
@@ -22,7 +22,7 @@ class AvroProducerTest : FunSpec({
             every { getSubject(any()) } returns Subject("$topic-value", listOf(Schema("", 1))).right()
         }
         val jsonAvroConverter = mockk<JsonToAvroConverter> {
-            every { convert(any(), any()) } returns mockk<GenericRecord>().right()
+            every { parse(any(), any()) } returns mockk<GenericRecord>().right()
         }
         val sut = AvroProducer(mockk(), schemaRegistry, jsonAvroConverter)
         // act
@@ -40,7 +40,7 @@ class AvroProducerTest : FunSpec({
             every { getSubject(any()) } returns Subject("$topic-value", listOf(Schema("", 1))).right()
         }
         val jsonAvroConverter = mockk<JsonToAvroConverter> {
-            every { convert(any(), any()) } returns mockk<GenericRecord>().right()
+            every { parse(any(), any()) } returns mockk<GenericRecord>().right()
         }
         val producer = mockk<Producer<String, GenericRecord>> {
             every { send(any()) } throws error

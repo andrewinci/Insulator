@@ -2,8 +2,6 @@ package insulator.lib.kafka
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import arrow.core.left
-import arrow.core.right
 import insulator.lib.helpers.toEither
 import insulator.lib.kafka.model.Schema
 import insulator.lib.kafka.model.Subject
@@ -13,7 +11,7 @@ class SchemaRegistry(private val client: SchemaRegistryClient) {
 
     fun deleteSubject(subject: String) =
         client.runCatching { deleteSubject(subject) }
-            .fold({ Unit.right() }, { it.left() })
+            .toEither().map { Unit }
 
     fun getAllSubjects(): Either<Throwable, Collection<String>> =
         client.runCatching { allSubjects.sorted() }.toEither()

@@ -7,7 +7,7 @@ import helper.configureDi
 import helper.configureFXFramework
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
-import insulator.lib.jsonhelper.JsonToAvroException
+import insulator.lib.jsonhelper.jsontoavro.JsonToAvroException
 import insulator.lib.kafka.AvroProducer
 import insulator.lib.kafka.Producer
 import insulator.lib.kafka.StringProducer

@@ -33,7 +33,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
                     }
                 }
             }
-            right = searchBox(searchItem)
+            right = searchBox(searchItem).also { shortcut("CTRL+F") { it.requestFocus() } }
         }
         listview<String> {
             cellFormat { graphic = label(it) { id = "topic-$it" } }

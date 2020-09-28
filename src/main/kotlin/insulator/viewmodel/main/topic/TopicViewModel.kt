@@ -62,6 +62,8 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         },
         messageConsumedCountProperty,
         isCompactedProperty,
+        partitionCountProperty,
+        isInternalProperty,
         messageCountProperty
     )
 
