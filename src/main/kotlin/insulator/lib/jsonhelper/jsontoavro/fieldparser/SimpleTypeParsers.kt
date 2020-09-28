@@ -52,8 +52,11 @@ class SimpleTypeParsersFactory {
         booleanParser = jsonFieldParser { field, schema ->
             when (field) {
                 is Boolean -> field.right()
-                (field as? String)?.toLowerCase() == "false" -> false.right()
-                (field as? String)?.toLowerCase() == "true" -> true.right()
+                is String -> when (field.toLowerCase()) {
+                    "false" -> false.right()
+                    "true" -> true.right()
+                    else -> JsonInvalidFieldException(schema, field).left()
+                }
                 else -> JsonInvalidFieldException(schema, field).left()
             }
         },
