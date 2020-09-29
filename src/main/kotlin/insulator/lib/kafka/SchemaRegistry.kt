@@ -23,7 +23,7 @@ class SchemaRegistry(private val client: SchemaRegistryClient) {
                 subject,
                 versions
                     .map { !getByVersion(subject, it) }
-                    .map { Schema(it.schema, it.version) }
+                    .map { Schema(it.schema, it.version, it.id) }
             )
         }
 

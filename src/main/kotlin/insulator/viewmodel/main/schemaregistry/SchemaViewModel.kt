@@ -4,6 +4,7 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.SchemaRegistry
+import insulator.lib.kafka.model.Schema
 import insulator.lib.kafka.model.Subject
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.property.Property
@@ -20,8 +21,8 @@ class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
     private val schemaRegistry: SchemaRegistry by di()
 
     val nameProperty = SimpleStringProperty(schema.subject)
-    val versionsProperty: ObservableList<Int> = FXCollections.observableArrayList(schema.schemas.map { it.version })
-    val selectedVersionProperty: Property<Int> = SimpleObjectProperty(-1)
+    val versionsProperty: ObservableList<Schema> = FXCollections.observableArrayList(schema.schemas)
+    val selectedVersionProperty: Property<Schema> = SimpleObjectProperty(null)
     val schemaProperty: ObservableList<Token> = FXCollections.observableArrayList()
 
     init {
@@ -30,12 +31,12 @@ class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
 
     private fun refresh() {
         selectedVersionProperty.onChange { version ->
-            val schemaVersion = schema.schemas.first { it.version == version }.schema
+            val schemaVersion = selectedVersionProperty.value.schema
             val res = formatter.formatJsonString(schemaVersion)
             schemaProperty.clear()
             schemaProperty.addAll(res.fold({ listOf(Token.Value("Unable to parse ${it.message}")) }, { it }))
         }
-        selectedVersionProperty.value = schema.schemas.last().version
+        selectedVersionProperty.value = schema.schemas.last()
     }
 
     fun delete() = schemaRegistry.deleteSubject(nameProperty.value)

@@ -84,7 +84,7 @@ class ListSchemaViewModelTest : FunSpec({
         }
         schemaRegistry = SchemaRegistry::class to mockk {
             every { getAllSubjects() } returns listOf(targetSubject, "subject2").right()
-            every { getSubject(any()) } returns Subject("*", listOf(Schema("{}", 1))).right()
+            every { getSubject(any()) } returns Subject("*", listOf(Schema("{}", 1, 3))).right()
         }
     }
 

@@ -1,6 +1,7 @@
 package insulator.views.main.schemaregistry
 
 import insulator.lib.jsonhelper.Token
+import insulator.lib.kafka.model.Schema
 import insulator.styles.Controls
 import insulator.styles.Theme
 import insulator.styles.Titles
@@ -18,7 +19,6 @@ import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.Callable
 
 class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewModel::class) {
 
@@ -36,10 +36,11 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
         }
         center = vbox(spacing = 2.0) {
             hbox(alignment = Pos.CENTER_LEFT) {
-                label("Schema version")
-                combobox<Int> {
+                label("Schema")
+                combobox<Schema> {
                     items.bind(viewModel.versionsProperty) { it }
                     valueProperty().bindBidirectional(viewModel.selectedVersionProperty)
+                    cellFormat { text = "v: ${it.version} id: ${it.id}" }
                 }
             }
             scrollpane {
@@ -72,7 +73,7 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
     }
 
     override fun onDock() {
-        titleProperty.bind(Bindings.createStringBinding(Callable { "${viewModel.cluster.name}  ${viewModel.nameProperty.value}" }, viewModel.nameProperty))
+        titleProperty.bind(Bindings.createStringBinding({ "${viewModel.nameProperty.value} ${viewModel.cluster.name}" }, viewModel.nameProperty))
         super.onDock()
     }
 }

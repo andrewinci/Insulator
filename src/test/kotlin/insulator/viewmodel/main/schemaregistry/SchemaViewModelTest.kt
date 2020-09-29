@@ -22,7 +22,7 @@ class SchemaViewModelTest : FunSpec({
 
     test("happy path delete") {
         // arrange
-        val subject = Subject(subject = targetSubject, schemas = listOf(Schema("{}", 1)))
+        val subject = Subject(subject = targetSubject, schemas = listOf(Schema("{}", 1, 4)))
         val sut = SchemaViewModel(subject)
         // act
         sut.delete()

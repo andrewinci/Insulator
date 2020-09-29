@@ -29,6 +29,7 @@ class SchemaRegistryTest : FunSpec({
                 mockk {
                     every { schema } returns "asd"
                     every { version } returns 1
+                    every { id } returns 123
                 }
         }
         val sut = SchemaRegistry(mockSchema)

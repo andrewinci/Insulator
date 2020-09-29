@@ -19,7 +19,7 @@ class AvroProducerTest : FunSpec({
         val testMessage = "test-message"
         val topic = "topic-name"
         val schemaRegistry = mockk<SchemaRegistry> {
-            every { getSubject(any()) } returns Subject("$topic-value", listOf(Schema("", 1))).right()
+            every { getSubject(any()) } returns Subject("$topic-value", listOf(Schema("", 1, 2))).right()
         }
         val jsonAvroConverter = mockk<JsonToAvroConverter> {
             every { parse(any(), any()) } returns mockk<GenericRecord>().right()
@@ -37,7 +37,7 @@ class AvroProducerTest : FunSpec({
         val error = Throwable("error message")
         val topic = "topic-name"
         val schemaRegistry = mockk<SchemaRegistry> {
-            every { getSubject(any()) } returns Subject("$topic-value", listOf(Schema("", 1))).right()
+            every { getSubject(any()) } returns Subject("$topic-value", listOf(Schema("", 1, 2))).right()
         }
         val jsonAvroConverter = mockk<JsonToAvroConverter> {
             every { parse(any(), any()) } returns mockk<GenericRecord>().right()
