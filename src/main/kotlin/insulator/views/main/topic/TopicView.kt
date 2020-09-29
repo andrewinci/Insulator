@@ -111,7 +111,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
-        titleProperty.bind(Bindings.createStringBinding({ "${viewModel.cluster.name}  ${viewModel.nameProperty.value}" }, viewModel.nameProperty))
+        titleProperty.bind(Bindings.createStringBinding({ "${viewModel.nameProperty.value} ${viewModel.cluster.name}" }, viewModel.nameProperty))
         super.onDock()
     }
 
