@@ -58,7 +58,7 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
             .let { attempts -> attempts.firstOrNull { it.isRight() } ?: attempts.first() }
 
     private fun parseArray(field: Any?, schema: Schema) =
-        if (field is GenericData.Array<*>) field.map { parseField(it, schema.elementType) }.toEitherOfList()
+        if (field is Collection<*>) field.map { parseField(it, schema.elementType) }.toEitherOfList()
         else AvroFieldParsingException(field, "Array").left()
 
     private fun parseBoolean(field: Any?) =

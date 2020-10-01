@@ -81,9 +81,10 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
     }
 
     private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
-        val parsedValue = converter.parse(record.value() as GenericRecord)
+        val parsedValue = if (record.value() is GenericRecord) converter.parse(record.value() as GenericRecord)
             // fallback to Avro.toString if unable to parse with the custom parser
             .fold({ record.value().toString() }, { it })
+        else record.value().toString()
         return Tuple3(record.key()?.toString(), parsedValue, record.timestamp())
     }
 }

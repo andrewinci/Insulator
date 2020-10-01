@@ -1,9 +1,14 @@
 package insulator.lib.kafka
 
+import arrow.core.right
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.jsonhelper.AvroToJsonConverter
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.delay
+import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.MockConsumer
 import org.apache.kafka.clients.consumer.OffsetResetStrategy
@@ -14,11 +19,12 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 
 class ConsumerTest : FunSpec({
+    val mockConverter = mockk<AvroToJsonConverter> { every { parse(any()) } answers { firstArg<GenericRecord>().toString().right() } }
 
     test("start happy path") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer(Cluster.empty())
+        val sut = Consumer(Cluster.empty(), mockConverter)
         // act
         sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
         // assert
@@ -30,7 +36,7 @@ class ConsumerTest : FunSpec({
     test("start happy path - now") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer(Cluster.empty())
+        val sut = Consumer(Cluster.empty(), mockConverter)
         // act
         sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
         // assert
@@ -42,7 +48,7 @@ class ConsumerTest : FunSpec({
     test("isRunning") {
         // arrange
         val messages = mutableListOf<String>()
-        val sut = Consumer(Cluster.empty())
+        val sut = Consumer(Cluster.empty(), mockConverter)
         // act
         sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
         // assert
@@ -53,7 +59,7 @@ class ConsumerTest : FunSpec({
 
     test("stop if not running") {
         // arrange
-        val sut = Consumer(Cluster.empty())
+        val sut = Consumer(Cluster.empty(), mockConverter)
         // act/assert
         sut.stop()
     }
