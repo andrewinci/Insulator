@@ -1,12 +1,14 @@
 package insulator.lib.jsonhelper
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.headers
 import io.kotest.data.row
 import io.kotest.data.table
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
@@ -171,6 +173,26 @@ class AvroToJsonConverterTest : FunSpec({
         val res = sut.parse(testRecord)
         // assert
         res shouldBeRight """{"$testFieldName":"$testFieldValue"}"""
+    }
+
+    test("not supported map") {
+        // arrange
+        val testFieldName = "testField"
+        val testFieldValue = "SPADES"
+        val schema = Schema.Parser().parse(
+            schemaTemplate(
+                """{"name":"$testFieldName", "type": { "type": "map", "values" : "long" }
+            |}""".trimMargin()
+            )
+        )
+        val avroFieldValue = GenericData.EnumSymbol(schema.fields[0].schema(), testFieldValue)
+        val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, avroFieldValue) }.build()
+        // act
+        val res = sut.parse(testRecord)
+        // assert
+        res shouldBeLeft {
+            it.shouldBeInstanceOf<UnsupportedTypeException>()
+        }
     }
 })
 

@@ -37,11 +37,8 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
             STRING -> parseString(field)
             ENUM -> parseEnum(field)
             INT, LONG, FLOAT, DOUBLE -> parseNumber(field)
-
-            MAP -> UnsupportedTypeException("MAP").left()
-            FIXED -> UnsupportedTypeException("FIXED").left()
-
-            else -> field.toString().right()
+            // missing: MAP, FIXED
+            else -> UnsupportedTypeException(schema.type.getName()).left()
         }
 
     private fun parseRecord(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
