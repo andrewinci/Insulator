@@ -4,6 +4,7 @@ import arrow.core.right
 import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
+import helper.waitFXThread
 import insulator.di.currentCluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
@@ -24,15 +25,14 @@ class MainViewModelTest : FunSpec({
         val sut = MainViewModel()
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
         val newView = ListSchemaView::class
-        sut.runOnFXThread {
-            // act
-            setCurrentView(newView)
-            // assert
-            val currentView = FX.getComponents()[newView] as ListSchemaView
-            sut.currentViewProperty.value shouldBe currentView
-            sut.currentCenter.value shouldBe currentView.root
-            sut.currentTitle.value shouldBe currentView.title
-        }
+        // act
+        sut.runOnFXThread { setCurrentView(newView) }
+        waitFXThread()
+        // assert
+        val currentView = FX.getComponents()[newView] as ListSchemaView
+        sut.currentViewProperty.value shouldBe currentView
+        sut.currentCenter.value shouldBe currentView.root
+        sut.currentTitle.value shouldBe currentView.title
     }
 
     test("do not show the schema list if schema registry is not configured") {
@@ -40,27 +40,23 @@ class MainViewModelTest : FunSpec({
         val sut = MainViewModel()
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns false }
         val topicView = sut.currentViewProperty.value
-        sut.runOnFXThread {
-            // act
-            setCurrentView(ListSchemaView::class)
-            // assert
-            sut.currentViewProperty.value shouldBe topicView
-        }
+        // act
+        sut.runOnFXThread { setCurrentView(ListSchemaView::class) }
+        waitFXThread()
+        // assert
+        sut.currentViewProperty.value shouldBe topicView
     }
 
     test("toggle sidebar show/hide the sidebar") {
         // arrange
         val sut = MainViewModel()
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns false }
-        val topicView = sut.currentViewProperty.value
-        sut.runOnFXThread {
-            sut.showSidebar.value shouldBe false
-            // act
-            sut.toggleSidebar()
-            setCurrentView(ListSchemaView::class)
-            // assert
-            sut.showSidebar.value shouldBe true
-        }
+        sut.showSidebar.value shouldBe false
+        // act
+        sut.runOnFXThread { toggleSidebar() }
+        waitFXThread()
+        // assert
+        sut.showSidebar.value shouldBe true
     }
 
     test("switch to an unsupported view show an error") {
@@ -68,12 +64,11 @@ class MainViewModelTest : FunSpec({
         val sut = MainViewModel()
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
         val newView = ClusterView::class
-        sut.runOnFXThread {
-            // act
-            setCurrentView(newView)
-            // assert
-            sut.error.value shouldNotBe null
-        }
+        // act
+        sut.runOnFXThread { setCurrentView(newView) }
+        waitFXThread()
+        // assert
+        sut.error.value shouldNotBe null
     }
 
     beforeTest {
