@@ -2,6 +2,8 @@ package insulator.lib.kafka
 
 import arrow.core.Tuple3
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.jsonhelper.AvroToJsonConverter
+import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
@@ -13,7 +15,7 @@ import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
 
-class Consumer(private val cluster: Cluster) : KoinComponent {
+class Consumer(private val cluster: Cluster, private val converter: AvroToJsonConverter) : KoinComponent {
 
     private var threadLoop: Thread? = null
     private var running = false
@@ -78,8 +80,10 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
             }
     }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> =
-        Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
+    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
+        val parsedValue = converter.parse(record.value() as GenericRecord)
+        return Tuple3(record.key()?.toString(), parsedValue, record.timestamp())
+    }
 }
 
 enum class ConsumeFrom {
