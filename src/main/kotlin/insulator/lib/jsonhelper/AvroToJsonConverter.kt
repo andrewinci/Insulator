@@ -1,11 +1,11 @@
 package insulator.lib.jsonhelper
 
 import arrow.core.Either
-import arrow.core.Option
 import arrow.core.left
 import arrow.core.right
 import com.fasterxml.jackson.databind.ObjectMapper
 import insulator.lib.helpers.toEitherOfList
+import org.apache.avro.Conversions
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
@@ -18,7 +18,7 @@ class InvalidFieldTypeParsingException(field: Any?, type: String) : AvroToJsonPa
 class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
 
     fun parse(record: GenericRecord): String {
-        val map = parseField(record, record.schema).fold({ throw  it }, { it })
+        val map = parseField(record, record.schema).fold({ throw it }, { it })
         return objectMapper.writeValueAsString(map)
     }
 
@@ -33,8 +33,8 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
             Schema.Type.BOOLEAN -> parseBoolean(field)
             Schema.Type.STRING -> parseString(field)
             Schema.Type.ENUM -> parseEnum(field)
-//todo            Schema.Type.MAP -> checkType<String>()
-//todo            Schema.Type.FIXED -> checkType<String>()
+// todo            Schema.Type.MAP -> checkType<String>()
+// todo            Schema.Type.FIXED -> checkType<String>()
 
             else -> field.toString().right()
         }
@@ -81,6 +81,7 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
 
     private fun parseBytes(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
         if (field !is ByteBuffer) return InvalidFieldTypeParsingException(field, "ByteBuffer").left()
-        return ("0x" + field.array().joinToString("") { String.format("%02x", it) }).right()
+        return if (schema.objectProps["logicalType"] == "decimal") Conversions.DecimalConversion().fromBytes(field, schema, schema.logicalType).right()
+        else ("0x" + field.array().joinToString("") { String.format("%02x", it) }).right()
     }
 }
