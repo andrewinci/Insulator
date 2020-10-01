@@ -8,7 +8,6 @@ import insulator.lib.configuration.model.SslConfiguration
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel
-import java.util.UUID
 
 class ClusterViewModel(cluster: ClusterModel = ClusterModel(Cluster.empty())) : ItemViewModel<ClusterModel>(cluster) {
 

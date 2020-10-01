@@ -12,7 +12,6 @@ import javafx.beans.value.ObservableStringValue
 import javafx.scene.Parent
 import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.Callable
 import kotlin.reflect.KClass
 
 class MainViewModel : InsulatorViewModel() {

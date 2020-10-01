@@ -9,10 +9,7 @@ import insulator.lib.configuration.model.SaslConfiguration
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.configuration.model.SslConfiguration
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.date.after
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

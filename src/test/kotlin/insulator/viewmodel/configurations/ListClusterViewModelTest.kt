@@ -37,7 +37,7 @@ class ListClusterViewModelTest : FunSpec({
     test("Update the list of cluster when a new one is added") {
         // arrange
         val sut = ListClusterViewModel()
-        val newMockConfiguration = mockk<Configuration>{
+        val newMockConfiguration = mockk<Configuration> {
             every { clusters } returns listOf(mockk(), mockk(), mockk())
         }
         lateinit var callback: (Configuration) -> Unit

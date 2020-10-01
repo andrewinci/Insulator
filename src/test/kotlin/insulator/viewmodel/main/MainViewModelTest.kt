@@ -15,8 +15,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
-import tornadofx.*
-import kotlin.reflect.KClass
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainViewModelTest : FunSpec({
 
