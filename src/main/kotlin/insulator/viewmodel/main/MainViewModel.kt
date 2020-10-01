@@ -13,22 +13,23 @@ import javafx.scene.Parent
 import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.Callable
+import kotlin.reflect.KClass
 
 class MainViewModel : InsulatorViewModel() {
 
     val showSidebar = SimpleBooleanProperty(false)
     val currentViewProperty = SimpleObjectProperty<View>().also { it.value = find<ListTopicView>() }
-    val currentCenter: ObservableObjectValue<Parent> = Bindings.createObjectBinding(Callable { currentViewProperty.value.root }, currentViewProperty)
-    val currentTitle: ObservableStringValue = Bindings.createStringBinding(Callable { currentViewProperty.value.title }, currentViewProperty)
+    val currentCenter: ObservableObjectValue<Parent> = Bindings.createObjectBinding({ currentViewProperty.value.root }, currentViewProperty)
+    val currentTitle: ObservableStringValue = Bindings.createStringBinding({ currentViewProperty.value.title }, currentViewProperty)
 
     fun toggleSidebar() = showSidebar.set(!showSidebar.value)
 
-    fun <T> setCurrentView(clazz: Class<T>): Unit = when (clazz) {
-        ListTopicView::class.java -> currentViewProperty.set(find<ListTopicView>())
-        ListSchemaView::class.java -> {
+    fun <T : Any> setCurrentView(clazz: KClass<T>): Unit = when (clazz) {
+        ListTopicView::class -> currentViewProperty.set(find<ListTopicView>())
+        ListSchemaView::class -> {
             if (currentCluster.isSchemaRegistryConfigured()) currentViewProperty.set(find<ListSchemaView>())
             else alert(Alert.AlertType.WARNING, "Schema registry configuration not found"); Unit
         }
-        else -> error.set(Throwable("UI: Unable to navigate to ${clazz.name}"))
+        else -> error.set(Throwable("UI: Unable to navigate to ${clazz.qualifiedName}"))
     }
 }
