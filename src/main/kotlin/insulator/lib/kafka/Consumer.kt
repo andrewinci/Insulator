@@ -2,18 +2,19 @@ package insulator.lib.kafka
 
 import arrow.core.Tuple3
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
+import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.qualifier.named
 import org.koin.ext.scope
 import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
 
-class Consumer(private val cluster: Cluster) : KoinComponent {
+class Consumer(private val cluster: Cluster, private val converter: AvroToJsonConverter) : KoinComponent {
 
     private var threadLoop: Thread? = null
     private var running = false
@@ -52,7 +53,6 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
 
         when (from) {
             ConsumeFrom.Now -> consumer.seekToEnd(partitions)
-            ConsumeFrom.Beginning -> consumer.seekToBeginning(partitions)
             ConsumeFrom.LastHour -> {
                 val time = Instant.now().minus(Duration.ofMinutes(30)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
@@ -65,6 +65,7 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
                 val time = Instant.now().minus(Duration.ofDays(7)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
             }
+            ConsumeFrom.Beginning -> consumer.seekToBeginning(partitions)
         }
     }
 
@@ -78,19 +79,24 @@ class Consumer(private val cluster: Cluster) : KoinComponent {
             }
     }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> =
-        Tuple3(record.key()?.toString(), record.value().toString(), record.timestamp())
+    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
+        val parsedValue = if (record.value() is GenericRecord) converter.parse(record.value() as GenericRecord)
+            // fallback to Avro.toString if unable to parse with the custom parser
+            .fold({ record.value().toString() }, { it })
+        else record.value().toString()
+        return Tuple3(record.key()?.toString(), parsedValue, record.timestamp())
+    }
 }
 
 enum class ConsumeFrom {
     Now,
     LastHour,
     LastDay,
+    LastWeek,
     Beginning,
-    LastWeek
 }
 
 enum class DeserializationFormat {
     String,
-    Avro
+    Avro,
 }

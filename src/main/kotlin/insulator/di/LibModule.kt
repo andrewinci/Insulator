@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter
+import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
 import insulator.lib.jsonhelper.jsontoavro.FieldParser
 import insulator.lib.jsonhelper.jsontoavro.JsonToAvroConverter
 import insulator.lib.jsonhelper.jsontoavro.fieldparser.ComplexTypeParsersFactory
@@ -32,7 +33,7 @@ val libModule = module {
 
     scope<Cluster> {
         factory { AdminApi(get(), get()) }
-        factory { Consumer(get()) }
+        factory { Consumer(get(), AvroToJsonConverter(get())) }
         factory { AvroProducer(get(named("avroProducer")), get(), get()) }
         factory { StringProducer(get()) }
         factory { SchemaRegistry(get()) }
