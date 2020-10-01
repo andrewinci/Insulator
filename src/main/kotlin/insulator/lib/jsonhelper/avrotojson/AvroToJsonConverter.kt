@@ -1,19 +1,14 @@
-package insulator.lib.jsonhelper
+package insulator.lib.jsonhelper.avrotojson
 
 import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
-import arrow.core.right
 import com.fasterxml.jackson.databind.ObjectMapper
 import insulator.lib.helpers.toEither
 import insulator.lib.helpers.toEitherOfList
-import org.apache.avro.Conversions
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type.* // ktlint-disable no-wildcard-imports
-import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
-import org.apache.avro.util.Utf8
-import java.nio.ByteBuffer
 
 open class AvroToJsonParsingException(message: String) : Throwable(message)
 class AvroFieldParsingException(field: Any?, type: String) : AvroToJsonParsingException("Invalid field $field. Expected $type")
@@ -57,26 +52,4 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
     private fun parseArray(field: Any?, schema: Schema) =
         if (field is Collection<*>) field.map { parseField(it, schema.elementType) }.toEitherOfList()
         else AvroFieldParsingException(field, "Array").left()
-
-    private fun parseBoolean(field: Any?) =
-        if (field is Boolean) field.right() else AvroFieldParsingException(field, "Boolean").left()
-
-    private fun parseNumber(field: Any?) =
-        if (field is Number) field.right() else AvroFieldParsingException(field, "Number").left()
-
-    private fun parseEnum(field: Any?) =
-        if (field is GenericData.EnumSymbol) field.toString().right() else AvroFieldParsingException(field, "Enum").left()
-
-    private fun parseString(field: Any?) =
-        if (field is String || field is Utf8) field.toString().right() else AvroFieldParsingException(field, "String").left()
-
-    private fun parseNull(field: Any?) =
-        if (field == null) null.right() else AvroFieldParsingException(field, "Null").left()
-
-    private fun parseBytes(field: Any?, schema: Schema) =
-        when {
-            field !is ByteBuffer -> AvroFieldParsingException(field, "ByteBuffer").left()
-            schema.objectProps["logicalType"] == "decimal" -> Conversions.DecimalConversion().fromBytes(field, schema, schema.logicalType).right()
-            else -> ("0x" + field.array().joinToString("") { String.format("%02x", it) }).right()
-        }
 }

@@ -2,13 +2,12 @@ package insulator.lib.kafka
 
 import arrow.core.Tuple3
 import insulator.lib.configuration.model.Cluster
-import insulator.lib.jsonhelper.AvroToJsonConverter
+import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.qualifier.named
 import org.koin.ext.scope
 import java.time.Duration

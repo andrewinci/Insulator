@@ -3,8 +3,8 @@ package insulator.lib.kafka
 import arrow.core.left
 import arrow.core.right
 import insulator.lib.configuration.model.Cluster
-import insulator.lib.jsonhelper.AvroToJsonConverter
-import insulator.lib.jsonhelper.UnsupportedTypeException
+import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
+import insulator.lib.jsonhelper.avrotojson.UnsupportedTypeException
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

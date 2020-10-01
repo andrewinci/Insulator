@@ -1,4 +1,4 @@
-package insulator.lib.jsonhelper
+package insulator.lib.jsonhelper.avrotojson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.assertions.arrow.either.shouldBeLeft
