@@ -54,7 +54,6 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
 
         when (from) {
             ConsumeFrom.Now -> consumer.seekToEnd(partitions)
-            ConsumeFrom.Beginning -> consumer.seekToBeginning(partitions)
             ConsumeFrom.LastHour -> {
                 val time = Instant.now().minus(Duration.ofMinutes(30)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
@@ -67,6 +66,7 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
                 val time = Instant.now().minus(Duration.ofDays(7)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
             }
+            ConsumeFrom.Beginning -> consumer.seekToBeginning(partitions)
         }
     }
 
@@ -82,6 +82,8 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
 
     private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
         val parsedValue = converter.parse(record.value() as GenericRecord)
+            // fallback to Avro.toString if unable to parse with the custom parser
+            .fold({ record.value().toString() }, { it })
         return Tuple3(record.key()?.toString(), parsedValue, record.timestamp())
     }
 }
@@ -90,11 +92,11 @@ enum class ConsumeFrom {
     Now,
     LastHour,
     LastDay,
+    LastWeek,
     Beginning,
-    LastWeek
 }
 
 enum class DeserializationFormat {
     String,
-    Avro
+    Avro,
 }

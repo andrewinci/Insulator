@@ -1,9 +1,11 @@
 package insulator.lib.jsonhelper
 
 import arrow.core.Either
+import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import com.fasterxml.jackson.databind.ObjectMapper
+import insulator.lib.helpers.toEither
 import insulator.lib.helpers.toEitherOfList
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
@@ -12,17 +14,18 @@ import org.apache.avro.generic.GenericRecord
 import org.apache.avro.util.Utf8
 import java.nio.ByteBuffer
 
-open class AvroToJsonParsingException(message: String? = null) : Throwable(message)
-class InvalidFieldTypeParsingException(field: Any?, type: String) : AvroToJsonParsingException("Invalid field $field. Expected $type")
+open class AvroToJsonParsingException(message: String) : Throwable(message)
+class AvroFieldParsingException(field: Any?, type: String) : AvroToJsonParsingException("Invalid field $field. Expected $type")
 
 class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
 
-    fun parse(record: GenericRecord): String {
-        val map = parseField(record, record.schema).fold({ throw it }, { it })
-        return objectMapper.writeValueAsString(map)
-    }
+    fun parse(record: GenericRecord) =
+        parseField(record, record.schema)
+            .flatMap {
+                objectMapper.runCatching { writeValueAsString(it) }.toEither { AvroToJsonParsingException("Unable to write the json") }
+            }
 
-    private fun parseField(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
+    private fun parseField(field: Any?, schema: Schema): Either<AvroFieldParsingException, Any?> {
         return when (schema.type) {
             Schema.Type.RECORD -> parseRecord(field, schema)
             Schema.Type.BYTES -> parseBytes(field, schema)
@@ -41,27 +44,27 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
     }
 
     private fun parseBoolean(field: Any?) =
-        if (field is Boolean) field.right() else InvalidFieldTypeParsingException(field, "Boolean").left()
+        if (field is Boolean) field.right() else AvroFieldParsingException(field, "Boolean").left()
 
     private fun parseNull(field: Any?) =
-        if (field == null) null.right() else InvalidFieldTypeParsingException(field, "Null").left()
+        if (field == null) null.right() else AvroFieldParsingException(field, "Null").left()
 
     private fun parseNumber(field: Any?) =
         if (field is Number) field.right()
-        else InvalidFieldTypeParsingException(field, "Number").left()
+        else AvroFieldParsingException(field, "Number").left()
 
     private fun parseEnum(field: Any?) =
         (field as? GenericData.EnumSymbol)?.toString()?.right()
-            ?: InvalidFieldTypeParsingException(field, "Enum").left()
+            ?: AvroFieldParsingException(field, "Enum").left()
 
     private fun parseString(field: Any?) =
         when (field) {
             is String, is Utf8 -> field.toString().right()
-            else -> InvalidFieldTypeParsingException(field, "String").left()
+            else -> AvroFieldParsingException(field, "String").left()
         }
 
-    private fun parseRecord(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
-        if (field !is GenericRecord) return InvalidFieldTypeParsingException(field, "Record").left()
+    private fun parseRecord(field: Any?, schema: Schema): Either<AvroFieldParsingException, Any?> {
+        if (field !is GenericRecord) return AvroFieldParsingException(field, "Record").left()
         val keySchema = schema.fields.map { it.name() to it.schema() }
         return keySchema
             .map { (name, schema) -> parseField(field[name], schema) }
@@ -69,18 +72,18 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
             .map { values -> keySchema.map { it.first }.zip(values).toMap() }
     }
 
-    private fun parseArray(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
-        if (field !is GenericData.Array<*>) return InvalidFieldTypeParsingException(field, "Array").left()
+    private fun parseArray(field: Any?, schema: Schema): Either<AvroFieldParsingException, Any?> {
+        if (field !is GenericData.Array<*>) return AvroFieldParsingException(field, "Array").left()
         return field.map { parseField(it, schema.elementType) }.toEitherOfList()
     }
 
-    private fun parseUnion(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
+    private fun parseUnion(field: Any?, schema: Schema): Either<AvroFieldParsingException, Any?> {
         val mapAttempts = schema.types.map { t -> parseField(field, t) }
         return mapAttempts.firstOrNull { it.isRight() } ?: mapAttempts.first()
     }
 
-    private fun parseBytes(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
-        if (field !is ByteBuffer) return InvalidFieldTypeParsingException(field, "ByteBuffer").left()
+    private fun parseBytes(field: Any?, schema: Schema): Either<AvroFieldParsingException, Any?> {
+        if (field !is ByteBuffer) return AvroFieldParsingException(field, "ByteBuffer").left()
         return if (schema.objectProps["logicalType"] == "decimal") Conversions.DecimalConversion().fromBytes(field, schema, schema.logicalType).right()
         else ("0x" + field.array().joinToString("") { String.format("%02x", it) }).right()
     }
