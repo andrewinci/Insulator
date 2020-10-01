@@ -7,7 +7,11 @@ data class Topic(
     val messageCount: Long? = null,
     val replicationFactor: Short = 0,
     val isCompacted: Boolean = false
-)
+) {
+    companion object {
+        fun empty() = Topic("")
+    }
+}
 
 data class TopicConfiguration(
     val isCompacted: Boolean

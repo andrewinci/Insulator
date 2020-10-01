@@ -12,12 +12,12 @@ data class Cluster(
     val endpoint: String,
 
     val useSSL: Boolean = false,
-    val sslConfiguration: SslConfiguration? = null,
+    val sslConfiguration: SslConfiguration = SslConfiguration(),
 
     val useSasl: Boolean = false,
-    val saslConfiguration: SaslConfiguration? = null,
+    val saslConfiguration: SaslConfiguration = SaslConfiguration(),
 
-    val schemaRegistryConfig: SchemaRegistryConfiguration? = null
+    val schemaRegistryConfig: SchemaRegistryConfiguration = SchemaRegistryConfiguration()
 ) {
     companion object {
         fun empty() = Cluster(UUID.randomUUID(), "", "")

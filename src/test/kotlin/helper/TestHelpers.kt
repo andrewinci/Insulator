@@ -1,10 +1,9 @@
 package helper
 
-import javafx.application.Platform
 import org.koin.core.context.stopKoin
 import org.testfx.api.FxToolkit
+import org.testfx.util.WaitForAsyncUtils
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.Semaphore
 import kotlin.reflect.KClass
 
 fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
@@ -33,9 +32,7 @@ fun cleanupFXFramework() {
 }
 
 fun waitFXThread() {
-    val semaphore = Semaphore(0)
-    Platform.runLater { semaphore.release() }
-    semaphore.acquire()
+    WaitForAsyncUtils.waitForFxEvents()
 }
 
 class TestHelperError(message: String) : Throwable(message)

@@ -4,16 +4,19 @@ import arrow.core.right
 import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
+import helper.waitFXThread
 import insulator.di.currentCluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.SchemaRegistry
+import insulator.views.configurations.ClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainViewModelTest : FunSpec({
 
@@ -21,13 +24,15 @@ class MainViewModelTest : FunSpec({
         // arrange
         val sut = MainViewModel()
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
-        val topicView = sut.currentViewProperty.value
-        sut.runOnFXThread {
-            // act
-            setCurrentView(ListSchemaView::class.java)
-            // assert
-            runOnFXThread { sut.currentViewProperty.value shouldNotBe topicView }
-        }
+        val newView = ListSchemaView::class
+        // act
+        sut.runOnFXThread { setCurrentView(newView) }
+        waitFXThread()
+        // assert
+        val currentView = FX.getComponents()[newView] as ListSchemaView
+        sut.currentViewProperty.value shouldBe currentView
+        sut.currentCenter.value shouldBe currentView.root
+        sut.currentTitle.value shouldBe currentView.title
     }
 
     test("do not show the schema list if schema registry is not configured") {
@@ -35,12 +40,35 @@ class MainViewModelTest : FunSpec({
         val sut = MainViewModel()
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns false }
         val topicView = sut.currentViewProperty.value
-        sut.runOnFXThread {
-            // act
-            setCurrentView(ListSchemaView::class.java)
-            // assert
-            sut.currentViewProperty.value shouldBe topicView
-        }
+        // act
+        sut.runOnFXThread { setCurrentView(ListSchemaView::class) }
+        waitFXThread()
+        // assert
+        sut.currentViewProperty.value shouldBe topicView
+    }
+
+    test("toggle sidebar show/hide the sidebar") {
+        // arrange
+        val sut = MainViewModel()
+        currentCluster = mockk { every { isSchemaRegistryConfigured() } returns false }
+        sut.showSidebar.value shouldBe false
+        // act
+        sut.runOnFXThread { toggleSidebar() }
+        waitFXThread()
+        // assert
+        sut.showSidebar.value shouldBe true
+    }
+
+    test("switch to an unsupported view show an error") {
+        // arrange
+        val sut = MainViewModel()
+        currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
+        val newView = ClusterView::class
+        // act
+        sut.runOnFXThread { setCurrentView(newView) }
+        waitFXThread()
+        // assert
+        sut.error.value shouldNotBe null
     }
 
     beforeTest {

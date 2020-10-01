@@ -1,34 +1,34 @@
 package insulator.viewmodel.configurations
 
 import insulator.lib.configuration.ConfigurationRepo
+import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.SaslConfiguration
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.configuration.model.SslConfiguration
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel
-import java.util.UUID
 
-class ClusterViewModel(cluster: ClusterModel = ClusterModel()) : ItemViewModel<ClusterModel>(cluster) {
+class ClusterViewModel(cluster: ClusterModel = ClusterModel(Cluster.empty())) : ItemViewModel<ClusterModel>(cluster) {
 
     private val configurationRepo: ConfigurationRepo by di()
 
-    val nameProperty = bind { item?.nameProperty }
-    val endpointProperty = bind { item?.endpointProperty }
-    val useSSLProperty = bind { item?.useSSLProperty }
+    val nameProperty = bind { item.nameProperty }
+    val endpointProperty = bind { item.endpointProperty }
+    val useSSLProperty = bind { item.useSSLProperty }
 
-    val sslTruststoreLocationProperty = bind { item?.sslTruststoreLocationProperty }
-    val sslTruststorePasswordProperty = bind { item?.sslTruststorePasswordProperty }
-    val sslKeystoreLocationProperty = bind { item?.sslKeystoreLocationProperty }
-    val sslKeyStorePasswordProperty = bind { item?.sslKeyStorePasswordProperty }
+    val sslTruststoreLocationProperty = bind { item.sslTruststoreLocationProperty }
+    val sslTruststorePasswordProperty = bind { item.sslTruststorePasswordProperty }
+    val sslKeystoreLocationProperty = bind { item.sslKeystoreLocationProperty }
+    val sslKeyStorePasswordProperty = bind { item.sslKeyStorePasswordProperty }
 
-    val useSaslProperty = bind { item?.useSaslProperty }
-    val saslUsernameProperty = bind { item?.saslUsernameProperty }
-    val saslPasswordProperty = bind { item?.saslPasswordProperty }
+    val useSaslProperty = bind { item.useSaslProperty }
+    val saslUsernameProperty = bind { item.saslUsernameProperty }
+    val saslPasswordProperty = bind { item.saslPasswordProperty }
 
-    val schemaRegistryEndpointProperty = bind { item?.schemaRegistryEndpointProperty }
-    val schemaRegistryUsernameProperty = bind { item?.schemaRegistryUsernameProperty }
-    val schemaRegistryPasswordProperty = bind { item?.schemaRegistryPasswordProperty }
+    val schemaRegistryEndpointProperty = bind { item.schemaRegistryEndpointProperty }
+    val schemaRegistryUsernameProperty = bind { item.schemaRegistryUsernameProperty }
+    val schemaRegistryPasswordProperty = bind { item.schemaRegistryPasswordProperty }
 
     fun save() {
         configurationRepo.store(this.item.toClusterConfig())
@@ -40,27 +40,27 @@ class ClusterViewModel(cluster: ClusterModel = ClusterModel()) : ItemViewModel<C
     }
 }
 
-class ClusterModel(cluster: insulator.lib.configuration.model.Cluster? = null) {
-    private val guid = cluster?.guid ?: UUID.randomUUID()
-    val nameProperty = SimpleStringProperty(cluster?.name)
-    val endpointProperty = SimpleStringProperty(cluster?.endpoint)
+class ClusterModel(cluster: Cluster) {
+    private val guid = cluster.guid
+    val nameProperty = SimpleStringProperty(cluster.name)
+    val endpointProperty = SimpleStringProperty(cluster.endpoint)
 
-    val useSSLProperty = SimpleBooleanProperty(cluster?.useSSL ?: false)
-    val sslTruststoreLocationProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslTruststoreLocation)
-    val sslTruststorePasswordProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslTruststorePassword)
-    val sslKeystoreLocationProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslKeystoreLocation)
-    val sslKeyStorePasswordProperty = SimpleStringProperty(cluster?.sslConfiguration?.sslKeyStorePassword)
+    val useSSLProperty = SimpleBooleanProperty(cluster.useSSL)
+    val sslTruststoreLocationProperty = SimpleStringProperty(cluster.sslConfiguration.sslTruststoreLocation)
+    val sslTruststorePasswordProperty = SimpleStringProperty(cluster.sslConfiguration.sslTruststorePassword)
+    val sslKeystoreLocationProperty = SimpleStringProperty(cluster.sslConfiguration.sslKeystoreLocation)
+    val sslKeyStorePasswordProperty = SimpleStringProperty(cluster.sslConfiguration.sslKeyStorePassword)
 
-    val useSaslProperty = SimpleBooleanProperty(cluster?.useSasl ?: false)
-    val saslUsernameProperty = SimpleStringProperty(cluster?.saslConfiguration?.saslUsername)
-    val saslPasswordProperty = SimpleStringProperty(cluster?.saslConfiguration?.saslPassword)
+    val useSaslProperty = SimpleBooleanProperty(cluster.useSasl)
+    val saslUsernameProperty = SimpleStringProperty(cluster.saslConfiguration.saslUsername)
+    val saslPasswordProperty = SimpleStringProperty(cluster.saslConfiguration.saslPassword)
 
-    val schemaRegistryEndpointProperty = SimpleStringProperty(cluster?.schemaRegistryConfig?.endpoint)
-    val schemaRegistryUsernameProperty = SimpleStringProperty(cluster?.schemaRegistryConfig?.username)
-    val schemaRegistryPasswordProperty = SimpleStringProperty(cluster?.schemaRegistryConfig?.password)
+    val schemaRegistryEndpointProperty = SimpleStringProperty(cluster.schemaRegistryConfig.endpoint)
+    val schemaRegistryUsernameProperty = SimpleStringProperty(cluster.schemaRegistryConfig.username)
+    val schemaRegistryPasswordProperty = SimpleStringProperty(cluster.schemaRegistryConfig.password)
 
     fun toClusterConfig() =
-        insulator.lib.configuration.model.Cluster(
+        Cluster(
             guid = this.guid,
             name = this.nameProperty.value,
             endpoint = this.endpointProperty.value,

@@ -15,6 +15,7 @@ import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.MockConsumer
+import org.apache.kafka.clients.consumer.OffsetAndTimestamp
 import org.apache.kafka.clients.consumer.OffsetResetStrategy
 import org.apache.kafka.common.PartitionInfo
 import org.apache.kafka.common.TopicPartition
@@ -44,6 +45,30 @@ class ConsumerTest : FunSpec({
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act
         sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { messages.addAll(it.map { record -> record.b }) }
+        // assert
+        delay(200)
+        sut.stop()
+        messages.size shouldBe 1
+    }
+
+    test("start happy path - last hour") {
+        // arrange
+        val messages = mutableListOf<String>()
+        val sut = Consumer(Cluster.empty(), mockConverter)
+        // act
+        sut.start("testTopic", ConsumeFrom.LastHour, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+        // assert
+        delay(200)
+        sut.stop()
+        messages.size shouldBe 1
+    }
+
+    test("start happy path - last week") {
+        // arrange
+        val messages = mutableListOf<String>()
+        val sut = Consumer(Cluster.empty(), mockConverter)
+        // act
+        sut.start("testTopic", ConsumeFrom.LastWeek, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
         // assert
         delay(200)
         sut.stop()
@@ -115,13 +140,20 @@ class TestConsumerFixture {
         }
     }
 
-    private val stringConsumer = MockConsumer<Any, Any>(OffsetResetStrategy.EARLIEST).also {
+    private val stringConsumer = object : MockConsumer<Any, Any>(OffsetResetStrategy.EARLIEST) {
         val topicName = "testTopic"
-        it.updatePartitions(topicName, listOf(PartitionInfo(topicName, 0, null, null, null)))
-        it.updateBeginningOffsets(mapOf(TopicPartition(topicName, 0) to 0L))
-        it.updateEndOffsets(mapOf(TopicPartition(topicName, 0) to 1L))
-        it.assign(listOf(TopicPartition(topicName, 0)))
-        it.addRecord(ConsumerRecord(topicName, 0, 0L, "key", "value"))
+
+        init {
+            updatePartitions(topicName, listOf(PartitionInfo(topicName, 0, null, null, null)))
+            updateBeginningOffsets(mapOf(TopicPartition(topicName, 0) to 0L))
+            updateEndOffsets(mapOf(TopicPartition(topicName, 0) to 1L))
+            assign(listOf(TopicPartition(topicName, 0)))
+            addRecord(ConsumerRecord(topicName, 0, 0L, "key", "value"))
+        }
+
+        override fun offsetsForTimes(timestampsToSearch: MutableMap<TopicPartition, Long>): Map<TopicPartition, OffsetAndTimestamp> {
+            return timestampsToSearch.map { (tp, _) -> tp to OffsetAndTimestamp(0, 0) }.toMap()
+        }
     }
 
     private val avroConsumer = MockConsumer<Any, Any>(OffsetResetStrategy.EARLIEST).also {

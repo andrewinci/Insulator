@@ -12,20 +12,20 @@ class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : Ite
 
     private val admin: AdminApi by di()
 
-    val nameProperty = bind { item?.nameProperty }
-    val partitionCountProperty = bind { item?.partitionCountProperty }
-    val replicationFactorProperty = bind { item?.replicationFactorProperty }
-    val isCompactedProperty = bind { item?.isCompactedProperty }
+    val nameProperty = bind { item.nameProperty }
+    val partitionCountProperty = bind { item.partitionCountProperty }
+    val replicationFactorProperty = bind { item.replicationFactorProperty }
+    val isCompactedProperty = bind { item.isCompactedProperty }
 
     fun save(): Option<Throwable> = admin.createTopics(this.item.toTopic()).get()
         .fold({ Option.just(it) }, { Option.empty() })
 }
 
-class CreateTopicModel(topic: Topic? = null) {
-    val nameProperty = SimpleStringProperty(topic?.name)
-    val partitionCountProperty = SimpleIntegerProperty(topic?.partitionCount ?: 0)
-    val replicationFactorProperty = SimpleIntegerProperty(topic?.replicationFactor?.toInt() ?: 0)
-    val isCompactedProperty = SimpleBooleanProperty(topic?.isCompacted ?: false)
+class CreateTopicModel(topic: Topic = Topic.empty()) {
+    val nameProperty = SimpleStringProperty(topic.name)
+    val partitionCountProperty = SimpleIntegerProperty(topic.partitionCount)
+    val replicationFactorProperty = SimpleIntegerProperty(topic.replicationFactor.toInt())
+    val isCompactedProperty = SimpleBooleanProperty(topic.isCompacted)
 
     fun toTopic() = Topic(
         name = nameProperty.value,
