@@ -8,6 +8,8 @@ import arrow.core.right
 fun <R> Result<R>.toEither() = this.fold({ it.right() }, { it.left() })
 fun <R, T : Throwable> Result<R>.toEither(f: (Throwable) -> T) = this.fold({ it.right() }, { it.left() }).mapLeft { f(it) }
 
+fun <I, R> I.runCatching_(f: I.() -> R) = this.runCatching(f).toEither()
+
 fun <A, B> List<Either<A, B>>.toEitherOfList() =
     this.fold(emptyList<B>().right() as Either<A, List<B>>) { lst, v ->
         lst.flatMap {

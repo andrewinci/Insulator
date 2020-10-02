@@ -1,50 +1,69 @@
 package insulator.lib.update
 
 import arrow.core.Either
+import arrow.core.extensions.fx
+import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.responseJson
-import com.github.kittinunf.result.map
+import com.vdurmont.semver4j.Semver
+import insulator.di.CONFIG_FILE_NAME
+import insulator.di.GITHUB_REPO
+import insulator.di.LATEST_RELEASE_API_ENDPOINT
+import insulator.di.VERSION_PROPERTY
+import insulator.lib.helpers.runCatching_
+import insulator.lib.helpers.toEither
+import insulator.lib.helpers.toEitherOfList
+import org.koin.core.error.MissingPropertyException
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.net.URLDecoder
 import java.nio.file.Paths
 import java.util.Properties
 
-class VersionChecker {
-    private val configFileName = "Insulator.cfg"
-    private val versionProperty = "app.version"
-    private val baseWebUrl = "https://github.com/darka91/Insulator/releases/tag/"
-    private val lastReleaseApiCall = "https://api.github.com/repos/darka91/Insulator/releases/latest"
+data class Version(val version: String, val latestRelease: Release?)
+data class Release(val version: String, val webUrl: String, val debianUrl: String, val macUrl: String, val winUrl: String)
 
-    fun getCurrentVersion(): Either<Unit, String> {
-        val jarPath = this::class.java.protectionDomain.codeSource.location.path
-        val jarFolder = Paths.get(URLDecoder.decode(jarPath, "UTF-8")).parent.toAbsolutePath().toString()
-        val configPath = Paths.get(jarFolder, configFileName).toAbsolutePath().toString()
-        return if (File(configPath).exists())
-            Properties().also { it.load(FileInputStream(configPath)) }.getProperty(versionProperty).right()
-        else Unit.left()
+class VersionChecker(private val customJarPath: String? = null) {
+
+    private val jarPath: String
+        get() = customJarPath ?: this::class.java.protectionDomain.codeSource.location.path
+
+    fun getCurrentVersion() = Either.fx<Throwable, Version> {
+        val appVersion = !getAppVersion()
+        val latestVersion = !getLatestVersion()
+        val isANewVersionAvailable = Semver(appVersion).isLowerThan(latestVersion.version)
+        Version(appVersion, if (isANewVersionAvailable) latestVersion else null)
     }
 
-    fun getLatestVersion(): Either<Throwable, Release> =
-        lastReleaseApiCall.httpGet().responseJson().third
-            .map { it.obj().getString("tag_name") to it.obj().getJSONArray("assets") }
-            .map { (tag, assets) -> tag to assets.mapIndexed { id, _ -> assets.getJSONObject(id).getString("browser_download_url") } }
-            .map { (tag, assetUrls) ->
-                Release(
-                    version = tag,
-                    webUrl = Paths.get(baseWebUrl, tag).toString(),
-                    debianUrl = assetUrls.first { it.contains("debian") },
-                    macUrl = assetUrls.first { it.contains("mac") },
-                    winUrl = assetUrls.first { it.contains("win") }
-                )
-            }.fold({ it.right() }, { it.left() })
+    fun getAppVersion(): Either<Throwable, String> {
+        val jarFolder = Paths.get(URLDecoder.decode(jarPath, "UTF-8")).parent.toAbsolutePath().toString()
+        val configPath = Paths.get(jarFolder, CONFIG_FILE_NAME).toAbsolutePath().toString()
+        return if (File(configPath).exists())
+            Properties()
+                .also { it.load(FileInputStream(configPath)) }
+                .getProperty(VERSION_PROPERTY)?.right()
+                ?: MissingPropertyException(VERSION_PROPERTY).left()
+        else FileNotFoundException().left()
+    }
 
+    fun getLatestVersion() = Either.fx<Throwable, Release> {
+        val jsonObject = !LATEST_RELEASE_API_ENDPOINT.httpGet().responseJson().third
+            .fold({ it.right() }, { it.left() })
+            .flatMap { it.runCatching { obj() }.toEither() }
+        val tag = !jsonObject.runCatching_ { getString("tag_name") }
+        val assets = !jsonObject.runCatching_ { getJSONArray("assets") }
+        val assetUrls = !assets
+            .mapIndexed { id, _ -> assets.runCatching_ { getJSONObject(id).getString("browser_download_url") } }
+            .toEitherOfList()
+        Release(
+            version = tag,
+            webUrl = "$GITHUB_REPO/releases/tag/$tag",
+            macUrl = assetUrls.first { it.contains("mac") },
+            winUrl = assetUrls.first { it.contains("win") },
+            debianUrl = assetUrls.first { it.contains("debian") },
+        )
+    }
 }
-
-data class Release(val version: String,
-                   val webUrl: String,
-                   val debianUrl: String,
-                   val macUrl: String,
-                   val winUrl: String)
