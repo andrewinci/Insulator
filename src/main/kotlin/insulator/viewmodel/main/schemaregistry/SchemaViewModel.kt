@@ -30,7 +30,7 @@ class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
     }
 
     private fun refresh() {
-        selectedVersionProperty.onChange { version ->
+        selectedVersionProperty.onChange {
             val schemaVersion = selectedVersionProperty.value.schema
             val res = formatter.formatJsonString(schemaVersion)
             schemaProperty.clear()

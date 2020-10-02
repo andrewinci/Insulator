@@ -9,10 +9,7 @@ import insulator.views.configurations.ListClusterView
 import javafx.scene.Scene
 import javafx.stage.Stage
 import javafx.stage.Window
-import tornadofx.App
-import tornadofx.FX
-import tornadofx.UIComponent
-import tornadofx.launch
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class Insulator : App(ListClusterView::class, Theme::class, Titles::class, Root::class, Controls::class) {
 

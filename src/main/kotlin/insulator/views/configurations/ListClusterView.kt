@@ -2,6 +2,7 @@ package insulator.views.configurations
 
 import insulator.di.currentCluster
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.update.VersionChecker
 import insulator.styles.Controls
 import insulator.styles.Titles
 import insulator.viewmodel.configurations.ClusterModel
@@ -12,6 +13,7 @@ import insulator.views.common.InsulatorView
 import insulator.views.common.StringScope
 import insulator.views.common.customOpenWindow
 import insulator.views.main.MainView
+import insulator.views.update.UpdateInfoView
 import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
@@ -75,6 +77,11 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         super.currentStage?.width = 380.0
         super.currentStage?.height = 500.0
         super.currentStage?.resizableProperty()?.value = false
+        checkVersion()
+    }
+
+    private fun checkVersion() = VersionChecker().getCurrentVersion().map {
+        if (it.latestRelease != null) UpdateInfoView(it.latestRelease).customOpenWindow()
     }
 
     override fun onError(throwable: Throwable) {
