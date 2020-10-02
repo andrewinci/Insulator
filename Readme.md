@@ -1,7 +1,7 @@
 # Insulator
 
 ![CI](https://github.com/darka91/insulator/workflows/CI/badge.svg)
-[![codecov](https://codecov.io/gh/darka91/insulator/branch/master/graph/badge.svg?token=70FXB1QXTI)](https://codecov.io/gh/darka91/Insulator)
+[![codecov](https://codecov.io/gh/andrea-vinci/insulator/branch/master/graph/badge.svg?token=70FXB1QXTI)](https://codecov.io/gh/darka91/Insulator)
 [![Known Vulnerabilities](https://snyk.io/test/github/darka91/Insulator/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/darka91/Insulator?targetFile=build.gradle)
 ![Release](https://github.com/darka91/insulator/workflows/Release/badge.svg)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
