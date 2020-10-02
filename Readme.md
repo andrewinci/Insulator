@@ -1,11 +1,12 @@
 # Insulator
 
-![CI](https://github.com/darka91/insulator/workflows/CI/badge.svg)
-[![codecov](https://codecov.io/gh/andrea-vinci/insulator/branch/master/graph/badge.svg?token=70FXB1QXTI)](https://codecov.io/gh/darka91/Insulator)
-[![Known Vulnerabilities](https://snyk.io/test/github/darka91/Insulator/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/darka91/Insulator?targetFile=build.gradle)
-![Release](https://github.com/darka91/insulator/workflows/Release/badge.svg)
+![Release](https://github.com/andrea-vinci/Insulator/workflows/Release/badge.svg)
+![CI](https://github.com/andrea-vinci/Insulator/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/andrea-vinci/Insulator/branch/master/graph/badge.svg)](https://codecov.io/gh/andrea-vinci/Insulator)
+[![Known Vulnerabilities](https://snyk.io/test/github/andrea-vinci/Insulator/badge.svg?targetFile=build.gradle)](https://snyk.io/test/github/andrea-vinci/Insulator?targetFile=build.gradle)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=darka91/Insulator)](https://dependabot.com)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=andrea-vinci/Insulator)](https://dependabot.com)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a0c4f55b8cb641bd8c991b6a98d12e1b)](https://www.codacy.com/manual/darka91/Insulator/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=darka91/Insulator&amp;utm_campaign=Badge_Grade)
 
 Insulator is a tool to help development of kafka based applications.
 
