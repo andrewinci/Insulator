@@ -2,7 +2,6 @@ package insulator.lib.update
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import com.github.kittinunf.fuel.httpGet
@@ -12,8 +11,7 @@ import insulator.di.CONFIG_FILE_NAME
 import insulator.di.GITHUB_REPO
 import insulator.di.LATEST_RELEASE_API_ENDPOINT
 import insulator.di.VERSION_PROPERTY
-import insulator.lib.helpers.runCatching_
-import insulator.lib.helpers.toEither
+import insulator.lib.helpers.runCatchingE
 import insulator.lib.helpers.toEitherOfList
 import org.koin.core.error.MissingPropertyException
 import java.io.File
@@ -52,11 +50,11 @@ class VersionChecker(private val customJarPath: String? = null) {
     fun getLatestVersion() = Either.fx<Throwable, Release> {
         val jsonObject = !LATEST_RELEASE_API_ENDPOINT.httpGet().responseJson().third
             .fold({ it.right() }, { it.left() })
-            .flatMap { it.runCatching { obj() }.toEither() }
-        val tag = !jsonObject.runCatching_ { getString("tag_name") }
-        val assets = !jsonObject.runCatching_ { getJSONArray("assets") }
+            .flatMap { it.runCatchingE { obj() } }
+        val tag = !jsonObject.runCatchingE { getString("tag_name") }
+        val assets = !jsonObject.runCatchingE { getJSONArray("assets") }
         val assetUrls = !assets
-            .mapIndexed { id, _ -> assets.runCatching_ { getJSONObject(id).getString("browser_download_url") } }
+            .mapIndexed { id, _ -> assets.runCatchingE { getJSONObject(id).getString("browser_download_url") } }
             .toEitherOfList()
         Release(
             version = tag,

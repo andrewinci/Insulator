@@ -2,7 +2,7 @@ package insulator.lib.kafka
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import insulator.lib.helpers.toEither
+import insulator.lib.helpers.runCatchingE
 import insulator.lib.kafka.model.Schema
 import insulator.lib.kafka.model.Subject
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
@@ -10,15 +10,14 @@ import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 class SchemaRegistry(private val client: SchemaRegistryClient) {
 
     fun deleteSubject(subject: String) =
-        client.runCatching { deleteSubject(subject) }
-            .toEither().map { Unit }
+        client.runCatchingE { deleteSubject(subject) }.map { Unit }
 
     fun getAllSubjects(): Either<Throwable, Collection<String>> =
-        client.runCatching { allSubjects.sorted() }.toEither()
+        client.runCatchingE { allSubjects.sorted() }
 
     fun getSubject(subject: String) =
         Either.fx<Throwable, Subject> {
-            val versions = !client.runCatching { getAllVersions(subject) }.toEither()
+            val versions = !client.runCatchingE { getAllVersions(subject) }
             Subject(
                 subject,
                 versions
@@ -28,5 +27,5 @@ class SchemaRegistry(private val client: SchemaRegistryClient) {
         }
 
     private fun getByVersion(subject: String, version: Int) =
-        client.runCatching { getByVersion(subject, version, false) }.toEither()
+        client.runCatchingE { getByVersion(subject, version, false) }
 }
