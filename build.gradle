@@ -63,7 +63,7 @@ dependencies {
 
     // Json
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
 
     // Kotest
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"
