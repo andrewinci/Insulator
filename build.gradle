@@ -53,8 +53,6 @@ dependencies {
     // Kafka
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '6.0.0-ce'
     compile group: 'io.confluent', name: 'kafka-schema-registry', version: '6.0.0'
-
-    // Avro
     compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '6.0.0'
 
     // Koin
@@ -69,6 +67,9 @@ dependencies {
     // Fuel
     implementation group:'com.github.kittinunf.fuel', name:'fuel', version: "$fuel_version"
     implementation group:'com.github.kittinunf.fuel', name:'fuel-json', version: "$fuel_version"
+
+    // Semver4j
+    implementation group:'com.vdurmont', name:'semver4j', version: "3.1.0"
 
     // Kotest
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"
