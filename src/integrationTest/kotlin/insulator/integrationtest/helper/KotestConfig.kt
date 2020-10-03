@@ -6,7 +6,7 @@ import io.kotest.core.test.TestCaseOrder
 import java.net.URLDecoder
 import java.nio.file.Paths
 
-object ProjectConfig : AbstractProjectConfig() {
+object KotestConfig : AbstractProjectConfig() {
 
     override val parallelism = 1
     override val testCaseOrder = TestCaseOrder.Random
