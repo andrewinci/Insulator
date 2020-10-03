@@ -34,6 +34,7 @@ def kotest_version = "4.2.5"
 def koin_version = "2.1.6"
 def testfx_version = "4.0.16-alpha"
 def testcontainer_version = "1.14.3"
+def fuel_version = "2.3.0"
 
 testSets { integrationTest }
 
@@ -52,8 +53,6 @@ dependencies {
     // Kafka
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '6.0.0-ce'
     compile group: 'io.confluent', name: 'kafka-schema-registry', version: '6.0.0'
-
-    // Avro
     compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '6.0.0'
 
     // Koin
@@ -64,6 +63,13 @@ dependencies {
     // Json
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
+
+    // Fuel
+    implementation group:'com.github.kittinunf.fuel', name:'fuel', version: "$fuel_version"
+    implementation group:'com.github.kittinunf.fuel', name:'fuel-json', version: "$fuel_version"
+
+    // Semver4j
+    implementation group:'com.vdurmont', name:'semver4j', version: "3.1.0"
 
     // Kotest
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"

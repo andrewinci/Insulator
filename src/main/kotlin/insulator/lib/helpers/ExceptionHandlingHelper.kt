@@ -5,8 +5,8 @@ import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 
-fun <R> Result<R>.toEither() = this.fold({ it.right() }, { it.left() })
-fun <R, T : Throwable> Result<R>.toEither(f: (Throwable) -> T) = this.fold({ it.right() }, { it.left() }).mapLeft { f(it) }
+// run catching and fold the response to Either
+fun <I, R> I.runCatchingE(f: I.() -> R) = this.runCatching(f).fold({ it.right() }, { it.left() })
 
 fun <A, B> List<Either<A, B>>.toEitherOfList() =
     this.fold(emptyList<B>().right() as Either<A, List<B>>) { lst, v ->

@@ -5,15 +5,15 @@ import arrow.core.extensions.fx
 import arrow.core.left
 import arrow.core.right
 import com.fasterxml.jackson.databind.ObjectMapper
-import insulator.lib.helpers.toEither
+import insulator.lib.helpers.runCatchingE
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 
 class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val fieldParser: FieldParser, private val genericData: GenericData) {
     fun parse(jsonString: String, schemaString: String) = Either.fx<JsonToAvroException, GenericRecord> {
-        val jsonMap = !objectMapper.runCatching { readValue(jsonString, Map::class.java) }.toEither { JsonParsingException("Invalid json", it) }
-        val schema = !Schema.Parser().runCatching { parse(schemaString) }.toEither { SchemaParsingException("Invalid AVRO schema", it) }
+        val jsonMap = !objectMapper.runCatchingE { readValue(jsonString, Map::class.java) }.mapLeft { JsonParsingException("Invalid json", it) }
+        val schema = !Schema.Parser().runCatchingE { parse(schemaString) }.mapLeft { SchemaParsingException("Invalid AVRO schema", it) }
         val record = !fieldParser.parseField(jsonMap, schema).flatMap {
             (it as? GenericRecord)?.right() ?: JsonToAvroException("Invalid record").left()
         }

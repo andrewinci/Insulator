@@ -1,6 +1,6 @@
 package insulator.lib.jsonhelper
 
-import insulator.lib.helpers.toEither
+import insulator.lib.helpers.runCatchingE
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -11,9 +11,8 @@ import java.lang.Exception
 
 class JsonFormatter(private val json: Json) {
 
-    fun formatJsonString(jsonString: String, indent: Boolean = true) = json.runCatching { parseToJsonElement(jsonString) }
+    fun formatJsonString(jsonString: String, indent: Boolean = true) = json.runCatchingE { parseToJsonElement(jsonString) }
         .map { InternalFormatter(indent).format(it, 1) }
-        .toEither()
 
     private class InternalFormatter(private val indent: Boolean = true) {
         @OptIn(ExperimentalStdlibApi::class)

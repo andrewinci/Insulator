@@ -36,12 +36,12 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     private val messageCountProperty = SimpleLongProperty()
     private val isCompactedProperty = SimpleBooleanProperty()
 
-    val records: ObservableList<RecordViewModel> = FXCollections.observableList(LinkedList<RecordViewModel>())
+    val records: ObservableList<RecordViewModel> = FXCollections.observableList(LinkedList())
     val filteredRecords = SimpleObjectProperty<ObservableList<RecordViewModel>>()
         .also { prop ->
             prop.onChange { list ->
                 list?.onChange {
-                    messageConsumedCountProperty.value = list.size ?: 0
+                    messageConsumedCountProperty.value = list.size
                 }
             }
         }

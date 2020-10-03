@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
-import insulator.lib.helpers.toEither
+import insulator.lib.helpers.runCatchingE
 import insulator.lib.jsonhelper.jsontoavro.JsonToAvroConverter
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -29,7 +29,7 @@ class AvroProducer(
     override fun send(topic: String, key: String, value: String) =
         internalValidate(value, topic)
             .map { ProducerRecord(topic, key, it) }
-            .flatMap { avroProducer.runCatching { send(it) }.toEither() }
+            .flatMap { avroProducer.runCatchingE { send(it) } }
             .map { Unit }
 
     private fun internalValidate(value: String, topic: String) =

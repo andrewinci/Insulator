@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
 import com.fasterxml.jackson.databind.ObjectMapper
-import insulator.lib.helpers.toEither
+import insulator.lib.helpers.runCatchingE
 import insulator.lib.helpers.toEitherOfList
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Type.* // ktlint-disable no-wildcard-imports
@@ -18,8 +18,7 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
 
     fun parse(record: GenericRecord) =
         parseField(record, record.schema)
-            .map { objectMapper.runCatching { writeValueAsString(it) } }
-            .flatMap { it.toEither { AvroToJsonParsingException("Unable to write the json") } }
+            .flatMap { objectMapper.runCatchingE { writeValueAsString(it) } }
 
     private fun parseField(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> =
         when (schema.type) {
