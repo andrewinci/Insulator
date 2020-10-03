@@ -8,3 +8,4 @@ build
 *.deb
 out
 Insulator.cfg
+test-sandbox
