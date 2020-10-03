@@ -80,12 +80,12 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         super.currentStage?.resizableProperty()?.value = false
         checkVersion()
     }
-    
+
     private fun checkVersion() {
         if (wasVersionChecked.compareAndSet(false, true))
             VersionChecker().getCurrentVersion().map {
-            if (it.latestRelease != null) UpdateInfoView(it.latestRelease).customOpenWindow(modality = Modality.WINDOW_MODAL)
-        }
+                if (it.latestRelease != null) UpdateInfoView(it.latestRelease).customOpenWindow(modality = Modality.WINDOW_MODAL)
+            }
     }
 
     override fun onError(throwable: Throwable) {
