@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane
 import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClusterViewModel::class) {
 
@@ -80,12 +81,19 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         checkVersion()
     }
 
-    private fun checkVersion() = VersionChecker().getCurrentVersion().map {
-        if (it.latestRelease != null) UpdateInfoView(it.latestRelease).customOpenWindow()
+    private fun checkVersion() {
+        if (wasVersionChecked.compareAndSet(false, true))
+            VersionChecker().getCurrentVersion().map {
+                if (it.latestRelease != null) UpdateInfoView(it.latestRelease).customOpenWindow(modality = Modality.WINDOW_MODAL)
+            }
     }
 
     override fun onError(throwable: Throwable) {
         // we can't continue without the list of clusters
         close()
+    }
+
+    companion object {
+        private val wasVersionChecked = AtomicBoolean(false)
     }
 }
