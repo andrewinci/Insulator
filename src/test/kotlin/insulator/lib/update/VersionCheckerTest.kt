@@ -9,6 +9,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.mockk.every
 import io.mockk.mockk
 import java.io.Closeable
+import java.nio.file.Path
 import java.nio.file.Paths
 
 class VersionCheckerTest : FunSpec({
@@ -16,7 +17,7 @@ class VersionCheckerTest : FunSpec({
     test("happy path getCurrentVersion with a new release") {
         VersionCheckerTestFixture().use {
             // arrange
-            val sut = VersionChecker(it.mockJarPath)
+            val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
             it.mockCurrentAppVersion("0.0.8")
             val sampleMessage = Paths.get("src", "test", "resources", "githubResponseSample.json").toFile().readText()
             it.mockHttpResponse(200, sampleMessage)
@@ -32,7 +33,7 @@ class VersionCheckerTest : FunSpec({
         VersionCheckerTestFixture().use {
             // arrange
             val mockVersion = "0.0.9"
-            val sut = VersionChecker(it.mockJarPath)
+            val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
             it.mockCurrentAppVersion(mockVersion)
             val sampleMessage = Paths.get("src", "test", "resources", "githubResponseSample.json").toFile().readText()
             it.mockHttpResponse(200, sampleMessage)
@@ -49,7 +50,7 @@ class VersionCheckerTest : FunSpec({
         VersionCheckerTestFixture().use {
             // arrange
             val mockVersion = "1.2.3"
-            val sut = VersionChecker(it.mockJarPath)
+            val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
             it.mockCurrentAppVersion(mockVersion)
             // act
             val latestVersion = sut.getAppVersion()
@@ -118,8 +119,8 @@ class VersionCheckerTest : FunSpec({
     test("get app version with a wrong formatted config file return left") {
         VersionCheckerTestFixture().use {
             // arrange
-            val sut = VersionChecker(it.mockJarPath)
-            with(Paths.get("src", "test", "resources", "Insulator.cfg").toFile()) {
+            val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
+            with(it.mockInsulatorConfigPath.toFile()) {
                 createNewFile()
                 writeText("invalid string in the config file")
             }
@@ -135,10 +136,7 @@ class VersionCheckerTest : FunSpec({
     test("get app version with a missing config file return left") {
         VersionCheckerTestFixture().use {
             // arrange
-            val sut = VersionChecker(it.mockJarPath)
-            with(Paths.get("src", "test", "resources", "Insulator.cfg").toFile()) {
-                delete()
-            }
+            val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
 
             // act
             val latestVersion = sut.getAppVersion()
@@ -163,10 +161,10 @@ class VersionCheckerTestFixture : Closeable {
     private val testDir = getTestSandboxFolder()
 
     val mockRelease = Release(remoteTag, "$releasesPath/tag/$remoteTag", downloadUrls[0], downloadUrls[1], downloadUrls[2])
-    val mockJarPath: String = Paths.get(testDir.toString(), "mock.jar").toFile().absolutePath
+    val mockInsulatorConfigPath: Path = Paths.get(testDir.toString(), "Insulator.cfg")
 
     fun mockCurrentAppVersion(version: String) {
-        with(Paths.get(testDir.toString(), "Insulator.cfg").toFile()) {
+        with(mockInsulatorConfigPath.toFile()) {
             testDir.toFile().mkdirs()
             createNewFile()
             writeText("app.version=$version")
