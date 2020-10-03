@@ -37,8 +37,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
         anchorpane {
             vbox {
-                menuItem("Topics", ICON_TOPICS, "menu-item-topic") { viewModel.setCurrentView(ListTopicView::class.java) }
-                menuItem("Schema Registry", ICON_REGISTRY, "menu-item-schema-registry") { viewModel.setCurrentView(ListSchemaView::class.java) }
+                menuItem("Topics", ICON_TOPICS, "menu-item-topic") { viewModel.setCurrentView(ListTopicView::class) }
+                menuItem("Schema Registry", ICON_REGISTRY, "menu-item-schema-registry") { viewModel.setCurrentView(ListSchemaView::class) }
                 button("Change cluster") { id = "menu-item-change-cluster"; action { viewModel.toggleSidebar(); replaceWith<ListClusterView>() } }
 
                 addClass(Controls.sidebar)
