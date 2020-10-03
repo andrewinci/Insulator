@@ -27,7 +27,7 @@ data class Release(val version: String, val webUrl: String, val debianUrl: Strin
 class VersionChecker(private val customJarPath: String? = null) {
 
     private val jarPath: String
-        get() = customJarPath ?: this::class.java.protectionDomain.codeSource.location.path
+        get() = customJarPath ?: Paths.get(this::class.java.protectionDomain.codeSource.location.toURI()).toString()
 
     fun getCurrentVersion() = Either.fx<Throwable, Version> {
         val appVersion = !getAppVersion()
