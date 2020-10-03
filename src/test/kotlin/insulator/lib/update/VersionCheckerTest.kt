@@ -1,7 +1,7 @@
 package insulator.lib.update
 
-import com.github.kittinunf.fuel.core.Client
 import com.github.kittinunf.fuel.core.FuelManager
+import helper.getTestSandboxFolder
 import insulator.di.GITHUB_REPO
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
@@ -10,6 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import java.io.Closeable
 import java.nio.file.Paths
+import java.util.UUID
 
 class VersionCheckerTest : FunSpec({
 
@@ -151,7 +152,7 @@ class VersionCheckerTest : FunSpec({
 
 class VersionCheckerTestFixture : Closeable {
     fun mockHttpResponse(statusCode: Int, jsonResponse: String) {
-        FuelManager.instance.client = mockk<Client> {
+        FuelManager.instance.client = mockk {
             every { executeRequest(any()).statusCode } returns statusCode
             every { executeRequest(any()).data } returns jsonResponse.toByteArray()
         }
@@ -160,12 +161,14 @@ class VersionCheckerTestFixture : Closeable {
     private val remoteTag = "0.0.9"
     private val releasesPath = "$GITHUB_REPO/releases"
     private val downloadUrls = listOf("debian", "mac", "win").map { "$releasesPath/download/$remoteTag/insulator-$it.zip" }
+    private val testDir = getTestSandboxFolder()
 
     val mockRelease = Release(remoteTag, "$releasesPath/tag/$remoteTag", downloadUrls[0], downloadUrls[1], downloadUrls[2])
-    val mockJarPath = Paths.get("src", "test", "resources", "mock.jar").toFile().absolutePath
+    val mockJarPath: String = Paths.get(testDir.toString(), "mock.jar").toFile().absolutePath
 
     fun mockCurrentAppVersion(version: String) {
-        with(Paths.get("src", "test", "resources", "Insulator.cfg").toFile()) {
+        with(Paths.get(testDir.toString(), "Insulator.cfg").toFile()) {
+            testDir.toFile().mkdirs()
             createNewFile()
             writeText("app.version=$version")
         }

@@ -4,7 +4,13 @@ import org.koin.core.context.stopKoin
 import org.testfx.api.FxToolkit
 import org.testfx.util.WaitForAsyncUtils
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.UUID
 import kotlin.reflect.KClass
+
+fun getTestSandboxFolder(): Path = Paths.get("test-sandbox", UUID.randomUUID().toString()).also { it.toFile().mkdirs() }
+fun deleteTestSandboxFolder() = Paths.get("test-sandbox").toFile().deleteRecursively()
 
 fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
     if (FX.dicontainer != null) throw TestHelperError("DI already configured")
