@@ -10,7 +10,6 @@ import io.mockk.every
 import io.mockk.mockk
 import java.io.Closeable
 import java.nio.file.Paths
-import java.util.UUID
 
 class VersionCheckerTest : FunSpec({
 
