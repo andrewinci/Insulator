@@ -1,6 +1,7 @@
 package insulator.views.update
 
 import insulator.lib.update.Release
+import insulator.styles.Controls
 import insulator.styles.Titles
 import javafx.geometry.Pos
 import tornadofx.* // ktlint-disable no-wildcard-imports
@@ -21,13 +22,13 @@ class UpdateInfoView(release: Release) : View() {
         bottom = hbox(alignment = Pos.CENTER) {
             button("Close") { action { close() } }
         }
-        paddingAll = 20.0
+        addClass(Controls.view)
     }
 
     override fun onDock() {
         super.currentStage?.resizableProperty()?.set(false)
-        super.currentStage?.height = 300.0
-        super.currentStage?.width = 350.0
+        super.currentStage?.height = 350.0
+        super.currentStage?.width = 400.0
         super.onDock()
     }
 }

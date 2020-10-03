@@ -30,7 +30,7 @@ class VersionChecker(private val customJarPath: String? = null) {
         get() = customJarPath ?: Paths.get(this::class.java.protectionDomain.codeSource.location.toURI()).toString()
 
     fun getCurrentVersion() = Either.fx<Throwable, Version> {
-        val appVersion = !getAppVersion()
+        val appVersion = getAppVersion().fold({ "0.0.0" },{it})
         val latestVersion = !getLatestVersion()
         val isANewVersionAvailable = Semver(appVersion).isLowerThan(latestVersion.version)
         Version(appVersion, if (isANewVersionAvailable) latestVersion else null)

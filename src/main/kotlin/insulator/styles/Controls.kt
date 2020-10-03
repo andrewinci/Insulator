@@ -11,7 +11,7 @@ import tornadofx.multi
 import tornadofx.px
 
 class Controls : Stylesheet() {
-    private val defaultPadding = 15.0.px
+    private val defaultPadding = 12.0.px
 
     companion object {
 
