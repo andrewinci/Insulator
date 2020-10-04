@@ -6,6 +6,7 @@ import helper.configureDi
 import helper.configureFXFramework
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.ConfigurationRepoException
+import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -28,7 +29,7 @@ class ListClusterViewModelTest : FunSpec({
             }
         )
         // act
-        val clusters = sut.clustersProperty
+        val clusters = sut.clusterListProperty({}, {})
         // assert
         clusters.size shouldBe 0
         sut.error.value!!.message shouldBe errorMessage
@@ -38,7 +39,7 @@ class ListClusterViewModelTest : FunSpec({
         // arrange
         val sut = ListClusterViewModel()
         val newMockConfiguration = mockk<Configuration> {
-            every { clusters } returns listOf(mockk(), mockk(), mockk())
+            every { clusters } returns listOf(Cluster.empty(), Cluster.empty(), Cluster.empty())
         }
         lateinit var callback: (Configuration) -> Unit
         configureDi(
@@ -47,7 +48,7 @@ class ListClusterViewModelTest : FunSpec({
                 every { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
             }
         )
-        val cluster = sut.clustersProperty
+        val cluster = sut.clusterListProperty({}, {})
         cluster.size shouldBe 0
         // act
         callback(newMockConfiguration)

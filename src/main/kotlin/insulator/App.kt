@@ -1,17 +1,14 @@
 package insulator
 
 import insulator.di.DIContainer
-import insulator.styles.Controls
-import insulator.styles.Root
-import insulator.styles.Theme
-import insulator.styles.Titles
+import insulator.ui.style.styles
 import insulator.views.configurations.ListClusterView
 import javafx.scene.Scene
 import javafx.stage.Stage
 import javafx.stage.Window
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class Insulator : App(ListClusterView::class, Theme::class, Titles::class, Root::class, Controls::class) {
+class Insulator : App(ListClusterView::class, *styles) {
 
     override fun createPrimaryScene(view: UIComponent): Scene {
         FX.primaryStage.setOnCloseRequest { stop() }
