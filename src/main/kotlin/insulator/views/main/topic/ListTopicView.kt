@@ -10,6 +10,7 @@ import insulator.views.common.customOpenWindow
 import insulator.views.common.searchBox
 import insulator.views.configurations.ListClusterView
 import javafx.beans.property.SimpleStringProperty
+import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import javafx.stage.Modality
@@ -22,17 +23,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
 
     override val root = vbox(spacing = 5.0) {
         borderpane {
-            left = hbox {
-                button("Create topic") {
-                    action {
-                        with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
-                            find<CreateTopicView>(this).also {
-                                it.whenUndockedOnce { viewModel.refresh(); this.close() }
-                            }.customOpenWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
-                        }
-                    }
-                }
-            }
+            left = createTopicButton()
             right = searchBox(searchItem).also { shortcut("CTRL+F") { it.requestFocus() } }
         }
         listview<String> {
@@ -53,6 +44,17 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
             vgrow = Priority.ALWAYS
         }
     }
+
+    private fun EventTarget.createTopicButton() =
+        button("Create topic") {
+            action {
+                with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
+                    find<CreateTopicView>(this).also {
+                        it.whenUndockedOnce { viewModel.refresh(); this.close() }
+                    }.customOpenWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+                }
+            }
+        }
 
     override fun onError(throwable: Throwable) {
         replaceWith<ListClusterView>()
