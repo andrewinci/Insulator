@@ -30,7 +30,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.openjfx.javafxplugin'
 
 def arrow_version = "0.10.5"
-def kotest_version = "4.2.5"
+def kotest_version = "4.2.6"
 def koin_version = "2.1.6"
 def testfx_version = "4.0.16-alpha"
 def testcontainer_version = "1.14.3"
