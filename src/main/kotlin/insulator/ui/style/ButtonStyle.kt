@@ -5,7 +5,6 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ButtonStyle : Stylesheet() {
     companion object {
-        val button by cssclass("insulator-button")
         val alertButton by cssclass("alert-button")
         val blueButton by cssclass("blue-button")
         val burgerButton by cssclass("burger-button")
@@ -13,42 +12,36 @@ class ButtonStyle : Stylesheet() {
     }
 
     init {
-        button {
-            padding = box(5.0.px)
-            textFill = Theme.mainColor
-            backgroundColor = multi(Color.TRANSPARENT)
-            and(hover) {
-                textFill = Theme.backgroundColor
-                backgroundColor = multi(Theme.mainColor)
-                and(alertButton) {
+        root {
+            button {
+                padding = box(0.7.em)
+                textFill = Theme.mainColor
+                backgroundColor = multi(Color.TRANSPARENT)
+                and(hover) {
                     textFill = Theme.backgroundColor
-                    backgroundColor = multi(Theme.alertColor)
+                    backgroundColor = multi(Theme.mainColor)
+                    backgroundRadius = multi(box(0.7.em))
+                    and(alertButton) {
+                        textFill = Theme.backgroundColor
+                        backgroundColor = multi(Theme.alertColor)
+                    }
+                    and(blueButton) {
+                        textFill = Theme.backgroundColor
+                        backgroundColor = multi(Theme.blueColor)
+                    }
+                    and(settingsButton) {
+                        textFill = Theme.mainColor
+                        backgroundRadius = multi(box(5.em))
+                        backgroundColor = multi(Theme.mainColorDark)
+                    }
+                    and(burgerButton) {
+                        textFill = Theme.mainColor
+                        backgroundRadius = multi(box(5.em))
+                        backgroundColor = multi(Theme.mainColorDark)
+                    }
                 }
-                and(blueButton) {
-                    textFill = Theme.backgroundColor
-                    backgroundColor = multi(Theme.blueColor)
-                }
-                backgroundRadius = multi(box(2.0.px))
-            }
-            and(alertButton) { textFill = Theme.alertColor }
-            and(blueButton) { textFill = Theme.blueColor }
-        }
-        burgerButton {
-            padding = box(1.em)
-            textFill = Theme.mainColor
-            backgroundColor = multi(Color.TRANSPARENT)
-            backgroundRadius = multi(box(100.0.px))
-            and(hover) {
-                backgroundColor = multi(Theme.mainColorDark)
-            }
-        }
-        settingsButton {
-            padding = box(1.em)
-            textFill = Theme.mainColor
-            backgroundColor = multi(Color.TRANSPARENT)
-            backgroundRadius = multi(box(100.0.px))
-            and(hover) {
-                backgroundColor = multi(Theme.mainColorDark)
+                and(alertButton) { textFill = Theme.alertColor }
+                and(blueButton) { textFill = Theme.blueColor }
             }
         }
     }

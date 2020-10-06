@@ -1,57 +1,30 @@
 package insulator.styles
 
 import javafx.geometry.Pos
-import javafx.scene.effect.DropShadow
 import javafx.scene.paint.Color
-import tornadofx.Stylesheet
-import tornadofx.box
-import tornadofx.cssclass
-import tornadofx.insets
-import tornadofx.multi
-import tornadofx.px
+import tornadofx.*
+import tornadofx.Stylesheet.Companion.box
 
 class Controls : Stylesheet() {
-    private val defaultPadding = 12.0.px
+    private val defaultPadding = 1.em
 
     companion object {
 
         // Components
-        val topBarMenu by cssclass()
-        val topBarMenuShadow by cssclass()
         val sidebar by cssclass()
         val sidebarItem by cssclass()
-        val iconButton by cssclass()
-        val alertButton by cssclass()
-        val blueButton by cssclass()
+
         val view by cssclass()
     }
 
     init {
-
-        topBarMenu {
-            translateY = -defaultPadding
-            borderInsets = multi(box(-defaultPadding, -defaultPadding, 0.px, -defaultPadding))
-            spacing = 5.px
-            alignment = Pos.CENTER_LEFT
-            borderColor = multi(box(Theme.lightGray))
-            prefHeight = 60.0.px
-            and(Titles.subtitle) { prefHeight = 70.0.px }
-        }
-
-        topBarMenuShadow {
-            translateY = -defaultPadding
-            prefHeight = 0.0.px
-            borderColor = multi(box(Theme.lightGray))
-            effect = DropShadow(1.0, 0.0, +1.0, Theme.lightGray)
-            borderInsets = multi(box(0.0.px, -defaultPadding))
-        }
 
         sidebar {
             prefWidth = 250.0.px
             backgroundColor = multi(Theme.backgroundColor)
             backgroundColor = multi(Theme.backgroundColor)
             borderInsets = multi(box(-defaultPadding, 0.px, -defaultPadding, -defaultPadding))
-            borderColor = multi(box(Theme.lightGray))
+            borderColor = multi(box(Color.TRANSPARENT, Theme.lightGray, Theme.lightGray, Theme.lightGray))
             padding = box(-defaultPadding, 0.px, 0.px, 0.px)
             alignment = Pos.TOP_CENTER
         }

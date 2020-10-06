@@ -4,14 +4,14 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-val styles = arrayOf(Root::class, TextStyle::class, ButtonStyle::class)
+val styles = arrayOf(Root::class, TextStyle::class, ButtonStyle::class, AppBarStyle::class)
 
 class Root : Stylesheet() {
     init {
         root {
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(Theme.backgroundColor)
-            padding = box(1.em)
+            padding = box(Theme.viewPadding)
         }
     }
 }
@@ -27,5 +27,6 @@ class Theme {
         val lightGray = c("#ccc")
         val darkGray = c("#666")
         val blueColor = Color.BLUE
+        val viewPadding = 1.em
     }
 }

@@ -1,7 +1,7 @@
 package insulator.views.main.topic
 
 import insulator.styles.Controls
-import insulator.styles.Titles
+import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import javafx.geometry.Insets
 import javafx.scene.control.Alert
@@ -12,7 +12,7 @@ class CreateTopicView : View() {
 
     override val root = form {
         fieldset {
-            label("Create topic") { addClass(Titles.h1) }
+            h1("Create topic")
             field("Topic name") { textfield(viewModel.nameProperty).required() }
             field("Number of partitions") {
                 textfield(viewModel.partitionCountProperty) {

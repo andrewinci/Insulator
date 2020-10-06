@@ -1,7 +1,8 @@
 package insulator.views.main.topic
 
 import insulator.styles.Controls
-import insulator.styles.Titles
+import insulator.ui.component.appBar
+import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.views.common.InsulatorView
 import javafx.beans.binding.Bindings
@@ -20,13 +21,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
 
     override val root = borderpane {
         shortcut("CTRL+SPACE") { autoComplete() }
-        top = vbox {
-            hbox {
-                label(viewModel.topicName) { addClass(Titles.h1) }
-                addClass(Controls.topBarMenu)
-            }
-            hbox { addClass(Controls.topBarMenuShadow) }
-        }
+        top = appBar { h1(viewModel.topicName) }
         center = vbox(spacing = 5.0) {
             label("Key")
             textfield(viewModel.keyProperty)

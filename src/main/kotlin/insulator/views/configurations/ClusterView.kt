@@ -1,9 +1,9 @@
 package insulator.views.configurations
 
 import insulator.styles.Controls
-import insulator.styles.Titles
+import insulator.ui.component.confirmationButton
+import insulator.ui.component.h1
 import insulator.viewmodel.configurations.ClusterViewModel
-import insulator.views.common.confirmationButton
 import javafx.geometry.Insets
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -13,7 +13,7 @@ class ClusterView : View() {
 
     override val root = form {
         fieldset {
-            label("Cluster connection") { addClass(Titles.h1) }
+            h1("Cluster connection")
             field("Cluster name") { textfield(viewModel.nameProperty).required() }
             field("Endpoint (url:port)") { textfield(viewModel.endpointProperty).required() }
             fieldset {
@@ -31,7 +31,7 @@ class ClusterView : View() {
                 field("Password") { textfield(viewModel.saslPasswordProperty).requiredWhen(viewModel.useSaslProperty) }
             }
             fieldset {
-                label("Schema registry") { addClass(Titles.h1) }
+                h1("Schema registry")
                 field("Endpoint") { textfield(viewModel.schemaRegistryEndpointProperty) }
                 field("Username") { textfield(viewModel.schemaRegistryUsernameProperty) }
                 field("Password") { textfield(viewModel.schemaRegistryPasswordProperty) }

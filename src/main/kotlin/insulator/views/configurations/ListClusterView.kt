@@ -4,11 +4,13 @@ import insulator.di.currentCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
 import insulator.styles.Controls
-import insulator.styles.Titles
+import insulator.ui.component.h1
+import insulator.ui.component.h2
+import insulator.ui.component.settingsButton
+import insulator.ui.component.subTitle
 import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
-import insulator.views.common.ICON_SETTINGS_SVG
 import insulator.views.common.InsulatorView
 import insulator.views.common.StringScope
 import insulator.views.common.customOpenWindow
@@ -25,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClusterViewModel::class) {
 
     override val root = vbox(spacing = 15) {
-        label("Clusters") { addClass(Titles.h1) }
+        h1("Clusters")
         listview(viewModel.clustersProperty) {
             cellFormat { cluster ->
                 graphic = buildClusterCell(cluster)
@@ -56,18 +58,14 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         return borderpane {
             id = "cluster-${cluster.guid}"
             center = vbox(alignment = Pos.CENTER_LEFT) {
-                label(cluster.name) { addClass(Titles.h2) }
-                label(cluster.endpoint) { addClass(Titles.h3); maxWidth = 260.0 }
+                h2(cluster.name)
+                subTitle(cluster.endpoint) { maxWidth = 260.0 }
             }
             right = vbox(alignment = Pos.CENTER) {
-                button {
-                    addClass(Controls.iconButton)
-                    graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
-                    onMouseClicked = EventHandler {
-                        StringScope("Cluster-${cluster.guid}")
-                            .withComponent(ClusterViewModel(ClusterModel(cluster)))
-                            .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
-                    }
+                settingsButton {
+                    StringScope("Cluster-${cluster.guid}")
+                        .withComponent(ClusterViewModel(ClusterModel(cluster)))
+                        .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
                 }
             }
         }

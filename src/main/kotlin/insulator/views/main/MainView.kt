@@ -2,9 +2,11 @@ package insulator.views.main
 
 import insulator.di.currentCluster
 import insulator.styles.Controls
-import insulator.styles.Titles
+import insulator.ui.component.appBar
+import insulator.ui.component.burgerButton
+import insulator.ui.component.h1
+import insulator.ui.component.h2
 import insulator.viewmodel.main.MainViewModel
-import insulator.views.common.ICON_MENU_SVG
 import insulator.views.common.ICON_REGISTRY
 import insulator.views.common.ICON_TOPICS
 import insulator.views.common.InsulatorView
@@ -14,24 +16,17 @@ import insulator.views.main.topic.ListTopicView
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.image.Image
-import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
     override val root = stackpane {
         borderpane {
-            top = vbox {
+            top = appBar {
                 hbox {
-                    button {
-                        addClass(Controls.iconButton)
-                        graphic = SVGIcon(ICON_MENU_SVG, 20.0, Color.BLACK)
-                        action { viewModel.toggleSidebar() }
-                    }
-                    label(viewModel.currentTitle) { addClass(Titles.h1) }
-                    addClass(Controls.topBarMenu)
+                    burgerButton { viewModel.toggleSidebar() }
+                    h1(viewModel.currentTitle)
                 }
-                hbox { addClass(Controls.topBarMenuShadow) }
             }
             centerProperty().bind(viewModel.currentCenter)
         }
@@ -56,7 +51,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
         hbox(spacing = 5.0) {
             imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
-            label(name) { addClass(Titles.h2) }
+            h2(name)
             onMouseClicked = EventHandler { onClick(); viewModel.toggleSidebar() }
             addClass(Controls.sidebarItem)
         }

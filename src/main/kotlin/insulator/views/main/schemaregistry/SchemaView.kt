@@ -4,10 +4,11 @@ import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
 import insulator.styles.Controls
 import insulator.styles.Theme
-import insulator.styles.Titles
+import insulator.ui.component.appBar
+import insulator.ui.component.confirmationButton
+import insulator.ui.component.h1
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.common.confirmationButton
 import javafx.beans.binding.Bindings
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -23,16 +24,14 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewModel::class) {
 
     override val root = borderpane {
-        top = vbox {
+        top = appBar {
             hbox {
-                label(viewModel.nameProperty.value) { addClass(Titles.h1) }
+                h1(viewModel.nameProperty.value)
                 confirmationButton("delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
                     viewModel.delete()
                     close()
                 }
-                addClass(Controls.topBarMenu)
             }
-            hbox { addClass(Controls.topBarMenuShadow) }
         }
         center = vbox(spacing = 2.0) {
             hbox(alignment = Pos.CENTER_LEFT) {

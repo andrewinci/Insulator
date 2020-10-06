@@ -3,13 +3,16 @@ package insulator.views.main.topic
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.styles.Controls
-import insulator.styles.Titles
+import insulator.ui.component.appBar
+import insulator.ui.component.blueButton
+import insulator.ui.component.confirmationButton
+import insulator.ui.component.h1
+import insulator.ui.component.subTitle
 import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.common.StringScope
-import insulator.views.common.confirmationButton
 import insulator.views.common.customOpenWindow
 import insulator.views.common.searchBox
 import javafx.beans.binding.Bindings
@@ -23,33 +26,26 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
 
     override val root = borderpane {
-        top = vbox {
-            vbox {
-                hbox(spacing = 10.0, alignment = Pos.CENTER_LEFT) {
-                    label(viewModel.nameProperty.value) { addClass(Titles.h1) }
-                    confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
-                        viewModel.delete()
-                        close()
-                    }
+        top = appBar {
+            hbox(spacing = 10.0, alignment = Pos.CENTER_LEFT) {
+                h1(viewModel.nameProperty.value)
+                confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
+                    viewModel.delete()
+                    close()
                 }
-                label(viewModel.subtitleProperty) { addClass(Titles.h3) }
-                addClass(Controls.topBarMenu, Titles.subtitle)
             }
-            hbox { addClass(Controls.topBarMenuShadow) }
+            subTitle(viewModel.subtitleProperty)
         }
         center = vbox(spacing = 2.0) {
             borderpane {
                 left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                    button("Produce") {
-                        action {
-                            with(StringScope(viewModel.topicName).withComponent(ProducerViewModel(viewModel.topicName))) {
-                                find<ProducerView>(this).customOpenWindow(owner = null)
-                            }
+                    blueButton("Produce") {
+                        with(StringScope(viewModel.topicName).withComponent(ProducerViewModel(viewModel.topicName))) {
+                            find<ProducerView>(this).customOpenWindow(owner = null)
                         }
-                        prefWidth = 80.0
-                        addClass(Controls.blueButton)
                     }
-                    button(viewModel.consumeButtonText) { action { viewModel.consume() }; prefWidth = 80.0 }
+
+                    button(viewModel.consumeButtonText) { action { viewModel.consume() } }
                     label("from")
                     combobox<String> {
                         items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())

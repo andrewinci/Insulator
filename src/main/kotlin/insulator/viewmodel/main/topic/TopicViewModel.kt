@@ -15,7 +15,7 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.value.ObservableValue
+import javafx.beans.value.ObservableStringValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
@@ -53,7 +53,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.toString())
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
     val searchItem = SimpleStringProperty()
-    val subtitleProperty: ObservableValue<String> = Bindings.createStringBinding(
+    val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
         {
             "Message count: ${messageConsumedCountProperty.value}/${messageCountProperty.value} - " +
                 "Is internal: ${isInternalProperty.value} - " +

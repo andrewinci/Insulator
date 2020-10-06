@@ -46,32 +46,6 @@ class Root : Stylesheet() {
                 }
             }
 
-            button {
-                padding = box(5.0.px)
-                textFill = Theme.mainColor
-                backgroundColor = multi(Color.TRANSPARENT)
-                and(hover) {
-                    textFill = Theme.backgroundColor
-                    backgroundColor = multi(Theme.mainColor)
-                    and(Controls.alertButton) {
-                        textFill = Theme.backgroundColor
-                        backgroundColor = multi(Theme.alertColor)
-                    }
-                    and(Controls.blueButton) {
-                        textFill = Theme.backgroundColor
-                        backgroundColor = multi(Theme.blueColor)
-                    }
-                    backgroundRadius = multi(box(2.0.px))
-                }
-                and(Controls.iconButton) {
-                    padding = box(12.0.px)
-                    backgroundRadius = multi(box(100.0.px))
-                    and(hover) { backgroundColor = multi(Theme.mainColorDark) }
-                }
-                and(Controls.alertButton) { textFill = Theme.alertColor }
-                and(Controls.blueButton) { textFill = Theme.blueColor }
-            }
-
             checkBox {
                 box {
                     focusColor = Theme.backgroundColor
