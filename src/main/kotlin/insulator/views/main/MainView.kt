@@ -45,7 +45,6 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
             isPickOnBounds = false
             padding = insets(-15.0, 0.0)
         }
-        addClass(Controls.view)
     }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =

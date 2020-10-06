@@ -1,7 +1,6 @@
 package insulator.views.update
 
 import insulator.lib.update.Release
-import insulator.styles.Controls
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import javafx.geometry.Pos
@@ -23,7 +22,6 @@ class UpdateInfoView(release: Release) : View() {
         bottom = hbox(alignment = Pos.CENTER) {
             button("Close") { action { close() } }
         }
-        addClass(Controls.view)
     }
 
     override fun onDock() {

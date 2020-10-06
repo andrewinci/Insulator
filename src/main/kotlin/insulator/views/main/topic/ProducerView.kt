@@ -1,6 +1,5 @@
 package insulator.views.main.topic
 
-import insulator.styles.Controls
 import insulator.ui.component.appBar
 import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
@@ -46,7 +45,6 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
                 }
             }
         }
-        addClass(Controls.view)
         prefWidth = 800.0
         prefHeight = 800.0
     }

@@ -2,7 +2,7 @@ package insulator.styles
 
 import javafx.geometry.Pos
 import javafx.scene.paint.Color
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import tornadofx.Stylesheet.Companion.box
 
 class Controls : Stylesheet() {
@@ -13,8 +13,6 @@ class Controls : Stylesheet() {
         // Components
         val sidebar by cssclass()
         val sidebarItem by cssclass()
-
-        val view by cssclass()
     }
 
     init {
@@ -89,8 +87,6 @@ class Controls : Stylesheet() {
             prefHeight = 140.0.px
             minHeight = 140.0.px
         }
-
-        view { padding = box(defaultPadding) }
 
         contextMenu {
             padding = box(0.px)

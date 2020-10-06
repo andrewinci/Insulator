@@ -2,7 +2,6 @@ package insulator.views.main.topic
 
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
-import insulator.styles.Controls
 import insulator.ui.component.appBar
 import insulator.ui.component.blueButton
 import insulator.ui.component.confirmationButton
@@ -66,7 +65,6 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
             }
             recordsTable()
         }
-        addClass(Controls.view)
     }
 
     private fun EventTarget.recordsTable() = apply {

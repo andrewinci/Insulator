@@ -4,7 +4,7 @@ import insulator.ui.style.AppBarStyle
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 fun EventTarget.appBar(op: EventTarget.() -> Unit) =
     vbox(alignment = Pos.TOP_LEFT) {

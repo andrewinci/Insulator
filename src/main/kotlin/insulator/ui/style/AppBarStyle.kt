@@ -2,7 +2,7 @@ package insulator.ui.style
 
 import javafx.geometry.Pos
 import javafx.scene.paint.Color
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class AppBarStyle : Stylesheet() {
     companion object {

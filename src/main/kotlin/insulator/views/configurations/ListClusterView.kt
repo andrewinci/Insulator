@@ -3,7 +3,6 @@ package insulator.views.configurations
 import insulator.di.currentCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
-import insulator.styles.Controls
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.settingsButton
@@ -17,8 +16,8 @@ import insulator.views.common.customOpenWindow
 import insulator.views.main.MainView
 import insulator.views.update.UpdateInfoView
 import javafx.event.EventHandler
+import javafx.event.EventTarget
 import javafx.geometry.Pos
-import javafx.scene.layout.BorderPane
 import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
@@ -28,47 +27,53 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     override val root = vbox(spacing = 15) {
         h1("Clusters")
-        listview(viewModel.clustersProperty) {
-            cellFormat { cluster ->
-                graphic = buildClusterCell(cluster)
-                onMouseClicked = EventHandler {
-                    currentCluster = cluster
-                    StringScope("Cluster-${cluster.guid}")
-                        .withComponent(ClusterViewModel(ClusterModel(cluster)))
-                        .let { replaceWith(find<MainView>(it)) }
-                }
-            }
-        }
+        clusterList()
         hbox(alignment = Pos.CENTER_RIGHT) {
-            button {
-                alignment = Pos.CENTER_RIGHT
-                text = "Add new cluster"
-                action {
-                    val clusterScope = StringScope("CreateNewCluster")
-                        .withComponent(ClusterViewModel(ClusterModel(Cluster.empty())))
-                    find<ClusterView>(clusterScope).also { it.whenUndockedOnce { clusterScope.close() } }
-                        .customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
-                }
-            }
+            addNewClusterButton()
         }
-        addClass(Controls.view)
     }
 
-    private fun buildClusterCell(cluster: Cluster): BorderPane {
-        return borderpane {
-            id = "cluster-${cluster.guid}"
+    private fun EventTarget.addNewClusterButton() = button {
+        text = "Add new cluster"
+        action {
+            val clusterScope = StringScope("CreateNewCluster")
+                .withComponent(ClusterViewModel(ClusterModel(Cluster.empty())))
+            find<ClusterView>(clusterScope).also { it.whenUndockedOnce { clusterScope.close() } }
+                .customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+        }
+    }
+
+    private fun EventTarget.clusterList() = listview(viewModel.clustersProperty) {
+        cellFormat { cluster ->
+            graphic = buildClusterCell(cluster)
+            onMouseClicked = EventHandler {
+                currentCluster = cluster
+                StringScope("Cluster-${cluster.guid}")
+                    .withComponent(ClusterViewModel(ClusterModel(cluster)))
+                    .let { replaceWith(find<MainView>(it)) }
+            }
+        }
+    }
+
+    private fun EventTarget.buildClusterCell(cluster: Cluster) =
+        borderpane {
             center = vbox(alignment = Pos.CENTER_LEFT) {
                 h2(cluster.name)
                 subTitle(cluster.endpoint) { maxWidth = 260.0 }
             }
-            right = vbox(alignment = Pos.CENTER) {
-                settingsButton {
-                    StringScope("Cluster-${cluster.guid}")
-                        .withComponent(ClusterViewModel(ClusterModel(cluster)))
-                        .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
-                }
+            right = settingsButton {
+                StringScope("Cluster-${cluster.guid}")
+                    .withComponent(ClusterViewModel(ClusterModel(cluster)))
+                    .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
             }
+            id = "cluster-${cluster.guid}"
         }
+
+    private fun checkVersion() {
+        if (wasVersionChecked.compareAndSet(false, true))
+            VersionChecker().getCurrentVersion().map {
+                if (it.latestRelease != null) UpdateInfoView(it.latestRelease).customOpenWindow(modality = Modality.WINDOW_MODAL)
+            }
     }
 
     override fun onDock() {
@@ -77,13 +82,6 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         super.currentStage?.height = 500.0
         super.currentStage?.resizableProperty()?.value = false
         checkVersion()
-    }
-
-    private fun checkVersion() {
-        if (wasVersionChecked.compareAndSet(false, true))
-            VersionChecker().getCurrentVersion().map {
-                if (it.latestRelease != null) UpdateInfoView(it.latestRelease).customOpenWindow(modality = Modality.WINDOW_MODAL)
-            }
     }
 
     override fun onError(throwable: Throwable) {

@@ -2,7 +2,6 @@ package insulator.views.main.schemaregistry
 
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
-import insulator.styles.Controls
 import insulator.styles.Theme
 import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
@@ -47,7 +46,6 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
                 vgrow = Priority.ALWAYS
             }
         }
-        addClass(Controls.view)
         prefWidth = 800.0
         prefHeight = 800.0
     }

@@ -1,10 +1,9 @@
 package insulator.views.configurations
 
-import insulator.styles.Controls
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.h1
 import insulator.viewmodel.configurations.ClusterViewModel
-import javafx.geometry.Insets
+import javafx.event.EventTarget
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ClusterView : View() {
@@ -36,25 +35,29 @@ class ClusterView : View() {
                 field("Username") { textfield(viewModel.schemaRegistryUsernameProperty) }
                 field("Password") { textfield(viewModel.schemaRegistryPasswordProperty) }
             }
-            borderpane {
-                padding = Insets(0.0, 50.0, 0.0, 50.0)
-                left = confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
-                    viewModel.delete()
-                    close()
-                }
-                right = button("Save") {
-                    enableWhen(viewModel.valid)
-                    action {
-                        viewModel.commit()
-                        viewModel.save()
-                        close()
-                    }
-                }
-            }
+        }
+        borderpane {
+            left = deleteButton()
+            right = saveButton()
         }
         prefWidth = 600.0
-        addClass(Controls.view)
     }
+
+    private fun EventTarget.deleteButton() =
+        confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
+            viewModel.delete()
+            close()
+        }
+
+    private fun EventTarget.saveButton() =
+        button("Save") {
+            enableWhen(viewModel.valid)
+            action {
+                viewModel.commit()
+                viewModel.save()
+                close()
+            }
+        }
 
     override fun onDock() {
         super.onDock()

@@ -1,6 +1,5 @@
 package insulator.views.main.topic
 
-import insulator.styles.Controls
 import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import javafx.geometry.Insets
@@ -54,6 +53,5 @@ class CreateTopicView : View() {
                 }
             }
         }
-        addClass(Controls.view)
     }
 }
