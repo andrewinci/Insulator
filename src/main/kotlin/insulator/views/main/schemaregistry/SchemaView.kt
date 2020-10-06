@@ -9,6 +9,7 @@ import insulator.ui.component.h1
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import insulator.views.common.InsulatorView
 import javafx.beans.binding.Bindings
+import javafx.event.EventTarget
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
@@ -26,20 +27,13 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
         top = appBar {
             hbox {
                 h1(viewModel.nameProperty.value)
-                confirmationButton("delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
-                    viewModel.delete()
-                    close()
-                }
+                deleteButton()
             }
         }
         center = vbox(spacing = 2.0) {
             hbox(alignment = Pos.CENTER_LEFT) {
                 label("Schema")
-                combobox<Schema> {
-                    items.bind(viewModel.versionsProperty) { it }
-                    valueProperty().bindBidirectional(viewModel.selectedVersionProperty)
-                    cellFormat { text = "v: ${it.version} id: ${it.id}" }
-                }
+                schemaComboBox()
             }
             scrollpane {
                 schemaContent()
@@ -49,6 +43,19 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
         prefWidth = 800.0
         prefHeight = 800.0
     }
+
+    private fun EventTarget.schemaComboBox() =
+        combobox<Schema> {
+            items.bind(viewModel.versionsProperty) { it }
+            valueProperty().bindBidirectional(viewModel.selectedVersionProperty)
+            cellFormat { text = "v: ${it.version} id: ${it.id}" }
+        }
+
+    private fun EventTarget.deleteButton() =
+        confirmationButton("delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
+            viewModel.delete()
+            close()
+        }
 
     private fun ScrollPane.schemaContent() = apply {
         textflow {
