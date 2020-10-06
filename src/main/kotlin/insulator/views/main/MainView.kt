@@ -30,6 +30,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
             }
             centerProperty().bind(viewModel.currentCenter)
         }
+        // sidebar
         anchorpane {
             vbox {
                 menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class) }
