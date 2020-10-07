@@ -1,20 +1,12 @@
 package insulator.views.main.topic
 
-import insulator.di.currentCluster
-import insulator.viewmodel.main.topic.CreateTopicViewModel
 import insulator.viewmodel.main.topic.ListTopicViewModel
-import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.common.StringScope
-import insulator.views.common.customOpenWindow
 import insulator.views.common.searchBox
 import insulator.views.configurations.ListClusterView
-import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
-import javafx.stage.Modality
-import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewModel::class) {

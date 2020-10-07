@@ -20,7 +20,6 @@ import tornadofx.whenUndockedOnce
 
 class ListTopicViewModel : InsulatorViewModel() {
 
-
     private val adminApi: AdminApi by di()
 
     private val topicList: ObservableList<String> = FXCollections.observableArrayList()

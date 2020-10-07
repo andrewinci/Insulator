@@ -25,7 +25,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         label("Value")
         recordValueTextArea()
 
-        label("Validation");
+        label("Validation")
         validationArea()
 
         borderpane {
