@@ -30,14 +30,14 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     private fun EventTarget.addNewClusterButton() =
         button("Add new cluster") {
-            action { viewModel.onAddNewClusterClick() }
+            action { viewModel.openNewClusterWindow() }
         }
 
     private fun EventTarget.clusterList() =
         listview(viewModel.clustersProperty) {
             cellFormat { graphic = buildClusterCell(it) }
             action { cluster ->
-                viewModel.onClusterSelected(cluster) { replaceWith(find<MainView>(it)) }
+                viewModel.openMainWindow(cluster) { replaceWith(find<MainView>(it)) }
             }
         }
 
@@ -47,7 +47,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                 h2(cluster.name)
                 subTitle(cluster.endpoint) { maxWidth = 260.0 }
             }
-            right = settingsButton { viewModel.onSettingsButtonClick(cluster) }
+            right = settingsButton { viewModel.openEditClusterWindow(cluster) }
             id = "cluster-${cluster.guid}"
         }
 
@@ -73,6 +73,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
     }
 
     companion object {
+        // make sure we check the version only once
         private val wasVersionChecked = AtomicBoolean(false)
     }
 }

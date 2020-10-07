@@ -15,22 +15,26 @@ import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.event.EventHandler
 import javafx.event.EventTarget
+import javafx.geometry.Orientation
 import javafx.scene.image.Image
+import javafx.scene.layout.HBox
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
-    override val root = stackpane {
-        borderpane {
-            top = appBar {
-                hbox {
-                    burgerButton { viewModel.toggleSidebar() }
-                    h1(viewModel.currentTitle)
-                }
-            }
-            centerProperty().bind(viewModel.currentCenter)
+    override val root = hbox {
+        sidebar()
+        separator(orientation = Orientation.VERTICAL)
+    }
+
+    init {
+        viewModel.currentCenter.onChange {
+            if (root.children.size > 2) root.children.removeAt(2)
+            root.children.add(it)
         }
-        // sidebar
+    }
+
+    private fun EventTarget.sidebar() =
         anchorpane {
             vbox {
                 menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class) }
@@ -42,11 +46,9 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 boundsInParent
             }
 
-            visibleWhen(viewModel.showSidebar)
             isPickOnBounds = false
             padding = insets(-15.0, 0.0)
         }
-    }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
         hbox(spacing = 5.0) {
@@ -60,6 +62,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         super.onDock()
         super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
+        super.currentStage?.isResizable = true
         title = currentCluster.name
     }
 

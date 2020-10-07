@@ -28,21 +28,21 @@ class ListClusterViewModel : InsulatorViewModel() {
         )
     }
 
-    fun onAddNewClusterClick() {
+    fun openNewClusterWindow() {
         val clusterScope = StringScope("CreateNewCluster")
             .withComponent(ClusterViewModel(ClusterModel(Cluster.empty())))
         find<ClusterView>(clusterScope).also { it.whenUndockedOnce { clusterScope.close() } }
             .customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
     }
 
-    fun onClusterSelected(cluster: Cluster, op: (StringScope) -> Unit) {
+    fun openMainWindow(cluster: Cluster, op: (StringScope) -> Unit) {
         currentCluster = cluster
         StringScope("Cluster-${cluster.guid}")
             .withComponent(ClusterViewModel(ClusterModel(cluster)))
             .let { op(it) }
     }
 
-    fun onSettingsButtonClick(cluster: Cluster) {
+    fun openEditClusterWindow(cluster: Cluster) {
         StringScope("Cluster-${cluster.guid}")
             .withComponent(ClusterViewModel(ClusterModel(cluster)))
             .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
