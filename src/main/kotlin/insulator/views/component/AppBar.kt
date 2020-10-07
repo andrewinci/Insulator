@@ -1,6 +1,6 @@
-package insulator.ui.component
+package insulator.views.component
 
-import insulator.ui.style.AppBarStyle
+import insulator.views.style.AppBarStyle
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority

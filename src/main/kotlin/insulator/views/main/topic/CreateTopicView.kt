@@ -1,6 +1,6 @@
 package insulator.views.main.topic
 
-import insulator.ui.component.h1
+import insulator.views.component.h1
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import javafx.event.EventTarget
 import javafx.scene.control.Alert

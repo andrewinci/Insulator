@@ -1,5 +1,6 @@
-package insulator.views.common
+package insulator.views.component
 
+import insulator.views.common.InsulatorView
 import javafx.beans.property.Property
 import javafx.event.EventTarget
 import javafx.geometry.Pos

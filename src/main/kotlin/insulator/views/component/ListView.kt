@@ -1,4 +1,4 @@
-package insulator.ui.component
+package insulator.views.component
 
 import javafx.scene.control.ListView
 import javafx.scene.input.KeyCode

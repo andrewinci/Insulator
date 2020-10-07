@@ -1,4 +1,4 @@
-package insulator.ui.style
+package insulator.views.style
 
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight

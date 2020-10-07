@@ -1,4 +1,4 @@
-package insulator.ui.style
+package insulator.views.style
 
 import javafx.geometry.Pos
 import javafx.scene.paint.Color

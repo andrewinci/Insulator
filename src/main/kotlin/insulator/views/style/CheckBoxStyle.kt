@@ -1,4 +1,4 @@
-package insulator.ui.style
+package insulator.views.style
 
 import tornadofx.* // ktlint-disable no-wildcard-imports
 

@@ -1,7 +1,7 @@
 package insulator.views.main.topic
 
-import insulator.ui.component.appBar
-import insulator.ui.component.h1
+import insulator.views.component.appBar
+import insulator.views.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.views.common.InsulatorView
 import javafx.beans.binding.Bindings

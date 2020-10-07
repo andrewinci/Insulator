@@ -3,7 +3,7 @@ package insulator.views.main.schemaregistry
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
 import insulator.views.common.InsulatorView
-import insulator.views.common.searchBox
+import insulator.views.component.searchBox
 import insulator.views.configurations.ListClusterView
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode

@@ -1,4 +1,4 @@
-package insulator.ui.style
+package insulator.views.style
 
 import javafx.scene.paint.Color
 import tornadofx.Stylesheet

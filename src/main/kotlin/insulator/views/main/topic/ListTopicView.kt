@@ -1,9 +1,9 @@
 package insulator.views.main.topic
 
-import insulator.ui.component.action
+import insulator.views.component.action
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.common.searchBox
+import insulator.views.component.searchBox
 import insulator.views.configurations.ListClusterView
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode

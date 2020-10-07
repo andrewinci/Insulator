@@ -2,11 +2,11 @@ package insulator.views.configurations
 
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
-import insulator.ui.component.action
-import insulator.ui.component.h1
-import insulator.ui.component.h2
-import insulator.ui.component.settingsButton
-import insulator.ui.component.subTitle
+import insulator.views.component.action
+import insulator.views.component.h1
+import insulator.views.component.h2
+import insulator.views.component.settingsButton
+import insulator.views.component.subTitle
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.common.customOpenWindow

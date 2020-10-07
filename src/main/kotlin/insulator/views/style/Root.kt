@@ -1,4 +1,4 @@
-package insulator.ui.style
+package insulator.views.style
 
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -13,6 +13,8 @@ val styles = arrayOf(
     Root::class,
     TableViewStyle::class,
     TextStyle::class,
+    DialogPaneStyle::class,
+    SideBarStyle::class
 )
 
 class Root : Stylesheet() {
@@ -21,6 +23,21 @@ class Root : Stylesheet() {
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(Theme.backgroundColor)
             padding = box(Theme.viewPadding)
+        }
+        contextMenu {
+            padding = box(0.px)
+            minWidth = 100.0.px
+            textFill = Color.BLACK
+            menuItem {
+                padding = box(10.0.px)
+                and(focused) {
+                    backgroundColor = multi(Theme.mainColor)
+                    label {
+                        textFill = Theme.backgroundColor
+                        textFill = Theme.backgroundColor
+                    }
+                }
+            }
         }
     }
 }

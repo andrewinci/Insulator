@@ -1,8 +1,8 @@
 package insulator.views.update
 
 import insulator.lib.update.Release
-import insulator.ui.component.h1
-import insulator.ui.component.h2
+import insulator.views.component.h1
+import insulator.views.component.h2
 import javafx.geometry.Pos
 import tornadofx.* // ktlint-disable no-wildcard-imports
 

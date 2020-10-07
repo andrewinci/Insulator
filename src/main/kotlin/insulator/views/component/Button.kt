@@ -1,7 +1,7 @@
-package insulator.ui.component
+package insulator.views.component
 
-import insulator.ui.style.ButtonStyle
-import insulator.ui.style.Theme
+import insulator.views.style.ButtonStyle
+import insulator.views.style.Theme
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Pos
