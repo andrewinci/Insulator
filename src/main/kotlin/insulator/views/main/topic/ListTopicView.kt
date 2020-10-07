@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.ui.component.action
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.common.searchBox
@@ -22,8 +23,8 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
     private fun EventTarget.topicsListView() =
         listview<String> {
             cellFormat { graphic = label(it) { id = "topic-$it" } }
-            onDoubleClick { viewModel.showTopic() }
             bindSelected(viewModel.selectedItem)
+            action { viewModel.showTopic() }
             itemsProperty().set(viewModel.filteredTopics)
 
             placeholder = label("No topic found")

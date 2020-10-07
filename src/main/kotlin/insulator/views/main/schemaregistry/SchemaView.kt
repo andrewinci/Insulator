@@ -2,10 +2,10 @@ package insulator.views.main.schemaregistry
 
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
-import insulator.styles.Theme
 import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.h1
+import insulator.ui.style.Theme
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import insulator.views.common.InsulatorView
 import javafx.beans.binding.Bindings
@@ -58,6 +58,7 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
 
     private fun ScrollPane.schemaContent() = apply {
         textflow {
+            // todo: move to controls
             children.bind(viewModel.schemaProperty) {
                 val res = text(it.text) {
                     fill = when (it) {

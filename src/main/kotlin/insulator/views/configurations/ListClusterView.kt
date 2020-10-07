@@ -2,6 +2,7 @@ package insulator.views.configurations
 
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
+import insulator.ui.component.action
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.settingsButton
@@ -11,7 +12,6 @@ import insulator.views.common.InsulatorView
 import insulator.views.common.customOpenWindow
 import insulator.views.main.MainView
 import insulator.views.update.UpdateInfoView
-import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.stage.Modality
@@ -35,11 +35,9 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     private fun EventTarget.clusterList() =
         listview(viewModel.clustersProperty) {
-            cellFormat { cluster ->
-                graphic = buildClusterCell(cluster)
-                onMouseClicked = EventHandler {
-                    viewModel.onClusterSelected(cluster) { replaceWith(find<MainView>(it)) }
-                }
+            cellFormat { graphic = buildClusterCell(it) }
+            action { cluster ->
+                viewModel.onClusterSelected(cluster) { replaceWith(find<MainView>(it)) }
             }
         }
 

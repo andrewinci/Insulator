@@ -1,5 +1,6 @@
 package insulator.styles
 
+import insulator.ui.style.Theme
 import javafx.geometry.Pos
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
@@ -76,7 +77,6 @@ class Controls : Stylesheet() {
                 cancel {
                     textFill = Theme.alertColor
                     and(hover) {
-                        textFill = Theme.backgroundColor
                         textFill = Theme.backgroundColor
                         backgroundColor = multi(Theme.alertColor)
                     }

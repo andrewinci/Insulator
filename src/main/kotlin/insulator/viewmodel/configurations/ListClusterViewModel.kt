@@ -7,6 +7,7 @@ import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.StringScope
 import insulator.views.common.customOpenWindow
 import insulator.views.configurations.ClusterView
+import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.stage.Modality
@@ -16,6 +17,7 @@ import tornadofx.whenUndockedOnce
 
 class ListClusterViewModel : InsulatorViewModel() {
 
+    val selectedCluster = SimpleObjectProperty<Cluster>()
     private val configurationRepo: ConfigurationRepo by di()
 
     val clustersProperty: ObservableList<Cluster> by lazy {

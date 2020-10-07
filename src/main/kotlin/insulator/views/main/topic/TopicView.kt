@@ -7,12 +7,9 @@ import insulator.ui.component.blueButton
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.h1
 import insulator.ui.component.subTitle
-import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.common.StringScope
-import insulator.views.common.customOpenWindow
 import insulator.views.common.searchBox
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
@@ -24,72 +21,68 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
 
-    override val root = borderpane {
-        top = appBar {
-            hbox(spacing = 10.0, alignment = Pos.CENTER_LEFT) {
+    override val root = vbox {
+        appBar {
+            hbox {
                 h1(viewModel.nameProperty.value)
-                confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
-                    viewModel.delete()
-                    close()
-                }
+                deleteButton()
             }
             subTitle(viewModel.subtitleProperty)
         }
-        center = vbox(spacing = 2.0) {
-            borderpane {
-                left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                    blueButton("Produce") {
-                        with(StringScope(viewModel.topicName).withComponent(ProducerViewModel(viewModel.topicName))) {
-                            find<ProducerView>(this).customOpenWindow(owner = null)
-                        }
-                    }
-
-                    button(viewModel.consumeButtonText) { action { viewModel.consume() } }
-                    label("from")
-                    combobox<String> {
-                        items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
-                        valueProperty().bindBidirectional(viewModel.consumeFromProperty)
-                    }
-                    if (viewModel.cluster.isSchemaRegistryConfigured()) {
-                        viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
-                        label("value format")
-                        combobox<String> {
-                            items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
-                            valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
-                        }
-                    }
-                    region { minWidth = 10.0 }
-                    button("Clear") { action { viewModel.clear() } }
-                }
-                right = searchBox(viewModel.searchItem, this@TopicView)
+        borderpane {
+            left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
+                blueButton("Produce") { viewModel.showProduceView() }
+                button(viewModel.consumeButtonText) { action { viewModel.consume() } }
+                label("from")
+                consumeFromCombobox()
+                valueFormatOptions()
+                button("Clear") { action { viewModel.clear() } }
             }
-            recordsTable()
+            right = searchBox(viewModel.searchItem, this@TopicView)
+        }
+        recordsTable()
+    }
+
+    private fun EventTarget.valueFormatOptions() {
+        if (viewModel.cluster.isSchemaRegistryConfigured()) {
+            viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
+            label("value format")
+            combobox<String> {
+                items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+            }
         }
     }
 
-    private fun EventTarget.recordsTable() = apply {
+    private fun EventTarget.consumeFromCombobox() =
+        combobox<String> {
+            items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
+            valueProperty().bindBidirectional(viewModel.consumeFromProperty)
+        }
+
+    private fun EventTarget.deleteButton() =
+        confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
+            viewModel.delete()
+            close()
+        }
+
+    private fun EventTarget.recordsTable() =
         tableview<RecordViewModel> {
-            column("Time", RecordViewModel::timestampProperty) {
-                prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(1))
-            }
-            column("Key", RecordViewModel::keyProperty) {
-                prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(1))
-            }
+            val timeColumn = column("Time", RecordViewModel::timestampProperty) { prefWidthProperty().set(150.0) }
+            val keyColumn = column("Key", RecordViewModel::keyProperty) { prefWidthProperty().set(300.0) }
             column("Value", RecordViewModel::valueProperty) {
-                prefWidthProperty().bind(this.tableView.widthProperty().divide(4).multiply(2).minus(4.0))
+                prefWidthProperty().bind(
+                    this.tableView.widthProperty()
+                        .minus(keyColumn.widthProperty())
+                        .minus(timeColumn.widthProperty())
+                        .minus(20.0)
+                )
                 enableTextWrap()
             }
-            viewModel.filteredRecords.set(
-                SortedFilteredList(viewModel.records).apply {
-                    filterWhen(viewModel.searchItem) { p, i ->
-                        i.keyProperty.value?.toLowerCase()?.contains(p.toLowerCase()) ?: false ||
-                            i.valueProperty.value.toLowerCase().contains(p.toLowerCase())
-                    }
-                }.sortedItems.also {
-                    it.comparatorProperty().bind(this.comparatorProperty())
-                }
-            )
+
+            viewModel.configureFilteredRecords(this.comparatorProperty())
             itemsProperty().bind(viewModel.filteredRecords)
+
             contextMenu = contextmenu {
                 item("Copy") { action { viewModel.copySelectedRecordToClipboard() } }
                 item("Copy all") { action { viewModel.copyAllRecordsToClipboard() } }
@@ -97,11 +90,11 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
 
             bindSelected(viewModel.selectedItem)
             selectionModel.selectionMode = SelectionMode.SINGLE
+
             vgrow = Priority.ALWAYS
             prefWidth = 800.0
             prefHeight = 800.0
         }
-    }
 
     override fun onDock() {
         currentWindow?.setOnCloseRequest { viewModel.stop() }
