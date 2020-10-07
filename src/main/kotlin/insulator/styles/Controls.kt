@@ -3,7 +3,6 @@ package insulator.styles
 import javafx.geometry.Pos
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import tornadofx.Stylesheet.Companion.box
 
 class Controls : Stylesheet() {
     private val defaultPadding = 1.em

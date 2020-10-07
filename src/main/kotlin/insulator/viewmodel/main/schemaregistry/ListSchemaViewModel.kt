@@ -17,7 +17,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
     private val schemaRegistryClient: SchemaRegistry by di()
 
     val selectedSchema = SimpleStringProperty()
-    val listSchema: ObservableList<String> = FXCollections.observableArrayList<String>()
+    val listSchema: ObservableList<String> = FXCollections.observableArrayList()
 
     init {
         refresh()

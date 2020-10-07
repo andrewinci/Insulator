@@ -20,7 +20,7 @@ class UnionParserTest : FunSpec({
     test("happy path right union") {
         // arrange
         val sut = UnionParser(
-            mockk() {
+            mockk {
                 every { parseField(any(), any()) } returns "".right()
             }
         )
@@ -33,7 +33,7 @@ class UnionParserTest : FunSpec({
     test("happy path left union") {
         // arrange
         val sut = UnionParser(
-            mockk() {
+            mockk {
                 every { parseField(any(), any()) } returns null.right()
             }
         )
@@ -46,7 +46,7 @@ class UnionParserTest : FunSpec({
     test("join errors if value doesn't match any type in the union") {
         // arrange
         val sut = UnionParser(
-            mockk() {
+            mockk {
                 every { parseField(any(), any()) } returnsMany
                     listOf("error1", "error2").map { JsonFieldParsingException(it).left() }
             }

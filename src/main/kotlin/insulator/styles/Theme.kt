@@ -7,13 +7,13 @@ import tornadofx.c
 class Theme : Stylesheet() {
 
     companion object {
-        val backgroundColor = Color.WHITE
+        val backgroundColor: Color = Color.WHITE
         val mainColor = c("#FF9100")
         val mainColorDark = c("#D65400")
         val alertColor = c("#cc0016")
         val alertColorDark = c("#960017")
         val lightGray = c("#ccc")
         val darkGray = c("#666")
-        val blueColor = Color.BLUE
+        val blueColor: Color = Color.BLUE
     }
 }

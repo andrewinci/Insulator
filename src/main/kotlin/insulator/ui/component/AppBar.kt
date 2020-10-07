@@ -9,7 +9,6 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 fun EventTarget.appBar(op: EventTarget.() -> Unit) =
     vbox(alignment = Pos.TOP_LEFT) {
         op()
-        // hbox { addClass(AppBarStyle.topBarMenuShadow) }
         hgrow = Priority.ALWAYS
         addClass(AppBarStyle.appBar)
     }

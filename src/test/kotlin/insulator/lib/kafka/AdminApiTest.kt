@@ -97,7 +97,7 @@ class AdminApiTest : FunSpec({
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
         val res = sut.createTopics(Topic("name", null, 2, null, 1, false))
-        // asssert
+        // assert
         res.get() shouldBeRight {}
     }
 
@@ -112,7 +112,7 @@ class AdminApiTest : FunSpec({
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
         val res = sut.createTopics(Topic("name", null, 2, null, 1, true))
-        // asssert
+        // assert
         res.get() shouldBeRight {}
     }
 })

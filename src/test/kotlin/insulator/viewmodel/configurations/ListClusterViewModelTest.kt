@@ -29,7 +29,7 @@ class ListClusterViewModelTest : FunSpec({
             }
         )
         // act
-        val clusters = sut.clusterListProperty({}, {})
+        val clusters = sut.clustersProperty
         // assert
         clusters.size shouldBe 0
         sut.error.value!!.message shouldBe errorMessage
@@ -48,7 +48,7 @@ class ListClusterViewModelTest : FunSpec({
                 every { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
             }
         )
-        val cluster = sut.clusterListProperty({}, {})
+        val cluster = sut.clustersProperty
         cluster.size shouldBe 0
         // act
         callback(newMockConfiguration)

@@ -12,7 +12,7 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     private val adminApi: AdminApi by di()
 
-    val topicList: ObservableList<String> = FXCollections.observableArrayList<String>()
+    val topicList: ObservableList<String> = FXCollections.observableArrayList()
 
     init { refresh() }
 

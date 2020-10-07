@@ -65,11 +65,11 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
 
     // Fuel
-    implementation group:'com.github.kittinunf.fuel', name:'fuel', version: "$fuel_version"
-    implementation group:'com.github.kittinunf.fuel', name:'fuel-json', version: "$fuel_version"
+    implementation group: 'com.github.kittinunf.fuel', name: 'fuel', version: "$fuel_version"
+    implementation group: 'com.github.kittinunf.fuel', name: 'fuel-json', version: "$fuel_version"
 
     // Semver4j
-    implementation group:'com.vdurmont', name:'semver4j', version: "3.1.0"
+    implementation group: 'com.vdurmont', name: 'semver4j', version: "3.1.0"
 
     // Kotest
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version"
@@ -94,7 +94,7 @@ compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 
 jar { manifest { attributes('Main-Class': 'insulator.AppKt') } }
 
-import org.gradle.internal.os.OperatingSystem;
+import org.gradle.internal.os.OperatingSystem
 
 task packageApp(type: Exec) {
     group = 'jpackage'
