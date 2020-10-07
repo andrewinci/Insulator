@@ -24,7 +24,7 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
     override val root = vbox(spacing = 5.0) {
         borderpane {
             left = createTopicButton()
-            right = searchBox(searchItem).also { shortcut("CTRL+F") { it.requestFocus() } }
+            right = searchBox(searchItem, this@ListTopicView)
         }
         listview<String> {
             cellFormat { graphic = label(it) { id = "topic-$it" } }

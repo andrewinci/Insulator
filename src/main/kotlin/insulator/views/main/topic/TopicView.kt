@@ -61,7 +61,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
                     region { minWidth = 10.0 }
                     button("Clear") { action { viewModel.clear() } }
                 }
-                right = searchBox(viewModel.searchItem)
+                right = searchBox(viewModel.searchItem, this@TopicView)
             }
             recordsTable()
         }

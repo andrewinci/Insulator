@@ -28,19 +28,20 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         }
     }
 
-    private fun EventTarget.addNewClusterButton() = button {
-        text = "Add new cluster"
-        action { viewModel.onAddNewClusterClick() }
-    }
+    private fun EventTarget.addNewClusterButton() =
+        button("Add new cluster") {
+            action { viewModel.onAddNewClusterClick() }
+        }
 
-    private fun EventTarget.clusterList() = listview(viewModel.clustersProperty) {
-        cellFormat { cluster ->
-            graphic = buildClusterCell(cluster)
-            onMouseClicked = EventHandler {
-                viewModel.onClusterSelected(cluster) { replaceWith(find<MainView>(it)) }
+    private fun EventTarget.clusterList() =
+        listview(viewModel.clustersProperty) {
+            cellFormat { cluster ->
+                graphic = buildClusterCell(cluster)
+                onMouseClicked = EventHandler {
+                    viewModel.onClusterSelected(cluster) { replaceWith(find<MainView>(it)) }
+                }
             }
         }
-    }
 
     private fun EventTarget.buildClusterCell(cluster: Cluster) =
         borderpane {
