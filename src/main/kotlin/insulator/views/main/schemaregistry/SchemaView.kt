@@ -2,12 +2,12 @@ package insulator.views.main.schemaregistry
 
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
+import insulator.viewmodel.main.schemaregistry.SchemaViewModel
+import insulator.views.common.InsulatorView
 import insulator.views.component.appBar
 import insulator.views.component.confirmationButton
 import insulator.views.component.h1
 import insulator.views.style.Theme
-import insulator.viewmodel.main.schemaregistry.SchemaViewModel
-import insulator.views.common.InsulatorView
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
 import javafx.geometry.Insets

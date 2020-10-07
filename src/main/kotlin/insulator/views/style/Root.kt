@@ -14,7 +14,8 @@ val styles = arrayOf(
     TableViewStyle::class,
     TextStyle::class,
     DialogPaneStyle::class,
-    SideBarStyle::class
+    SideBarStyle::class,
+    ScrollPaneStyle::class
 )
 
 class Root : Stylesheet() {
@@ -42,17 +43,17 @@ class Root : Stylesheet() {
     }
 }
 
-class Theme {
-    companion object {
-        val black: Color = Color.BLACK
-        val backgroundColor: Color = Color.WHITE
-        val mainColor = c("#FF9100")
-        val mainColorDark = c("#D65400")
-        val alertColor = c("#cc0016")
-        val alertColorDark = c("#960017")
-        val lightGray = c("#ccc")
-        val darkGray = c("#666")
-        val blueColor: Color = Color.BLUE
-        val viewPadding = 1.em
-    }
-}
+data class ThemeTest(
+    val black: Color = Color.BLACK,
+    val backgroundColor: Color = Color.WHITE,
+    val mainColor: Color = c("#FF9100"),
+    val mainColorDark: Color = c("#D65400"),
+    val alertColor: Color = c("#cc0016"),
+    val alertColorDark: Color = c("#960017"),
+    val lightGray: Color = c("#ccc"),
+    val darkGray: Color = c("#666"),
+    val blueColor: Color = Color.BLUE,
+    val viewPadding: Dimension<Dimension.LinearUnits> = 1.em,
+)
+
+val Theme = ThemeTest()

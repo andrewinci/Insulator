@@ -7,7 +7,7 @@ class DialogPaneStyle : Stylesheet() {
     init {
         root {
             dialogPane {
-                padding = tornadofx.box(Theme.viewPadding)
+                padding = box(Theme.viewPadding)
                 headerPanel {
                     borderColor = multi(box(Theme.backgroundColor))
                     borderColor = multi(box(Theme.backgroundColor))

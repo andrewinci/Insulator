@@ -1,8 +1,8 @@
 package insulator.views.configurations
 
+import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.views.component.confirmationButton
 import insulator.views.component.h1
-import insulator.viewmodel.configurations.ClusterViewModel
 import javafx.event.EventTarget
 import tornadofx.* // ktlint-disable no-wildcard-imports
 

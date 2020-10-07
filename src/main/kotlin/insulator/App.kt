@@ -1,8 +1,8 @@
 package insulator
 
 import insulator.di.DIContainer
-import insulator.views.style.styles
 import insulator.views.configurations.ListClusterView
+import insulator.views.style.styles
 import javafx.scene.Scene
 import javafx.stage.Stage
 import javafx.stage.Window

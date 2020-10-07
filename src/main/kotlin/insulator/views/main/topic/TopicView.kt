@@ -2,15 +2,15 @@ package insulator.views.main.topic
 
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
+import insulator.viewmodel.main.topic.RecordViewModel
+import insulator.viewmodel.main.topic.TopicViewModel
+import insulator.views.common.InsulatorView
 import insulator.views.component.appBar
 import insulator.views.component.blueButton
 import insulator.views.component.confirmationButton
 import insulator.views.component.h1
-import insulator.views.component.subTitle
-import insulator.viewmodel.main.topic.RecordViewModel
-import insulator.viewmodel.main.topic.TopicViewModel
-import insulator.views.common.InsulatorView
 import insulator.views.component.searchBox
+import insulator.views.component.subTitle
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
 import javafx.event.EventTarget
