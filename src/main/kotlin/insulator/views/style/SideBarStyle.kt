@@ -13,19 +13,19 @@ class SideBarStyle : Stylesheet() {
     init {
         sidebar {
             prefWidth = 250.0.px
-            backgroundColor = multi(Theme.backgroundColor)
-            backgroundColor = multi(Theme.backgroundColor)
-            borderInsets = multi(box(-Theme.viewPadding, 0.px, -Theme.viewPadding, -Theme.viewPadding))
-            borderColor = multi(box(Color.TRANSPARENT, Theme.lightGray, Theme.lightGray, Theme.lightGray))
-            padding = box(-Theme.viewPadding, 0.px, 0.px, 0.px)
+            backgroundColor = multi(theme.backgroundColor)
+            backgroundColor = multi(theme.backgroundColor)
+            borderInsets = multi(box(-theme.viewPadding, 0.px, -theme.viewPadding, -theme.viewPadding))
+            borderColor = multi(box(Color.TRANSPARENT, theme.lightGray, Color.TRANSPARENT, Color.TRANSPARENT))
+            padding = box(-theme.viewPadding, 0.px, 0.px, 0.px)
             alignment = Pos.TOP_CENTER
         }
 
         sidebarItem {
-            and(hover) { backgroundColor = multi(Theme.mainColor) }
+            and(hover) { backgroundColor = multi(theme.mainColor) }
             minHeight = 50.0.px
-            borderInsets = multi(box(-Theme.viewPadding, 0.px, 0.px, -Theme.viewPadding))
-            padding = box(Theme.viewPadding)
+            borderInsets = multi(box(-theme.viewPadding, 0.px, 0.px, -theme.viewPadding))
+            padding = box(theme.viewPadding)
             alignment = Pos.CENTER_LEFT
             imageView { insets(0.0, 15.0, 0.0, 0.0) }
         }

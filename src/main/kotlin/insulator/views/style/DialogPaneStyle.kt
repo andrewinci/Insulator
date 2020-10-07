@@ -1,35 +1,33 @@
 package insulator.views.style
 
+import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class DialogPaneStyle : Stylesheet() {
 
     init {
-        root {
-            dialogPane {
-                padding = box(Theme.viewPadding)
-                headerPanel {
-                    borderColor = multi(box(Theme.backgroundColor))
-                    borderColor = multi(box(Theme.backgroundColor))
-                    backgroundColor = multi(Theme.backgroundColor)
-                    backgroundColor = multi(Theme.backgroundColor)
-                    backgroundInsets = multi(box(0.0.px))
-                    padding = box(0.0.px)
+        dialogPane {
+            backgroundColor = multi(theme.backgroundColor)
+            headerPanel {
+                label{
+                    textFill = theme.black
                 }
-                buttonBar {
-                    padding = box(0.0.px, (-10.0).px, 0.0.px, 0.0.px)
-                    cancel {
-                        textFill = Theme.alertColor
-                        and(hover) {
-                            textFill = Theme.backgroundColor
-                            backgroundColor = multi(Theme.alertColor)
-                        }
+                backgroundColor = multi(theme.backgroundColor)
+            }
+            buttonBar {
+                padding = box(0.0.px, (-10.0).px, 0.0.px, 0.0.px)
+                cancel {
+                    textFill = theme.alertColor
+                    and(hover) {
+                        textFill = Color.WHITE
+                        backgroundColor = multi(theme.alertColor)
                     }
                 }
-                maxHeight = 140.0.px
-                prefHeight = 140.0.px
-                minHeight = 140.0.px
             }
+            maxHeight = 140.0.px
+            prefHeight = 140.0.px
+            minHeight = 140.0.px
         }
     }
 }
+

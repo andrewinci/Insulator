@@ -15,51 +15,61 @@ class TextStyle : Stylesheet() {
         h1 {
             fontSize = 2.em
             fontWeight = FontWeight.EXTRA_BOLD
-            textFill = Theme.mainColor
+            textFill = theme.mainColor
             padding = box(0.2.em, 0.2.em, 0.em, 0.2.em)
         }
         h2 {
             fontSize = 1.5.em
             fontWeight = FontWeight.BOLD
-            textFill = Theme.black
+            textFill = theme.black
             padding = box(0.2.em, 0.2.em, 0.em, 0.2.em)
         }
         subTitle {
             fontSize = 1.em
             fontWeight = FontWeight.NORMAL
-            textFill = Theme.lightGray
+            textFill = theme.lightGray
             padding = box(0.1.em)
         }
+
+//        field {
+//            font = Font.font("Helvetica", 10.0)
+//            textFill = theme.black
+//        }
         root {
-
             field {
-                font = Font.font("Helvetica", 10.0)
+                textFill = theme.black.darker()
+                label {
+                    textFill = theme.black.darker()
+                }
             }
+        }
 
+        root {
             textField {
-                backgroundRadius = multi(box(0.0.px))
+                textFill = theme.black
+                backgroundRadius = multi(box(2.0.px))
                 backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, 0.px, (-1).px))
-                backgroundColor = multi(Theme.mainColor, Theme.backgroundColor, c("eee"))
+                backgroundColor = multi(theme.mainColor, theme.backgroundColor, theme.backgroundColor.brighter())
                 and(focused) {
-                    backgroundRadius = multi(box(0.0.px))
+                    backgroundRadius = multi(box(2.0.px))
                     backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, 0.px, (-2).px))
-                    backgroundColor = multi(Theme.mainColorDark, Theme.backgroundColor, c("ddd"))
+                    backgroundColor = multi(theme.mainColorDark, theme.backgroundColor, theme.backgroundColor.brighter().brighter())
                 }
             }
 
             textArea {
                 backgroundRadius = multi(box(0.0.px))
                 backgroundInsets = multi(box(0.px, (-1).px, (-1).px, (-1).px), box(0.0.px), box(0.px, (-1).px, 0.px, (-1).px))
-                backgroundColor = multi(Theme.mainColor, Theme.backgroundColor, Theme.backgroundColor)
+                backgroundColor = multi(theme.mainColor, theme.backgroundColor, theme.backgroundColor)
                 and(focused) {
                     backgroundRadius = multi(box(0.0.px))
                     backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, 0.px, (-2).px))
-                    backgroundColor = multi(Theme.mainColorDark, Theme.backgroundColor, Theme.backgroundColor)
+                    backgroundColor = multi(theme.mainColorDark, theme.backgroundColor, theme.backgroundColor)
                 }
                 content {
                     backgroundRadius = multi(box(0.0.px))
                     backgroundInsets = multi(box(0.px, (-2).px, (-2).px, (-2).px), box(0.0.px), box(0.px, (-2).px, 0.px, (-2).px))
-                    backgroundColor = multi(Theme.mainColorDark, Theme.backgroundColor, Theme.backgroundColor)
+                    backgroundColor = multi(theme.mainColorDark, theme.backgroundColor, theme.backgroundColor)
                 }
             }
         }

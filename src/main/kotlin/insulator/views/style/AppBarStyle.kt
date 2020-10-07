@@ -12,21 +12,21 @@ class AppBarStyle : Stylesheet() {
 
     init {
         appBar {
-            translateY = -Theme.viewPadding
-            borderInsets = multi(box(-Theme.viewPadding, -Theme.viewPadding, 0.px, -Theme.viewPadding))
-            spacing = 5.5.px
+            translateY = -theme.viewPadding
+            borderInsets = multi(box(-theme.viewPadding, -theme.viewPadding, 0.px, -theme.viewPadding))
+            spacing = 5.0.px
             alignment = Pos.CENTER_LEFT
-            borderColor = multi(box(Theme.lightGray))
+            borderColor = multi(box(theme.backgroundColor, theme.backgroundColor, theme.lightGray, theme.backgroundColor))
             minHeight = 5.em
         }
 
         burgerButton {
             padding = box(1.em)
-            textFill = Theme.mainColor
+            textFill = theme.mainColor
             backgroundColor = multi(Color.TRANSPARENT)
             backgroundRadius = multi(box(100.0.px))
             and(hover) {
-                backgroundColor = multi(Theme.mainColorDark)
+                backgroundColor = multi(theme.mainColorDark)
             }
         }
     }

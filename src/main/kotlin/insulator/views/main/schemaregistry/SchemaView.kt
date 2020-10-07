@@ -6,8 +6,9 @@ import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.component.appBar
 import insulator.views.component.confirmationButton
+import insulator.views.component.fieldName
 import insulator.views.component.h1
-import insulator.views.style.Theme
+import insulator.views.style.theme
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
 import javafx.geometry.Insets
@@ -17,7 +18,6 @@ import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.Priority
-import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -25,13 +25,13 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
 
     override val root = vbox {
         appBar {
-            hbox {
+            hbox(alignment = Pos.CENTER_LEFT, spacing = 5.0) {
                 h1(viewModel.nameProperty.value)
                 deleteButton()
             }
         }
         hbox(alignment = Pos.CENTER_LEFT) {
-            label("Schema")
+            fieldName("Schema")
             schemaComboBox()
         }
         scrollpane {
@@ -62,17 +62,18 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
             children.bind(viewModel.schemaProperty) {
                 val res = text(it.text) {
                     fill = when (it) {
-                        is Token.Symbol -> Color.GRAY
-                        is Token.Key -> Color.BLUE
-                        is Token.Value -> Color.GREEN
+                        is Token.Symbol -> theme.darkGray
+                        is Token.Key -> theme.blueColor
+                        is Token.Value -> theme.greenColor
                     }
                     font = Font.font("Helvetica", 15.0)
                 }
                 res
             }
             contextMenu = contextmenu { item("Copy") { action { viewModel.copySchemaToClipboard() } } }
-            background = Background(BackgroundFill(Theme.backgroundColor, CornerRadii.EMPTY, Insets.EMPTY))
+            background = Background(BackgroundFill(theme.backgroundColor, CornerRadii.EMPTY, Insets.EMPTY))
             vgrow = Priority.ALWAYS
+            hgrow = Priority.ALWAYS
         }
     }
 

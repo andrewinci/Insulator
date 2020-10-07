@@ -8,12 +8,12 @@ class CheckBoxStyle : Stylesheet() {
         root {
             checkBox {
                 box {
-                    focusColor = Theme.backgroundColor
+                    focusColor = theme.backgroundColor
                     backgroundInsets = multi(box(0.0.px))
-                    backgroundColor = multi(Theme.backgroundColor)
+                    backgroundColor = multi(theme.backgroundColor)
                     borderRadius = multi(box(0.0.px))
                     borderInsets = multi(box(1.0.px))
-                    borderColor = multi(box(Theme.mainColor))
+                    borderColor = multi(box(theme.mainColor))
                 }
             }
         }

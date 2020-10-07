@@ -3,6 +3,7 @@ package insulator.views.main.topic
 import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.component.appBar
+import insulator.views.component.fieldName
 import insulator.views.component.h1
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
@@ -19,13 +20,13 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
     override val root = vbox(spacing = 10.0) {
         appBar { h1(viewModel.topicName) }
 
-        label("Key")
+        fieldName("Key")
         textfield(viewModel.keyProperty)
 
-        label("Value")
+        fieldName("Value")
         recordValueTextArea()
 
-        label("Validation")
+        fieldName("Validation")
         validationArea()
 
         borderpane {
@@ -70,12 +71,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
 
     override fun onDock() {
         titleProperty.bind(
-            Bindings.createStringBinding(
-                {
-                    "${viewModel.cluster.name} ${viewModel.producerTypeProperty.value}"
-                },
-                viewModel.producerTypeProperty
-            )
+            Bindings.createStringBinding({ "${viewModel.cluster.name} ${viewModel.producerTypeProperty.value}" }, viewModel.producerTypeProperty)
         )
         super.onDock()
     }

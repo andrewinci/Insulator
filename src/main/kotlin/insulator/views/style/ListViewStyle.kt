@@ -9,24 +9,21 @@ import tornadofx.px
 class ListViewStyle : Stylesheet() {
     init {
         listView {
-            focusColor = Theme.mainColor
-            borderColor = multi(box(Theme.backgroundColor))
+            focusColor = theme.mainColor
+            backgroundColor = multi(theme.backgroundColor)
+            borderColor = multi(box(theme.backgroundColor))
             backgroundInsets = multi(box(0.0.px))
-//            and(focused) {
-//                borderRadius = multi(box(30.0.px))
-//                backgroundInsets = multi(box(0.0.px))
-//            }
             listCell {
                 padding = box(10.0.px)
                 borderRadius = multi(box(30.0.px))
-                Stylesheet.label { textFill = Color.BLACK }
-                and(even) { backgroundColor = multi(Color.TRANSPARENT) }
-                and(odd) { backgroundColor = multi(Color.TRANSPARENT) }
+                label { textFill = theme.black }
+                and(even) { backgroundColor = multi(theme.backgroundColor) }
+                and(odd) { backgroundColor = multi(theme.backgroundColor) }
                 and(hover) {
-                    backgroundColor = multi(Theme.mainColor)
+                    backgroundColor = multi(theme.mainColor)
                 }
                 and(focused) {
-                    backgroundColor = multi(Theme.mainColor)
+                    backgroundColor = multi(theme.mainColor)
                 }
             }
         }

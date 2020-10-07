@@ -7,28 +7,28 @@ class ScrollPaneStyle : Stylesheet() {
     init {
         root {
             scrollPane {
-                focusColor = Theme.backgroundColor
-                focusColor = Theme.backgroundColor
+                focusColor = theme.backgroundColor
+                focusColor = theme.backgroundColor
                 borderWidth = multi(box(0.0.px))
-                borderColor = multi(box(Theme.backgroundColor))
-                borderColor = multi(box(Theme.backgroundColor))
+                borderColor = multi(box(theme.backgroundColor))
+                borderColor = multi(box(theme.backgroundColor))
                 backgroundInsets = multi(box(0.0.px))
-                backgroundColor = multi(Theme.backgroundColor)
-                backgroundColor = multi(Theme.backgroundColor)
+                backgroundColor = multi(theme.backgroundColor)
+                backgroundColor = multi(theme.backgroundColor)
                 and(focused) { backgroundInsets = multi(box(0.0.px)) }
                 viewport {
-                    borderColor = multi(box(Theme.backgroundColor))
-                    borderColor = multi(box(Theme.backgroundColor))
+                    borderColor = multi(box(theme.backgroundColor))
+                    borderColor = multi(box(theme.backgroundColor))
                     backgroundInsets = multi(box(0.0.px))
-                    backgroundColor = multi(Theme.backgroundColor)
-                    backgroundColor = multi(Theme.backgroundColor)
+                    backgroundColor = multi(theme.backgroundColor)
+                    backgroundColor = multi(theme.backgroundColor)
                 }
                 corner {
-                    borderColor = multi(box(Theme.backgroundColor))
-                    borderColor = multi(box(Theme.backgroundColor))
+                    borderColor = multi(box(theme.backgroundColor))
+                    borderColor = multi(box(theme.backgroundColor))
                     backgroundInsets = multi(box(0.0.px))
-                    backgroundColor = multi(Theme.backgroundColor)
-                    backgroundColor = multi(Theme.backgroundColor)
+                    backgroundColor = multi(theme.backgroundColor)
+                    backgroundColor = multi(theme.backgroundColor)
                 }
             }
         }

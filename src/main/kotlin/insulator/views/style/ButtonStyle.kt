@@ -14,34 +14,34 @@ class ButtonStyle : Stylesheet() {
     init {
         root {
             button {
-                padding = box(0.7.em)
-                textFill = Theme.mainColor
+                padding = box(0.5.em)
+                textFill = theme.mainColor
                 backgroundColor = multi(Color.TRANSPARENT)
                 and(hover) {
-                    textFill = Theme.backgroundColor
-                    backgroundColor = multi(Theme.mainColor)
-                    backgroundRadius = multi(box(0.7.em))
+                    textFill = Color.WHITE
+                    backgroundColor = multi(theme.mainColor)
+                    backgroundRadius = multi(box(0.5.em))
                     and(alertButton) {
-                        textFill = Theme.backgroundColor
-                        backgroundColor = multi(Theme.alertColor)
+                        textFill = Color.WHITE
+                        backgroundColor = multi(theme.alertColor)
                     }
                     and(blueButton) {
-                        textFill = Theme.backgroundColor
-                        backgroundColor = multi(Theme.blueColor)
+                        textFill = Color.WHITE
+                        backgroundColor = multi(theme.blueColor)
                     }
                     and(settingsButton) {
-                        textFill = Theme.mainColor
+                        textFill = theme.mainColor
                         backgroundRadius = multi(box(5.em))
-                        backgroundColor = multi(Theme.mainColorDark)
+                        backgroundColor = multi(theme.mainColorDark)
                     }
                     and(burgerButton) {
-                        textFill = Theme.mainColor
+                        textFill = theme.mainColor
                         backgroundRadius = multi(box(5.em))
-                        backgroundColor = multi(Theme.mainColorDark)
+                        backgroundColor = multi(theme.mainColorDark)
                     }
                 }
-                and(alertButton) { textFill = Theme.alertColor }
-                and(blueButton) { textFill = Theme.blueColor }
+                and(alertButton) { textFill = theme.alertColor }
+                and(blueButton) { textFill = theme.blueColor }
             }
         }
     }

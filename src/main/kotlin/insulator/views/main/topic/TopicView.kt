@@ -5,15 +5,11 @@ import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.component.appBar
-import insulator.views.component.blueButton
-import insulator.views.component.confirmationButton
-import insulator.views.component.h1
-import insulator.views.component.searchBox
-import insulator.views.component.subTitle
+import insulator.views.component.*
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
 import javafx.event.EventTarget
+import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
@@ -23,17 +19,18 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
 
     override val root = vbox {
         appBar {
-            hbox {
+            hbox(alignment = Pos.CENTER_LEFT, spacing = 5.0) {
                 h1(viewModel.nameProperty.value)
                 deleteButton()
             }
             subTitle(viewModel.subtitleProperty)
         }
         borderpane {
+            padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
                 blueButton("Produce") { viewModel.showProduceView() }
                 button(viewModel.consumeButtonText) { action { viewModel.consume() } }
-                label("from")
+                fieldName("from")
                 consumeFromCombobox()
                 valueFormatOptions()
                 button("Clear") { action { viewModel.clear() } }
@@ -41,12 +38,15 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
             right = searchBox(viewModel.searchItem, this@TopicView)
         }
         recordsTable()
+
+        prefWidth = 800.0
+        prefHeight = 800.0
     }
 
     private fun EventTarget.valueFormatOptions() {
         if (viewModel.cluster.isSchemaRegistryConfigured()) {
             viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
-            label("value format")
+            fieldName("value format")
             combobox<String> {
                 items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
                 valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
@@ -92,8 +92,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
             selectionModel.selectionMode = SelectionMode.SINGLE
 
             vgrow = Priority.ALWAYS
-            prefWidth = 800.0
-            prefHeight = 800.0
+            hgrow = Priority.ALWAYS
         }
 
     override fun onDock() {

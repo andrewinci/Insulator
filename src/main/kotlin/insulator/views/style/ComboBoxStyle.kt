@@ -9,19 +9,20 @@ class ComboBoxStyle : Stylesheet() {
         root {
 
             comboBox {
-                borderColor = multi(box(Theme.backgroundColor))
-                focusColor = Theme.backgroundColor
+                borderColor = multi(box(theme.backgroundColor))
+                focusColor = theme.backgroundColor
                 backgroundColor = multi(Color.TRANSPARENT)
                 and(focused) { backgroundInsets = multi(box(0.0.px)) }
-                indexedCell { textFill = Theme.mainColorDark }
+                indexedCell { textFill = theme.mainColorDark }
                 arrowButton { backgroundColor = multi(Color.TRANSPARENT) }
                 arrow { backgroundColor = multi(Color.TRANSPARENT) }
                 listCell {
                     and(hover) {
-                        textFill = Theme.backgroundColor
-                        backgroundColor = multi(Theme.mainColor)
+                        textFill = Color.WHITE
+                        backgroundColor = multi(theme.mainColor)
                     }
                 }
+                label { textFill = theme.black }
             }
         }
     }

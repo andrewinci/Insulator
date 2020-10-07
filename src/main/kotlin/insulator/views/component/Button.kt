@@ -1,7 +1,7 @@
 package insulator.views.component
 
 import insulator.views.style.ButtonStyle
-import insulator.views.style.Theme
+import insulator.views.style.theme
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Pos
@@ -19,7 +19,7 @@ const val ICON_SETTINGS_SVG = "M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-
 fun EventTarget.burgerButton(op: () -> Unit) =
     button {
         action(op)
-        graphic = SVGIcon(ICON_MENU_SVG, 20.0, Theme.black)
+        graphic = SVGIcon(ICON_MENU_SVG, 20.0, theme.black)
         addClass(ButtonStyle.burgerButton)
     }
 
@@ -40,18 +40,11 @@ fun EventTarget.confirmationButton(value: String, confirmationMessage: String, v
         isVisible = visible
         addClass(ButtonStyle.alertButton)
         action {
-            alert(
-                Alert.AlertType.WARNING,
-                confirmationMessage,
-                null,
-                ButtonType.CANCEL,
-                ButtonType.OK,
-                actionFn = { buttonType ->
-                    when (buttonType) {
-                        ButtonType.OK -> onOkAction()
-                        else -> Unit
-                    }
+            insulatorAlert(Alert.AlertType.WARNING, confirmationMessage, ButtonType.CANCEL, ButtonType.OK) { btnType ->
+                when (btnType) {
+                    ButtonType.OK -> onOkAction()
+                    else -> Unit
                 }
-            )
+            }
         }
     }

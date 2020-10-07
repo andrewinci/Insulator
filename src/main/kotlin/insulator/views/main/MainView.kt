@@ -1,15 +1,18 @@
 package insulator.views.main
 
 import insulator.di.currentCluster
+import insulator.views.component.h2
+import insulator.views.style.SideBarStyle
 import insulator.viewmodel.main.MainViewModel
 import insulator.views.common.ICON_REGISTRY
 import insulator.views.common.ICON_TOPICS
 import insulator.views.common.InsulatorView
-import insulator.views.component.h2
+import insulator.views.component.appBar
+import insulator.views.component.burgerButton
+import insulator.views.component.h1
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
-import insulator.views.style.SideBarStyle
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Orientation
@@ -18,16 +21,17 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
-    override val root = hbox {
-        sidebar()
-        separator(orientation = Orientation.VERTICAL)
-    }
-
-    init {
-        viewModel.currentCenter.onChange {
-            if (root.children.size > 2) root.children.removeAt(2)
-            root.children.add(it)
+    override val root = stackpane {
+        borderpane {
+            top = appBar {
+                hbox {
+                    burgerButton { viewModel.toggleSidebar() }
+                    h1(viewModel.currentTitle)
+                }
+            }
+            centerProperty().bind(viewModel.currentCenter)
         }
+        sidebar()
     }
 
     private fun EventTarget.sidebar() =
@@ -37,13 +41,13 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class) }
                 button("Change cluster") { action { viewModel.toggleSidebar(); replaceWith<ListClusterView>() } }
 
+                anchorpaneConstraints { bottomAnchor = 0; leftAnchor = -13; topAnchor = 67.0 }
                 addClass(SideBarStyle.sidebar)
-                anchorpaneConstraints { bottomAnchor = 0; leftAnchor = 0; topAnchor = 60.0 }
                 boundsInParent
             }
 
+            visibleWhen(viewModel.showSidebar)
             isPickOnBounds = false
-            padding = insets(-15.0, 0.0)
         }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =

@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import insulator.views.component.h1
+import insulator.views.component.insulatorAlert
 import javafx.event.EventTarget
 import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports
@@ -29,7 +30,7 @@ class CreateTopicView : View() {
                 viewModel.commit()
                 viewModel.save().fold(
                     { close() },
-                    { alert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") }
+                    { insulatorAlert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") }
                 )
             }
         }
