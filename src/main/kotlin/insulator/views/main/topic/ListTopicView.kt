@@ -19,41 +19,29 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewModel::class) {
 
-    private val searchItem = SimpleStringProperty()
-
     override val root = vbox(spacing = 5.0) {
         borderpane {
             left = createTopicButton()
-            right = searchBox(searchItem, this@ListTopicView)
+            right = searchBox(viewModel.searchItem, this@ListTopicView)
         }
+        topicsListView()
+    }
+
+    private fun EventTarget.topicsListView() =
         listview<String> {
             cellFormat { graphic = label(it) { id = "topic-$it" } }
-            onDoubleClick {
-                if (this.selectedItem == null) return@onDoubleClick
-                with(StringScope("$currentCluster-${this.selectedItem!!}").withComponent(TopicViewModel(this.selectedItem!!))) {
-                    find<TopicView>(this).also { it.whenUndockedOnce { viewModel.refresh() } }.customOpenWindow(owner = null)
-                }
-            }
-            itemsProperty().set(
-                SortedFilteredList(viewModel.topicList).apply {
-                    filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
-                }.filteredItems
-            )
+            onDoubleClick { viewModel.showTopic() }
+            bindSelected(viewModel.selectedItem)
+            itemsProperty().set(viewModel.filteredTopics)
+
             placeholder = label("No topic found")
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }
-    }
 
     private fun EventTarget.createTopicButton() =
         button("Create topic") {
-            action {
-                with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
-                    find<CreateTopicView>(this).also {
-                        it.whenUndockedOnce { viewModel.refresh(); this.close() }
-                    }.customOpenWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
-                }
-            }
+            action { viewModel.createNewTopic() }
         }
 
     override fun onError(throwable: Throwable) {

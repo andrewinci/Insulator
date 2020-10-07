@@ -1,20 +1,39 @@
 package insulator.viewmodel.main.topic
 
+import insulator.di.currentCluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
 import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.common.StringScope
+import insulator.views.common.customOpenWindow
+import insulator.views.main.topic.CreateTopicView
+import insulator.views.main.topic.TopicView
+import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import javafx.stage.Modality
+import javafx.stage.StageStyle
+import tornadofx.SortedFilteredList
+import tornadofx.whenUndockedOnce
 
 class ListTopicViewModel : InsulatorViewModel() {
 
+
     private val adminApi: AdminApi by di()
 
-    val topicList: ObservableList<String> = FXCollections.observableArrayList()
+    private val topicList: ObservableList<String> = FXCollections.observableArrayList()
 
-    init { refresh() }
+    val selectedItem = SimpleStringProperty(null)
+    val searchItem = SimpleStringProperty(null)
+    val filteredTopics: ObservableList<String>? = SortedFilteredList(topicList).apply {
+        filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+    }.filteredItems
+
+    init {
+        refresh()
+    }
 
     fun refresh() = adminApi
         .listTopics()
@@ -25,5 +44,19 @@ class ListTopicViewModel : InsulatorViewModel() {
         }
         .handleErrorWith {
             error.set(it)
+        }
+
+    fun showTopic() {
+        val selectedTopicName = selectedItem.value ?: return
+        with(StringScope("$currentCluster-$selectedTopicName").withComponent(TopicViewModel(selectedTopicName))) {
+            tornadofx.find<TopicView>(this).also { it.whenUndockedOnce { refresh() } }.customOpenWindow(owner = null)
+        }
+    }
+
+    fun createNewTopic() =
+        with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
+            tornadofx.find<CreateTopicView>(this).also {
+                it.whenUndockedOnce { refresh(); this.close() }
+            }.customOpenWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
         }
 }
