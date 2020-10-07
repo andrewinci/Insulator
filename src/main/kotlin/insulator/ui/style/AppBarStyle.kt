@@ -14,10 +14,10 @@ class AppBarStyle : Stylesheet() {
         appBar {
             translateY = -Theme.viewPadding
             borderInsets = multi(box(-Theme.viewPadding, -Theme.viewPadding, 0.px, -Theme.viewPadding))
-            spacing = 5.px
+            spacing = 5.5.px
             alignment = Pos.CENTER_LEFT
             borderColor = multi(box(Theme.lightGray))
-            prefHeight = 60.0.px
+            minHeight = 5.em
         }
 
         burgerButton {
