@@ -23,23 +23,22 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewModel::class) {
 
-    override val root = borderpane {
-        top = appBar {
+    override val root = vbox {
+        appBar {
             hbox {
                 h1(viewModel.nameProperty.value)
                 deleteButton()
             }
         }
-        center = vbox(spacing = 2.0) {
-            hbox(alignment = Pos.CENTER_LEFT) {
-                label("Schema")
-                schemaComboBox()
-            }
-            scrollpane {
-                schemaContent()
-                vgrow = Priority.ALWAYS
-            }
+        hbox(alignment = Pos.CENTER_LEFT) {
+            label("Schema")
+            schemaComboBox()
         }
+        scrollpane {
+            schemaContent()
+            vgrow = Priority.ALWAYS
+        }
+
         prefWidth = 800.0
         prefHeight = 800.0
     }

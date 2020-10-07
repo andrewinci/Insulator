@@ -16,8 +16,14 @@ class ListSchemaViewModel : InsulatorViewModel() {
 
     private val schemaRegistryClient: SchemaRegistry by di()
 
+    private val listSchema: ObservableList<String> = FXCollections.observableArrayList()
+
     val selectedSchema = SimpleStringProperty()
-    val listSchema: ObservableList<String> = FXCollections.observableArrayList()
+    val searchItem = SimpleStringProperty()
+
+    val filteredSchemas = SortedFilteredList(listSchema).apply {
+        filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+    }.filteredItems
 
     init {
         refresh()
