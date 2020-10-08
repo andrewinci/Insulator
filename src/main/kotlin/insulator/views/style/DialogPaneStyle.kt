@@ -9,7 +9,7 @@ class DialogPaneStyle : Stylesheet() {
         dialogPane {
             backgroundColor = multi(theme.backgroundColor)
             headerPanel {
-                label{
+                label {
                     textFill = theme.black
                 }
                 backgroundColor = multi(theme.backgroundColor)
@@ -30,4 +30,3 @@ class DialogPaneStyle : Stylesheet() {
         }
     }
 }
-

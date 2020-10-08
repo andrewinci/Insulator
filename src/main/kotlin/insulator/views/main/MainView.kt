@@ -1,8 +1,6 @@
 package insulator.views.main
 
 import insulator.di.currentCluster
-import insulator.views.component.h2
-import insulator.views.style.SideBarStyle
 import insulator.viewmodel.main.MainViewModel
 import insulator.views.common.ICON_REGISTRY
 import insulator.views.common.ICON_TOPICS
@@ -10,12 +8,13 @@ import insulator.views.common.InsulatorView
 import insulator.views.component.appBar
 import insulator.views.component.burgerButton
 import insulator.views.component.h1
+import insulator.views.component.h2
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
+import insulator.views.style.SideBarStyle
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.geometry.Orientation
 import javafx.scene.image.Image
 import tornadofx.* // ktlint-disable no-wildcard-imports
 

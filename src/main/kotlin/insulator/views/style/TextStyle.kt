@@ -1,6 +1,5 @@
 package insulator.views.style
 
-import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import tornadofx.* // ktlint-disable no-wildcard-imports
 

@@ -67,8 +67,8 @@ private val darkTheme = Theme(
     alertColor = c("#cc0016"),
     alertColorDark = c("#960017"),
     lightGray = c("#666"),
-    darkGray =  c("#ccc"),
+    darkGray = c("#ccc"),
     blueColor = c("#20a3f5"),
     viewPadding = 1.em,
 )
-val theme = darkTheme
+val theme = Theme()

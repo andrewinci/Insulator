@@ -1,6 +1,5 @@
 package insulator.views.style
 
-import javafx.scene.paint.Color
 import javafx.scene.text.FontWeight
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -34,7 +33,6 @@ class TableViewStyle : Stylesheet() {
         }
 
         tableRowCell {
-
             and(selected) { backgroundColor = multi(theme.mainColor) }
             and(even) { backgroundColor = multi(theme.backgroundColor) }
             and(odd) { backgroundColor = multi(theme.backgroundColor) }
