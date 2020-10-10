@@ -75,7 +75,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
             addClass(SideBarStyle.sidebarItem)
         }
 
-    private fun setSize(){
+    private fun setSize() {
         val w = 800.0 + (nodes.size - 2) * 750
         super.currentStage?.minWidth = w
         super.currentStage?.width = w

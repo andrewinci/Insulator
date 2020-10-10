@@ -1,24 +1,24 @@
-//package insulator.viewmodel.main
+// package insulator.viewmodel.main
 //
-//import arrow.core.right
-//import helper.cleanupFXFramework
-//import helper.configureDi
-//import helper.configureFXFramework
-//import helper.waitFXThread
-//import insulator.di.currentCluster
-//import insulator.lib.helpers.runOnFXThread
-//import insulator.lib.kafka.AdminApi
-//import insulator.lib.kafka.SchemaRegistry
-//import insulator.views.configurations.ClusterView
-//import insulator.views.main.schemaregistry.ListSchemaView
-//import io.kotest.core.spec.style.FunSpec
-//import io.kotest.matchers.shouldBe
-//import io.kotest.matchers.shouldNotBe
-//import io.mockk.every
-//import io.mockk.mockk
-//import tornadofx.* // ktlint-disable no-wildcard-imports
+// import arrow.core.right
+// import helper.cleanupFXFramework
+// import helper.configureDi
+// import helper.configureFXFramework
+// import helper.waitFXThread
+// import insulator.di.currentCluster
+// import insulator.lib.helpers.runOnFXThread
+// import insulator.lib.kafka.AdminApi
+// import insulator.lib.kafka.SchemaRegistry
+// import insulator.views.configurations.ClusterView
+// import insulator.views.main.schemaregistry.ListSchemaView
+// import io.kotest.core.spec.style.FunSpec
+// import io.kotest.matchers.shouldBe
+// import io.kotest.matchers.shouldNotBe
+// import io.mockk.every
+// import io.mockk.mockk
+// import tornadofx.* // ktlint-disable no-wildcard-imports
 //
-//class MainViewModelTest : FunSpec({
+// class MainViewModelTest : FunSpec({
 //
 //    test("happy path change view") {
 //        // arrange
@@ -84,4 +84,4 @@
 //    afterTest {
 //        cleanupFXFramework()
 //    }
-//})
+// })
