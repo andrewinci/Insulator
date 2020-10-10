@@ -30,7 +30,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         maxWidth = 500.0
     }
 
-    private val content = tabpane().apply {
+    private val content = tabpane {
         viewModel.contentTabs = tabs
         minWidth = 750.0
         addClass(subview)
@@ -57,7 +57,6 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
             super.currentStage?.width = w
         }
     }
-
 
     private fun sidebar() =
         vbox {

@@ -29,8 +29,8 @@ class MainViewModel : InsulatorViewModel() {
 
     fun setContent(title: String, view: View) {
         val existingTab = contentTabs.firstOrNull { it.content == view.root }
-        existingTab?.let {
-            //todo: Show it
-        } ?: contentTabs.add(Tab(title, view.root)) //todo: select it
+        existingTab?.select() ?: with(Tab(title, view.root)) {
+            contentTabs.add(this).also { this.select() }
+        }
     }
 }
