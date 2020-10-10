@@ -2,6 +2,7 @@ package insulator.viewmodel.main
 
 import insulator.di.currentCluster
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.common.InsulatorTabView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.beans.property.SimpleObjectProperty
@@ -26,9 +27,13 @@ class MainViewModel : InsulatorViewModel() {
         else -> error.set(Throwable("UI: Unable to navigate to ${clazz.qualifiedName}"))
     }
 
-    fun setContent(title: String, view: View) {
+    fun setContent(title: String, view: InsulatorTabView<*>) {
         val existingTab = contentTabs.firstOrNull { it.content == view.root }
-        existingTab?.select() ?: with(Tab(title, view.root)) {
+        val newTab = Tab(title, view.root)
+            .also { it.setOnClosed { view.onTabClosed() } }
+            .also { view.setOnCloseListener { it.close() } }
+
+        existingTab?.select() ?: with(newTab) {
             contentTabs.add(this).also { this.select() }
         }
     }

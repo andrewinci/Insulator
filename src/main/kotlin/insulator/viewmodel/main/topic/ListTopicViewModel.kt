@@ -48,9 +48,11 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     fun showTopic() {
         val selectedTopicName = selectedItem.value ?: return
-        with(StringScope("$currentCluster-$selectedTopicName").withComponent(TopicViewModel(selectedTopicName))) {
-            setMainContent(selectedTopicName, find<TopicView>(this))
-        }
+        StringScope("$currentCluster-$selectedTopicName")
+            .withComponent(TopicViewModel(selectedTopicName))
+            .let { topicView -> find<TopicView>(topicView) }
+            .also { topicView -> topicView.setOnCloseListener { refresh() } }
+            .let { topicView -> setMainContent(selectedTopicName, topicView) }
     }
 
     fun createNewTopic() =

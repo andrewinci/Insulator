@@ -24,3 +24,13 @@ abstract class InsulatorView<T : InsulatorViewModel>(title: String? = null, view
         super.onDock()
     }
 }
+
+abstract class InsulatorTabView<T : InsulatorViewModel>(viewModelClazz: KClass<T>) : InsulatorView<T>(null, viewModelClazz) {
+    private val listeners = mutableListOf<() -> Unit>()
+
+    abstract fun onTabClosed()
+
+    fun setOnCloseListener(op: () -> Unit) = listeners.add(op)
+
+    fun closeTab() = listeners.forEach { it() }
+}

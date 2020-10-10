@@ -4,7 +4,7 @@ import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
-import insulator.views.common.InsulatorView
+import insulator.views.common.InsulatorTabView
 import insulator.views.component.appBar
 import insulator.views.component.blueButton
 import insulator.views.component.confirmationButton
@@ -23,7 +23,7 @@ import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
+class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
 
     override val root = vbox {
         appBar {
@@ -71,7 +71,7 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
     private fun EventTarget.deleteButton() =
         confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.delete()
-            close()
+            closeTab()
         }
 
     private fun EventTarget.recordsTable() =
@@ -113,13 +113,9 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
             hgrow = Priority.ALWAYS
         }
 
-    override fun onDock() {
-        currentWindow?.setOnCloseRequest { viewModel.stop() }
-        titleProperty.bind(Bindings.createStringBinding({ "${viewModel.nameProperty.value} ${viewModel.cluster.name}" }, viewModel.nameProperty))
-        super.onDock()
-    }
+    override fun onError(throwable: Throwable) { close() }
 
-    override fun onError(throwable: Throwable) {
-        close()
+    override fun onTabClosed() {
+        viewModel.stop()
     }
 }

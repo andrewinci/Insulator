@@ -6,7 +6,6 @@ import insulator.views.common.InsulatorView
 import insulator.views.component.appBar
 import insulator.views.component.h1
 import insulator.views.component.searchBox
-import insulator.views.configurations.ListClusterView
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
@@ -38,7 +37,7 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
 
     override fun onError(throwable: Throwable) {
         when (throwable) {
-            is LoadSchemaListError -> replaceWith<ListClusterView>()
+            is LoadSchemaListError -> return
             else -> viewModel.refresh()
         }
     }

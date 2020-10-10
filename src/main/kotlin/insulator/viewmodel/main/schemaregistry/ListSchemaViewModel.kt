@@ -49,7 +49,9 @@ class ListSchemaViewModel : InsulatorViewModel() {
                 {
                     StringScope(it.nameProperty.value)
                         .withComponent(it)
-                        .let { schemaView -> setMainContent(it.nameProperty.value, find<SchemaView>(schemaView)) }
+                        .let { schemaView -> find<SchemaView>(schemaView) }
+                        .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }
+                        .let { schemaViewTab -> setMainContent(it.nameProperty.value, schemaViewTab) }
                 }
             )
     }

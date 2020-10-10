@@ -3,13 +3,12 @@ package insulator.views.main.schemaregistry
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
-import insulator.views.common.InsulatorView
+import insulator.views.common.InsulatorTabView
 import insulator.views.component.appBar
 import insulator.views.component.confirmationButton
 import insulator.views.component.fieldName
 import insulator.views.component.h1
 import insulator.views.style.theme
-import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
@@ -17,7 +16,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewModel::class) {
+class SchemaView : InsulatorTabView<SchemaViewModel>(viewModelClazz = SchemaViewModel::class) {
 
     override val root = vbox {
         appBar {
@@ -49,7 +48,7 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
     private fun EventTarget.deleteButton() =
         confirmationButton("delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.delete()
-            close()
+            closeTab()
         }
 
     private fun ScrollPane.schemaContent() = apply {
@@ -72,8 +71,5 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
         }
     }
 
-    override fun onDock() {
-        titleProperty.bind(Bindings.createStringBinding({ "${viewModel.nameProperty.value} ${viewModel.cluster.name}" }, viewModel.nameProperty))
-        super.onDock()
-    }
+    override fun onTabClosed() {}
 }
