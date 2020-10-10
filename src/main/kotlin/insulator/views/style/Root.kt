@@ -69,4 +69,14 @@ private val darkTheme = Theme(
     blueColor = c("#20a3f5"),
     viewPadding = 1.em,
 )
-val theme = darkTheme// Theme()
+private val lightTheme = Theme()
+
+
+var theme: Theme = lightTheme
+    private set
+
+fun changeTheme() {
+    theme = if (theme == darkTheme) lightTheme
+    else darkTheme
+    FX.primaryStage.scene.reloadStylesheets()
+}
