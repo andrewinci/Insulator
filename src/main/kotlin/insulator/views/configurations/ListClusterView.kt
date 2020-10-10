@@ -61,7 +61,9 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     override fun onDock() {
         super.onDock()
+        super.currentStage?.minWidth = 380.0
         super.currentStage?.width = 380.0
+        super.currentStage?.minHeight = 500.0
         super.currentStage?.height = 500.0
         super.currentStage?.resizableProperty()?.value = false
         checkVersion()

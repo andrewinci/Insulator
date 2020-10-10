@@ -10,13 +10,13 @@ import insulator.views.component.h2
 import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
-import insulator.views.style.MainViewStyle.Companion.subview
+import insulator.views.style.MainViewStyle
 import insulator.views.style.SideBarStyle
-import javafx.beans.value.ObservableObjectValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.event.EventTarget
+import javafx.geometry.Side
 import javafx.scene.Parent
 import javafx.scene.image.Image
 import tornadofx.* // ktlint-disable no-wildcard-imports
@@ -25,7 +25,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
-        addClass(subview)
+        addClass(MainViewStyle.contentList)
         minWidth = 500.0
         maxWidth = 500.0
     }
@@ -33,7 +33,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     private val content = tabpane {
         viewModel.contentTabs = tabs
         minWidth = 750.0
-        addClass(subview)
+        side = Side.BOTTOM
+        addClass(MainViewStyle.content)
     }
 
     private val nodes: ObservableList<Parent> = FXCollections.observableArrayList(
@@ -51,11 +52,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 else -> nodes[2] = content
             }
         }
-        nodes.onChange {
-            val w = 800.0 + (nodes.size - 2) * 750
-            super.currentStage?.minWidth = w
-            super.currentStage?.width = w
-        }
+        nodes.onChange { setSize() }
     }
 
     private fun sidebar() =
@@ -78,10 +75,16 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
             addClass(SideBarStyle.sidebarItem)
         }
 
+    private fun setSize(){
+        val w = 800.0 + (nodes.size - 2) * 750
+        super.currentStage?.minWidth = w
+        super.currentStage?.width = w
+        super.currentStage?.minHeight = 800.0
+    }
+
     override fun onDock() {
         super.onDock()
-        super.currentStage?.height = 800.0
-        super.currentStage?.minWidth = 800.0
+        setSize()
         super.currentStage?.isResizable = true
     }
 

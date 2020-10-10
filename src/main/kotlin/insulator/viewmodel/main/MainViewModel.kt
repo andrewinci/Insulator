@@ -5,7 +5,6 @@ import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.beans.property.SimpleObjectProperty
-import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.Parent
 import javafx.scene.control.Alert

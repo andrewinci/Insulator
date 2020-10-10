@@ -8,26 +8,19 @@ class ScrollPaneStyle : Stylesheet() {
         root {
             scrollPane {
                 focusColor = theme.backgroundColor
-                focusColor = theme.backgroundColor
                 borderWidth = multi(box(0.0.px))
                 borderColor = multi(box(theme.backgroundColor))
-                borderColor = multi(box(theme.backgroundColor))
                 backgroundInsets = multi(box(0.0.px))
-                backgroundColor = multi(theme.backgroundColor)
                 backgroundColor = multi(theme.backgroundColor)
                 and(focused) { backgroundInsets = multi(box(0.0.px)) }
                 viewport {
                     borderColor = multi(box(theme.backgroundColor))
-                    borderColor = multi(box(theme.backgroundColor))
                     backgroundInsets = multi(box(0.0.px))
-                    backgroundColor = multi(theme.backgroundColor)
                     backgroundColor = multi(theme.backgroundColor)
                 }
                 corner {
                     borderColor = multi(box(theme.backgroundColor))
-                    borderColor = multi(box(theme.backgroundColor))
                     backgroundInsets = multi(box(0.0.px))
-                    backgroundColor = multi(theme.backgroundColor)
                     backgroundColor = multi(theme.backgroundColor)
                 }
             }
