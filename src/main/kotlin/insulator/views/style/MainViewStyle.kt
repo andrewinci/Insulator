@@ -1,8 +1,6 @@
 package insulator.views.style
 
 import insulator.views.style.SideBarStyle.Companion.sidebar
-import javafx.geometry.Pos
-import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainViewStyle : Stylesheet() {
@@ -24,5 +22,4 @@ class MainViewStyle : Stylesheet() {
             }
         }
     }
-
 }

@@ -5,7 +5,6 @@ import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.beans.binding.Bindings
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.value.ObservableObjectValue
 import javafx.beans.value.ObservableStringValue

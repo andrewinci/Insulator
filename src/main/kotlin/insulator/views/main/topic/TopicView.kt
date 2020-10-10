@@ -5,7 +5,13 @@ import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.component.*
+import insulator.views.component.appBar
+import insulator.views.component.blueButton
+import insulator.views.component.confirmationButton
+import insulator.views.component.fieldName
+import insulator.views.component.h1
+import insulator.views.component.searchBox
+import insulator.views.component.subTitle
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
 import javafx.event.EventTarget

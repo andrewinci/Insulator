@@ -7,7 +7,6 @@ import insulator.views.component.appBar
 import insulator.views.component.h1
 import insulator.views.component.searchBox
 import insulator.views.configurations.ListClusterView
-import insulator.views.style.MainViewStyle.Companion.subview
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority

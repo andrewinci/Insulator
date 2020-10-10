@@ -2,7 +2,6 @@ package insulator.views.style
 
 import insulator.views.style.TextStyle.Companion.h1
 import javafx.geometry.Pos
-import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class SideBarStyle : Stylesheet() {
