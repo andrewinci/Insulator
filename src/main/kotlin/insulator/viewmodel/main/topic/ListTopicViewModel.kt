@@ -8,6 +8,7 @@ import insulator.lib.kafka.AdminApi
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.StringScope
 import insulator.views.common.customOpenWindow
+import insulator.views.main.MainView
 import insulator.views.main.topic.CreateTopicView
 import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty
@@ -16,6 +17,7 @@ import javafx.collections.ObservableList
 import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.SortedFilteredList
+import tornadofx.find
 import tornadofx.whenUndockedOnce
 
 class ListTopicViewModel : InsulatorViewModel() {
@@ -48,13 +50,13 @@ class ListTopicViewModel : InsulatorViewModel() {
     fun showTopic() {
         val selectedTopicName = selectedItem.value ?: return
         with(StringScope("$currentCluster-$selectedTopicName").withComponent(TopicViewModel(selectedTopicName))) {
-            tornadofx.find<TopicView>(this).also { it.whenUndockedOnce { refresh() } }.customOpenWindow(owner = null)
+            setMainViewDetails(find<TopicView>(this))
         }
     }
 
     fun createNewTopic() =
         with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
-            tornadofx.find<CreateTopicView>(this).also {
+            find<CreateTopicView>(this).also {
                 it.whenUndockedOnce { refresh(); this.close() }
             }.customOpenWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
         }

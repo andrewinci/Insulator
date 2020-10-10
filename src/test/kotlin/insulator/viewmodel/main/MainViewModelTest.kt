@@ -26,12 +26,12 @@ class MainViewModelTest : FunSpec({
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
         val newView = ListSchemaView::class
         // act
-        sut.runOnFXThread { setCurrentView(newView) }
+        sut.runOnFXThread { setContent(newView) }
         waitFXThread()
         // assert
         val currentView = FX.getComponents()[newView] as ListSchemaView
         sut.currentViewProperty.value shouldBe currentView
-        sut.currentCenter.value shouldBe currentView.root
+        sut.content.value shouldBe currentView.root
         sut.currentTitle.value shouldBe currentView.title
     }
 
@@ -41,7 +41,7 @@ class MainViewModelTest : FunSpec({
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns false }
         val topicView = sut.currentViewProperty.value
         // act
-        sut.runOnFXThread { setCurrentView(ListSchemaView::class) }
+        sut.runOnFXThread { setContent(ListSchemaView::class) }
         waitFXThread()
         // assert
         sut.currentViewProperty.value shouldBe topicView
@@ -65,7 +65,7 @@ class MainViewModelTest : FunSpec({
         currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
         val newView = ClusterView::class
         // act
-        sut.runOnFXThread { setCurrentView(newView) }
+        sut.runOnFXThread { setContent(newView) }
         waitFXThread()
         // assert
         sut.error.value shouldNotBe null

@@ -50,11 +50,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
                 {
                     StringScope(it.nameProperty.value)
                         .withComponent(it)
-                        .let {
-                            find<SchemaView>(it)
-                                .also { view -> view.whenUndockedOnce { refresh() } }
-                                .customOpenWindow(owner = null)
-                        }
+                        .let { schemaView -> setMainViewDetails(find<SchemaView>(schemaView)) }
                 }
             )
     }

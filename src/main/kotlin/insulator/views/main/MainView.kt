@@ -12,11 +12,13 @@ import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import insulator.views.style.MainViewStyle.Companion.subview
 import insulator.views.style.SideBarStyle
+import javafx.beans.value.ObservableObjectValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.scene.Node
+import javafx.scene.Parent
 import javafx.scene.image.Image
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -24,22 +26,23 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
 
     private val nodes: ObservableList<Node> = FXCollections.observableArrayList(
         sidebar(),
-        listView()
+        viewWrapper(viewModel.content),
+        viewWrapper(viewModel.details)
     )
 
     override val root = splitpane {
         items.bind(nodes) { it }
     }
 
-    private fun listView() =
-        borderpane { centerProperty().bind(viewModel.currentCenter); addClass(subview) }
+    private fun viewWrapper(view: ObservableObjectValue<Parent>) =
+        borderpane { centerProperty().bind(view); addClass(subview) }
 
     private fun sidebar() =
         vbox {
             h1(currentCluster.name)
             vbox {
-                menuItem("Topics", ICON_TOPICS) { viewModel.setCurrentView(ListTopicView::class) }
-                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setCurrentView(ListSchemaView::class) }
+                menuItem("Topics", ICON_TOPICS) { viewModel.setContent(ListTopicView::class) }
+                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setContent(ListSchemaView::class) }
             }
             button("Change cluster") { action { replaceWith<ListClusterView>() } }
             addClass(SideBarStyle.sidebar)
