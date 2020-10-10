@@ -23,8 +23,19 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
-    private val content = viewWrapper(viewModel.content, 750.0)
-    private val contentList = viewWrapper(viewModel.contentList, 500.0, 500.0)
+    private val contentList = borderpane {
+        centerProperty().bind(viewModel.contentList)
+        addClass(subview)
+        minWidth = 500.0
+        maxWidth = 500.0
+    }
+
+    private val content = tabpane().apply {
+        viewModel.contentTabs = tabs
+        minWidth = 750.0
+        addClass(subview)
+    }
+
     private val nodes: ObservableList<Parent> = FXCollections.observableArrayList(
         sidebar(),
         contentList
@@ -33,12 +44,12 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     override val root = splitpane { items.bind(nodes) { it } }
 
     init {
-        content.centerProperty().onChange {
-            if (nodes.size == 3) nodes[2] = content
-            else nodes.add(content)
-        }
-        contentList.centerProperty().onChange {
-            if (nodes.size == 3) nodes.removeAt(2)
+        viewModel.contentTabs.onChange {
+            when {
+                viewModel.contentTabs.size == 0 -> nodes.removeAt(2)
+                nodes.size <= 2 -> nodes.add(content)
+                else -> nodes[2] = content
+            }
         }
         nodes.onChange {
             val w = 800.0 + (nodes.size - 2) * 750
@@ -47,13 +58,6 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
     }
 
-    private fun viewWrapper(view: ObservableObjectValue<Parent>, minW: Double? = null, maxW: Double? = null) =
-        borderpane {
-            centerProperty().bind(view)
-            addClass(subview)
-            minW?.let { minWidth = it }
-            maxW?.let { maxWidth = it }
-        }
 
     private fun sidebar() =
         vbox {

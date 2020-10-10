@@ -49,7 +49,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
                 {
                     StringScope(it.nameProperty.value)
                         .withComponent(it)
-                        .let { schemaView -> setMainContent(find<SchemaView>(schemaView)) }
+                        .let { schemaView -> setMainContent(it.nameProperty.value, find<SchemaView>(schemaView)) }
                 }
             )
     }
