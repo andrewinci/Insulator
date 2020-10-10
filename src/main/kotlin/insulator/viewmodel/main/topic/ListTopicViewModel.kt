@@ -26,7 +26,7 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     val selectedItem = SimpleStringProperty(null)
     val searchItem = SimpleStringProperty(null)
-    val filteredTopics: ObservableList<String>? = SortedFilteredList(topicList).apply {
+    val filteredTopics: ObservableList<String> = SortedFilteredList(topicList).apply {
         filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
     }.filteredItems
 

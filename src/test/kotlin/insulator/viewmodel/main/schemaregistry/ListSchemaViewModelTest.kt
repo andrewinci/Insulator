@@ -31,7 +31,7 @@ class ListSchemaViewModelTest : FunSpec({
         configureDi(schemaRegistry, jsonFormatter)
         val sut = ListSchemaViewModel()
         // act
-        val schemas = sut.listSchema
+        val schemas = sut.filteredSchemas
         // assert
         waitFXThread()
         schemas.size shouldBe 2
@@ -44,7 +44,7 @@ class ListSchemaViewModelTest : FunSpec({
         configureDi(schemaRegistry, jsonFormatter)
         val sut = ListSchemaViewModel()
         // act
-        val schemas = sut.listSchema
+        val schemas = sut.filteredSchemas
         // assert
         schemas.size shouldBe 0
         sut.error.value!!.message shouldBe errorMessage

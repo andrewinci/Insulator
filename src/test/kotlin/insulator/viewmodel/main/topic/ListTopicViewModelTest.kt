@@ -25,7 +25,7 @@ class ListTopicViewModelTest : FunSpec({
         )
         val sut = ListTopicViewModel()
         // act
-        val res = sut.topicList
+        val res = sut.filteredTopics
         // assert
         sut.refresh().get() // force and wait refresh
         res.size shouldBe 0
@@ -41,7 +41,7 @@ class ListTopicViewModelTest : FunSpec({
         )
         val sut = ListTopicViewModel()
         // act
-        val res = sut.topicList
+        val res = sut.filteredTopics
         // assert
         sut.refresh().get() // force and wait refresh
         res.size shouldBe 2
