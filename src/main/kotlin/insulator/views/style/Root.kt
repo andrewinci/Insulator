@@ -4,20 +4,6 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-val styles = arrayOf(
-    Root::class,
-    AppBarStyle::class,
-    ButtonStyle::class,
-    CheckBoxStyle::class,
-    ComboBoxStyle::class,
-    ListViewStyle::class,
-    TableViewStyle::class,
-    TextStyle::class,
-    DialogPaneStyle::class,
-    ScrollPaneStyle::class,
-    MainViewStyle::class,
-)
-
 class Root : Stylesheet() {
     init {
         root {
