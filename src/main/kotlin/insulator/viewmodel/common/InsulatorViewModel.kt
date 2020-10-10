@@ -6,6 +6,8 @@ import tornadofx.View
 import tornadofx.ViewModel
 
 abstract class InsulatorViewModel : ViewModel() {
-    fun setMainViewDetails(view: View): Unit = find<MainViewModel>().setDetails(view)
+
+    fun setMainContent(view: View): Unit = find<MainViewModel>().setDetails(view)
+
     val error = SimpleObjectProperty<Throwable?>(null)
 }

@@ -31,7 +31,7 @@ class MainViewModelTest : FunSpec({
         // assert
         val currentView = FX.getComponents()[newView] as ListSchemaView
         sut.currentViewProperty.value shouldBe currentView
-        sut.content.value shouldBe currentView.root
+        sut.contentList.value shouldBe currentView.root
         sut.currentTitle.value shouldBe currentView.title
     }
 

@@ -8,7 +8,6 @@ import insulator.lib.kafka.AdminApi
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.StringScope
 import insulator.views.common.customOpenWindow
-import insulator.views.main.MainView
 import insulator.views.main.topic.CreateTopicView
 import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty
@@ -50,7 +49,7 @@ class ListTopicViewModel : InsulatorViewModel() {
     fun showTopic() {
         val selectedTopicName = selectedItem.value ?: return
         with(StringScope("$currentCluster-$selectedTopicName").withComponent(TopicViewModel(selectedTopicName))) {
-            setMainViewDetails(find<TopicView>(this))
+            setMainContent(find<TopicView>(this))
         }
     }
 

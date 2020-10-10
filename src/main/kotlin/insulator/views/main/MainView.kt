@@ -17,28 +17,27 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.event.EventTarget
-import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.image.Image
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
-    private val details = viewWrapper(viewModel.details, 750.0)
-    private val content = viewWrapper(viewModel.content, 500.0, 500.0)
+    private val content = viewWrapper(viewModel.content, 750.0)
+    private val contentList = viewWrapper(viewModel.contentList, 500.0, 500.0)
     private val nodes: ObservableList<Parent> = FXCollections.observableArrayList(
         sidebar(),
-        content
+        contentList
     )
 
     override val root = splitpane { items.bind(nodes) { it } }
 
     init {
-        details.centerProperty().onChange {
-            if (nodes.size == 3) nodes[2] = details
-            else nodes.add(details)
-        }
         content.centerProperty().onChange {
+            if (nodes.size == 3) nodes[2] = content
+            else nodes.add(content)
+        }
+        contentList.centerProperty().onChange {
             if (nodes.size == 3) nodes.removeAt(2)
         }
         nodes.onChange {
