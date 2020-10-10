@@ -64,8 +64,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 button("Change cluster") { action { replaceWith<ListClusterView>() } }
             }
             center = vbox {
-                menuItem("Topics", ICON_TOPICS) { viewModel.setContent(ListTopicView::class) }
-                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setContent(ListSchemaView::class) }
+                menuItem("Topics", ICON_TOPICS) { viewModel.setContentList(ListTopicView::class) }
+                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setContentList(ListSchemaView::class) }
             }
             bottom = hbox(alignment = Pos.CENTER) {
                 themeButton { changeTheme() }

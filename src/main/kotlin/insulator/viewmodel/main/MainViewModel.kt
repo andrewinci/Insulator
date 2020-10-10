@@ -18,7 +18,7 @@ class MainViewModel : InsulatorViewModel() {
     lateinit var contentTabs: ObservableList<Tab>
     val contentList: SimpleObjectProperty<Parent> = SimpleObjectProperty<Parent>().also { it.value = find<ListTopicView>().root }
 
-    fun <T : Any> setContent(clazz: KClass<T>): Unit = when (clazz) {
+    fun <T : Any> setContentList(clazz: KClass<T>): Unit = when (clazz) {
         ListTopicView::class -> contentList.set(find<ListTopicView>().root)
         ListSchemaView::class -> {
             if (currentCluster.isSchemaRegistryConfigured()) contentList.set(find<ListSchemaView>().root)
@@ -27,7 +27,7 @@ class MainViewModel : InsulatorViewModel() {
         else -> error.set(Throwable("UI: Unable to navigate to ${clazz.qualifiedName}"))
     }
 
-    fun setContent(title: String, view: InsulatorTabView<*>) {
+    fun showTab(title: String, view: InsulatorTabView<*>) {
         val existingTab = contentTabs.firstOrNull { it.content == view.root }
         val newTab = Tab(title, view.root)
             .also { it.setOnClosed { view.onTabClosed() } }

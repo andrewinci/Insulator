@@ -66,7 +66,7 @@ class ListSchemaViewModelTest : FunSpec({
         // assert
         waitFXThread()
         verify(exactly = 1) { schemaRegistry.second.getSubject(targetSubject) }
-        verify(exactly = 1) { mockMainViewModel.setContent(any(), any()) }
+        verify(exactly = 1) { mockMainViewModel.showTab(any(), any()) }
         sut.error.value shouldBe null
     }
 

@@ -8,7 +8,7 @@ import tornadofx.ViewModel
 abstract class InsulatorViewModel : ViewModel() {
 
     fun setMainContent(title: String, view: InsulatorTabView<*>): Unit =
-        find<MainViewModel>().setContent(title, view)
+        find<MainViewModel>().showTab(title, view)
 
     val error = SimpleObjectProperty<Throwable?>(null)
 }
