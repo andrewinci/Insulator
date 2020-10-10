@@ -15,17 +15,16 @@ val styles = arrayOf(
     TextStyle::class,
     DialogPaneStyle::class,
     SideBarStyle::class,
-    ScrollPaneStyle::class
+    ScrollPaneStyle::class,
+    MainViewStyle::class,
 )
 
 class Root : Stylesheet() {
     init {
-
         root {
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(theme.backgroundColor)
             padding = box(theme.viewPadding)
-
             contextMenu {
                 padding = box(0.px)
                 minWidth = 100.0.px

@@ -16,12 +16,9 @@ import kotlin.reflect.KClass
 
 class MainViewModel : InsulatorViewModel() {
 
-    val showSidebar = SimpleBooleanProperty(false)
     val currentViewProperty = SimpleObjectProperty<View>().also { it.value = find<ListTopicView>() }
     val currentCenter: ObservableObjectValue<Parent> = Bindings.createObjectBinding({ currentViewProperty.value.root }, currentViewProperty)
     val currentTitle: ObservableStringValue = Bindings.createStringBinding({ currentViewProperty.value.title }, currentViewProperty)
-
-    fun toggleSidebar() = showSidebar.set(!showSidebar.value)
 
     fun <T : Any> setCurrentView(clazz: KClass<T>): Unit = when (clazz) {
         ListTopicView::class -> currentViewProperty.set(find<ListTopicView>())
