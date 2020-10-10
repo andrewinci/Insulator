@@ -78,22 +78,23 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
         tableview<RecordViewModel> {
             val timeColumn = column("Time", RecordViewModel::timestampProperty) { prefWidthProperty().set(150.0) }
             val keyColumn = column("Key", RecordViewModel::keyProperty) { prefWidthProperty().set(300.0) }
-            column("Value", RecordViewModel::valueProperty) {
+            val valueColumn = column("Value", RecordViewModel::valueProperty) {
                 prefWidthProperty().bind(
                     this.tableView.widthProperty()
                         .minus(keyColumn.widthProperty())
                         .minus(timeColumn.widthProperty())
                         .minus(20.0)
                 )
-                setCellFactory {
-                    TableCell<RecordViewModel, String>().apply {
-                        graphic = text {
-                            addClass("text")
-                            wrappingWidthProperty().bind(this@column.widthProperty().subtract(Bindings.multiply(2.0, graphicTextGapProperty())))
-                            textProperty().bind(stringBinding(itemProperty()) { get()?.toString() ?: "" })
-                        }
-                        prefHeight = Control.USE_COMPUTED_SIZE
+            }
+
+            valueColumn.setCellFactory {
+                TableCell<RecordViewModel, String>().apply {
+                    graphic = text {
+                        addClass("text")
+                        wrappingWidthProperty().bind(valueColumn.widthProperty().subtract(Bindings.multiply(2.0, graphicTextGapProperty())))
+                        textProperty().bind(stringBinding(itemProperty()) { get()?.toString() ?: "" })
                     }
+                    prefHeight = Control.USE_COMPUTED_SIZE
                 }
             }
 

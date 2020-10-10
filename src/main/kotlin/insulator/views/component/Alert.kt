@@ -5,11 +5,9 @@ import javafx.scene.control.ButtonType
 import tornadofx.FX
 
 fun insulatorAlert(level: Alert.AlertType, message: String, vararg buttons: ButtonType, fn: ((ButtonType) -> Unit)? = null) {
-    val alert = Alert(level, "", *buttons)
-    alert.headerText = message
-    alert.dialogPane.stylesheets.addAll(FX.stylesheets)
-    val buttonClicked = alert.showAndWait()
-    if (buttonClicked.isPresent) {
-        fn?.invoke(buttonClicked.get())
-    }
+    val buttonClicked = Alert(level, "", *buttons).apply {
+        headerText = message
+        dialogPane.stylesheets.addAll(FX.stylesheets)
+    }.showAndWait()
+    if (buttonClicked.isPresent) fn?.invoke(buttonClicked.get())
 }
