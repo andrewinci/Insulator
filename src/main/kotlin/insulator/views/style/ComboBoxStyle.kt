@@ -7,7 +7,6 @@ class ComboBoxStyle : Stylesheet() {
 
     init {
         root {
-
             comboBox {
                 borderColor = multi(box(theme.backgroundColor))
                 focusColor = theme.backgroundColor

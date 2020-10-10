@@ -71,7 +71,6 @@ class SchemaView : InsulatorView<SchemaViewModel>(viewModelClazz = SchemaViewMod
                 res
             }
             contextMenu = contextmenu { item("Copy") { action { viewModel.copySchemaToClipboard() } } }
-            background = Background(BackgroundFill(theme.backgroundColor, CornerRadii.EMPTY, Insets.EMPTY))
             vgrow = Priority.ALWAYS
             hgrow = Priority.ALWAYS
         }

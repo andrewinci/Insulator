@@ -17,8 +17,11 @@ import javafx.collections.FXCollections
 import javafx.event.EventTarget
 import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.control.Control
 import javafx.scene.control.SelectionMode
+import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
+import javafx.scene.text.Text
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
@@ -83,7 +86,16 @@ class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel:
                         .minus(timeColumn.widthProperty())
                         .minus(20.0)
                 )
-                enableTextWrap()
+                setCellFactory {
+                    TableCell<RecordViewModel, String>().apply {
+                        graphic = text {
+                            addClass("text")
+                            wrappingWidthProperty().bind(this@column.widthProperty().subtract(Bindings.multiply(2.0, graphicTextGapProperty())))
+                            textProperty().bind(stringBinding(itemProperty()) { get()?.toString() ?: "" })
+                        }
+                        prefHeight = Control.USE_COMPUTED_SIZE
+                    }
+                }
             }
 
             viewModel.configureFilteredRecords(this.comparatorProperty())
