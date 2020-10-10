@@ -85,9 +85,13 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
 
     private fun setSize() {
         val w = 650.0 + (nodes.size - 2) * 750
+        if (nodes.size == 2) {
+            super.currentStage?.maxWidth = w
+        } else {
+            super.currentStage?.maxWidth = Double.MAX_VALUE
+        }
         super.currentStage?.minWidth = w
-        super.currentStage?.maxWidth = w
-        super.currentStage?.minHeight = 800.0
+        super.currentStage?.height = 800.0
     }
 
     override fun onDock() {
