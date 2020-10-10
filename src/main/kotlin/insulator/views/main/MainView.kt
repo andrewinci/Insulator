@@ -24,18 +24,37 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
-    private val nodes: ObservableList<Node> = FXCollections.observableArrayList(
+    private val details = viewWrapper(viewModel.details, 750.0)
+    private val content = viewWrapper(viewModel.content, 500.0, 500.0)
+    private val nodes: ObservableList<Parent> = FXCollections.observableArrayList(
         sidebar(),
-        viewWrapper(viewModel.content),
-        viewWrapper(viewModel.details)
+        content
     )
 
-    override val root = splitpane {
-        items.bind(nodes) { it }
+    override val root = splitpane { items.bind(nodes) { it } }
+
+    init {
+        details.centerProperty().onChange {
+            if (nodes.size == 3) nodes[2] = details
+            else nodes.add(details)
+        }
+        content.centerProperty().onChange {
+            if (nodes.size == 3) nodes.removeAt(2)
+        }
+        nodes.onChange {
+            val w = 800.0 + (nodes.size - 2) * 750
+            super.currentStage?.minWidth = w
+            super.currentStage?.width = w
+        }
     }
 
-    private fun viewWrapper(view: ObservableObjectValue<Parent>) =
-        borderpane { centerProperty().bind(view); addClass(subview) }
+    private fun viewWrapper(view: ObservableObjectValue<Parent>, minW: Double? = null, maxW: Double? = null) =
+        borderpane {
+            centerProperty().bind(view)
+            addClass(subview)
+            minW?.let { minWidth = it }
+            maxW?.let { maxWidth = it }
+        }
 
     private fun sidebar() =
         vbox {
@@ -59,8 +78,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
 
     override fun onDock() {
         super.onDock()
-        super.currentStage?.width = 800.0
         super.currentStage?.height = 800.0
+        super.currentStage?.minWidth = 800.0
         super.currentStage?.isResizable = true
     }
 
