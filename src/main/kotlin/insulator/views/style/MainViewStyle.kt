@@ -1,6 +1,6 @@
 package insulator.views.style
 
-import insulator.views.style.SideBarStyle.Companion.sidebar
+import javafx.geometry.Pos
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -9,9 +9,31 @@ class MainViewStyle : Stylesheet() {
         val contentList by cssclass("main-view-content-list")
         val content by cssclass("main-view-content")
         val tabContainer by cssclass("tab-container")
+        val sidebar by cssclass("sidebar")
+        val sidebarItem by cssclass("sidebar-item")
     }
 
     init {
+        sidebar {
+            spacing = 1.em
+            minWidth = 250.0.px
+            maxWidth = 250.0.px
+            backgroundColor = multi(theme.backgroundColor)
+            alignment = Pos.TOP_CENTER
+            padding = box(0.em, 0.em, 1.em, 0.em)
+            TextStyle.h1 {
+                minHeight = 3.em
+            }
+        }
+
+        sidebarItem {
+            and(hover) { backgroundColor = multi(theme.mainColor) }
+            minHeight = 50.0.px
+            borderInsets = multi(box(-theme.viewPadding, 0.px, 0.px, -theme.viewPadding))
+            alignment = Pos.CENTER_LEFT
+            padding = box(1.em)
+        }
+
         splitPane {
             padding = box(0.px)
             splitPaneDivider {
@@ -27,6 +49,7 @@ class MainViewStyle : Stylesheet() {
                 padding = box(0.px, 0.px, (-2).px, 0.px)
             }
         }
+
         tabPane {
             tabHeaderBackground {
                 padding = box(0.px)
@@ -42,7 +65,7 @@ class MainViewStyle : Stylesheet() {
                 headersRegion {
 
                     tab {
-                        textFill = theme.black
+                        tabContainer { tabLabel { text { fill = theme.black } } }
                         backgroundColor = multi(theme.backgroundColor)
                         backgroundRadius = multi(box(1.px))
                         backgroundInsets = multi(box(1.px))

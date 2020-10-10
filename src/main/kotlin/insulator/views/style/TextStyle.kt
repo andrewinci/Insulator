@@ -30,10 +30,6 @@ class TextStyle : Stylesheet() {
             padding = box(0.1.em)
         }
 
-//        field {
-//            font = Font.font("Helvetica", 10.0)
-//            textFill = theme.black
-//        }
         root {
             field {
                 textFill = theme.black.darker()

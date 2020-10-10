@@ -14,7 +14,6 @@ val styles = arrayOf(
     TableViewStyle::class,
     TextStyle::class,
     DialogPaneStyle::class,
-    SideBarStyle::class,
     ScrollPaneStyle::class,
     MainViewStyle::class,
 )
@@ -70,4 +69,4 @@ private val darkTheme = Theme(
     blueColor = c("#20a3f5"),
     viewPadding = 1.em,
 )
-val theme = Theme()
+val theme = darkTheme// Theme()

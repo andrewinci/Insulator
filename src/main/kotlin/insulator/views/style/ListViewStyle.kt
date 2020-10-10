@@ -12,6 +12,7 @@ class ListViewStyle : Stylesheet() {
             backgroundColor = multi(theme.backgroundColor)
             borderColor = multi(box(theme.backgroundColor))
             backgroundInsets = multi(box(0.0.px))
+            padding = box(0.px, -theme.viewPadding)
             listCell {
                 padding = box(10.0.px)
                 borderRadius = multi(box(30.0.px))
