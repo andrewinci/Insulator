@@ -28,8 +28,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
         addClass(MainViewStyle.contentList)
-        minWidth = 500.0
-        maxWidth = 500.0
+        minWidth = 400.0
+        maxWidth = 400.0
     }
 
     private val content = tabpane {
@@ -71,6 +71,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 themeButton { changeTheme() }
             }
             addClass(MainViewStyle.sidebar)
+            minWidth = 250.0
+            maxWidth = 250.0
         }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
@@ -82,9 +84,9 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
 
     private fun setSize() {
-        val w = 800.0 + (nodes.size - 2) * 750
+        val w = 650.0 + (nodes.size - 2) * 750
         super.currentStage?.minWidth = w
-        super.currentStage?.width = w
+        super.currentStage?.maxWidth = w
         super.currentStage?.minHeight = 800.0
     }
 

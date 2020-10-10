@@ -16,8 +16,6 @@ class MainViewStyle : Stylesheet() {
     init {
         sidebar {
             spacing = 1.em
-            minWidth = 250.0.px
-            maxWidth = 250.0.px
             backgroundColor = multi(theme.backgroundColor)
             alignment = Pos.TOP_CENTER
             padding = box(0.em, 0.em, 1.em, 0.em)

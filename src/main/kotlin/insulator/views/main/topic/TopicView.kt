@@ -21,7 +21,6 @@ import javafx.scene.control.Control
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
-import javafx.scene.text.Text
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class TopicView : InsulatorView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {

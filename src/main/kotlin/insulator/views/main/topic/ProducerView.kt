@@ -43,8 +43,21 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
 
     private fun EventTarget.validationArea() =
         scrollpane {
-            label(viewModel.validationErrorProperty) {
-                textFill = Color.RED
+            label {
+                val warning = {
+                    viewModel.validationErrorProperty.value
+                }
+                textProperty().bind(Bindings.createStringBinding({ if (warning().isNullOrEmpty()) "Valid" else warning() }, viewModel.validationErrorProperty))
+                textFillProperty().bind(
+                    Bindings.createObjectBinding(
+                        {
+                            if (warning().isNullOrEmpty()) {
+                                Color.GREEN
+                            } else Color.RED
+                        },
+                        viewModel.validationErrorProperty
+                    )
+                )
                 isWrapText = true
                 onDoubleClick { autoComplete() }
             }
@@ -57,8 +70,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         recordValueTextArea.apply {
             textProperty().bindBidirectional(viewModel.valueProperty)
             vgrow = Priority.ALWAYS
-        }
-        recordValueTextArea.attachTo(this)
+        }.attachTo(this)
     }
 
     private fun autoComplete() {

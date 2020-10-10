@@ -71,7 +71,6 @@ private val darkTheme = Theme(
 )
 private val lightTheme = Theme()
 
-
 var theme: Theme = lightTheme
     private set
 

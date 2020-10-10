@@ -11,12 +11,8 @@ import insulator.views.component.h1
 import insulator.views.style.theme
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
-import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.Priority
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports

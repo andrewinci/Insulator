@@ -41,6 +41,5 @@ class TableViewStyle : Stylesheet() {
             and(even) { backgroundColor = multi(theme.backgroundColor) }
             and(odd) { backgroundColor = multi(theme.backgroundColor) }
         }
-
     }
 }
