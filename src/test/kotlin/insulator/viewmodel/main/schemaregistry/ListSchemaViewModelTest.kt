@@ -12,11 +12,15 @@ import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.SchemaRegistry
 import insulator.lib.kafka.model.Schema
 import insulator.lib.kafka.model.Subject
+import insulator.viewmodel.main.MainViewModel
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import tornadofx.FX
+import tornadofx.ScopedInstance
+import tornadofx.set
 import kotlin.reflect.KClass
 
 class ListSchemaViewModelTest : FunSpec({
@@ -53,6 +57,8 @@ class ListSchemaViewModelTest : FunSpec({
     test("Happy path show schema") {
         // arrange
         configureDi(schemaRegistry, jsonFormatter)
+        val mockMainViewModel = mockk<MainViewModel>(relaxed = true)
+        FX.defaultScope.set(mockMainViewModel as ScopedInstance)
         val sut = ListSchemaViewModel()
         sut.selectedSchema.value = targetSubject
         // act
@@ -60,6 +66,7 @@ class ListSchemaViewModelTest : FunSpec({
         // assert
         waitFXThread()
         verify(exactly = 1) { schemaRegistry.second.getSubject(targetSubject) }
+        verify(exactly = 1) { mockMainViewModel.setContent(any(), any()) }
         sut.error.value shouldBe null
     }
 
