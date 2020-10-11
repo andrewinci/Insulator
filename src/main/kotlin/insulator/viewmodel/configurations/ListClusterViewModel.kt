@@ -5,7 +5,6 @@ import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.StringScope
-import insulator.views.common.customOpenWindow
 import insulator.views.configurations.ClusterView
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -26,23 +25,17 @@ class ListClusterViewModel : InsulatorViewModel() {
         )
     }
 
-    fun openNewClusterWindow() {
-        val clusterScope = StringScope("CreateNewCluster")
-            .withComponent(ClusterViewModel(ClusterModel(Cluster.empty())))
-        find<ClusterView>(clusterScope).also { it.whenUndockedOnce { clusterScope.close() } }
-            .customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+    fun openEditClusterWindow(cluster: Cluster = Cluster.empty()) {
+        getClusterScope(cluster)
+            .let { scope -> find<ClusterView>(scope).also { view -> view.whenUndockedOnce { scope.close() } } }
+            .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
     }
 
     fun openMainWindow(cluster: Cluster, op: (StringScope) -> Unit) {
         currentCluster = cluster
-        StringScope("Cluster-${cluster.guid}")
-            .withComponent(ClusterViewModel(ClusterModel(cluster)))
-            .let { op(it) }
+        op(getClusterScope(cluster))
     }
 
-    fun openEditClusterWindow(cluster: Cluster) {
-        StringScope("Cluster-${cluster.guid}")
-            .withComponent(ClusterViewModel(ClusterModel(cluster)))
-            .let { find<ClusterView>(it).customOpenWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY) }
-    }
+    private fun getClusterScope(cluster: Cluster) = StringScope("Cluster-${cluster.guid}")
+        .withComponent(ClusterViewModel(ClusterModel(cluster)))
 }

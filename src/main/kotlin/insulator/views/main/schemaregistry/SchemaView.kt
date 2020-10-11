@@ -70,6 +70,4 @@ class SchemaView : InsulatorTabView<SchemaViewModel>(viewModelClazz = SchemaView
             hgrow = Priority.ALWAYS
         }
     }
-
-    override fun onTabClosed() {}
 }

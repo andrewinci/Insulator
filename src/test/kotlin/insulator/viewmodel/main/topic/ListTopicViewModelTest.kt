@@ -48,10 +48,6 @@ class ListTopicViewModelTest : FunSpec({
         sut.error.value shouldBe null
     }
 
-    beforeTest {
-        configureFXFramework()
-    }
-    afterTest {
-        cleanupFXFramework()
-    }
+    beforeTest { configureFXFramework() }
+    afterTest { cleanupFXFramework() }
 })

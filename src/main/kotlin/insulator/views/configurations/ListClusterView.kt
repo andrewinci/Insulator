@@ -30,7 +30,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     private fun EventTarget.addNewClusterButton() =
         button("Add new cluster") {
-            action { viewModel.openNewClusterWindow() }
+            action { viewModel.openEditClusterWindow() }
         }
 
     private fun EventTarget.clusterList() =

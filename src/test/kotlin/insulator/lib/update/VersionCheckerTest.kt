@@ -173,5 +173,9 @@ class VersionCheckerTestFixture : Closeable {
 
     override fun close() {
         FuelManager.instance.reset()
+        with(mockInsulatorConfigPath.toFile()) {
+            testDir.toFile().mkdirs()
+            delete()
+        }
     }
 }
