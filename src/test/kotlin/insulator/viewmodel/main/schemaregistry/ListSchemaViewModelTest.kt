@@ -5,6 +5,7 @@ import arrow.core.right
 import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
+import helper.configureScopeDi
 import helper.waitFXThread
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.jsonhelper.JsonFormatter
@@ -18,8 +19,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import tornadofx.FX
-import tornadofx.ScopedInstance
 import tornadofx.set
 import kotlin.reflect.KClass
 
@@ -32,7 +31,6 @@ class ListSchemaViewModelTest : FunSpec({
 
     test("Happy path") {
         // arrange
-        configureDi(schemaRegistry, jsonFormatter)
         val sut = ListSchemaViewModel()
         // act
         val schemas = sut.filteredSchemas
@@ -45,7 +43,6 @@ class ListSchemaViewModelTest : FunSpec({
     test("Show an error if unable to retrieve the configuration") {
         // arrange
         every { schemaRegistry.second.getAllSubjects() } returns Throwable(errorMessage).left()
-        configureDi(schemaRegistry, jsonFormatter)
         val sut = ListSchemaViewModel()
         // act
         val schemas = sut.filteredSchemas
@@ -56,9 +53,8 @@ class ListSchemaViewModelTest : FunSpec({
 
     test("Happy path show schema") {
         // arrange
-        configureDi(schemaRegistry, jsonFormatter)
         val mockMainViewModel = mockk<MainViewModel>(relaxed = true)
-        FX.defaultScope.set(mockMainViewModel as ScopedInstance)
+        configureScopeDi(mockMainViewModel)
         val sut = ListSchemaViewModel()
         sut.selectedSchema.value = targetSubject
         // act
@@ -73,7 +69,6 @@ class ListSchemaViewModelTest : FunSpec({
     test("Show an error if unable to retrieve the schema") {
         // arrange
         every { schemaRegistry.second.getSubject(any()) } returns Throwable(errorMessage).left()
-        configureDi(schemaRegistry, jsonFormatter)
         val sut = ListSchemaViewModel()
         sut.selectedSchema.value = targetSubject
         // act
@@ -93,6 +88,7 @@ class ListSchemaViewModelTest : FunSpec({
             every { getAllSubjects() } returns listOf(targetSubject, "subject2").right()
             every { getSubject(any()) } returns Subject("*", listOf(Schema("{}", 1, 3))).right()
         }
+        configureDi(schemaRegistry, jsonFormatter)
     }
 
     afterTest {

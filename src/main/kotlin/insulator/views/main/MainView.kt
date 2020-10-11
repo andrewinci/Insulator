@@ -2,8 +2,6 @@ package insulator.views.main
 
 import insulator.di.currentCluster
 import insulator.viewmodel.main.MainViewModel
-import insulator.views.common.ICON_REGISTRY
-import insulator.views.common.ICON_TOPICS
 import insulator.views.common.InsulatorView
 import insulator.views.component.h1
 import insulator.views.component.h2
@@ -22,6 +20,9 @@ import javafx.geometry.Side
 import javafx.scene.Parent
 import javafx.scene.image.Image
 import tornadofx.* // ktlint-disable no-wildcard-imports
+
+private const val ICON_TOPICS = "icons/topics.png"
+private const val ICON_REGISTRY = "icons/schemaRegistryIcon.png"
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
@@ -84,13 +85,14 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
 
     private fun setSize() {
-        val w = 650.0 + (nodes.size - 2) * 750
+        val defaultWidth = 650.0
         if (nodes.size == 2) {
-            super.currentStage?.maxWidth = w
+            super.currentStage?.maxWidth = defaultWidth
+            super.currentStage?.minWidth = defaultWidth
         } else {
             super.currentStage?.maxWidth = Double.MAX_VALUE
+            super.currentStage?.minWidth = defaultWidth + 750
         }
-        super.currentStage?.minWidth = w
         super.currentStage?.height = 800.0
     }
 

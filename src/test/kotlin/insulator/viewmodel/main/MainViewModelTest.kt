@@ -65,7 +65,6 @@ class MainViewModelTest : FunSpec({
         val sut = MainViewModel()
         val mockTabPane = TabPane()
         sut.contentTabs = mockTabPane.tabs
-
         val newView = "sampleView" to mockk<TopicView>(relaxed = true) {
             every { root } returns VBox()
         }
