@@ -21,7 +21,6 @@ class VersionCheckerTest : FunSpec({
             it.mockCurrentAppVersion("0.0.8")
             val sampleMessage = Paths.get("src", "test", "resources", "githubResponseSample.json").toFile().readText()
             it.mockHttpResponse(200, sampleMessage)
-
             // act
             val version = sut.getCurrentVersion()
             // assert
@@ -37,10 +36,8 @@ class VersionCheckerTest : FunSpec({
             it.mockCurrentAppVersion(mockVersion)
             val sampleMessage = Paths.get("src", "test", "resources", "githubResponseSample.json").toFile().readText()
             it.mockHttpResponse(200, sampleMessage)
-
             // act
             val version = sut.getCurrentVersion()
-
             // assert
             version shouldBeRight Version(mockVersion, null)
         }
@@ -65,10 +62,8 @@ class VersionCheckerTest : FunSpec({
             val sut = VersionChecker()
             val sampleMessage = Paths.get("src", "test", "resources", "githubResponseSample.json").toFile().readText()
             it.mockHttpResponse(200, sampleMessage)
-
             // act
             val latestVersion = sut.getLatestVersion()
-
             // assert
             latestVersion shouldBeRight it.mockRelease
         }
@@ -79,10 +74,8 @@ class VersionCheckerTest : FunSpec({
             // arrange
             val sut = VersionChecker()
             it.mockHttpResponse(500, """Internal server error""")
-
             // act
             val latestVersion = sut.getLatestVersion()
-
             // assert
             latestVersion shouldBeLeft {}
         }
@@ -93,10 +86,8 @@ class VersionCheckerTest : FunSpec({
             // arrange
             val sut = VersionChecker()
             it.mockHttpResponse(200, """Invalid json here""")
-
             // act
             val latestVersion = sut.getLatestVersion()
-
             // assert
             latestVersion shouldBeLeft {}
         }
@@ -107,10 +98,8 @@ class VersionCheckerTest : FunSpec({
             // arrange
             val sut = VersionChecker()
             it.mockHttpResponse(200, """{"error": "Json response changed"}""")
-
             // act
             val latestVersion = sut.getLatestVersion()
-
             // assert
             latestVersion shouldBeLeft {}
         }
@@ -124,10 +113,8 @@ class VersionCheckerTest : FunSpec({
                 createNewFile()
                 writeText("invalid string in the config file")
             }
-
             // act
             val latestVersion = sut.getAppVersion()
-
             // assert
             latestVersion shouldBeLeft {}
         }
@@ -136,11 +123,9 @@ class VersionCheckerTest : FunSpec({
     test("get app version with a missing config file return left") {
         VersionCheckerTestFixture().use {
             // arrange
-            val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
-
+            val sut = VersionChecker("random_path")
             // act
             val latestVersion = sut.getAppVersion()
-
             // assert
             latestVersion shouldBeLeft {}
         }
