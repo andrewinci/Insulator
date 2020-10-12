@@ -6,7 +6,6 @@ import insulator.views.common.InsulatorView
 import insulator.views.component.h1
 import insulator.views.component.h2
 import insulator.views.component.themeButton
-import insulator.views.configurations.ListClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import insulator.views.style.MainViewStyle
@@ -62,7 +61,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         borderpane {
             top = vbox(alignment = Pos.TOP_CENTER) {
                 h1(currentCluster.name)
-                button("Change cluster") { action { replaceWith<ListClusterView>() } }
+                button("Change cluster") { action { close() } }
             }
             center = vbox {
                 menuItem("Topics", ICON_TOPICS) { viewModel.setContentList(ListTopicView::class) }
@@ -103,6 +102,6 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     }
 
     override fun onError(throwable: Throwable) {
-        replaceWith<ListClusterView>()
+        close()
     }
 }

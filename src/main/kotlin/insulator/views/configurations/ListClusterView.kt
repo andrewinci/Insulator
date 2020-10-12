@@ -1,9 +1,13 @@
 package insulator.views.configurations
 
+import insulator.di.currentCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
+import insulator.viewmodel.configurations.ClusterModel
+import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.common.InsulatorView
+import insulator.views.common.StringScope
 import insulator.views.common.customOpenWindow
 import insulator.views.component.action
 import insulator.views.component.h1
@@ -15,6 +19,7 @@ import insulator.views.update.UpdateInfoView
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -30,14 +35,22 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
 
     private fun EventTarget.addNewClusterButton() =
         button("Add new cluster") {
-            action { viewModel.openEditClusterWindow() }
+            action {
+                getClusterScope()
+                    .let { scope -> find<ClusterView>(scope).also { view -> view.whenUndockedOnce { scope.close() } } }
+                    .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+            }
         }
 
     private fun EventTarget.clusterList() =
         listview(viewModel.clustersProperty) {
             cellFormat { graphic = buildClusterCell(it) }
             action { cluster ->
-                viewModel.openMainWindow(cluster) { replaceWith(find<MainView>(it)) }
+                currentCluster = cluster
+                currentStage?.hide()
+                find<MainView>(getClusterScope(cluster))
+                    .also { it.whenUndocked { currentStage?.show() } }
+                    .openWindow(modality = Modality.WINDOW_MODAL)
             }
         }
 
@@ -47,7 +60,11 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                 h2(cluster.name)
                 subTitle(cluster.endpoint) { maxWidth = 260.0 }
             }
-            right = settingsButton { viewModel.openEditClusterWindow(cluster) }
+            right = settingsButton {
+                getClusterScope(cluster)
+                    .let { scope -> find<ClusterView>(scope).also { view -> view.whenUndockedOnce { scope.close() } } }
+                    .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+            }
             id = "cluster-${cluster.guid}"
         }
 
@@ -58,6 +75,9 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                     UpdateInfoView(it.latestRelease).customOpenWindow(modality = Modality.WINDOW_MODAL)
             }
     }
+
+    private fun getClusterScope(cluster: Cluster = Cluster.empty()) = StringScope("Cluster-${cluster.guid}")
+        .withComponent(ClusterViewModel(ClusterModel(cluster)))
 
     override fun onDock() {
         super.onDock()
