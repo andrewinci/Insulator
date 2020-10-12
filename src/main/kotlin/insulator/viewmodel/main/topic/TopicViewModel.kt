@@ -10,7 +10,6 @@ import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.StringScope
-import insulator.views.common.customOpenWindow
 import insulator.views.main.topic.ProducerView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
@@ -23,6 +22,8 @@ import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
+import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.LinkedList
 
@@ -122,10 +123,10 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         }
     }
 
-    fun showProduceView() =
-        with(StringScope(topicName).withComponent(ProducerViewModel(topicName))) {
-            find<ProducerView>(this).customOpenWindow(owner = null)
-        }
+    fun showProduceView() = StringScope("producer-$topicName")
+        .withComponent(ProducerViewModel(topicName))
+        .let { find<ProducerView>(it) }
+        .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
 
     fun configureFilteredRecords(comparator: ObservableValue<Comparator<RecordViewModel>>) {
         filteredRecords.set(

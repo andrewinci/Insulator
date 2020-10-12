@@ -4,7 +4,6 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.common.customOpenWindow
 import insulator.views.component.action
 import insulator.views.component.h1
 import insulator.views.component.h2
@@ -55,7 +54,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         if (wasVersionChecked.compareAndSet(false, true))
             VersionChecker().getCurrentVersion().map {
                 if (it.latestRelease != null)
-                    UpdateInfoView(it.latestRelease).customOpenWindow(modality = Modality.WINDOW_MODAL)
+                    UpdateInfoView(it.latestRelease).openWindow(modality = Modality.WINDOW_MODAL)
             }
     }
 
