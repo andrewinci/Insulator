@@ -27,7 +27,7 @@ class RecordParserTest : FunSpec({
     test("happy path") {
         // arrange
         val sut = RecordParser(
-            mockk() {
+            mockk {
                 every { parseField(any(), any()) } returns "".right()
             }
         )
@@ -40,7 +40,7 @@ class RecordParserTest : FunSpec({
     test("invalid record") {
         // arrange
         val sut = RecordParser(
-            mockk() {
+            mockk {
                 every { parseField(any(), any()) } returns "".right()
             }
         )
@@ -55,7 +55,7 @@ class RecordParserTest : FunSpec({
     test("record with a missing field") {
         // arrange
         val sut = RecordParser(
-            mockk() {
+            mockk {
                 every { parseField(any(), any()) } returns "".right()
             }
         )

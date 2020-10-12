@@ -23,7 +23,7 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
     val nextFieldProperty = SimpleStringProperty("")
     val validationErrorProperty = SimpleStringProperty(null)
     val keyProperty = SimpleStringProperty()
-    val valueProperty = SimpleStringProperty("{\n}")
+    val valueProperty = SimpleStringProperty()
     val canSendProperty: ObservableBooleanValue = Bindings.createBooleanBinding(
         { validationErrorProperty.value == null && !keyProperty.value.isNullOrEmpty() && !valueProperty.value.isNullOrEmpty() },
         validationErrorProperty,
@@ -51,6 +51,7 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
                 )
             }
         }
+        valueProperty.set("{\n}")
     }
 
     fun send() {

@@ -1,9 +1,9 @@
 package insulator.views.main.topic
 
-import insulator.styles.Controls
-import insulator.styles.Titles
 import insulator.viewmodel.main.topic.CreateTopicViewModel
-import javafx.geometry.Insets
+import insulator.views.component.h1
+import insulator.views.component.insulatorAlert
+import javafx.event.EventTarget
 import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -12,48 +12,46 @@ class CreateTopicView : View() {
 
     override val root = form {
         fieldset {
-            label("Create topic") { addClass(Titles.h1) }
+            h1("Create topic")
             field("Topic name") { textfield(viewModel.nameProperty).required() }
-            field("Number of partitions") {
-                textfield(viewModel.partitionCountProperty) {
-                    filterInput { it.controlNewText.isInt() }
-                    validator {
-                        ValidationMessage(
-                            "",
-                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error
-                        )
-                    }
-                    required()
-                }
-            }
-            field("Replication factor") {
-                textfield(viewModel.replicationFactorProperty) {
-                    filterInput { it.controlNewText.isInt() }
-                    validator {
-                        ValidationMessage(
-                            "",
-                            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error
-                        )
-                    }
-                    required()
-                }
-            }
+            field("Number of partitions") { numberOfPartitionTextField() }
+            field("Replication factor") { replicationFactorTextField() }
             field("Compacted") { checkbox(property = viewModel.isCompactedProperty) }
         }
-
         borderpane {
-            padding = Insets(0.0, 50.0, 0.0, 50.0)
-            right = button("Create") {
-                enableWhen(viewModel.valid)
-                action {
-                    viewModel.commit()
-                    viewModel.save().fold(
-                        { close() },
-                        { alert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") }
-                    )
-                }
+            right = createButton()
+        }
+    }
+
+    private fun EventTarget.createButton() =
+        button("Create") {
+            enableWhen(viewModel.valid)
+            action {
+                viewModel.commit()
+                viewModel.save().fold(
+                    { close() },
+                    { insulatorAlert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") }
+                )
             }
         }
-        addClass(Controls.view)
-    }
+
+    private fun EventTarget.replicationFactorTextField() =
+        textfield(viewModel.replicationFactorProperty) {
+            filterInput { it.controlNewText.isInt() }
+            validator { validationMessage(it) }
+            required()
+        }
+
+    private fun EventTarget.numberOfPartitionTextField() =
+        textfield(viewModel.partitionCountProperty) {
+            filterInput { it.controlNewText.isInt() }
+            validator { validationMessage(it) }
+            required()
+        }
+
+    private fun validationMessage(it: String?) =
+        ValidationMessage(
+            null,
+            if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error
+        )
 }

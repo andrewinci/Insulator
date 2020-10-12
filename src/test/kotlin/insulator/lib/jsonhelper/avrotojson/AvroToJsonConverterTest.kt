@@ -24,9 +24,9 @@ class AvroToJsonConverterTest : FunSpec({
         // null
         row("\"null\"", null, "null"),
         // boolean
-        row("\"boolean\"", true, true),
-        row("\"boolean\"", false, false),
-        row("""["boolean", "null"]""", false, false),
+        row("\"boolean\"", b = true, c = true),
+        row("\"boolean\"", b = false, c = false),
+        row("""["boolean", "null"]""", b = false, c = false),
         row("""["null", "boolean"]""", null, "null"),
         // int, long
         row("\"int\"", -12232, -12232),

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package insulator.integrationtest.helper
 
 import insulator.di.CONFIG_FILE_NAME

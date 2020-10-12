@@ -9,12 +9,16 @@ import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.common.StringScope
+import insulator.views.common.customOpenWindow
+import insulator.views.main.topic.ProducerView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.value.ObservableStringValue
 import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -53,7 +57,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.toString())
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
     val searchItem = SimpleStringProperty()
-    val subtitleProperty: ObservableValue<String> = Bindings.createStringBinding(
+    val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
         {
             "Message count: ${messageConsumedCountProperty.value}/${messageCountProperty.value} - " +
                 "Is internal: ${isInternalProperty.value} - " +
@@ -67,7 +71,9 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         messageCountProperty
     )
 
-    init { refresh() }
+    init {
+        refresh()
+    }
 
     fun clear() = records.clear()
     fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
@@ -114,5 +120,23 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
             val recordViewModels = it.map { (k, v, t) -> RecordViewModel(k, v, t) }
             records.runOnFXThread { addAll(recordViewModels) }
         }
+    }
+
+    fun showProduceView() =
+        with(StringScope(topicName).withComponent(ProducerViewModel(topicName))) {
+            find<ProducerView>(this).customOpenWindow(owner = null)
+        }
+
+    fun configureFilteredRecords(comparator: ObservableValue<Comparator<RecordViewModel>>) {
+        filteredRecords.set(
+            SortedFilteredList(records).apply {
+                filterWhen(searchItem) { p, i ->
+                    i.keyProperty.value?.toLowerCase()?.contains(p.toLowerCase()) ?: false ||
+                        i.valueProperty.value.toLowerCase().contains(p.toLowerCase())
+                }
+            }.sortedItems.also {
+                it.comparatorProperty().bind(comparator)
+            }
+        )
     }
 }

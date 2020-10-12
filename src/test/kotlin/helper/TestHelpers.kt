@@ -22,8 +22,13 @@ fun configureDi(vararg dependencyMap: Pair<KClass<*>, Any>) {
     }
 }
 
+fun configureScopeDi(vararg dependency: Configurable) = dependency.forEach {
+    FX.defaultScope.set(it as ScopedInstance)
+}
+
 fun cleanupDi() {
     FX.dicontainer = null
+    FX.defaultScope.deregister()
     stopKoin()
 }
 

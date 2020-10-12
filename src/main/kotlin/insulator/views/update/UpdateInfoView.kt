@@ -1,8 +1,8 @@
 package insulator.views.update
 
 import insulator.lib.update.Release
-import insulator.styles.Controls
-import insulator.styles.Titles
+import insulator.views.component.h1
+import insulator.views.component.h2
 import javafx.geometry.Pos
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -10,8 +10,8 @@ class UpdateInfoView(release: Release) : View() {
 
     override val root = borderpane {
         top = vbox {
-            label("New version available") { addClass(Titles.h1) }
-            label("Insulator ${release.version}") { addClass(Titles.h2) }
+            h1("New version available")
+            h2("Insulator ${release.version}")
         }
         center = vbox(alignment = Pos.CENTER, spacing = 7.0) {
             hyperlink("Web") { action { FX.application.hostServices.showDocument(release.webUrl) } }
@@ -22,7 +22,6 @@ class UpdateInfoView(release: Release) : View() {
         bottom = hbox(alignment = Pos.CENTER) {
             button("Close") { action { close() } }
         }
-        addClass(Controls.view)
     }
 
     override fun onDock() {

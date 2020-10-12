@@ -1,10 +1,9 @@
 package insulator.views.configurations
 
-import insulator.styles.Controls
-import insulator.styles.Titles
 import insulator.viewmodel.configurations.ClusterViewModel
-import insulator.views.common.confirmationButton
-import javafx.geometry.Insets
+import insulator.views.component.confirmationButton
+import insulator.views.component.h1
+import javafx.event.EventTarget
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ClusterView : View() {
@@ -13,7 +12,7 @@ class ClusterView : View() {
 
     override val root = form {
         fieldset {
-            label("Cluster connection") { addClass(Titles.h1) }
+            h1("Cluster connection")
             field("Cluster name") { textfield(viewModel.nameProperty).required() }
             field("Endpoint (url:port)") { textfield(viewModel.endpointProperty).required() }
             fieldset {
@@ -31,30 +30,34 @@ class ClusterView : View() {
                 field("Password") { textfield(viewModel.saslPasswordProperty).requiredWhen(viewModel.useSaslProperty) }
             }
             fieldset {
-                label("Schema registry") { addClass(Titles.h1) }
+                h1("Schema registry")
                 field("Endpoint") { textfield(viewModel.schemaRegistryEndpointProperty) }
                 field("Username") { textfield(viewModel.schemaRegistryUsernameProperty) }
                 field("Password") { textfield(viewModel.schemaRegistryPasswordProperty) }
             }
-            borderpane {
-                padding = Insets(0.0, 50.0, 0.0, 50.0)
-                left = confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
-                    viewModel.delete()
-                    close()
-                }
-                right = button("Save") {
-                    enableWhen(viewModel.valid)
-                    action {
-                        viewModel.commit()
-                        viewModel.save()
-                        close()
-                    }
-                }
-            }
+        }
+        borderpane {
+            left = deleteButton()
+            right = saveButton()
         }
         prefWidth = 600.0
-        addClass(Controls.view)
     }
+
+    private fun EventTarget.deleteButton() =
+        confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
+            viewModel.delete()
+            close()
+        }
+
+    private fun EventTarget.saveButton() =
+        button("Save") {
+            enableWhen(viewModel.valid)
+            action {
+                viewModel.commit()
+                viewModel.save()
+                close()
+            }
+        }
 
     override fun onDock() {
         super.onDock()

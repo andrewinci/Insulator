@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package helper
 
 import io.kotest.core.config.AbstractProjectConfig
