@@ -37,7 +37,8 @@ class VersionChecker(private val customJarPath: String? = null) {
     }
 
     fun getAppVersion(): Either<Throwable, String> {
-        val jarFolder = Paths.get(URLDecoder.decode(jarPath, "UTF-8")).parent.toAbsolutePath().toString()
+        val jarFolder = Paths.get(URLDecoder.decode(jarPath, "UTF-8")).parent?.toAbsolutePath()?.toString()
+            ?: return FileNotFoundException().left()
         val configPath = Paths.get(jarFolder, CONFIG_FILE_NAME).toAbsolutePath().toString()
         return if (File(configPath).exists())
             Properties()
