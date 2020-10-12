@@ -13,6 +13,8 @@ class MainViewStyle : Stylesheet() {
         val sidebarItem by cssclass("sidebar-item")
     }
 
+    private val contentPadding = 0.1.em
+
     init {
         sidebar {
             spacing = 1.em
@@ -41,7 +43,12 @@ class MainViewStyle : Stylesheet() {
                 padding = box(theme.viewPadding, 0.px)
             }
             contentList {
-                padding = box(theme.viewPadding)
+                padding = box(
+                    theme.viewPadding + contentPadding,
+                    theme.viewPadding + contentPadding,
+                    contentPadding,
+                    theme.viewPadding + contentPadding,
+                )
             }
             content {
                 padding = box(0.px, 0.px, (-2).px, 0.px)
@@ -54,9 +61,8 @@ class MainViewStyle : Stylesheet() {
                 backgroundColor = multi(theme.backgroundColor)
             }
             tabContentArea {
-                padding = box(theme.viewPadding)
+                padding = box(theme.viewPadding + contentPadding)
             }
-
             tabHeaderArea {
                 backgroundColor = multi(theme.backgroundColor)
                 padding = box(0.px)

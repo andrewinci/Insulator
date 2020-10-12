@@ -22,19 +22,22 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 private const val ICON_TOPICS = "icons/topics.png"
 private const val ICON_REGISTRY = "icons/schemaRegistryIcon.png"
+const val SIDEBAR_WIDTH = 250.0
+const val CONTENT_LIST_WIDTH = 450.0
+const val CONTENT_WIDTH = 780.0
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
         addClass(MainViewStyle.contentList)
-        minWidth = 400.0
-        maxWidth = 400.0
+        minWidth = CONTENT_LIST_WIDTH
+        maxWidth = CONTENT_LIST_WIDTH
     }
 
     private val content = tabpane {
         viewModel.contentTabs = tabs
-        minWidth = 750.0
+        minWidth = CONTENT_WIDTH
         side = Side.BOTTOM
         addClass(MainViewStyle.content)
     }
@@ -71,8 +74,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 themeButton { changeTheme() }
             }
             addClass(MainViewStyle.sidebar)
-            minWidth = 250.0
-            maxWidth = 250.0
+            minWidth = SIDEBAR_WIDTH
+            maxWidth = SIDEBAR_WIDTH
         }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
@@ -84,20 +87,20 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
 
     private fun setSize() {
-        val defaultWidth = 650.0
+        val min = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
         if (nodes.size == 2) {
-            super.currentStage?.maxWidth = defaultWidth
-            super.currentStage?.minWidth = defaultWidth
+            super.currentStage?.maxWidth = min
+            super.currentStage?.minWidth = min
         } else {
             super.currentStage?.maxWidth = Double.MAX_VALUE
-            super.currentStage?.minWidth = defaultWidth + 750
+            super.currentStage?.minWidth = min + CONTENT_WIDTH
         }
-        super.currentStage?.height = 800.0
     }
 
     override fun onDock() {
         super.onDock()
         setSize()
+        super.currentStage?.height = 800.0
         super.currentStage?.isResizable = true
     }
 
