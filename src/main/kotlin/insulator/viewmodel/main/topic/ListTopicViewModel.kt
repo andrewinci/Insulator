@@ -7,7 +7,6 @@ import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.StringScope
-import insulator.views.common.customOpenWindow
 import insulator.views.main.topic.CreateTopicView
 import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty
@@ -55,10 +54,8 @@ class ListTopicViewModel : InsulatorViewModel() {
             .let { topicView -> setMainContent(selectedTopicName, topicView) }
     }
 
-    fun createNewTopic() =
-        with(StringScope("CreateNewTopic").withComponent(CreateTopicViewModel())) {
-            find<CreateTopicView>(this).also {
-                it.whenUndockedOnce { refresh(); this.close() }
-            }.customOpenWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
-        }
+    fun createNewTopic() = StringScope("CreateNewTopic")
+        .withComponent(CreateTopicViewModel())
+        .let { scope -> find<CreateTopicView>(scope).also { it.whenUndockedOnce { refresh(); scope.close() } } }
+        .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
 }
