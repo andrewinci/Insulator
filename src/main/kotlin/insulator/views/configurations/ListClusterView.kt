@@ -59,10 +59,12 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
                 h2(cluster.name)
                 subTitle(cluster.endpoint) { maxWidth = 260.0 }
             }
-            right = settingsButton {
-                getClusterScope(cluster)
-                    .let { scope -> find<ClusterView>(scope).also { view -> view.whenUndockedOnce { scope.close() } } }
-                    .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+            right = vbox(alignment = Pos.CENTER_RIGHT) {
+                settingsButton {
+                    getClusterScope(cluster)
+                        .let { scope -> find<ClusterView>(scope).also { view -> view.whenUndockedOnce { scope.close() } } }
+                        .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+                }
             }
             id = "cluster-${cluster.guid}"
         }

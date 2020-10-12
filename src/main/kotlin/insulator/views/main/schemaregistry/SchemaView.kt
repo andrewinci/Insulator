@@ -33,9 +33,6 @@ class SchemaView : InsulatorTabView<SchemaViewModel>(viewModelClazz = SchemaView
             schemaContent()
             vgrow = Priority.ALWAYS
         }
-
-        prefWidth = 800.0
-        prefHeight = 800.0
     }
 
     private fun EventTarget.schemaComboBox() =

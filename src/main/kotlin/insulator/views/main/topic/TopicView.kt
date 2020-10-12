@@ -46,9 +46,6 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             right = searchBox(viewModel.searchItem, this@TopicView)
         }
         recordsTable()
-
-        prefWidth = 800.0
-        prefHeight = 800.0
     }
 
     private fun EventTarget.valueFormatOptions() {
