@@ -14,9 +14,6 @@ import insulator.views.style.ScrollBarStyle
 import insulator.views.style.ScrollPaneStyle
 import insulator.views.style.TableViewStyle
 import insulator.views.style.TextStyle
-import javafx.scene.Scene
-import javafx.stage.Stage
-import javafx.stage.Window
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class Insulator : App(
@@ -33,20 +30,7 @@ class Insulator : App(
     ScrollPaneStyle::class,
     MainViewStyle::class,
     ScrollBarStyle::class
-) {
-
-    override fun createPrimaryScene(view: UIComponent): Scene {
-        FX.primaryStage.setOnCloseRequest { stop() }
-        return super.createPrimaryScene(view)
-    }
-
-    override fun stop() {
-        Window.getWindows().map { it as? Stage }
-            .filter { it != FX.primaryStage }
-            .forEach { it?.close() }
-        super.stop()
-    }
-}
+)
 
 fun main(args: Array<String>) {
     FX.dicontainer = DIContainer()
