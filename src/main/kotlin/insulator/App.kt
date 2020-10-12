@@ -10,6 +10,7 @@ import insulator.views.style.DialogPaneStyle
 import insulator.views.style.ListViewStyle
 import insulator.views.style.MainViewStyle
 import insulator.views.style.Root
+import insulator.views.style.ScrollBarStyle
 import insulator.views.style.ScrollPaneStyle
 import insulator.views.style.TableViewStyle
 import insulator.views.style.TextStyle
@@ -31,6 +32,7 @@ class Insulator : App(
     DialogPaneStyle::class,
     ScrollPaneStyle::class,
     MainViewStyle::class,
+    ScrollBarStyle::class
 ) {
 
     override fun createPrimaryScene(view: UIComponent): Scene {
