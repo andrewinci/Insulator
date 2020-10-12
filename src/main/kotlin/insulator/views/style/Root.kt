@@ -2,6 +2,8 @@ package insulator.views.style
 
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
+import javafx.stage.Stage
+import javafx.stage.Window
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class Root : Stylesheet() {
@@ -63,5 +65,6 @@ var theme: Theme = lightTheme
 fun changeTheme() {
     theme = if (theme == darkTheme) lightTheme
     else darkTheme
-    FX.primaryStage.scene.reloadStylesheets()
+    Window.getWindows().map { it as? Stage }
+        .forEach { it?.scene?.reloadStylesheets() }
 }
