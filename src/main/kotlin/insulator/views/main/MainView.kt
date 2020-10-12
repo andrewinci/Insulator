@@ -22,22 +22,22 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 private const val ICON_TOPICS = "icons/topics.png"
 private const val ICON_REGISTRY = "icons/schemaRegistryIcon.png"
+const val SIDEBAR_WIDTH = 250.0
+const val CONTENT_LIST_WIDTH = 450.0
+const val CONTENT_WIDTH = 780.0
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
-    private val sidebarWidth = 250.0
-    private val contentListWidth = 450.0
-    private val contentWidth = 780.0
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
         addClass(MainViewStyle.contentList)
-        minWidth = contentListWidth
-        maxWidth = contentListWidth
+        minWidth = CONTENT_LIST_WIDTH
+        maxWidth = CONTENT_LIST_WIDTH
     }
 
     private val content = tabpane {
         viewModel.contentTabs = tabs
-        minWidth = contentWidth
+        minWidth = CONTENT_WIDTH
         side = Side.BOTTOM
         addClass(MainViewStyle.content)
     }
@@ -74,8 +74,8 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
                 themeButton { changeTheme() }
             }
             addClass(MainViewStyle.sidebar)
-            minWidth = sidebarWidth
-            maxWidth = sidebarWidth
+            minWidth = SIDEBAR_WIDTH
+            maxWidth = SIDEBAR_WIDTH
         }
 
     private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
@@ -87,13 +87,13 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
 
     private fun setSize() {
-        val min = sidebarWidth + contentListWidth
+        val min = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
         if (nodes.size == 2) {
             super.currentStage?.maxWidth = min
             super.currentStage?.minWidth = min
         } else {
             super.currentStage?.maxWidth = Double.MAX_VALUE
-            super.currentStage?.minWidth = min + contentWidth
+            super.currentStage?.minWidth = min + CONTENT_WIDTH
         }
     }
 
