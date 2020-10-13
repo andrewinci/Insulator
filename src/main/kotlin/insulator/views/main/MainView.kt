@@ -88,12 +88,17 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
 
     private fun setSize() {
         val min = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
-        if (nodes.size == 2) {
-            super.currentStage?.maxWidth = min
-            super.currentStage?.minWidth = min
-        } else {
-            super.currentStage?.maxWidth = Double.MAX_VALUE
-            super.currentStage?.minWidth = min + CONTENT_WIDTH
+        if (super.currentStage == null) return
+        with(super.currentStage!!) {
+            if (nodes.size == 2 && maxWidth != min) {
+                maxWidth = min
+                minWidth = min
+                center()
+            } else if (maxWidth != Double.MAX_VALUE) {
+                maxWidth = Double.MAX_VALUE
+                minWidth = min + CONTENT_WIDTH
+                center()
+            }
         }
     }
 
