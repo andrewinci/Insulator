@@ -81,13 +81,15 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         .withComponent(ClusterViewModel(ClusterModel(cluster)))
 
     override fun onDock() {
-        super.onDock()
-        super.currentStage?.minWidth = 380.0
-        super.currentStage?.width = 380.0
-        super.currentStage?.minHeight = 500.0
-        super.currentStage?.height = 500.0
-        super.currentStage?.resizableProperty()?.value = false
+        super.currentStage?.let {
+            it.minWidth = 380.0
+            it.width = 380.0
+            it.minHeight = 500.0
+            it.height = 500.0
+            it.resizableProperty().value = false
+        }
         checkVersion()
+        super.onDock()
     }
 
     override fun onError(throwable: Throwable) {

@@ -86,24 +86,22 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
 
     private fun setSize() {
-        val min = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
-        if (super.currentStage == null) return
-        with(super.currentStage!!) {
-            if (nodes.size == 2 && minWidth != min) {
-                minWidth = min
-                center()
-            } else if (minWidth != min + CONTENT_WIDTH) {
-                minWidth = min + CONTENT_WIDTH
+        val newMinWidth = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + if (nodes.size == 2) 0.0 else CONTENT_WIDTH
+        super.currentStage?.let {
+            if (it.minWidth != newMinWidth) {
+                it.minWidth = newMinWidth
                 center()
             }
         }
     }
 
     override fun onDock() {
-        super.onDock()
+        super.currentStage?.let {
+            it.height = 800.0
+            it.isResizable = true
+        }
         setSize()
-        super.currentStage?.height = 800.0
-        super.currentStage?.isResizable = true
+        super.onDock()
     }
 
     override fun onError(throwable: Throwable) {
