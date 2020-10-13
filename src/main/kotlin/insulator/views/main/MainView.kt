@@ -32,7 +32,6 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         centerProperty().bind(viewModel.contentList)
         addClass(MainViewStyle.contentList)
         minWidth = CONTENT_LIST_WIDTH
-        maxWidth = CONTENT_LIST_WIDTH
     }
 
     private val content = tabpane {
@@ -88,12 +87,15 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
 
     private fun setSize() {
         val min = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
-        if (nodes.size == 2) {
-            super.currentStage?.maxWidth = min
-            super.currentStage?.minWidth = min
-        } else {
-            super.currentStage?.maxWidth = Double.MAX_VALUE
-            super.currentStage?.minWidth = min + CONTENT_WIDTH
+        if (super.currentStage == null) return
+        with(super.currentStage!!) {
+            if (nodes.size == 2 && minWidth != min) {
+                minWidth = min
+                center()
+            } else if (minWidth != min + CONTENT_WIDTH) {
+                minWidth = min + CONTENT_WIDTH
+                center()
+            }
         }
     }
 
