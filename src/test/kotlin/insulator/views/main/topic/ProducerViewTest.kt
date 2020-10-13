@@ -3,8 +3,6 @@ package insulator.views.main.topic
 import helper.cleanupFXFramework
 import helper.configureFXFramework
 import helper.configureScopeDi
-import insulator.di.currentCluster
-import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.main.topic.ProducerViewModel
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldNotBe
@@ -26,11 +24,10 @@ class ProducerViewTest : FunSpec({
     }
 
     beforeTest {
-        currentCluster = Cluster.empty()
         configureFXFramework()
         configureScopeDi(
             mockk<ProducerViewModel>(relaxed = true) {
-                every { producerTypeProperty } returns SimpleStringProperty("")
+                every { producerTypeProperty } returns SimpleObjectProperty()
                 every { nextFieldProperty } returns SimpleStringProperty("")
                 every { validationErrorProperty } returns SimpleStringProperty(null)
                 every { keyProperty } returns SimpleStringProperty()

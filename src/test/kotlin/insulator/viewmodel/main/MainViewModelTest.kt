@@ -5,7 +5,7 @@ import helper.cleanupFXFramework
 import helper.configureDi
 import helper.configureFXFramework
 import helper.waitFXThread
-import insulator.di.currentCluster
+import insulator.di.setGlobalCluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.SchemaRegistry
@@ -26,7 +26,7 @@ class MainViewModelTest : FunSpec({
     test("happy path change view") {
         // arrange
         val sut = MainViewModel()
-        currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
+        setGlobalCluster(mockk { every { isSchemaRegistryConfigured() } returns true })
         val newView = ListSchemaView::class
         // act
         sut.runOnFXThread { setContentList(newView) }
@@ -39,7 +39,7 @@ class MainViewModelTest : FunSpec({
     test("do not show the schema list if schema registry is not configured") {
         // arrange
         val sut = MainViewModel()
-        currentCluster = mockk { every { isSchemaRegistryConfigured() } returns false }
+        setGlobalCluster(mockk { every { isSchemaRegistryConfigured() } returns false })
         val topicView = sut.contentList.value
         // act
         sut.runOnFXThread { setContentList(ListSchemaView::class) }
@@ -51,7 +51,7 @@ class MainViewModelTest : FunSpec({
     test("switch to an unsupported view show an error") {
         // arrange
         val sut = MainViewModel()
-        currentCluster = mockk { every { isSchemaRegistryConfigured() } returns true }
+        setGlobalCluster(mockk { every { isSchemaRegistryConfigured() } returns true })
         val newView = ClusterView::class
         // act
         sut.runOnFXThread { setContentList(newView) }

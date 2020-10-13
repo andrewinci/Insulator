@@ -3,7 +3,7 @@ package insulator.views.main.topic
 import helper.cleanupFXFramework
 import helper.configureFXFramework
 import helper.configureScopeDi
-import insulator.di.currentCluster
+import insulator.di.setGlobalCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import io.kotest.core.spec.style.FunSpec
@@ -21,7 +21,7 @@ class CreateTopicViewTest : FunSpec({
     }
 
     beforeTest {
-        currentCluster = Cluster.empty()
+        setGlobalCluster(Cluster.empty())
         configureFXFramework()
         configureScopeDi(CreateTopicViewModel())
     }

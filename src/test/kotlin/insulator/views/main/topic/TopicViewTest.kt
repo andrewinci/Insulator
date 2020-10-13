@@ -3,7 +3,7 @@ package insulator.views.main.topic
 import helper.cleanupFXFramework
 import helper.configureFXFramework
 import helper.configureScopeDi
-import insulator.di.currentCluster
+import insulator.di.setGlobalCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
@@ -27,7 +27,7 @@ class TopicViewTest : FunSpec({
     }
 
     beforeTest {
-        currentCluster = Cluster.empty()
+        setGlobalCluster(Cluster.empty())
         configureFXFramework()
         configureScopeDi(
             mockk<TopicViewModel>(relaxed = true) {
