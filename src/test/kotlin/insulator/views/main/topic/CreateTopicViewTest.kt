@@ -1,32 +1,22 @@
 package insulator.views.main.topic
 
-import helper.cleanupFXFramework
-import helper.configureFXFramework
-import helper.configureScopeDi
-import insulator.di.setGlobalCluster
-import insulator.lib.configuration.model.Cluster
+import helper.FxContext
 import insulator.viewmodel.main.topic.CreateTopicViewModel
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 
-class CreateTopicViewTest : FunSpec({
+class CreateTopicViewTest : StringSpec({
 
-    test("Render view without exceptions") {
-        // arrange
-        val sut = CreateTopicView()
-        // act
-        val res = sut.root
-        // assert
-        res shouldNotBe null
-    }
+    "Render view without exceptions" {
+        FxContext().use {
 
-    beforeTest {
-        setGlobalCluster(Cluster.empty())
-        configureFXFramework()
-        configureScopeDi(CreateTopicViewModel())
-    }
-
-    afterTest {
-        cleanupFXFramework()
+            it.configureFxDi(CreateTopicViewModel())
+            // arrange
+            val sut = CreateTopicView()
+            // act
+            val res = sut.root
+            // assert
+            res shouldNotBe null
+        }
     }
 })

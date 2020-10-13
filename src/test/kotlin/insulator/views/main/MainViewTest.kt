@@ -1,26 +1,17 @@
 package insulator.views.main
 
-import helper.cleanupFXFramework
-import helper.configureFXFramework
-import helper.configureScopeDi
-import insulator.di.setGlobalCluster
-import insulator.lib.configuration.model.Cluster
+import helper.FxContext
 import insulator.viewmodel.main.MainViewModel
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.mockk.every
-import io.mockk.mockk
-import javafx.beans.property.SimpleObjectProperty
-import javafx.collections.FXCollections
-import javafx.scene.Parent
 import javafx.scene.control.Tab
 import javafx.scene.layout.VBox
 import tornadofx.FX
 
-class MainViewTest : FunSpec({
+class MainViewTest : StringSpec({
 
-    test("Render view without exceptions") {
+    "Render view without exceptions" {
         // arrange
         val sut = MainView()
         // act
@@ -29,7 +20,7 @@ class MainViewTest : FunSpec({
         res shouldNotBe null
     }
 
-    test("Default main view len should be 650") {
+    "Default main view len should be 650" {
         // arrange
         val sut = MainView()
         // act
@@ -38,42 +29,30 @@ class MainViewTest : FunSpec({
         sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
     }
 
-    test("Default main view + a tab len should be 1400") {
-        // arrange
-        val sut = MainView()
-        val vm = FX.find<MainViewModel>()
-        // act
-        sut.onDock()
-        vm.contentTabs.add(Tab("1", VBox()))
-        // assert
-        sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + CONTENT_WIDTH
+    "Default main view + a tab len should be 1400" {
+        FxContext().use {
+            // arrange
+            val sut = MainView()
+            val vm = FX.find<MainViewModel>()
+            // act
+            sut.onDock()
+            vm.contentTabs.add(Tab("1", VBox()))
+            // assert
+            sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + CONTENT_WIDTH
+        }
     }
 
-    test("Add and remove a tab leave the width unchanged") {
-        // arrange
-        val sut = MainView()
-        val vm = FX.find<MainViewModel>()
-        // act
-        sut.onDock()
-        vm.contentTabs.add(Tab("1", VBox()))
-        vm.contentTabs.removeLast()
-        // assert
-        sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
-    }
-
-    beforeTest {
-        setGlobalCluster(Cluster.empty())
-        configureFXFramework()
-        configureScopeDi(
-            mockk<MainViewModel>(relaxed = true) {
-                every { contentTabs } returns FXCollections.observableArrayList()
-                every { contentList } returns SimpleObjectProperty<Parent>()
-                every { error } returns SimpleObjectProperty<Throwable?>(null)
-            }
-        )
-    }
-
-    afterTest {
-        cleanupFXFramework()
+    "Add and remove a tab leave the width unchanged" {
+        FxContext().use {
+            // arrange
+            val sut = MainView()
+            val vm = FX.find<MainViewModel>()
+            // act
+            sut.onDock()
+            vm.contentTabs.add(Tab("1", VBox()))
+            vm.contentTabs.removeLast()
+            // assert
+            sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
+        }
     }
 })

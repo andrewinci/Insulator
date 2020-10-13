@@ -1,13 +1,13 @@
 package insulator.lib.jsonhelper.jsontoavro
 
 import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.mockk.mockk
 import org.apache.avro.Schema
 
-class FieldParserTest : FunSpec({
+class FieldParserTest : StringSpec({
 
-    test("Parse unsupported return left") {
+    "Parse unsupported return left" {
         // arrange
         val testFieldName = "testFieldName"
         val sut = FieldParser(mockk(relaxed = true), mockk(relaxed = true))

@@ -1,11 +1,12 @@
 package insulator.views.update
 
 import insulator.lib.update.Release
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 
-class UpdateInfoViewTest : FunSpec({
-    test("View is correctly rendered") {
+class UpdateInfoViewTest : StringSpec({
+
+    "View is correctly rendered" {
         // arrange
         val sut = UpdateInfoView(Release("", "", "", "", ""))
         // act
