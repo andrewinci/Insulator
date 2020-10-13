@@ -4,7 +4,7 @@ import arrow.core.extensions.either.applicativeError.handleError
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.StringScope
+import insulator.views.common.scope
 import insulator.views.main.schemaregistry.SchemaView
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -47,7 +47,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
             .fold(
                 { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) },
                 {
-                    StringScope(it.nameProperty.value)
+                    it.subject.scope
                         .withComponent(it)
                         .let { schemaView -> find<SchemaView>(schemaView) }
                         .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }

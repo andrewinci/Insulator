@@ -7,7 +7,7 @@ import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.common.StringScope
+import insulator.views.common.scope
 import insulator.views.component.action
 import insulator.views.component.h1
 import insulator.views.component.h2
@@ -77,7 +77,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
             }
     }
 
-    private fun getClusterScope(cluster: Cluster = Cluster.empty()) = StringScope("Cluster-${cluster.guid}")
+    private fun getClusterScope(cluster: Cluster = Cluster.empty()) = cluster.scope
         .withComponent(ClusterViewModel(ClusterModel(cluster)))
 
     override fun onDock() {

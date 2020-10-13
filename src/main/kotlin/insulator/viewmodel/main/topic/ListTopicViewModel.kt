@@ -1,12 +1,11 @@
 package insulator.viewmodel.main.topic
 
-import insulator.di.currentCluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
 import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.StringScope
+import insulator.views.common.topicScope
 import insulator.views.main.topic.CreateTopicView
 import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty
@@ -47,14 +46,14 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     fun showTopic() {
         val selectedTopicName = selectedItem.value ?: return
-        StringScope("${currentCluster.guid}-$selectedTopicName")
+        selectedItem.value.topicScope
             .withComponent(TopicViewModel(selectedTopicName))
             .let { topicView -> find<TopicView>(topicView) }
             .also { topicView -> topicView.setOnCloseListener { refresh() } }
             .let { topicView -> setMainContent(selectedTopicName, topicView) }
     }
 
-    fun createNewTopic() = StringScope("CreateNewTopic")
+    fun createNewTopic() = "new-topic".topicScope
         .withComponent(CreateTopicViewModel())
         .let { scope -> find<CreateTopicView>(scope).also { it.whenUndockedOnce { refresh(); scope.close() } } }
         .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)

@@ -9,7 +9,7 @@ import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.StringScope
+import insulator.views.common.topicScope
 import insulator.views.main.topic.ProducerView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
@@ -123,7 +123,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         }
     }
 
-    fun showProduceView() = StringScope("producer-$topicName")
+    fun showProduceView() = topicName.topicScope
         .withComponent(ProducerViewModel(topicName))
         .let { find<ProducerView>(it) }
         .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
