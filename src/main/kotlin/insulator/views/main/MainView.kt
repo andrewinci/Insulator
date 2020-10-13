@@ -51,7 +51,11 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     init {
         viewModel.contentTabs.onChange {
             when {
-                viewModel.contentTabs.size == 0 -> nodes.removeAt(2)
+                viewModel.contentTabs.size == 0 -> {
+                    val contentListWidth = contentList.width
+                    nodes.removeAt(2)
+                    super.currentStage?.width = SIDEBAR_WIDTH + contentListWidth
+                }
                 nodes.size <= 2 -> nodes.add(content)
                 else -> nodes[2] = content
             }
