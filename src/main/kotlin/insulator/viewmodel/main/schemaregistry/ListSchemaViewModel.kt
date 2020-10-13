@@ -55,6 +55,10 @@ class ListSchemaViewModel : InsulatorViewModel() {
                 }
             )
     }
+
+    fun createNewSchema() {
+        TODO("Not yet implemented")
+    }
 }
 
 class LoadSchemaError(message: String) : Throwable(message)

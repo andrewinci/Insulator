@@ -19,9 +19,18 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
                 h1("Schema registry")
             }
         }
-        searchBox(viewModel.searchItem, currentView = this@ListSchemaView)
+        borderpane {
+            left = createSchemaButton()
+            right = searchBox(viewModel.searchItem, currentView = this@ListSchemaView)
+        }
+
         schemasListView()
     }
+
+    private fun EventTarget.createSchemaButton() =
+        button("Create schema") {
+            action { viewModel.createNewSchema() }
+        }
 
     private fun EventTarget.schemasListView() =
         listview<String> {
