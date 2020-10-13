@@ -36,7 +36,6 @@ class MainViewTest : FunSpec({
         sut.onDock()
         // assert
         sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
-        sut.currentStage?.maxWidth shouldBe sut.currentStage?.minWidth
     }
 
     test("Default main view + a tab len should be 1400") {
@@ -48,7 +47,6 @@ class MainViewTest : FunSpec({
         vm.contentTabs.add(Tab("1", VBox()))
         // assert
         sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + CONTENT_WIDTH
-        sut.currentStage?.maxWidth shouldBe Double.MAX_VALUE
     }
 
     test("Add and remove a tab leave the width unchanged") {
@@ -61,7 +59,6 @@ class MainViewTest : FunSpec({
         vm.contentTabs.removeLast()
         // assert
         sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
-        sut.currentStage?.maxWidth shouldBe sut.currentStage?.minWidth
     }
 
     beforeTest {
