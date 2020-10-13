@@ -1,5 +1,6 @@
 package insulator.viewmodel.main.topic
 
+import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
 import insulator.lib.helpers.map
@@ -19,8 +20,8 @@ import tornadofx.whenUndockedOnce
 
 class ListTopicViewModel : InsulatorViewModel() {
 
+    private val cluster: Cluster by di()
     private val adminApi: AdminApi by di()
-
     private val topicList: ObservableList<String> = FXCollections.observableArrayList()
 
     val selectedItem = SimpleStringProperty(null)
@@ -46,14 +47,14 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     fun showTopic() {
         val selectedTopicName = selectedItem.value ?: return
-        selectedItem.value.topicScope
+        selectedItem.value.topicScope(cluster)
             .withComponent(TopicViewModel(selectedTopicName))
             .let { topicView -> find<TopicView>(topicView) }
             .also { topicView -> topicView.setOnCloseListener { refresh() } }
             .let { topicView -> setMainContent(selectedTopicName, topicView) }
     }
 
-    fun createNewTopic() = "new-topic".topicScope
+    fun createNewTopic() = "new-topic".topicScope(cluster)
         .withComponent(CreateTopicViewModel())
         .let { scope -> find<CreateTopicView>(scope).also { it.whenUndockedOnce { refresh(); scope.close() } } }
         .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)

@@ -1,5 +1,6 @@
 package insulator.views.common
 
+import insulator.di.setGlobalCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.model.Subject
 import tornadofx.FX
@@ -24,11 +25,9 @@ open class StringScope() : Closeable, Scope() {
     override fun close() = super.deregister()
 }
 
-val Subject.scope
-    get() = object : StringScope("subject-${this.name}") {}
+fun Subject.scope(cluster: Cluster) = object : StringScope("subject-${this.name}-${cluster.hashCode()}") {}
 
-val Cluster.scope
-    get() = object : StringScope("cluster-${this.guid}") {}
+// The cluster scopes in tornado and in koin have to be the same
+fun Cluster.scope() = (object : StringScope("cluster-${this.hashCode()}") {}).also { setGlobalCluster(this) }
 
-val String.topicScope
-    get() = object : StringScope("topic-$this") {}
+fun String.topicScope(cluster: Cluster) = object : StringScope("topic-$this-${cluster.hashCode()}") {}

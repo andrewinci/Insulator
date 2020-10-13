@@ -1,6 +1,5 @@
 package insulator.views.configurations
 
-import insulator.di.currentCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
 import insulator.viewmodel.configurations.ClusterModel
@@ -45,7 +44,6 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         listview(viewModel.clustersProperty) {
             cellFormat { graphic = buildClusterCell(it) }
             action { cluster ->
-                currentCluster = cluster
                 currentStage?.hide()
                 find<MainView>(getClusterScope(cluster))
                     .also { it.whenUndocked { currentStage?.show() } }
@@ -77,7 +75,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
             }
     }
 
-    private fun getClusterScope(cluster: Cluster = Cluster.empty()) = cluster.scope
+    private fun getClusterScope(cluster: Cluster = Cluster.empty()) = cluster.scope()
         .withComponent(ClusterViewModel(ClusterModel(cluster)))
 
     override fun onDock() {

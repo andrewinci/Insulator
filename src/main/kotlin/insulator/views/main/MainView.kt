@@ -1,6 +1,6 @@
 package insulator.views.main
 
-import insulator.di.currentCluster
+import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.main.MainViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.component.h1
@@ -27,6 +27,8 @@ const val CONTENT_LIST_WIDTH = 450.0
 const val CONTENT_WIDTH = 780.0
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
+
+    val cluster: Cluster by di()
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
@@ -66,7 +68,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     private fun sidebar() =
         borderpane {
             top = vbox(alignment = Pos.TOP_CENTER) {
-                h1(currentCluster.name)
+                h1(cluster.name)
                 button("Change cluster") { action { close() } }
             }
             center = vbox {

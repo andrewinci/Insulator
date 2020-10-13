@@ -1,6 +1,7 @@
 package insulator.viewmodel.main.schemaregistry
 
 import arrow.core.extensions.either.applicativeError.handleError
+import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
 import insulator.viewmodel.common.InsulatorViewModel
@@ -13,6 +14,7 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ListSchemaViewModel : InsulatorViewModel() {
 
+    private val cluster: Cluster by di()
     private val schemaRegistryClient: SchemaRegistry by di()
 
     private val listSchema: ObservableList<String> = FXCollections.observableArrayList()
@@ -47,7 +49,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
             .fold(
                 { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) },
                 {
-                    it.subject.scope
+                    it.subject.scope(cluster)
                         .withComponent(it)
                         .let { schemaView -> find<SchemaView>(schemaView) }
                         .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }
