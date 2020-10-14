@@ -1,6 +1,5 @@
 package insulator.viewmodel.main.topic
 
-import insulator.di.getInstanceNow
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.runOnFXThread
@@ -9,7 +8,7 @@ import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.StringScope
+import insulator.views.common.topicScope
 import insulator.views.main.topic.ProducerView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
@@ -32,9 +31,9 @@ private const val STOP = "Stop"
 
 class TopicViewModel(val topicName: String) : InsulatorViewModel() {
 
-    private val adminApi: AdminApi = getInstanceNow()
-    private val consumer: Consumer = getInstanceNow()
-    val cluster: Cluster by di()
+    private val cluster: Cluster by di()
+    private val adminApi: AdminApi by di()
+    private val consumer: Consumer by di()
 
     private val isInternalProperty = SimpleBooleanProperty()
     private val partitionCountProperty = SimpleIntegerProperty()
@@ -123,7 +122,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         }
     }
 
-    fun showProduceView() = StringScope("producer-$topicName")
+    fun showProduceView() = topicName.topicScope(cluster)
         .withComponent(ProducerViewModel(topicName))
         .let { find<ProducerView>(it) }
         .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)

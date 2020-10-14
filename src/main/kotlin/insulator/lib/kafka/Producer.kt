@@ -53,3 +53,8 @@ class StringProducer(private val stringProducer: KafkaProducer<String, String>) 
         return stringProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })
     }
 }
+
+enum class SerializationFormat {
+    String,
+    Avro,
+}

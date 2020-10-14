@@ -5,13 +5,13 @@ import insulator.lib.jsonhelper.jsontoavro.JsonInvalidFieldException
 import insulator.lib.jsonhelper.jsontoavro.JsonMissingFieldException
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.avro.Schema
 
-class RecordParserTest : FunSpec({
+class RecordParserTest : StringSpec({
     val schema = Schema.Parser().parse(
         """
             {
@@ -24,7 +24,7 @@ class RecordParserTest : FunSpec({
         """.trimIndent()
     )
 
-    test("happy path") {
+    "happy path" {
         // arrange
         val sut = RecordParser(
             mockk {
@@ -37,7 +37,7 @@ class RecordParserTest : FunSpec({
         res shouldBeRight {}
     }
 
-    test("invalid record") {
+    "invalid record" {
         // arrange
         val sut = RecordParser(
             mockk {
@@ -52,7 +52,7 @@ class RecordParserTest : FunSpec({
         }
     }
 
-    test("record with a missing field") {
+    "record with a missing field" {
         // arrange
         val sut = RecordParser(
             mockk {

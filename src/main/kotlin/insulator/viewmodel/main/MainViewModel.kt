@@ -1,6 +1,6 @@
 package insulator.viewmodel.main
 
-import insulator.di.currentCluster
+import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.InsulatorTabView
 import insulator.views.main.schemaregistry.ListSchemaView
@@ -15,13 +15,15 @@ import kotlin.reflect.KClass
 
 class MainViewModel : InsulatorViewModel() {
 
+    private val cluster: Cluster by di()
+
     lateinit var contentTabs: ObservableList<Tab>
     val contentList: SimpleObjectProperty<Parent> = SimpleObjectProperty<Parent>().also { it.value = find<ListTopicView>().root }
 
     fun <T : Any> setContentList(clazz: KClass<T>): Unit = when (clazz) {
         ListTopicView::class -> contentList.set(find<ListTopicView>().root)
         ListSchemaView::class -> {
-            if (currentCluster.isSchemaRegistryConfigured()) contentList.set(find<ListSchemaView>().root)
+            if (cluster.isSchemaRegistryConfigured()) contentList.set(find<ListSchemaView>().root)
             else alert(Alert.AlertType.WARNING, "Schema registry configuration not found"); Unit
         }
         else -> error.set(Throwable("UI: Unable to navigate to ${clazz.qualifiedName}"))

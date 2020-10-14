@@ -6,7 +6,7 @@ import insulator.integrationtest.helper.IntegrationTestContext
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.just
@@ -17,9 +17,9 @@ import org.testfx.api.FxAssert
 import org.testfx.matcher.control.LabeledMatchers
 import tornadofx.FX
 
-class ListClusterTest : FunSpec({
+class ListClusterTest : StringSpec({
 
-    test("Insulator start successfully showing the list of clusters") {
+    "Insulator start successfully showing the list of clusters" {
         IntegrationTestContext(false).use {
             // arrange
             val cluster = Cluster.empty().copy(name = "Test cluster")

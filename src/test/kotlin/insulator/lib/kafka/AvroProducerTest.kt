@@ -5,16 +5,16 @@ import insulator.lib.jsonhelper.jsontoavro.JsonToAvroConverter
 import insulator.lib.kafka.model.Schema
 import insulator.lib.kafka.model.Subject
 import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.Producer
 
-class AvroProducerTest : FunSpec({
+class AvroProducerTest : StringSpec({
 
-    test("avro producer caches schemas") {
+    "avro producer caches schemas" {
         // arrange
         val testMessage = "test-message"
         val topic = "topic-name"
@@ -32,7 +32,7 @@ class AvroProducerTest : FunSpec({
         verify(exactly = 1) { schemaRegistry.getSubject(any()) }
     }
 
-    test("send return an error if the underlying operation fails") {
+    "send return an error if the underlying operation fails" {
         // arrange
         val error = Throwable("error message")
         val topic = "topic-name"
