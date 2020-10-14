@@ -57,7 +57,7 @@ dependencies {
         because("Improper Input Validation [Medium Severity][https://snyk.io/vuln/SNYK-JAVA-ORGHIBERNATEVALIDATOR-568163] in org.hibernate.validator:hibernate-validator@6.0.17.Final")
         implementation(group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.6.Final')
         because("XML Entity Expansion [High Severity][https://snyk.io/vuln/SNYK-JAVA-ORGGLASSFISHJERSEYMEDIA-595972] in org.glassfish.jersey.media:jersey-media-jaxb@2.30")
-        implementation(group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.31')
+        implementation(group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.32')
     }
     implementation(group: 'io.confluent', name: 'kafka-avro-serializer', version: '6.0.0')
 
