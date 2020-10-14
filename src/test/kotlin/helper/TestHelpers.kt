@@ -16,10 +16,11 @@ fun deleteTestSandboxFolder() = Paths.get("test-sandbox").toFile().deleteRecursi
 
 open class FxContext() : Closeable {
     private val diCache = mutableMapOf<KClass<*>, Any>()
+    val cluster = Cluster.empty()
 
     init {
         val stage = FxToolkit.registerPrimaryStage()
-        addToDI(Cluster::class to Cluster.empty())
+        addToDI(Cluster::class to cluster)
         FX.setPrimaryStage(stage = stage)
     }
 

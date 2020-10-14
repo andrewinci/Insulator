@@ -2,7 +2,8 @@ package insulator.viewmodel.main
 
 import arrow.core.right
 import helper.FxContext
-import insulator.di.setGlobalCluster
+import insulator.lib.configuration.model.Cluster
+import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.SchemaRegistry
@@ -25,13 +26,13 @@ class MainViewModelTest : StringSpec({
             // arrange
             it.setup()
             val sut = MainViewModel()
-            setGlobalCluster(mockk { every { isSchemaRegistryConfigured() } returns true })
+            it.addToDI(Cluster::class to it.cluster.copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample endpoint")))
             val newView = ListSchemaView::class
             // act
             sut.runOnFXThread { setContentList(newView) }
             it.waitFXThread()
             // assert
-            val currentView = FX.getComponents()[newView] as ListSchemaView
+            val currentView = find<ListSchemaView>()
             sut.contentList.value shouldBe currentView.root
         }
     }
@@ -41,7 +42,6 @@ class MainViewModelTest : StringSpec({
             // arrange
             it.setup()
             val sut = MainViewModel()
-            setGlobalCluster(mockk { every { isSchemaRegistryConfigured() } returns false })
             val topicView = sut.contentList.value
             // act
             sut.runOnFXThread { setContentList(ListSchemaView::class) }
@@ -56,7 +56,7 @@ class MainViewModelTest : StringSpec({
             // arrange
             it.setup()
             val sut = MainViewModel()
-            setGlobalCluster(mockk { every { isSchemaRegistryConfigured() } returns true })
+            it.addToDI(Cluster::class to it.cluster.copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample endpoint")))
             val newView = ClusterView::class
             // act
             sut.runOnFXThread { setContentList(newView) }

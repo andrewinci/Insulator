@@ -36,6 +36,7 @@ class ProducerViewModelTest : StringSpec({
             sut.canSendProperty.value shouldBe false
         }
     }
+
     "send message without value fails" {
         FxContext().use {
             // arrange
@@ -55,19 +56,23 @@ class ProducerViewModelTest : StringSpec({
             sut.canSendProperty.value shouldBe false
         }
     }
+
     "Use avro producer if schema registry is configured" {
         FxContext().use {
             // arrange
             it.addToDI(
                 Cluster::class to Cluster.empty().copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample")),
-                AvroProducer::class to mockk<Producer>()
+                AvroProducer::class to mockk<Producer> {
+                    every { validate(any(), any()) } returns Unit.right()
+                }
             )
             // act
             val sut = ProducerViewModel("test-topic")
             // assert
-            sut.producerTypeProperty.value shouldBe "Avro Producer"
+            sut.producerTypeProperty.value.toString() shouldBe "Avro"
         }
     }
+
     "send message without key fails" {
         FxContext().use {
             // arrange
