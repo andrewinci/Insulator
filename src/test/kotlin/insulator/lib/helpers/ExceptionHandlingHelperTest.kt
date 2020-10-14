@@ -7,7 +7,7 @@ import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 
-class ExceptionHandlingHelperKtTest : StringSpec({
+class ExceptionHandlingHelperTest : StringSpec({
 
     "list of either to either of list return the list of right if all elements are right" {
         // arrange

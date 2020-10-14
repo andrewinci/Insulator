@@ -77,7 +77,7 @@ class ListSchemaViewModelTest : StringSpec({
     }
 })
 
-private class TestFixture() : FxContext() {
+private class TestFixture : FxContext() {
 
     val errorMessage = "Example error"
     val targetSubject = "subject1"

@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 fun getTestSandboxFolder(): Path = Paths.get("test-sandbox", UUID.randomUUID().toString()).also { it.toFile().mkdirs() }
 fun deleteTestSandboxFolder() = Paths.get("test-sandbox").toFile().deleteRecursively()
 
-open class FxContext() : Closeable {
+open class FxContext : Closeable {
     private val diCache = mutableMapOf<KClass<*>, Any>()
     val cluster = Cluster.empty()
 

@@ -108,7 +108,7 @@ class TopicViewModelTest : StringSpec({
     }
 })
 
-private class TestContext() : FxContext() {
+private class TestContext : FxContext() {
     init {
         addToDI(
             AdminApi::class to mockk<AdminApi> {
