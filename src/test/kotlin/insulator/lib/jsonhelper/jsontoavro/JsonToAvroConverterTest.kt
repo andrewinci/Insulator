@@ -4,14 +4,14 @@ import arrow.core.right
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.avro.generic.GenericRecord
 
-class JsonToAvroConverterTest : FunSpec({
-    test("return left if the json provided is invalid") {
+class JsonToAvroConverterTest : StringSpec({
+    "return left if the json provided is invalid" {
         // arrange
         val sut = JsonToAvroConverter(ObjectMapper(), mockk(), mockk())
         // act
@@ -22,7 +22,7 @@ class JsonToAvroConverterTest : FunSpec({
         }
     }
 
-    test("return left if the schema provided is invalid") {
+    "return left if the schema provided is invalid" {
         // arrange
         val sut = JsonToAvroConverter(ObjectMapper(), mockk(), mockk())
         // act
@@ -33,7 +33,7 @@ class JsonToAvroConverterTest : FunSpec({
         }
     }
 
-    test("return the record parse value if the input schema and json are correct") {
+    "return the record parse value if the input schema and json are correct" {
         // arrange
         val mockOutputRecord = mockk<GenericRecord>()
         val sut = JsonToAvroConverter(

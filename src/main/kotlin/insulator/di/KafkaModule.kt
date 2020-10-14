@@ -22,6 +22,11 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.Properties
 
+private var currentCluster: Cluster = Cluster.empty()
+fun setGlobalCluster(cluster: Cluster) {
+    currentCluster = cluster
+}
+
 val kafkaModule = module {
 
     factory { currentCluster }

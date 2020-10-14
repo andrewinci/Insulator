@@ -2,13 +2,13 @@ package insulator.lib.kafka
 
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.mockk.every
 import io.mockk.mockk
 
-class StringProducerTest : FunSpec({
+class StringProducerTest : StringSpec({
 
-    test("validate always succeed") {
+    "validate always succeed" {
         // arrange
         val sut = StringProducer(mockk())
         // act
@@ -17,7 +17,7 @@ class StringProducerTest : FunSpec({
         res shouldBeRight Unit
     }
 
-    test("send return an error if the underlying operation fails") {
+    "send return an error if the underlying operation fails" {
         // arrange
         val error = Throwable("error message")
         val sut = StringProducer(

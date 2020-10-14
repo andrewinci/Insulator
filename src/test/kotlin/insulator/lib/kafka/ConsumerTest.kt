@@ -5,7 +5,7 @@ import arrow.core.right
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
 import insulator.lib.jsonhelper.avrotojson.UnsupportedTypeException
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -24,10 +24,10 @@ import org.koin.core.context.stopKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-class ConsumerTest : FunSpec({
+class ConsumerTest : StringSpec({
     val mockConverter = mockk<AvroToJsonConverter> { every { parse(any()) } answers { firstArg<GenericRecord>().toString().right() } }
 
-    test("start happy path") {
+    "start happy path" {
         // arrange
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
@@ -39,7 +39,7 @@ class ConsumerTest : FunSpec({
         messages.size shouldBe 1
     }
 
-    test("start happy path - avro consumer") {
+    "start happy path - avro consumer" {
         // arrange
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
@@ -51,7 +51,7 @@ class ConsumerTest : FunSpec({
         messages.size shouldBe 1
     }
 
-    test("start happy path - last hour") {
+    "start happy path - last hour" {
         // arrange
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
@@ -63,7 +63,7 @@ class ConsumerTest : FunSpec({
         messages.size shouldBe 1
     }
 
-    test("start happy path - last week") {
+    "start happy path - last week" {
         // arrange
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
@@ -75,7 +75,7 @@ class ConsumerTest : FunSpec({
         messages.size shouldBe 1
     }
 
-    test("start happy path - unsupported schema for custom avro converter") {
+    "start happy path - unsupported schema for custom avro converter" {
         // arrange
         val mockInvalidSchemaConverter = mockk<AvroToJsonConverter> { every { parse(any()) } returns UnsupportedTypeException("").left() }
         val messages = mutableListOf<String>()
@@ -88,7 +88,7 @@ class ConsumerTest : FunSpec({
         messages.size shouldBe 1
     }
 
-    test("start happy path - now") {
+    "start happy path - now" {
         // arrange
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
@@ -100,7 +100,7 @@ class ConsumerTest : FunSpec({
         messages.size shouldBe 0
     }
 
-    test("isRunning") {
+    "isRunning" {
         // arrange
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
@@ -112,7 +112,7 @@ class ConsumerTest : FunSpec({
         sut.isRunning() shouldBe false
     }
 
-    test("stop if not running") {
+    "stop if not running" {
         // arrange
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act/assert

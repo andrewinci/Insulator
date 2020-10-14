@@ -3,7 +3,7 @@ package insulator.lib.kafka
 import insulator.lib.kafka.model.Topic
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.kafka.clients.admin.AdminClient
@@ -21,9 +21,9 @@ import org.apache.kafka.common.TopicPartitionInfo
 import org.apache.kafka.common.config.ConfigResource
 import java.util.HashSet
 
-class AdminApiTest : FunSpec({
+class AdminApiTest : StringSpec({
 
-    test("listTopics happy path") {
+    "listTopics happy path" {
         // arrange
         val listTopicResultMock = mockk<ListTopicsResult> {
             every { names() } returns KafkaFuture.completedFuture(HashSet<String>(1).also { it.add("Sample topic") })
@@ -38,7 +38,7 @@ class AdminApiTest : FunSpec({
         res.get() shouldBeRight listOf("Sample topic")
     }
 
-    test("listTopics throws") {
+    "listTopics throws" {
         // arrange
         val exception = Throwable("Exception")
         val listTopicResultMock = mockk<ListTopicsResult> {
@@ -54,7 +54,7 @@ class AdminApiTest : FunSpec({
         res.get() shouldBeLeft exception
     }
 
-    test("describeTopic happy path") {
+    "describeTopic happy path" {
         // arrange
         val partition = mockk<TopicPartitionInfo> {
             every { partition() } returns 0
@@ -86,7 +86,7 @@ class AdminApiTest : FunSpec({
         res.get() shouldBeRight Topic("topic2", false, 2, 5, 1, true)
     }
 
-    test("Create topic happy path") {
+    "Create topic happy path" {
         // arrange
         val kafkaAdminClientMock = mockk<AdminClient> {
             every { createTopics(any()) } returns mockk {
@@ -101,7 +101,7 @@ class AdminApiTest : FunSpec({
         res.get() shouldBeRight {}
     }
 
-    test("Create compacted topic happy path") {
+    "Create compacted topic happy path" {
         // arrange
         val kafkaAdminClientMock = mockk<AdminClient> {
             every { createTopics(any()) } returns mockk {

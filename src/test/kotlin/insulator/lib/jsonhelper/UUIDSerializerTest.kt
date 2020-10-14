@@ -1,24 +1,24 @@
 package insulator.lib.jsonhelper
 
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.util.UUID
 
-class UUIDSerializerTest : FunSpec({
+class UUIDSerializerTest : StringSpec({
 
     val json = Json {}
 
-    test("descriptor") {
+    "descriptor" {
         // arrange
         val sut = UUIDSerializer()
         // act/assert
         sut.descriptor shouldNotBe null
     }
 
-    test("serialize") {
+    "serialize" {
         // arrange
         val uuid = UUID.randomUUID()
         val testObject = Test(uuid)
@@ -28,7 +28,7 @@ class UUIDSerializerTest : FunSpec({
         res shouldBe "{\"uuid\":\"$uuid\"}"
     }
 
-    test("deserialize") {
+    "deserialize" {
         // arrange
         val uuid = UUID.randomUUID()
         // act

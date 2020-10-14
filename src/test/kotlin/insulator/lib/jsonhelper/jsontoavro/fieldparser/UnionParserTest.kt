@@ -5,19 +5,19 @@ import arrow.core.right
 import insulator.lib.jsonhelper.jsontoavro.JsonFieldParsingException
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.avro.Schema
 
-class UnionParserTest : FunSpec({
+class UnionParserTest : StringSpec({
     val schema = Schema.Parser()
         .parse(""" {"type": "record", "name": "unionTest", "fields": [{ "name": "t", "type": [ "null", "string"] }] } """)
         .fields.first().schema()
 
-    test("happy path right union") {
+    "happy path right union" {
         // arrange
         val sut = UnionParser(
             mockk {
@@ -30,7 +30,7 @@ class UnionParserTest : FunSpec({
         res shouldBeRight {}
     }
 
-    test("happy path left union") {
+    "happy path left union" {
         // arrange
         val sut = UnionParser(
             mockk {
@@ -43,7 +43,7 @@ class UnionParserTest : FunSpec({
         res shouldBeRight {}
     }
 
-    test("join errors if value doesn't match any type in the union") {
+    "join errors if value doesn't match any type in the union" {
         // arrange
         val sut = UnionParser(
             mockk {
