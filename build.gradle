@@ -29,7 +29,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.openjfx.javafxplugin'
 
-def arrow_version = "0.10.5"
+def arrow_version = "0.11.0"
 def kotest_version = "4.3.0"
 def koin_version = "2.1.6"
 def testfx_version = "4.0.16-alpha"
