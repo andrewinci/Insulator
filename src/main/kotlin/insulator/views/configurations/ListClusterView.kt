@@ -1,13 +1,12 @@
 package insulator.views.configurations
 
-import insulator.di.currentCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.update.VersionChecker
 import insulator.viewmodel.configurations.ClusterModel
 import insulator.viewmodel.configurations.ClusterViewModel
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.common.StringScope
+import insulator.views.common.scope
 import insulator.views.component.action
 import insulator.views.component.h1
 import insulator.views.component.h2
@@ -45,7 +44,6 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
         listview(viewModel.clustersProperty) {
             cellFormat { graphic = buildClusterCell(it) }
             action { cluster ->
-                currentCluster = cluster
                 currentStage?.hide()
                 find<MainView>(getClusterScope(cluster))
                     .also { it.whenUndocked { currentStage?.show() } }
@@ -77,17 +75,19 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
             }
     }
 
-    private fun getClusterScope(cluster: Cluster = Cluster.empty()) = StringScope("Cluster-${cluster.guid}")
+    private fun getClusterScope(cluster: Cluster = Cluster.empty()) = cluster.scope()
         .withComponent(ClusterViewModel(ClusterModel(cluster)))
 
     override fun onDock() {
-        super.onDock()
-        super.currentStage?.minWidth = 380.0
-        super.currentStage?.width = 380.0
-        super.currentStage?.minHeight = 500.0
-        super.currentStage?.height = 500.0
-        super.currentStage?.resizableProperty()?.value = false
+        super.currentStage?.let {
+            it.minWidth = 380.0
+            it.width = 380.0
+            it.minHeight = 500.0
+            it.height = 500.0
+            it.resizableProperty().value = false
+        }
         checkVersion()
+        super.onDock()
     }
 
     override fun onError(throwable: Throwable) {

@@ -15,13 +15,13 @@ import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
+class SchemaViewModel(val subject: Subject) : InsulatorViewModel() {
     val cluster: Cluster by di()
     private val formatter: JsonFormatter by di()
     private val schemaRegistry: SchemaRegistry by di()
 
-    val nameProperty = SimpleStringProperty(schema.subject)
-    val versionsProperty: ObservableList<Schema> = FXCollections.observableArrayList(schema.schemas)
+    val nameProperty = SimpleStringProperty(subject.name)
+    val versionsProperty: ObservableList<Schema> = FXCollections.observableArrayList(subject.schemas)
     val selectedVersionProperty: Property<Schema> = SimpleObjectProperty(null)
     val schemaProperty: ObservableList<Token> = FXCollections.observableArrayList()
 
@@ -36,7 +36,7 @@ class SchemaViewModel(val schema: Subject) : InsulatorViewModel() {
             schemaProperty.clear()
             schemaProperty.addAll(res.fold({ listOf(Token.Value("Unable to parse ${it.message}")) }, { it }))
         }
-        selectedVersionProperty.value = schema.schemas.last()
+        selectedVersionProperty.value = subject.schemas.last()
     }
 
     fun delete() = schemaRegistry.deleteSubject(nameProperty.value)

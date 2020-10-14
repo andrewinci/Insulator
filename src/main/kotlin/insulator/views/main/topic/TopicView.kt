@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.viewmodel.main.topic.RecordViewModel
@@ -25,6 +26,8 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
 
+    private val cluster: Cluster by di()
+
     override val root = vbox {
         appBar {
             hbox(alignment = Pos.CENTER_LEFT, spacing = 5.0) {
@@ -49,7 +52,7 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
     }
 
     private fun EventTarget.valueFormatOptions() {
-        if (viewModel.cluster.isSchemaRegistryConfigured()) {
+        if (cluster.isSchemaRegistryConfigured()) {
             viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
             fieldName("value format")
             combobox<String> {

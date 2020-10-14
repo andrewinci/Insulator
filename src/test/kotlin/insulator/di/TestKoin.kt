@@ -14,11 +14,13 @@ class TestKoin : StringSpec({
 
     "Test koin modules" {
         // arrange
-        currentCluster = Cluster(
-            UUID.randomUUID(),
-            "test",
-            "127.0.0.1:9092",
-            schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
+        setGlobalCluster(
+            Cluster(
+                UUID.randomUUID(),
+                "test",
+                "127.0.0.1:9092",
+                schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
+            )
         )
         // test
         koinApplication {
@@ -30,18 +32,20 @@ class TestKoin : StringSpec({
         // arrange
         val resourceDirectory = Paths.get("src", "test", "resources", "example.p12")
         val absolutePath = resourceDirectory.toFile().absolutePath
-        currentCluster = Cluster(
-            guid = UUID.randomUUID(),
-            name = "test",
-            endpoint = "127.0.0.1:9092",
-            useSSL = true,
-            sslConfiguration = SslConfiguration(
-                sslTruststoreLocation = absolutePath,
-                sslTruststorePassword = "1234",
-                sslKeystoreLocation = absolutePath,
-                sslKeyStorePassword = "1234"
-            ),
-            schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
+        setGlobalCluster(
+            Cluster(
+                guid = UUID.randomUUID(),
+                name = "test",
+                endpoint = "127.0.0.1:9092",
+                useSSL = true,
+                sslConfiguration = SslConfiguration(
+                    sslTruststoreLocation = absolutePath,
+                    sslTruststorePassword = "1234",
+                    sslKeystoreLocation = absolutePath,
+                    sslKeyStorePassword = "1234"
+                ),
+                schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
+            )
         )
         // test
         koinApplication {
@@ -51,16 +55,18 @@ class TestKoin : StringSpec({
 
     "Test koin modules (SASL)" {
         // arrange
-        currentCluster = Cluster(
-            guid = UUID.randomUUID(),
-            name = "test",
-            endpoint = "127.0.0.1:9092",
-            useSasl = true,
-            saslConfiguration = SaslConfiguration(
-                saslUsername = "",
-                saslPassword = ""
-            ),
-            schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
+        setGlobalCluster(
+            Cluster(
+                guid = UUID.randomUUID(),
+                name = "test",
+                endpoint = "127.0.0.1:9092",
+                useSasl = true,
+                saslConfiguration = SaslConfiguration(
+                    saslUsername = "",
+                    saslPassword = ""
+                ),
+                schemaRegistryConfig = SchemaRegistryConfiguration("127.0.0.1")
+            )
         )
         // test
         koinApplication {

@@ -31,7 +31,6 @@ abstract class InsulatorView<T : InsulatorViewModel>(title: String? = null, view
         if (super.currentStage == null) return
         with(super.currentStage!!) {
             x = (screenSize.width - width) / 2
-            // y = (screenSize.height - height)/2
         }
     }
 }

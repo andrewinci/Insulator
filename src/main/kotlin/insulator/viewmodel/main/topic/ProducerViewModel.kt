@@ -1,25 +1,35 @@
 package insulator.viewmodel.main.topic
 
 import arrow.core.extensions.either.applicativeError.handleError
-import insulator.di.getInstanceNow
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.jsontoavro.JsonFieldParsingException
 import insulator.lib.jsonhelper.jsontoavro.JsonMissingFieldException
 import insulator.lib.kafka.AvroProducer
 import insulator.lib.kafka.Producer
+import insulator.lib.kafka.SerializationFormat
 import insulator.lib.kafka.StringProducer
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.binding.Bindings
+import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableBooleanValue
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
 
-    val cluster: Cluster by di()
-    private var producer: Producer
+    private val cluster: Cluster by di()
+    private val avroProducer: Producer by di<AvroProducer>()
+    private val stringProducer: Producer by di<StringProducer>()
+    private val producer: Producer
+        get() = when (producerTypeProperty.value!!) {
+            SerializationFormat.Avro -> avroProducer
+            SerializationFormat.String -> stringProducer
+        }
 
-    val producerTypeProperty = SimpleStringProperty("")
+    val producerTypeProperty = SimpleObjectProperty(
+        if (cluster.isSchemaRegistryConfigured()) SerializationFormat.Avro else SerializationFormat.String
+    )
+
     val nextFieldProperty = SimpleStringProperty("")
     val validationErrorProperty = SimpleStringProperty(null)
     val keyProperty = SimpleStringProperty()
@@ -32,13 +42,6 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
     )
 
     init {
-        if (cluster.isSchemaRegistryConfigured()) {
-            producer = getInstanceNow<AvroProducer>()
-            producerTypeProperty.set("Avro Producer")
-        } else {
-            producer = getInstanceNow<StringProducer>()
-            producerTypeProperty.set("String Producer")
-        }
         valueProperty.onChange { value ->
             if (value != null) {
                 producer.validate(value, topicName).fold(

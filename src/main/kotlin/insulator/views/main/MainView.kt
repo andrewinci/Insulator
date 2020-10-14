@@ -1,6 +1,6 @@
 package insulator.views.main
 
-import insulator.di.currentCluster
+import insulator.lib.configuration.model.Cluster
 import insulator.viewmodel.main.MainViewModel
 import insulator.views.common.InsulatorView
 import insulator.views.component.h1
@@ -28,6 +28,8 @@ const val CONTENT_WIDTH = 780.0
 
 class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
 
+    val cluster: Cluster by di()
+
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
         addClass(MainViewStyle.contentList)
@@ -51,7 +53,11 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     init {
         viewModel.contentTabs.onChange {
             when {
-                viewModel.contentTabs.size == 0 -> nodes.removeAt(2)
+                viewModel.contentTabs.size == 0 -> {
+                    val contentListWidth = contentList.width
+                    nodes.removeAt(2)
+                    super.currentStage?.width = SIDEBAR_WIDTH + contentListWidth
+                }
                 nodes.size <= 2 -> nodes.add(content)
                 else -> nodes[2] = content
             }
@@ -62,7 +68,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     private fun sidebar() =
         borderpane {
             top = vbox(alignment = Pos.TOP_CENTER) {
-                h1(currentCluster.name)
+                h1(cluster.name)
                 button("Change cluster") { action { close() } }
             }
             center = vbox {
@@ -86,24 +92,22 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
         }
 
     private fun setSize() {
-        val min = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH
-        if (super.currentStage == null) return
-        with(super.currentStage!!) {
-            if (nodes.size == 2 && minWidth != min) {
-                minWidth = min
-                center()
-            } else if (minWidth != min + CONTENT_WIDTH) {
-                minWidth = min + CONTENT_WIDTH
+        val newMinWidth = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + if (nodes.size == 2) 0.0 else CONTENT_WIDTH
+        super.currentStage?.let {
+            if (it.minWidth != newMinWidth) {
+                it.minWidth = newMinWidth
                 center()
             }
         }
     }
 
     override fun onDock() {
-        super.onDock()
+        super.currentStage?.let {
+            it.height = 800.0
+            it.isResizable = true
+        }
         setSize()
-        super.currentStage?.height = 800.0
-        super.currentStage?.isResizable = true
+        super.onDock()
     }
 
     override fun onError(throwable: Throwable) {

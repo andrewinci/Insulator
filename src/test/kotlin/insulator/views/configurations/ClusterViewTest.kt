@@ -1,21 +1,19 @@
 package insulator.views.configurations
 
-import helper.cleanupFXFramework
-import helper.configureFXFramework
-import io.kotest.core.spec.style.FunSpec
+import helper.FxContext
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 
-class ClusterViewTest : FunSpec({
+class ClusterViewTest : StringSpec({
 
-    test("Render without exceptions") {
-        // arrange
-        val sut = ClusterView()
-        // act
-        val root = sut.root
-        // assert
-        root shouldNotBe null
+    "Render without exceptions" {
+        FxContext().use {
+            // arrange
+            val sut = ClusterView()
+            // act
+            val root = sut.root
+            // assert
+            root shouldNotBe null
+        }
     }
-
-    beforeTest { configureFXFramework() }
-    afterTest { cleanupFXFramework() }
 })

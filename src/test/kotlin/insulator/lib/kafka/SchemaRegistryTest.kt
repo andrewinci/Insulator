@@ -2,13 +2,13 @@ package insulator.lib.kafka
 
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.mockk.every
 import io.mockk.mockk
 
-class SchemaRegistryTest : FunSpec({
+class SchemaRegistryTest : StringSpec({
 
-    test("happy path getAllSubjects") {
+    "happy path getAllSubjects" {
         // arrange
         val subjects = listOf("subject1", "subject2")
         val mockSchema = mockk<SchemaRegistryClient> {
@@ -21,7 +21,7 @@ class SchemaRegistryTest : FunSpec({
         res shouldBeRight subjects
     }
 
-    test("happy path getSubject") {
+    "happy path getSubject" {
         // arrange
         val mockSchema = mockk<SchemaRegistryClient> {
             every { getAllVersions(any()) } returns listOf(1, 2, 3)
@@ -39,7 +39,7 @@ class SchemaRegistryTest : FunSpec({
         res shouldBeRight { }
     }
 
-    test("happy path deleteSubject") {
+    "happy path deleteSubject" {
         // arrange
         val mockSchema = mockk<SchemaRegistryClient> {
             every { deleteSubject(any()) } returns listOf(1)

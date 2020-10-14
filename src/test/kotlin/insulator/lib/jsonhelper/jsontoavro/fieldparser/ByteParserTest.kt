@@ -3,15 +3,15 @@ package insulator.lib.jsonhelper.jsontoavro.fieldparser
 import insulator.lib.jsonhelper.jsontoavro.JsonFieldParsingException
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
 import java.nio.ByteBuffer
 
-class ByteParserTest : FunSpec({
+class ByteParserTest : StringSpec({
 
-    test("happy path - bytes") {
+    "happy path - bytes" {
         // arrange
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes"}""")
@@ -22,7 +22,7 @@ class ByteParserTest : FunSpec({
         res shouldBeRight ByteBuffer.wrap(byteArrayOf(0, 1, 2, 3))
     }
 
-    test("happy path - decimal") {
+    "happy path - decimal" {
         // arrange
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes", "logicalType": "decimal", "precision": 4, "scale": 2}""")
@@ -35,7 +35,7 @@ class ByteParserTest : FunSpec({
         }
     }
 
-    test("parsing a decimal set the scale to the schema one") {
+    "parsing a decimal set the scale to the schema one" {
         // arrange
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes", "logicalType": "decimal", "precision": 6, "scale": 4}""")
@@ -49,7 +49,7 @@ class ByteParserTest : FunSpec({
         }
     }
 
-    test("parsing a decimal return left if exceed scale") {
+    "parsing a decimal return left if exceed scale" {
         // arrange
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes", "logicalType": "decimal", "precision": 6, "scale": 4}""")
@@ -60,7 +60,7 @@ class ByteParserTest : FunSpec({
         res shouldBeLeft {}
     }
 
-    test("return left if try to parse number to bytes") {
+    "return left if try to parse number to bytes" {
         // arrange
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes"}""")
@@ -73,7 +73,7 @@ class ByteParserTest : FunSpec({
         }
     }
 
-    test("return left if try to parse an int to decimal") {
+    "return left if try to parse an int to decimal" {
         // arrange
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes", "logicalType": "decimal", "precision": 6, "scale": 4}""")
@@ -86,7 +86,7 @@ class ByteParserTest : FunSpec({
         }
     }
 
-    test("return left if try to parse an invalid string to bytes") {
+    "return left if try to parse an invalid string to bytes" {
         // arrange
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes"}""")

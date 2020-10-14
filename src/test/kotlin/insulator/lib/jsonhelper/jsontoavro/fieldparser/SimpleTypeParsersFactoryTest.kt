@@ -3,7 +3,7 @@ package insulator.lib.jsonhelper.jsontoavro.fieldparser
 import insulator.lib.jsonhelper.jsontoavro.JsonInvalidFieldException
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.data.forAll
 import io.kotest.data.headers
 import io.kotest.data.row
@@ -12,11 +12,11 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
 
-class SimpleTypeParsersFactoryTest : FunSpec({
+class SimpleTypeParsersFactoryTest : StringSpec({
 
     val sut = SimpleTypeParsersFactory().build()
 
-    test("happy path") {
+    "happy path" {
         table(
             headers("test value", "schema", "parser", "result"),
             // int parser
@@ -62,7 +62,7 @@ class SimpleTypeParsersFactoryTest : FunSpec({
         }
     }
 
-    test("parse invalid field") {
+    "parse invalid field" {
         table(
             headers("test value", "schema", "parser"),
             // int parser
@@ -102,7 +102,7 @@ class SimpleTypeParsersFactoryTest : FunSpec({
         }
     }
 
-    test("enumParser  happy path") {
+    "enumParser  happy path" {
         // arrange
         val testValue = "SPADES"
         val parser = sut.enumParser
@@ -113,7 +113,7 @@ class SimpleTypeParsersFactoryTest : FunSpec({
         res shouldBeRight GenericData.EnumSymbol(schema, testValue)
     }
 
-    test("enumParser parse invalid field") {
+    "enumParser parse invalid field" {
         table(
             headers("test value"),
             row("spades"),

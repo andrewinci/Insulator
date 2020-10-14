@@ -83,7 +83,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
 
     override fun onDock() {
         titleProperty.bind(
-            Bindings.createStringBinding({ "${viewModel.cluster.name} ${viewModel.producerTypeProperty.value}" }, viewModel.producerTypeProperty)
+            Bindings.createStringBinding({ "Insulator - ${viewModel.producerTypeProperty.value} producer" }, viewModel.producerTypeProperty)
         )
         super.onDock()
     }

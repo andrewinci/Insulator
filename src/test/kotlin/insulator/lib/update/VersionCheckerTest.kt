@@ -5,16 +5,16 @@ import helper.getTestSandboxFolder
 import insulator.di.GITHUB_REPO
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 import io.mockk.every
 import io.mockk.mockk
 import java.io.Closeable
 import java.nio.file.Path
 import java.nio.file.Paths
 
-class VersionCheckerTest : FunSpec({
+class VersionCheckerTest : StringSpec({
 
-    test("happy path getCurrentVersion with a new release") {
+    "happy path getCurrentVersion with a new release" {
         VersionCheckerTestFixture().use {
             // arrange
             val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
@@ -28,7 +28,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("happy path getCurrentVersion having the latest release") {
+    "happy path getCurrentVersion having the latest release" {
         VersionCheckerTestFixture().use {
             // arrange
             val mockVersion = "0.0.9"
@@ -43,7 +43,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("happy path getAppVersion") {
+    "happy path getAppVersion" {
         VersionCheckerTestFixture().use {
             // arrange
             val mockVersion = "1.2.3"
@@ -56,7 +56,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("happy path getLatestVersion") {
+    "happy path getLatestVersion" {
         VersionCheckerTestFixture().use {
             // arrange
             val sut = VersionChecker()
@@ -69,7 +69,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("get latest version with a server error return left") {
+    "get latest version with a server error return left" {
         VersionCheckerTestFixture().use {
             // arrange
             val sut = VersionChecker()
@@ -81,7 +81,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("get latest version with an invalid json return left") {
+    "get latest version with an invalid json return left" {
         VersionCheckerTestFixture().use {
             // arrange
             val sut = VersionChecker()
@@ -93,7 +93,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("get latest version with an invalid response return left") {
+    "get latest version with an invalid response return left" {
         VersionCheckerTestFixture().use {
             // arrange
             val sut = VersionChecker()
@@ -105,7 +105,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("get app version with a wrong formatted config file return left") {
+    "get app version with a wrong formatted config file return left" {
         VersionCheckerTestFixture().use {
             // arrange
             val sut = VersionChecker(it.mockInsulatorConfigPath.toString())
@@ -120,7 +120,7 @@ class VersionCheckerTest : FunSpec({
         }
     }
 
-    test("get app version with a missing config file return left") {
+    "get app version with a missing config file return left" {
         VersionCheckerTestFixture().use {
             // arrange
             val sut = VersionChecker("random_path")

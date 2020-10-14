@@ -5,11 +5,11 @@ import arrow.core.left
 import arrow.core.right
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.StringSpec
 
-class ExceptionHandlingHelperKtTest : FunSpec({
+class ExceptionHandlingHelperTest : StringSpec({
 
-    test("list of either to either of list return the list of right if all elements are right") {
+    "list of either to either of list return the list of right if all elements are right" {
         // arrange
         val sample = listOf(1.right(), 2.right(), 3.right())
         // act
@@ -18,7 +18,7 @@ class ExceptionHandlingHelperKtTest : FunSpec({
         res shouldBeRight listOf(1, 2, 3)
     }
 
-    test("list of either to either of list return the first left only if any") {
+    "list of either to either of list return the first left only if any" {
         // arrange
         val sample = listOf(1.right(), 2.right(), "e".left(), 3.right(), "b".left())
         // act
@@ -27,7 +27,7 @@ class ExceptionHandlingHelperKtTest : FunSpec({
         res shouldBeLeft "e"
     }
 
-    test("list of either to either of list with empty list") {
+    "list of either to either of list with empty list" {
         // arrange
         val sample = emptyList<Either<Int, Boolean>>()
         // act
