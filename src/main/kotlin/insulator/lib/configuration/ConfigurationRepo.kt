@@ -2,13 +2,12 @@ package insulator.lib.configuration
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import insulator.lib.helpers.runCatchingE
-import kotlinx.serialization.json.Json
-import java.io.File
 import arrow.core.flatMap
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
-
+import insulator.lib.helpers.runCatchingE
+import kotlinx.serialization.json.Json
+import java.io.File
 
 class ConfigurationRepo(private val json: Json, private val configPath: String = "${System.getProperty("user.home")}/.insulator.config") {
 

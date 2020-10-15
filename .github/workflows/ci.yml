@@ -9,7 +9,37 @@ on:
       - master
 
 jobs:
+
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Use current branch
+        run: git checkout ${{ github.head_ref }}
+      - name: Download ktlint
+        run: "curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.39.0/ktlint && chmod a+x ktlint && mv ktlint .."
+      - name: Run ktlint
+        run: "../ktlint -F"
+      - name: Check for changes
+        run: |
+          if [[ $(git status -s) ]]; then
+            echo "Fixing PR"
+            git diff
+            git config --local user.email "autolint@lint.local"
+            git config --local user.name "Auto Lint"
+            git commit -m "Fix PR lint" -a
+            git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/insulator.git
+            exit 1
+          else
+            echo "Nothing to change"
+            exit 0
+          fi
+
   build-mac:
+    needs: linting
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,6 +54,7 @@ jobs:
         run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
 
   build-deb:
+    needs: linting
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -34,14 +65,13 @@ jobs:
       with:
         java-version: 14
         java-package: jdk
-
     - name: Run tests
       run: "xvfb-run --auto-servernum ./gradlew check"
-
     - name: Run integration tests
       run: "xvfb-run --auto-servernum ./gradlew integrationTest"
 
   build-win:
+    needs: linting
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
