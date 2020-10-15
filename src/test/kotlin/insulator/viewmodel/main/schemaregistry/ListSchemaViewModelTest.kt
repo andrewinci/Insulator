@@ -23,7 +23,7 @@ class ListSchemaViewModelTest : StringSpec({
             // arrange
             val sut = ListSchemaViewModel()
             // act
-            val schemas = sut.filteredSchemas
+            val schemas = sut.filteredSchemasProperty
             // assert
             it.waitFXThread()
             schemas.size shouldBe 2
@@ -37,7 +37,7 @@ class ListSchemaViewModelTest : StringSpec({
             every { it.schemaRegistry.second.getAllSubjects() } returns Throwable(it.errorMessage).left()
             val sut = ListSchemaViewModel()
             // act
-            val schemas = sut.filteredSchemas
+            val schemas = sut.filteredSchemasProperty
             // assert
             schemas.size shouldBe 0
             sut.error.value!!.message shouldBe it.errorMessage
@@ -50,7 +50,7 @@ class ListSchemaViewModelTest : StringSpec({
             val mockMainViewModel = mockk<MainViewModel>(relaxed = true)
             it.configureFxDi(mockMainViewModel)
             val sut = ListSchemaViewModel()
-            sut.selectedSchema.value = it.targetSubject
+            sut.selectedSchemaProperty.value = it.targetSubject
             // act
             sut.runOnFXThread { showSchema() }
             // assert
@@ -66,7 +66,7 @@ class ListSchemaViewModelTest : StringSpec({
             // arrange
             every { it.schemaRegistry.second.getSubject(any()) } returns Throwable(it.errorMessage).left()
             val sut = ListSchemaViewModel()
-            sut.selectedSchema.value = it.targetSubject
+            sut.selectedSchemaProperty.value = it.targetSubject
             // act
             sut.runOnFXThread { showSchema() }
             // assert

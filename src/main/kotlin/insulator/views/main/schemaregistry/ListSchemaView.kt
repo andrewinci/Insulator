@@ -4,6 +4,7 @@ import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.h1
 import insulator.ui.component.searchBox
+import insulator.ui.component.subTitle
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
 import javafx.event.EventTarget
@@ -18,8 +19,9 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
             hbox {
                 h1("Schema registry")
             }
+            subTitle(viewModel.subtitleProperty)
         }
-        searchBox(viewModel.searchItem, currentView = this@ListSchemaView)
+        searchBox(viewModel.searchItemProperty, currentView = this@ListSchemaView)
         schemasListView()
     }
 
@@ -27,8 +29,8 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
         listview<String> {
             cellFormat { graphic = label(it) }
             onDoubleClick { viewModel.showSchema() }
-            itemsProperty().set(viewModel.filteredSchemas)
-            bindSelected(viewModel.selectedSchema)
+            itemsProperty().set(viewModel.filteredSchemasProperty)
+            bindSelected(viewModel.selectedSchemaProperty)
 
             placeholder = label("No schema found")
             selectionModel.selectionMode = SelectionMode.SINGLE
