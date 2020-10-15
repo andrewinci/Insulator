@@ -1,4 +1,4 @@
-package insulator.views.style
+package insulator.ui.style
 
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports

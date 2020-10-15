@@ -1,10 +1,10 @@
 package insulator.views.main.topic
 
+import insulator.ui.common.InsulatorView
+import insulator.ui.component.appBar
+import insulator.ui.component.fieldName
+import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
-import insulator.views.common.InsulatorView
-import insulator.views.component.appBar
-import insulator.views.component.fieldName
-import insulator.views.component.h1
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
 import javafx.scene.control.ScrollPane

@@ -1,15 +1,15 @@
 package insulator.views.main
 
 import insulator.lib.configuration.model.Cluster
+import insulator.ui.common.InsulatorView
+import insulator.ui.component.h1
+import insulator.ui.component.h2
+import insulator.ui.component.themeButton
+import insulator.ui.style.MainViewStyle
+import insulator.ui.style.changeTheme
 import insulator.viewmodel.main.MainViewModel
-import insulator.views.common.InsulatorView
-import insulator.views.component.h1
-import insulator.views.component.h2
-import insulator.views.component.themeButton
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
-import insulator.views.style.MainViewStyle
-import insulator.views.style.changeTheme
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler

@@ -1,12 +1,12 @@
 package insulator.views.main.topic
 
+import insulator.ui.common.InsulatorView
+import insulator.ui.component.action
+import insulator.ui.component.appBar
+import insulator.ui.component.h1
+import insulator.ui.component.searchBox
+import insulator.ui.component.subTitle
 import insulator.viewmodel.main.topic.ListTopicViewModel
-import insulator.views.common.InsulatorView
-import insulator.views.component.action
-import insulator.views.component.appBar
-import insulator.views.component.h1
-import insulator.views.component.searchBox
-import insulator.views.component.subTitle
 import insulator.views.configurations.ListClusterView
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode

@@ -1,12 +1,12 @@
 package insulator.views.main.schemaregistry
 
+import insulator.ui.common.InsulatorView
+import insulator.ui.component.appBar
+import insulator.ui.component.h1
+import insulator.ui.component.searchBox
+import insulator.ui.component.subTitle
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
-import insulator.views.common.InsulatorView
-import insulator.views.component.appBar
-import insulator.views.component.h1
-import insulator.views.component.searchBox
-import insulator.views.component.subTitle
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority

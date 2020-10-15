@@ -1,4 +1,4 @@
-package insulator.views.style
+package insulator.ui.style
 
 import tornadofx.Stylesheet
 import tornadofx.box
