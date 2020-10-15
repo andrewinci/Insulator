@@ -6,6 +6,7 @@ import insulator.views.common.InsulatorView
 import insulator.views.component.appBar
 import insulator.views.component.h1
 import insulator.views.component.searchBox
+import insulator.views.component.subTitle
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
@@ -18,8 +19,9 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
             hbox {
                 h1("Schema registry")
             }
+            subTitle(viewModel.subtitleProperty)
         }
-        searchBox(viewModel.searchItem, currentView = this@ListSchemaView)
+        searchBox(viewModel.searchItemProperty, currentView = this@ListSchemaView)
         schemasListView()
     }
 
@@ -27,8 +29,8 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
         listview<String> {
             cellFormat { graphic = label(it) }
             onDoubleClick { viewModel.showSchema() }
-            itemsProperty().set(viewModel.filteredSchemas)
-            bindSelected(viewModel.selectedSchema)
+            itemsProperty().set(viewModel.filteredSchemasProperty)
+            bindSelected(viewModel.selectedSchemaProperty)
 
             placeholder = label("No schema found")
             selectionModel.selectionMode = SelectionMode.SINGLE
