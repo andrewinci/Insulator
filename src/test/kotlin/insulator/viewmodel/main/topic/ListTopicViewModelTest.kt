@@ -24,7 +24,7 @@ class ListTopicViewModelTest : StringSpec({
             )
             val sut = ListTopicViewModel()
             // act
-            val res = sut.filteredTopics
+            val res = sut.filteredTopicsProperty
             // assert
             sut.refresh().get() // force and wait refresh
             res.size shouldBe 0
@@ -42,7 +42,7 @@ class ListTopicViewModelTest : StringSpec({
             )
             val sut = ListTopicViewModel()
             // act
-            val res = sut.filteredTopics
+            val res = sut.filteredTopicsProperty
             // assert
             sut.refresh().get() // force and wait refresh
             res.size shouldBe 2

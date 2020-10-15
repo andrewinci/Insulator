@@ -9,7 +9,9 @@ import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.common.topicScope
 import insulator.views.main.topic.CreateTopicView
 import insulator.views.main.topic.TopicView
+import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.value.ObservableStringValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.stage.Modality
@@ -22,13 +24,20 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     private val cluster: Cluster by di()
     private val adminApi: AdminApi by di()
-    private val topicList: ObservableList<String> = FXCollections.observableArrayList()
+    private val topicListProperty: ObservableList<String> = FXCollections.observableArrayList()
 
-    val selectedItem = SimpleStringProperty(null)
-    val searchItem = SimpleStringProperty(null)
-    val filteredTopics: ObservableList<String> = SortedFilteredList(topicList).apply {
-        filterWhen(searchItem) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+    val selectedItemProperty = SimpleStringProperty(null)
+    val searchItemProperty = SimpleStringProperty(null)
+    val filteredTopicsProperty: ObservableList<String> = SortedFilteredList(topicListProperty).apply {
+        filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
     }.filteredItems
+    val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
+        {
+            "Topic count: ${filteredTopicsProperty.size}/${topicListProperty.size}"
+        },
+        topicListProperty,
+        filteredTopicsProperty
+    )
 
     init {
         refresh()
@@ -38,16 +47,16 @@ class ListTopicViewModel : InsulatorViewModel() {
         .listTopics()
         .map { it.sorted() }
         .completeOnFXThread {
-            topicList.clear()
-            topicList.addAll(it)
+            topicListProperty.clear()
+            topicListProperty.addAll(it)
         }
         .handleErrorWith {
             error.set(it)
         }
 
     fun showTopic() {
-        val selectedTopicName = selectedItem.value ?: return
-        selectedItem.value.topicScope(cluster)
+        val selectedTopicName = selectedItemProperty.value ?: return
+        selectedItemProperty.value.topicScope(cluster)
             .withComponent(TopicViewModel(selectedTopicName))
             .let { topicView -> find<TopicView>(topicView) }
             .also { topicView -> topicView.setOnCloseListener { refresh() } }

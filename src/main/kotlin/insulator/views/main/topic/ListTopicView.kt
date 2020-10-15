@@ -2,10 +2,7 @@ package insulator.views.main.topic
 
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.views.common.InsulatorView
-import insulator.views.component.action
-import insulator.views.component.appBar
-import insulator.views.component.h1
-import insulator.views.component.searchBox
+import insulator.views.component.*
 import insulator.views.configurations.ListClusterView
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
@@ -19,10 +16,11 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
             hbox {
                 h1("Topics")
             }
+            subTitle(viewModel.subtitleProperty)
         }
         borderpane {
             left = createTopicButton()
-            right = searchBox(viewModel.searchItem, this@ListTopicView)
+            right = searchBox(viewModel.searchItemProperty, this@ListTopicView)
         }
         topicsListView()
     }
@@ -30,9 +28,9 @@ class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewM
     private fun EventTarget.topicsListView() =
         listview<String> {
             cellFormat { graphic = label(it) { id = "topic-$it" } }
-            bindSelected(viewModel.selectedItem)
+            bindSelected(viewModel.selectedItemProperty)
             action { viewModel.showTopic() }
-            itemsProperty().set(viewModel.filteredTopics)
+            itemsProperty().set(viewModel.filteredTopicsProperty)
 
             placeholder = label("No topic found")
             selectionModel.selectionMode = SelectionMode.SINGLE
