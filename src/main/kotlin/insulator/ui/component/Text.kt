@@ -1,6 +1,6 @@
-package insulator.views.component
+package insulator.ui.component
 
-import insulator.views.style.TextStyle
+import insulator.ui.style.TextStyle
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.event.EventTarget

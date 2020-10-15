@@ -5,8 +5,8 @@ import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
 import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
+import insulator.ui.common.topicScope
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.topicScope
 import insulator.views.main.topic.CreateTopicView
 import insulator.views.main.topic.TopicView
 import javafx.beans.property.SimpleStringProperty

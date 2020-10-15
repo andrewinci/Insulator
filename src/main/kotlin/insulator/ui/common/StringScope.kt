@@ -1,4 +1,4 @@
-package insulator.views.common
+package insulator.ui.common
 
 import insulator.di.setGlobalCluster
 import insulator.lib.configuration.model.Cluster

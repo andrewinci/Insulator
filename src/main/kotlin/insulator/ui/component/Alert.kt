@@ -1,4 +1,4 @@
-package insulator.views.component
+package insulator.ui.component
 
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType

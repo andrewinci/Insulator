@@ -1,8 +1,8 @@
 package insulator.viewmodel.main
 
 import insulator.lib.configuration.model.Cluster
+import insulator.ui.common.InsulatorTabView
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.InsulatorTabView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.beans.property.SimpleObjectProperty

@@ -1,19 +1,19 @@
 package insulator
 
 import insulator.di.DIContainer
+import insulator.ui.style.AppBarStyle
+import insulator.ui.style.ButtonStyle
+import insulator.ui.style.CheckBoxStyle
+import insulator.ui.style.ComboBoxStyle
+import insulator.ui.style.DialogPaneStyle
+import insulator.ui.style.ListViewStyle
+import insulator.ui.style.MainViewStyle
+import insulator.ui.style.Root
+import insulator.ui.style.ScrollBarStyle
+import insulator.ui.style.ScrollPaneStyle
+import insulator.ui.style.TableViewStyle
+import insulator.ui.style.TextStyle
 import insulator.views.configurations.ListClusterView
-import insulator.views.style.AppBarStyle
-import insulator.views.style.ButtonStyle
-import insulator.views.style.CheckBoxStyle
-import insulator.views.style.ComboBoxStyle
-import insulator.views.style.DialogPaneStyle
-import insulator.views.style.ListViewStyle
-import insulator.views.style.MainViewStyle
-import insulator.views.style.Root
-import insulator.views.style.ScrollBarStyle
-import insulator.views.style.ScrollPaneStyle
-import insulator.views.style.TableViewStyle
-import insulator.views.style.TextStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class Insulator : App(

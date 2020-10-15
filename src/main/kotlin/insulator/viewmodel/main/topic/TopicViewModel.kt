@@ -7,8 +7,8 @@ import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.DeserializationFormat
+import insulator.ui.common.topicScope
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.topicScope
 import insulator.views.main.topic.ProducerView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
