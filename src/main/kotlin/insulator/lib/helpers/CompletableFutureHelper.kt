@@ -2,11 +2,10 @@ package insulator.lib.helpers
 
 import arrow.core.Either
 import arrow.core.flatMap
-import javafx.application.Platform
-import org.apache.kafka.common.KafkaFuture
 import arrow.core.left
 import arrow.core.right
-
+import javafx.application.Platform
+import org.apache.kafka.common.KafkaFuture
 import java.util.concurrent.CompletableFuture
 
 fun <T> KafkaFuture<T>.toCompletableFuture(): CompletableFuture<Either<Throwable, T>> {
