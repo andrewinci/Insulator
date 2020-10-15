@@ -2,13 +2,13 @@ package insulator.views.main.schemaregistry
 
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
+import insulator.ui.common.InsulatorTabView
+import insulator.ui.component.appBar
+import insulator.ui.component.confirmationButton
+import insulator.ui.component.fieldName
+import insulator.ui.component.h1
+import insulator.ui.style.theme
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
-import insulator.views.common.InsulatorTabView
-import insulator.views.component.appBar
-import insulator.views.component.confirmationButton
-import insulator.views.component.fieldName
-import insulator.views.component.h1
-import insulator.views.style.theme
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane

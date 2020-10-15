@@ -4,8 +4,8 @@ import arrow.core.extensions.either.applicativeError.handleError
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
+import insulator.ui.common.scope
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.common.scope
 import insulator.views.main.schemaregistry.SchemaView
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections

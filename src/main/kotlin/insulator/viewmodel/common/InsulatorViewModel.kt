@@ -1,7 +1,7 @@
 package insulator.viewmodel.common
 
+import insulator.ui.common.InsulatorTabView
 import insulator.viewmodel.main.MainViewModel
-import insulator.views.common.InsulatorTabView
 import javafx.beans.property.SimpleObjectProperty
 import tornadofx.ViewModel
 

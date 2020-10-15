@@ -129,7 +129,7 @@ tasks.jacocoTestReport {
     reports { xml.setEnabled(true) }
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['insulator/styles/**', 'insulator/views/**'])
+            fileTree(dir: it, exclude: ['insulator/ui/**', 'insulator/views/**'])
         }))
     }
 }

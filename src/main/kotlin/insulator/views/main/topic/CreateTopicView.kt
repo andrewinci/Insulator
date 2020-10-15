@@ -1,8 +1,8 @@
 package insulator.views.main.topic
 
+import insulator.ui.component.h1
+import insulator.ui.component.insulatorAlert
 import insulator.viewmodel.main.topic.CreateTopicViewModel
-import insulator.views.component.h1
-import insulator.views.component.insulatorAlert
 import javafx.event.EventTarget
 import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports

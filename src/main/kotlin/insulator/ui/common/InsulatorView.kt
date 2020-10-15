@@ -1,4 +1,4 @@
-package insulator.views.common
+package insulator.ui.common
 
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.scene.control.Alert
