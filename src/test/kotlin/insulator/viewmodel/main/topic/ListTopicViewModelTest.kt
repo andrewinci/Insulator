@@ -8,9 +8,7 @@ import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
-import java.util.concurrent.CompletableFuture
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 

@@ -20,7 +20,6 @@ import javafx.collections.FXCollections
 import javafx.scene.input.Clipboard
 import kotlinx.coroutines.delay
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.CompletableFuture
 
 class TopicViewModelTest : StringSpec({
 

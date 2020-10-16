@@ -3,7 +3,6 @@ package insulator.viewmodel.main.topic
 import arrow.core.right
 import helper.FxContext
 import insulator.lib.helpers.dispatch
-import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.model.Topic
 import io.kotest.core.spec.style.StringSpec
@@ -11,10 +10,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.CapturingSlot
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import java.util.concurrent.CompletableFuture
 
 class CreateTopicViewModelTest : StringSpec({
 
