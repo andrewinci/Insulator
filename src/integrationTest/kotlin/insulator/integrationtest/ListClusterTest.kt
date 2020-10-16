@@ -8,6 +8,7 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -26,7 +27,7 @@ class ListClusterTest : StringSpec({
             it.configureDi(
                 ConfigurationRepo::class to mockk<ConfigurationRepo> {
                     every { addNewClusterCallback(any()) } just runs
-                    every { getConfiguration() } returns
+                    coEvery { getConfiguration() } returns
                         Configuration(clusters = listOf(cluster)).right()
                 }
             )

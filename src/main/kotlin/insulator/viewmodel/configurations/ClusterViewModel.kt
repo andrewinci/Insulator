@@ -5,7 +5,6 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.SaslConfiguration
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.configuration.model.SslConfiguration
-import insulator.lib.helpers.dispatch
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel

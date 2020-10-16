@@ -3,7 +3,7 @@ package insulator.viewmodel.main.schemaregistry
 import arrow.core.left
 import arrow.core.right
 import helper.FxContext
-import insulator.lib.helpers.runOnFXThread
+import insulator.lib.helpers.dispatch
 import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.kafka.SchemaRegistry
 import insulator.lib.kafka.model.Schema
@@ -11,6 +11,8 @@ import insulator.lib.kafka.model.Subject
 import insulator.viewmodel.main.MainViewModel
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -52,10 +54,10 @@ class ListSchemaViewModelTest : StringSpec({
             val sut = ListSchemaViewModel()
             sut.selectedSchemaProperty.value = it.targetSubject
             // act
-            sut.runOnFXThread { showSchema() }
+            sut.dispatch { showSchema() }
             // assert
             it.waitFXThread()
-            verify(exactly = 1) { it.schemaRegistry.second.getSubject(it.targetSubject) }
+            coVerify(exactly = 1) { it.schemaRegistry.second.getSubject(it.targetSubject) }
             verify(exactly = 1) { mockMainViewModel.showTab(any(), any()) }
             sut.error.value shouldBe null
         }
@@ -64,14 +66,14 @@ class ListSchemaViewModelTest : StringSpec({
     "Show an error if unable to retrieve the schema" {
         TestFixture().use {
             // arrange
-            every { it.schemaRegistry.second.getSubject(any()) } returns Throwable(it.errorMessage).left()
+            coEvery { it.schemaRegistry.second.getSubject(any()) } returns Throwable(it.errorMessage).left()
             val sut = ListSchemaViewModel()
             sut.selectedSchemaProperty.value = it.targetSubject
             // act
-            sut.runOnFXThread { showSchema() }
+            sut.dispatch { showSchema() }
             // assert
             it.waitFXThread()
-            verify(exactly = 1) { it.schemaRegistry.second.getSubject(it.targetSubject) }
+            coVerify(exactly = 1) { it.schemaRegistry.second.getSubject(it.targetSubject) }
             sut.error.value shouldBe LoadSchemaError(it.errorMessage)
         }
     }
@@ -87,7 +89,7 @@ private class TestFixture : FxContext() {
     }
     var schemaRegistry: Pair<KClass<SchemaRegistry>, SchemaRegistry> = SchemaRegistry::class to mockk {
         every { getAllSubjects() } returns listOf(targetSubject, "subject2").right()
-        every { getSubject(any()) } returns Subject("*", listOf(Schema("{}", 1, 3))).right()
+        coEvery { getSubject(any()) } returns Subject("*", listOf(Schema("{}", 1, 3))).right()
     }
 
     init {

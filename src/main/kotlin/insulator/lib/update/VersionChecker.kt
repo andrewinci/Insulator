@@ -2,16 +2,12 @@ package insulator.lib.update
 
 import arrow.core.Either
 import arrow.core.computations.either
-import arrow.core.extensions.fx
 import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.coroutines.awaitObject
 import com.github.kittinunf.fuel.coroutines.awaitObjectResult
-import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.jsonDeserializer
-import com.github.kittinunf.fuel.json.responseJson
 import com.vdurmont.semver4j.Semver
 import insulator.di.CONFIG_FILE_NAME
 import insulator.di.GITHUB_REPO

@@ -18,8 +18,10 @@ class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val fi
         val record = !fieldParser.parseField(jsonMap, schema).flatMap {
             (it as? GenericRecord)?.right() ?: JsonToAvroException("Invalid record").left()
         }
-        !(if (genericData.validate(schema, record)) record.right()
-        else JsonToAvroException("Unable to parse the json into a valid ${schema.name}. Final validation failed.").left())
+        !(
+            if (genericData.validate(schema, record)) record.right()
+            else JsonToAvroException("Unable to parse the json into a valid ${schema.name}. Final validation failed.").left()
+            )
     }
 }
 

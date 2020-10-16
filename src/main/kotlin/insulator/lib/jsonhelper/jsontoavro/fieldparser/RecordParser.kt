@@ -1,8 +1,6 @@
 package insulator.lib.jsonhelper.jsontoavro.fieldparser
 
-import arrow.core.Either
 import arrow.core.computations.either
-import arrow.core.extensions.fx
 import arrow.core.left
 import arrow.core.right
 import insulator.lib.jsonhelper.jsontoavro.FieldParser
