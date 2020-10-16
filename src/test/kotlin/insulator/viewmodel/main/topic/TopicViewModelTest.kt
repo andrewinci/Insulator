@@ -4,6 +4,7 @@ import arrow.core.right
 import helper.FxContext
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.Consumer
+import insulator.lib.kafka.model.Record
 import insulator.lib.kafka.model.Topic
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -19,7 +20,6 @@ import javafx.scene.input.Clipboard
 import kotlinx.coroutines.delay
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.CompletableFuture
-import insulator.lib.kafka.model.Record
 
 class TopicViewModelTest : StringSpec({
 

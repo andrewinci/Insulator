@@ -5,11 +5,8 @@ import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Record
 import insulator.ui.component.fieldName
 import insulator.ui.style.theme
-import javafx.beans.property.SimpleStringProperty
-import javafx.scene.control.ScrollPane
-import javafx.scene.layout.Priority
 import javafx.scene.text.Font
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -34,20 +31,21 @@ class RecordView(private val record: Record) : View() {
         fieldName("Value")
         scrollpane {
             textflow {
-                children.setAll(formatter.formatJsonString(record.value)
-                    .map { records ->
-                        records.map {
-                            val res = text(it.text) {
-                                fill = when (it) {
-                                    is Token.Symbol -> theme.darkGray
-                                    is Token.Key -> theme.blueColor
-                                    is Token.Value -> theme.greenColor
+                children.setAll(
+                    formatter.formatJsonString(record.value)
+                        .map { records ->
+                            records.map {
+                                val res = text(it.text) {
+                                    fill = when (it) {
+                                        is Token.Symbol -> theme.darkGray
+                                        is Token.Key -> theme.blueColor
+                                        is Token.Value -> theme.greenColor
+                                    }
+                                    font = Font.font("Helvetica", 15.0)
                                 }
-                                font = Font.font("Helvetica", 15.0)
+                                res
                             }
-                            res
-                        }
-                    }.fold({ listOf(text(record.value)) }, { it })
+                        }.fold({ listOf(text(record.value)) }, { it })
                 )
             }
         }

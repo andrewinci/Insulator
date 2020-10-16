@@ -48,7 +48,6 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
                         .withComponent(ProducerViewModel(viewModel.topicName))
                         .let { find<ProducerView>(it) }
                         .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY, owner = currentWindow)
-
                 }
                 button(viewModel.consumeButtonText) { action { viewModel.consume() } }
                 fieldName("from")

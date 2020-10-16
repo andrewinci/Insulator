@@ -1,15 +1,12 @@
 package insulator.viewmodel.main.topic
 
-import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.DeserializationFormat
-import insulator.ui.common.topicScope
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.main.topic.ProducerView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
@@ -21,8 +18,6 @@ import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
-import javafx.stage.Modality
-import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.LinkedList
 
