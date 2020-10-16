@@ -2,7 +2,6 @@ package insulator.viewmodel.main.topic
 
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.dispatch
-import insulator.lib.helpers.map
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.ui.common.topicScope

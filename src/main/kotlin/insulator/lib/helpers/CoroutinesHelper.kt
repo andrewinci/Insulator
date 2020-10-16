@@ -3,6 +3,7 @@ package insulator.lib.helpers
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import javafx.application.Platform
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.javafx.JavaFx
@@ -10,6 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.apache.kafka.common.KafkaFuture
 import kotlin.coroutines.resume
+
+fun <T> T.runOnFXThread(f: T.() -> Unit) = Platform.runLater { this.apply(f) }
 
 fun <T : Any> T.dispatch(block: suspend T.() -> Unit) = GlobalScope.launch(Dispatchers.JavaFx) { block() }
 
