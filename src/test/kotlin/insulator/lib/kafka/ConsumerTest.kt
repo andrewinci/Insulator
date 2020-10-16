@@ -32,7 +32,7 @@ class ConsumerTest : StringSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act
-        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { messages.addAll(it.map { record -> record.value }) }
         // assert
         delay(200)
         sut.stop()
@@ -44,7 +44,7 @@ class ConsumerTest : StringSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act
-        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { messages.addAll(it.map { record -> record.b }) }
+        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { messages.addAll(it.map { record -> record.value }) }
         // assert
         delay(200)
         sut.stop()
@@ -56,7 +56,7 @@ class ConsumerTest : StringSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act
-        sut.start("testTopic", ConsumeFrom.LastHour, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+        sut.start("testTopic", ConsumeFrom.LastHour, DeserializationFormat.String) { messages.addAll(it.map { record -> record.value }) }
         // assert
         delay(200)
         sut.stop()
@@ -68,7 +68,7 @@ class ConsumerTest : StringSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act
-        sut.start("testTopic", ConsumeFrom.LastWeek, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+        sut.start("testTopic", ConsumeFrom.LastWeek, DeserializationFormat.String) { messages.addAll(it.map { record -> record.value }) }
         // assert
         delay(200)
         sut.stop()
@@ -81,7 +81,7 @@ class ConsumerTest : StringSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockInvalidSchemaConverter)
         // act
-        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { messages.addAll(it.map { record -> record.b }) }
+        sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { messages.addAll(it.map { record -> record.value }) }
         // assert
         delay(200)
         sut.stop()
@@ -93,7 +93,7 @@ class ConsumerTest : StringSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act
-        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.value }) }
         // assert
         delay(200)
         sut.stop()
@@ -105,7 +105,7 @@ class ConsumerTest : StringSpec({
         val messages = mutableListOf<String>()
         val sut = Consumer(Cluster.empty(), mockConverter)
         // act
-        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+        sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.value }) }
         // assert
         sut.isRunning() shouldBe true
         sut.stop()

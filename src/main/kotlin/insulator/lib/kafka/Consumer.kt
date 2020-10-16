@@ -3,6 +3,7 @@ package insulator.lib.kafka
 import arrow.core.Tuple3
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
+import insulator.lib.kafka.model.Record
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -19,7 +20,7 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
     private var threadLoop: Thread? = null
     private var running = false
 
-    fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
+    fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Record>) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
         val consumer: Consumer<Any, Any> = when (valueFormat) {
             DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
@@ -37,7 +38,7 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
         threadLoop?.join()
     }
 
-    private fun loop(consumer: Consumer<Any, Any>, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
+    private fun loop(consumer: Consumer<Any, Any>, callback: (List<Record>) -> Unit) {
         threadLoop = thread {
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
@@ -79,12 +80,17 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
             }
     }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
+    private fun parse(record: ConsumerRecord<Any, Any>): Record {
         val parsedValue = if (record.value() is GenericRecord) converter.parse(record.value() as GenericRecord)
             // fallback to Avro.toString if unable to parse with the custom parser
             .fold({ record.value().toString() }, { it })
         else record.value().toString()
-        return Tuple3(record.key()?.toString(), parsedValue, record.timestamp())
+        return Record(
+            record.key()?.toString(),
+            parsedValue,
+            record.timestamp(),
+            record.headers().toArray().map { h -> h.key() to h.value() }.toMap()
+        )
     }
 }
 

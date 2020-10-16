@@ -1,6 +1,5 @@
 package insulator.viewmodel.main.topic
 
-import arrow.core.Tuple3
 import arrow.core.right
 import helper.FxContext
 import insulator.lib.kafka.AdminApi
@@ -20,6 +19,7 @@ import javafx.scene.input.Clipboard
 import kotlinx.coroutines.delay
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.CompletableFuture
+import insulator.lib.kafka.model.Record
 
 class TopicViewModelTest : StringSpec({
 
@@ -117,9 +117,9 @@ private class TestContext : FxContext() {
             },
             Consumer::class to mockk<Consumer> {
                 every { start(any(), any(), any(), any()) } answers {
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+                    lastArg<(List<Record>) -> Unit>()(listOf(Record("1", "2", 3L, emptyMap())))
+                    lastArg<(List<Record>) -> Unit>()(listOf(Record("1", "2", 3L, emptyMap())))
+                    lastArg<(List<Record>) -> Unit>()(listOf(Record("1", "2", 3L, emptyMap())))
                 }
                 every { stop() } just runs
                 every { isRunning() } returns false
