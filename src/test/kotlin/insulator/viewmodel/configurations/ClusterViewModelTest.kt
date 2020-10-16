@@ -10,16 +10,16 @@ import insulator.lib.configuration.model.SslConfiguration
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.core.spec.style.stringSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import java.util.UUID
 
 class ClusterViewModelTest : StringSpec({
 
     fun mockConfigurationRepo() = mockk<ConfigurationRepo>() {
-        every { store(any()) } returns Unit.right()
-        every { delete(any()) } returns Unit.right()
+        coEvery { store(any()) } returns Unit.right()
+        coEvery { delete(any()) } returns Unit.right()
     }
 
     fun testSave(name: String, cluster: Cluster) = stringSpec {
@@ -32,7 +32,7 @@ class ClusterViewModelTest : StringSpec({
                 // act
                 sut.save()
                 // assert
-                verify(exactly = 1) { mockConfigurationRepo.store(cluster) }
+                coVerify(exactly = 1) { mockConfigurationRepo.store(cluster) }
             }
         }
     }
@@ -61,7 +61,7 @@ class ClusterViewModelTest : StringSpec({
             // act
             sut.delete()
             // assert
-            verify(exactly = 1) { mockConfigurationRepo.delete(mockCluster) }
+            coVerify(exactly = 1) { mockConfigurationRepo.delete(mockCluster) }
         }
     }
 

@@ -6,7 +6,6 @@ import insulator.lib.helpers.dispatch
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import kotlinx.coroutines.delay
 
 class ListClusterViewModel : InsulatorViewModel() {
 

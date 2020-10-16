@@ -4,11 +4,6 @@ import insulator.ui.component.confirmationButton
 import insulator.ui.component.h1
 import insulator.viewmodel.configurations.ClusterViewModel
 import javafx.event.EventTarget
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.javafx.JavaFx
-import kotlinx.coroutines.launch
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ClusterView : View() {
