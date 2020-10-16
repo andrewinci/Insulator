@@ -66,6 +66,9 @@ dependencies {
     implementation(group: 'org.koin', name: 'koin-core-ext', version: "$koin_version")
     testImplementation(group: 'org.koin', name: 'koin-test', version: "$koin_version")
 
+    // kotlinx-coroutines-javafx
+    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-javafx', version: '1.4.0-M1')
+
     // Json
     implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218')
     implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3')

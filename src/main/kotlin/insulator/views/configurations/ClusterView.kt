@@ -4,6 +4,11 @@ import insulator.ui.component.confirmationButton
 import insulator.ui.component.h1
 import insulator.viewmodel.configurations.ClusterViewModel
 import javafx.event.EventTarget
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.javafx.JavaFx
+import kotlinx.coroutines.launch
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class ClusterView : View() {
@@ -43,11 +48,10 @@ class ClusterView : View() {
         prefWidth = 600.0
     }
 
-    private fun EventTarget.deleteButton() =
-        confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
-            viewModel.delete()
-            close()
-        }
+    private fun EventTarget.deleteButton() = confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
+        viewModel.delete()
+        close()
+    }
 
     private fun EventTarget.saveButton() =
         button("Save") {

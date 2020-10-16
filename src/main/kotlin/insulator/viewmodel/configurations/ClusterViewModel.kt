@@ -5,6 +5,7 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.SaslConfiguration
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.configuration.model.SslConfiguration
+import insulator.lib.helpers.dispatch
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel
@@ -30,14 +31,8 @@ class ClusterViewModel(cluster: ClusterModel = ClusterModel(Cluster.empty())) : 
     val schemaRegistryUsernameProperty = bind { item.schemaRegistryUsernameProperty }
     val schemaRegistryPasswordProperty = bind { item.schemaRegistryPasswordProperty }
 
-    fun save() {
-        configurationRepo.store(this.item.toClusterConfig())
-            .mapLeft { println("Unable to store the new configuration $it") }
-    }
-
-    fun delete() {
-        configurationRepo.delete(this.item.toClusterConfig())
-    }
+    fun save() = configurationRepo.dispatch { store(item.toClusterConfig()) }
+    fun delete() = configurationRepo.dispatch { delete(item.toClusterConfig()) }
 }
 
 class ClusterModel(cluster: Cluster) {
