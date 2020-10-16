@@ -76,7 +76,7 @@ class TopicViewModelTest : StringSpec({
             mockkStatic(Clipboard::class)
             every { Clipboard.getSystemClipboard() } returns mockClipboard
             val sut = TopicViewModel(topicName)
-            sut.selectedItem.set(RecordViewModel("key", "value", 1599913230000L))
+            sut.selectedItem.set(RecordViewModel(Record("key", "value", 1599913230000L, emptyMap())))
             // act
             sut.copySelectedRecordToClipboard()
             // assert
@@ -95,8 +95,8 @@ class TopicViewModelTest : StringSpec({
             sut.filteredRecords.set(
                 FXCollections.observableList(
                     listOf(
-                        RecordViewModel("key1", "value1", 1599913230000L),
-                        RecordViewModel("key2", "value2", 1599913230000L)
+                        RecordViewModel(Record("key1", "value1", 1599913230000L, emptyMap())),
+                        RecordViewModel(Record("key2", "value2", 1599913230000L, emptyMap()))
                     )
                 )
             )
