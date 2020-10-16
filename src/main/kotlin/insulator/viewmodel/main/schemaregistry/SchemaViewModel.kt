@@ -16,7 +16,7 @@ import javafx.scene.input.Clipboard
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class SchemaViewModel(val subject: Subject) : InsulatorViewModel() {
-    val cluster: Cluster by di()
+    private val cluster: Cluster by di()
     private val formatter: JsonFormatter by di()
     private val schemaRegistry: SchemaRegistry by di()
 

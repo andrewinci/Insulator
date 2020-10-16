@@ -108,6 +108,13 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
                 }
             }
 
+            onDoubleClick {
+                selectedItem?.record?.let {
+                    RecordView(it)
+                        .openModal(owner = currentWindow, stageStyle = StageStyle.UTILITY, modality = Modality.WINDOW_MODAL)
+                }
+            }
+
             viewModel.configureFilteredRecords(this.comparatorProperty())
             itemsProperty().bind(viewModel.filteredRecords)
 

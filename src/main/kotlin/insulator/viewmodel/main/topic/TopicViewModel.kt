@@ -31,7 +31,6 @@ private const val STOP = "Stop"
 
 class TopicViewModel(val topicName: String) : InsulatorViewModel() {
 
-    private val cluster: Cluster by di()
     private val adminApi: AdminApi by di()
     private val consumer: Consumer by di()
 
@@ -117,7 +116,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     private fun consume(from: ConsumeFrom, valueFormat: DeserializationFormat) {
         if (consumer.isRunning()) return
         consumer.start(nameProperty.value, from, valueFormat) {
-            val recordViewModels = it.map { (k, v, t) -> RecordViewModel(k, v, t) }
+            val recordViewModels = it.map { r -> RecordViewModel(r) }
             records.runOnFXThread { addAll(recordViewModels) }
         }
     }
