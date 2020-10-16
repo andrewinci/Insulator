@@ -31,8 +31,8 @@ class ClusterViewModel(cluster: ClusterModel = ClusterModel(Cluster.empty())) : 
     val schemaRegistryUsernameProperty = bind { item.schemaRegistryUsernameProperty }
     val schemaRegistryPasswordProperty = bind { item.schemaRegistryPasswordProperty }
 
-    fun save() = configurationRepo.dispatch { store(item.toClusterConfig()) }
-    fun delete() = configurationRepo.dispatch { delete(item.toClusterConfig()) }
+    suspend fun save() = configurationRepo.store(item.toClusterConfig())
+    suspend fun delete() = configurationRepo.delete(item.toClusterConfig())
 }
 
 class ClusterModel(cluster: Cluster) {

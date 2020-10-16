@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.lib.helpers.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
@@ -32,7 +33,7 @@ class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerV
         borderpane {
             right = button("Send") {
                 enableWhen(viewModel.canSendProperty)
-                action { viewModel.send() }
+                action { viewModel.dispatch { send() }; close() }
             }
         }
 

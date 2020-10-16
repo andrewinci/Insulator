@@ -1,6 +1,7 @@
 package insulator.lib.jsonhelper.jsontoavro.fieldparser
 
 import arrow.core.Either
+import arrow.core.computations.either
 import arrow.core.extensions.fx
 import arrow.core.left
 import arrow.core.right
@@ -15,7 +16,7 @@ import org.apache.avro.generic.GenericRecordBuilder
 
 internal class RecordParser(private val fieldParser: FieldParser) : JsonFieldParser<GenericRecord> {
 
-    override fun parse(fieldValue: Any?, schema: Schema) = Either.fx<JsonFieldParsingException, GenericRecord> {
+    override fun parse(fieldValue: Any?, schema: Schema) = either.eager<JsonFieldParsingException, GenericRecord> {
         val jsonMap = !if (schema.type != Schema.Type.RECORD || fieldValue !is Map<*, *>)
             JsonInvalidFieldException(schema, fieldValue).left()
         else fieldValue.right()

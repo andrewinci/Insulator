@@ -18,12 +18,12 @@ class ByteParser : JsonFieldParser<ByteBuffer> {
         if (fieldValue == null) return JsonInvalidFieldException(schema, fieldValue).left()
         return when (fieldValue) {
             is Double -> mapFromDecimal(fieldValue, schema)
-            is String -> mapFromHex(fieldValue, schema)
+            is String -> mapFromHex(fieldValue)
             else -> JsonInvalidFieldException(schema, fieldValue).left()
         }
     }
 
-    private fun mapFromHex(fieldValue: String, schema: Schema) =
+    private fun mapFromHex(fieldValue: String) =
         if (!fieldValue.toLowerCase().startsWith("0x")) JsonFieldParsingException("Invalid $fieldValue, BYTES value need to start with 0x").left()
         else ByteBuffer.wrap(DatatypeConverter.parseHexBinary(fieldValue.substring(2))).right()
 

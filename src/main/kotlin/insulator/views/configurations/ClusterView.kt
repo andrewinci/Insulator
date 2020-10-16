@@ -1,5 +1,6 @@
 package insulator.views.configurations
 
+import insulator.lib.helpers.dispatch
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.h1
 import insulator.viewmodel.configurations.ClusterViewModel
@@ -44,7 +45,7 @@ class ClusterView : View() {
     }
 
     private fun EventTarget.deleteButton() = confirmationButton("Delete", "The cluster \"${viewModel.nameProperty.value}\" will be removed.", visible = !isNewCluster) {
-        viewModel.delete()
+        viewModel.dispatch { delete() }
         close()
     }
 
@@ -53,7 +54,7 @@ class ClusterView : View() {
             enableWhen(viewModel.valid)
             action {
                 viewModel.commit()
-                viewModel.save()
+                viewModel.dispatch { save() }
                 close()
             }
         }

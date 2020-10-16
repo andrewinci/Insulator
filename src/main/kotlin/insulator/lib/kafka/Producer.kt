@@ -11,8 +11,8 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.Producer as KafkaProducer
 
 interface Producer {
-    fun validate(value: String, topic: String): Either<Throwable, Unit>
-    fun send(topic: String, key: String, value: String): Either<Throwable, Unit>
+    suspend fun validate(value: String, topic: String): Either<Throwable, Unit>
+    suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit>
 }
 
 class AvroProducer(
@@ -23,19 +23,19 @@ class AvroProducer(
 
     private val schemaCache = HashMap<String, Either<Throwable, String>>()
 
-    override fun validate(value: String, topic: String) =
+    override suspend fun validate(value: String, topic: String) =
         internalValidate(value, topic).flatMap { Unit.right() }
 
-    override fun send(topic: String, key: String, value: String) =
+    override suspend fun send(topic: String, key: String, value: String) =
         internalValidate(value, topic)
             .map { ProducerRecord(topic, key, it) }
             .flatMap { avroProducer.runCatchingE { send(it) } }
             .map { Unit }
 
-    private fun internalValidate(value: String, topic: String) =
+    private suspend fun internalValidate(value: String, topic: String) =
         getCachedSchema(topic).flatMap { jsonAvroConverter.parse(jsonString = value, schemaString = it) }
 
-    private fun getCachedSchema(topic: String) =
+    private suspend fun getCachedSchema(topic: String) =
         schemaCache.getOrPut(
             topic,
             {
@@ -47,8 +47,8 @@ class AvroProducer(
 }
 
 class StringProducer(private val stringProducer: KafkaProducer<String, String>) : Producer {
-    override fun validate(value: String, topic: String) = Unit.right()
-    override fun send(topic: String, key: String, value: String): Either<Throwable, Unit> {
+    override suspend fun validate(value: String, topic: String) = Unit.right()
+    override suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit> {
         val record = ProducerRecord(topic, key, value)
         return stringProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })
     }

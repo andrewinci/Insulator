@@ -1,7 +1,8 @@
 package insulator.lib.jsonhelper.jsontoavro
 
 import arrow.core.Either
-import arrow.core.extensions.fx
+import arrow.core.computations.either
+import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -11,16 +12,14 @@ import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 
 class JsonToAvroConverter(private val objectMapper: ObjectMapper, private val fieldParser: FieldParser, private val genericData: GenericData) {
-    fun parse(jsonString: String, schemaString: String) = Either.fx<JsonToAvroException, GenericRecord> {
+    suspend fun parse(jsonString: String, schemaString: String): Either<JsonToAvroException, GenericRecord> = either {
         val jsonMap = !objectMapper.runCatchingE { readValue(jsonString, Map::class.java) }.mapLeft { JsonParsingException("Invalid json", it) }
         val schema = !Schema.Parser().runCatchingE { parse(schemaString) }.mapLeft { SchemaParsingException("Invalid AVRO schema", it) }
         val record = !fieldParser.parseField(jsonMap, schema).flatMap {
             (it as? GenericRecord)?.right() ?: JsonToAvroException("Invalid record").left()
         }
-        !(
-            if (genericData.validate(schema, record)) record.right()
-            else JsonToAvroException("Unable to parse the json into a valid ${schema.name}. Final validation failed.").left()
-            )
+        !(if (genericData.validate(schema, record)) record.right()
+        else JsonToAvroException("Unable to parse the json into a valid ${schema.name}. Final validation failed.").left())
     }
 }
 

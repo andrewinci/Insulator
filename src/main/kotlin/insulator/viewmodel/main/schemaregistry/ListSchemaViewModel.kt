@@ -52,7 +52,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
             error.set(LoadSchemaListError(it.message ?: "Unable to load the schema list"))
         }
 
-    fun showSchema() {
+    suspend fun showSchema() {
         if (selectedSchemaProperty.value.isNullOrEmpty()) return
         schemaRegistryClient.getSubject(selectedSchemaProperty.value!!)
             .map { SchemaViewModel(it) }

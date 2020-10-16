@@ -76,6 +76,7 @@ dependencies {
     // Fuel
     implementation(group: 'com.github.kittinunf.fuel', name: 'fuel', version: "$fuel_version")
     implementation(group: 'com.github.kittinunf.fuel', name: 'fuel-json', version: "$fuel_version")
+    implementation(group: 'com.github.kittinunf.fuel', name: 'fuel-coroutines', version: "$fuel_version")
 
     // Semver4j
     implementation(group: 'com.vdurmont', name: 'semver4j', version: "3.1.0")
@@ -112,19 +113,18 @@ import org.gradle.internal.os.OperatingSystem
 task packageApp(type: Exec) {
     group = 'jpackage'
     dependsOn 'shadowJar'
-    def command = ['jpackage',
-                   '--input', './build/libs',
-                   '--main-jar', 'insulator-all.jar',
-                   '-d', '.',
-                   '--name', 'Insulator',
-                   '--java-options', "'--enable-preview'",
-                   '--app-version', "${System.getenv().get("RELEASE_VERSION") ?: "0.0.0"}"]
-    if (OperatingSystem.current().isWindows()) {
-        command.addAll('--icon', './assets/icon.ico', '--win-dir-chooser', '--win-menu')
-    } else if (OperatingSystem.current().isMacOsX()) {
-        command.addAll('--icon', './assets/icon.icns')
-    } else command.addAll('--icon', './assets/icon.png', '--linux-shortcut')
 
+    // build command
+    def appVersion = "${System.getenv().get("RELEASE_VERSION") ?: "0.0.0"}"
+    def command = ['jpackage', '--input', './build/libs', '--main-jar', 'insulator-all.jar', '-d', '.',
+                   '--name', 'Insulator', '--java-options', "'--enable-preview'", '--app-version', appVersion]
+
+    // customization for each OS
+    if (OperatingSystem.current().isWindows()) command.addAll('--icon', './assets/icon.ico', '--win-dir-chooser', '--win-menu')
+    else if (OperatingSystem.current().isMacOsX()) command.addAll('--icon', './assets/icon.icns')
+    else command.addAll('--icon', './assets/icon.png', '--linux-shortcut')
+
+    // run command
     commandLine(command)
 }
 

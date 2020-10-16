@@ -1,5 +1,6 @@
 package insulator.views.main.schemaregistry
 
+import insulator.lib.helpers.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.h1
@@ -28,7 +29,7 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
     private fun EventTarget.schemasListView() =
         listview<String> {
             cellFormat { graphic = label(it) }
-            onDoubleClick { viewModel.showSchema() }
+            onDoubleClick { viewModel.dispatch { showSchema() } }
             itemsProperty().set(viewModel.filteredSchemasProperty)
             bindSelected(viewModel.selectedSchemaProperty)
 
