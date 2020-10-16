@@ -8,6 +8,7 @@ import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.model.Topic
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -112,8 +113,8 @@ private class TestContext : FxContext() {
     init {
         addToDI(
             AdminApi::class to mockk<AdminApi> {
-                every { describeTopic(any()) } returns CompletableFuture.completedFuture(Topic("Topic name").right())
-                every { deleteTopic(any()) } returns CompletableFuture.completedFuture(null.right())
+                coEvery { describeTopic(any()) } returns Topic("Topic name").right()
+                coEvery { deleteTopic(any()) } returns null.right()
             },
             Consumer::class to mockk<Consumer> {
                 every { start(any(), any(), any(), any()) } answers {

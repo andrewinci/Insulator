@@ -4,12 +4,17 @@ import arrow.core.left
 import arrow.core.right
 import helper.FxContext
 import insulator.lib.kafka.AdminApi
+import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import java.util.concurrent.CompletableFuture
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
+@ExperimentalTime
 class ListTopicViewModelTest : StringSpec({
 
     val errorMessage = "Example error"
@@ -19,16 +24,18 @@ class ListTopicViewModelTest : StringSpec({
             // arrange
             it.addToDI(
                 AdminApi::class to mockk<AdminApi> {
-                    every { listTopics() } returns CompletableFuture.completedFuture(Throwable(errorMessage).left())
+                    coEvery { listTopics() } returns Throwable(errorMessage).left()
                 }
             )
             val sut = ListTopicViewModel()
             // act
             val res = sut.filteredTopicsProperty
             // assert
-            sut.refresh().get() // force and wait refresh
-            res.size shouldBe 0
-            sut.error.value!!.message shouldBe errorMessage
+            sut.refresh()
+            eventually(1.seconds) {
+                res.size shouldBe 0
+                sut.error.value!!.message shouldBe errorMessage
+            }
         }
     }
 
@@ -37,16 +44,18 @@ class ListTopicViewModelTest : StringSpec({
             // arrange
             it.addToDI(
                 AdminApi::class to mockk<AdminApi> {
-                    every { listTopics() } returns CompletableFuture.completedFuture(listOf("tppic1", "topic2").right())
+                    coEvery { listTopics() } returns listOf("tppic1", "topic2").right()
                 }
             )
             val sut = ListTopicViewModel()
             // act
             val res = sut.filteredTopicsProperty
             // assert
-            sut.refresh().get() // force and wait refresh
-            res.size shouldBe 2
-            sut.error.value shouldBe null
+            sut.refresh()
+            eventually(1.seconds) {
+                res.size shouldBe 2
+                sut.error.value shouldBe null
+            }
         }
     }
 })
