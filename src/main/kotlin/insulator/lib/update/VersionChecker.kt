@@ -1,11 +1,13 @@
 package insulator.lib.update
 
 import arrow.core.Either
-import arrow.core.extensions.fx
+import arrow.core.computations.either
+import arrow.core.flatMap
 import arrow.core.left
 import arrow.core.right
-import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.fuel.json.responseJson
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitObjectResult
+import com.github.kittinunf.fuel.json.jsonDeserializer
 import com.vdurmont.semver4j.Semver
 import insulator.di.CONFIG_FILE_NAME
 import insulator.di.GITHUB_REPO
@@ -29,7 +31,7 @@ class VersionChecker(private val customJarPath: String? = null) {
     private val jarPath: String
         get() = customJarPath ?: Paths.get(this::class.java.protectionDomain.codeSource.location.toURI()).toString()
 
-    fun getCurrentVersion() = Either.fx<Throwable, Version> {
+    suspend fun getCurrentVersion(): Either<Throwable, Version> = either {
         val appVersion = getAppVersion().fold({ "0.0.0" }, { it })
         val latestVersion = !getLatestVersion()
         val isANewVersionAvailable = Semver(appVersion).isLowerThan(latestVersion.version)
@@ -48,8 +50,8 @@ class VersionChecker(private val customJarPath: String? = null) {
         else FileNotFoundException().left()
     }
 
-    fun getLatestVersion() = Either.fx<Throwable, Release> {
-        val jsonObject = !LATEST_RELEASE_API_ENDPOINT.httpGet().responseJson().third
+    suspend fun getLatestVersion(): Either<Throwable, Release> = either {
+        val jsonObject = !Fuel.get(LATEST_RELEASE_API_ENDPOINT).awaitObjectResult(jsonDeserializer())
             .fold({ it.right() }, { it.left() })
             .flatMap { it.runCatchingE { obj() } }
         val tag = !jsonObject.runCatchingE { getString("tag_name") }

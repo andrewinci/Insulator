@@ -2,6 +2,7 @@ package insulator.viewmodel.main.topic
 
 import arrow.core.extensions.either.applicativeError.handleError
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.helpers.dispatch
 import insulator.lib.jsonhelper.jsontoavro.JsonFieldParsingException
 import insulator.lib.jsonhelper.jsontoavro.JsonMissingFieldException
 import insulator.lib.kafka.AvroProducer
@@ -43,21 +44,23 @@ class ProducerViewModel(val topicName: String) : InsulatorViewModel() {
 
     init {
         valueProperty.onChange { value ->
-            if (value != null) {
-                producer.validate(value, topicName).fold(
-                    { error ->
-                        if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
-                        if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
-                            validationErrorProperty.set(error.message)
-                    },
-                    { validationErrorProperty.set(null) }
-                )
+            value?.let {
+                producer.dispatch {
+                    validate(value, topicName).fold(
+                        { error ->
+                            if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
+                            if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
+                                validationErrorProperty.set(error.message)
+                        },
+                        { validationErrorProperty.set(null) }
+                    )
+                }
             }
         }
         valueProperty.set("{\n}")
     }
 
-    fun send() {
+    suspend fun send() {
         if (keyProperty.value.isNullOrBlank()) {
             error.set(Exception("Invalid key. Key must be not empty"))
             return

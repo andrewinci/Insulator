@@ -29,8 +29,8 @@ class CreateTopicView : View() {
             action {
                 viewModel.commit()
                 viewModel.save().fold(
-                    { close() },
-                    { insulatorAlert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") }
+                    { insulatorAlert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") },
+                    { close() }
                 )
             }
         }

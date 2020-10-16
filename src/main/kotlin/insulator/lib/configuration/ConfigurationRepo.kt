@@ -1,8 +1,7 @@
 package insulator.lib.configuration
 
 import arrow.core.Either
-import arrow.core.extensions.fx
-import arrow.core.flatMap
+import arrow.core.computations.either
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.Configuration
 import insulator.lib.helpers.runCatchingE
@@ -13,17 +12,15 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
 
     private val callbacks = ArrayList<(Configuration) -> Unit>()
 
-    fun getConfiguration(): Either<ConfigurationRepoException, Configuration> {
+    suspend fun getConfiguration(): Either<ConfigurationRepoException, Configuration> = either {
         if (!File(configPath).exists()) store(Configuration(emptyList()))
-        return runCatchingE { File(configPath).readText() }
+        val textConfig = !runCatchingE { File(configPath).readText() }
             .mapLeft { ConfigurationRepoException("Unable to load the file", it) }
-            .flatMap {
-                json.runCatchingE { decodeFromString(Configuration.serializer(), it) }
-                    .mapLeft { ConfigurationRepoException("Unable to load the configurations", it) }
-            }
+        !json.runCatchingE { decodeFromString(Configuration.serializer(), textConfig) }
+            .mapLeft { ConfigurationRepoException("Unable to load the configurations", it) }
     }
 
-    fun delete(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
+    suspend fun delete(cluster: Cluster): Either<Throwable, Unit> = either {
         (!getConfiguration()).clusters
             .map { it.guid to it }.filter { (guid, _) -> guid != cluster.guid }
             .map { it.second }
@@ -32,7 +29,7 @@ class ConfigurationRepo(private val json: Json, private val configPath: String =
             .also { config -> callbacks.forEach { it(config) } }
     }
 
-    fun store(cluster: Cluster) = Either.fx<ConfigurationRepoException, Unit> {
+    suspend fun store(cluster: Cluster): Either<ConfigurationRepoException, Unit> = either {
         val configuration = (!getConfiguration()).clusters
             .map { it.guid to it }.toMap().plus(cluster.guid to cluster)
             .map { it.value }

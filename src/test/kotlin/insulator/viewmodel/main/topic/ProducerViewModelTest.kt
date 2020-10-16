@@ -9,12 +9,16 @@ import insulator.lib.jsonhelper.jsontoavro.JsonToAvroException
 import insulator.lib.kafka.AvroProducer
 import insulator.lib.kafka.Producer
 import insulator.lib.kafka.StringProducer
+import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
+@ExperimentalTime
 class ProducerViewModelTest : StringSpec({
 
     val errorMessage = "Example error"
@@ -25,15 +29,17 @@ class ProducerViewModelTest : StringSpec({
             it.addToDI(
                 Cluster::class to Cluster.empty(),
                 StringProducer::class to mockk<Producer> {
-                    every { validate(any(), any()) } returns JsonToAvroException(errorMessage).left()
+                    coEvery { validate(any(), any()) } returns JsonToAvroException(errorMessage).left()
                 }
             )
             val sut = ProducerViewModel("test-topic")
             // act
             sut.valueProperty.set("test")
             // assert
-            sut.validationErrorProperty.value shouldBe errorMessage
-            sut.canSendProperty.value shouldBe false
+            eventually(1.seconds) {
+                sut.validationErrorProperty.value shouldBe errorMessage
+                sut.canSendProperty.value shouldBe false
+            }
         }
     }
 
@@ -43,7 +49,7 @@ class ProducerViewModelTest : StringSpec({
             it.addToDI(
                 Cluster::class to Cluster.empty(),
                 StringProducer::class to mockk<Producer> {
-                    every { validate(any(), any()) } returns Unit.right()
+                    coEvery { validate(any(), any()) } returns Unit.right()
                 }
             )
             val sut = ProducerViewModel("test-topic")
@@ -63,7 +69,7 @@ class ProducerViewModelTest : StringSpec({
             it.addToDI(
                 Cluster::class to Cluster.empty().copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample")),
                 AvroProducer::class to mockk<Producer> {
-                    every { validate(any(), any()) } returns Unit.right()
+                    coEvery { validate(any(), any()) } returns Unit.right()
                 }
             )
             // act
@@ -79,7 +85,7 @@ class ProducerViewModelTest : StringSpec({
             it.addToDI(
                 Cluster::class to Cluster.empty(),
                 StringProducer::class to mockk<Producer> {
-                    every { validate(any(), any()) } returns Unit.right()
+                    coEvery { validate(any(), any()) } returns Unit.right()
                 }
             )
             val sut = ProducerViewModel("test-topic")
@@ -98,8 +104,8 @@ class ProducerViewModelTest : StringSpec({
             it.addToDI(
                 Cluster::class to Cluster.empty(),
                 StringProducer::class to mockk<Producer> {
-                    every { validate(any(), any()) } returns Unit.right()
-                    every { send(any(), any(), any()) } returns Unit.right()
+                    coEvery { validate(any(), any()) } returns Unit.right()
+                    coEvery { send(any(), any(), any()) } returns Unit.right()
                 }
             )
             val sut = ProducerViewModel("test-topic")
@@ -118,8 +124,8 @@ class ProducerViewModelTest : StringSpec({
             it.addToDI(
                 Cluster::class to Cluster.empty(),
                 StringProducer::class to mockk<Producer> {
-                    every { validate(any(), any()) } returns Unit.right()
-                    every { send(any(), any(), any()) } returns Throwable("sample").left()
+                    coEvery { validate(any(), any()) } returns Unit.right()
+                    coEvery { send(any(), any(), any()) } returns Throwable("sample").left()
                 }
             )
             val sut = ProducerViewModel("test-topic")

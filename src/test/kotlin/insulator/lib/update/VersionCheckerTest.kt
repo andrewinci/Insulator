@@ -6,7 +6,7 @@ import insulator.di.GITHUB_REPO
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import java.io.Closeable
 import java.nio.file.Path
@@ -135,8 +135,8 @@ class VersionCheckerTest : StringSpec({
 class VersionCheckerTestFixture : Closeable {
     fun mockHttpResponse(statusCode: Int, jsonResponse: String) {
         FuelManager.instance.client = mockk {
-            every { executeRequest(any()).statusCode } returns statusCode
-            every { executeRequest(any()).data } returns jsonResponse.toByteArray()
+            coEvery { awaitRequest(any()).data } returns jsonResponse.toByteArray()
+            coEvery { awaitRequest(any()).statusCode } returns statusCode
         }
     }
 
