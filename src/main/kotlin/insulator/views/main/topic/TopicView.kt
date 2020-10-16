@@ -1,6 +1,7 @@
 package insulator.views.main.topic
 
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.helpers.dispatch
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.ui.common.InsulatorTabView
@@ -70,7 +71,7 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
 
     private fun EventTarget.deleteButton() =
         confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
-            viewModel.delete()
+            viewModel.dispatch { delete() }
             closeTab()
         }
 
@@ -113,7 +114,9 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             hgrow = Priority.ALWAYS
         }
 
-    override fun onError(throwable: Throwable) { close() }
+    override fun onError(throwable: Throwable) {
+        close()
+    }
 
     override fun onTabClosed() {
         viewModel.stop()

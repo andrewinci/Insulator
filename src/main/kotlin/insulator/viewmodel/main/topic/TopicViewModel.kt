@@ -1,7 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import insulator.lib.configuration.model.Cluster
-import insulator.lib.helpers.completeOnFXThread
+import insulator.lib.helpers.dispatch
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.ConsumeFrom
@@ -72,14 +72,12 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     )
 
     init {
-        refresh()
+        dispatch { refresh() }
     }
 
     fun clear() = records.clear()
     fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
-    fun delete() {
-        adminApi.deleteTopic(this.nameProperty.value).get()
-    }
+    suspend fun delete() = adminApi.deleteTopic(this.nameProperty.value)
 
     fun consume() {
         if (consumeButtonText.value == CONSUME) {
@@ -104,13 +102,15 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         Clipboard.getSystemClipboard().putString(filteredRecords.value.joinToString("\n") { it.toCsv() })
     }
 
-    private fun refresh() {
-        adminApi.describeTopic(topicName).completeOnFXThread {
-            nameProperty.set(it.name)
-            isInternalProperty.set(it.isInternal ?: false)
-            partitionCountProperty.set(it.partitionCount)
-            messageCountProperty.set(it.messageCount ?: -1)
-            isCompactedProperty.set(it.isCompacted)
+    private suspend fun refresh() {
+        adminApi.describeTopic(topicName).map {
+            runOnFXThread {
+                nameProperty.set(it.name)
+                isInternalProperty.set(it.isInternal ?: false)
+                partitionCountProperty.set(it.partitionCount)
+                messageCountProperty.set(it.messageCount ?: -1)
+                isCompactedProperty.set(it.isCompacted)
+            }
         }
     }
 

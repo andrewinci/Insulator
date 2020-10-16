@@ -17,7 +17,7 @@ class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : Ite
     val replicationFactorProperty = bind { item.replicationFactorProperty }
     val isCompactedProperty = bind { item.isCompactedProperty }
 
-    fun save(): Either<Throwable, Unit> = admin.createTopics(this.item.toTopic()).get()
+    suspend fun save(): Either<Throwable, Unit> = admin.createTopics(this.item.toTopic())
 }
 
 class CreateTopicModel(topic: Topic = Topic.empty()) {

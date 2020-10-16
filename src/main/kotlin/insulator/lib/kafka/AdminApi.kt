@@ -1,10 +1,10 @@
 package insulator.lib.kafka
 
 import arrow.core.Either
+import arrow.core.computations.either
+import arrow.core.flatMap
 import arrow.core.rightIfNotNull
-import insulator.lib.helpers.flatMap
-import insulator.lib.helpers.map
-import insulator.lib.helpers.toCompletableFuture
+import insulator.lib.helpers.toSuspendCoroutine
 import insulator.lib.kafka.model.Topic
 import insulator.lib.kafka.model.TopicConfiguration
 import org.apache.kafka.clients.admin.AdminClient
@@ -14,45 +14,45 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.config.ConfigResource
 import org.apache.kafka.common.config.TopicConfig
-import java.util.concurrent.CompletableFuture
 
 class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) {
 
-    fun listTopics() = admin.listTopics().names().toCompletableFuture().map { it.toList() }
+    suspend fun listTopics() = admin.listTopics().names().toSuspendCoroutine().map { it.toList() }
 
-    fun describeTopic(topicName: String): CompletableFuture<Either<Throwable, Topic>> {
-        val configurationTopicResult = with(ConfigResource(ConfigResource.Type.TOPIC, topicName)) {
-            admin.describeConfigs(listOf(this)).values()[this]!!.toCompletableFuture()
-        }.map {
-            TopicConfiguration(isCompacted = it.get(TopicConfig.CLEANUP_POLICY_CONFIG).value() == TopicConfig.CLEANUP_POLICY_COMPACT)
-        }
+    suspend fun describeTopic(topicName: String): Either<Throwable, Topic> = either {
+        val configResource = ConfigResource(ConfigResource.Type.TOPIC, topicName)
+        val configuration = !admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
+            .map {
+                TopicConfiguration(
+                    isCompacted = it.get(TopicConfig.CLEANUP_POLICY_CONFIG).value() == TopicConfig.CLEANUP_POLICY_COMPACT
+                )
+            }
 
-        val describeTopicResult = admin.describeTopics(listOf(topicName)).all().toCompletableFuture()
-            .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
-
-        return configurationTopicResult.thenCompose { config ->
-            describeTopicResult.flatMap { description -> config.map { description to it } }
-        }.map { (description, configuration) ->
-            Topic(
-                name = description.name(),
-                isInternal = description.isInternal,
-                partitionCount = description.partitions().size,
-                messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(description.toTopicPartitions()).values.sum(),
-                replicationFactor = description.partitions()[0].replicas().count().toShort(),
-                isCompacted = configuration.isCompacted
+        val description = !(
+            admin.describeTopics(listOf(topicName)).all()
+                .toSuspendCoroutine()
+                .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
             )
-        }
+
+        Topic(
+            name = description.name(),
+            isInternal = description.isInternal,
+            partitionCount = description.partitions().size,
+            messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(description.toTopicPartitions()).values.sum(),
+            replicationFactor = description.partitions()[0].replicas().count().toShort(),
+            isCompacted = configuration.isCompacted
+        )
     }
 
-    fun createTopics(vararg topics: Topic) =
+    suspend fun createTopics(vararg topics: Topic) =
         admin.createTopics(
             topics.map {
                 NewTopic(it.name, it.partitionCount, it.replicationFactor)
                     .configs(mapOf(TopicConfig.CLEANUP_POLICY_CONFIG to compactedConfig(it.isCompacted)))
             }
-        ).all().thenApply { Unit }.toCompletableFuture()
+        ).all().thenApply { Unit }.toSuspendCoroutine()
 
-    fun deleteTopic(topicName: String) = admin.deleteTopics(listOf(topicName)).all().toCompletableFuture()
+    suspend fun deleteTopic(topicName: String) = admin.deleteTopics(listOf(topicName)).all().toSuspendCoroutine()
 
     private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
 
