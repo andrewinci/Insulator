@@ -122,11 +122,6 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         }
     }
 
-    fun showProduceView() = topicName.topicScope(cluster)
-        .withComponent(ProducerViewModel(topicName))
-        .let { find<ProducerView>(it) }
-        .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
-
     fun configureFilteredRecords(comparator: ObservableValue<Comparator<RecordViewModel>>) {
         filteredRecords.set(
             SortedFilteredList(records).apply {

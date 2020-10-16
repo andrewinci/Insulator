@@ -4,6 +4,7 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.ui.common.InsulatorTabView
+import insulator.ui.common.topicScope
 import insulator.ui.component.appBar
 import insulator.ui.component.blueButton
 import insulator.ui.component.confirmationButton
@@ -11,6 +12,7 @@ import insulator.ui.component.fieldName
 import insulator.ui.component.h1
 import insulator.ui.component.searchBox
 import insulator.ui.component.subTitle
+import insulator.viewmodel.main.topic.ProducerViewModel
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import javafx.beans.binding.Bindings
@@ -22,6 +24,8 @@ import javafx.scene.control.Control
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
+import javafx.stage.Modality
+import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
@@ -39,10 +43,16 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                blueButton("Produce") { viewModel.showProduceView() }
+                blueButton("Produce") {
+                    viewModel.topicName.topicScope(cluster)
+                        .withComponent(ProducerViewModel(viewModel.topicName))
+                        .let { find<ProducerView>(it) }
+                        .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY, owner = currentWindow)
+
+                }
                 button(viewModel.consumeButtonText) { action { viewModel.consume() } }
                 fieldName("from")
-                consumeFromCombobox()
+                consumeFromComboBox()
                 valueFormatOptions()
                 button("Clear") { action { viewModel.clear() } }
             }
@@ -62,7 +72,7 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
         }
     }
 
-    private fun EventTarget.consumeFromCombobox() =
+    private fun EventTarget.consumeFromComboBox() =
         combobox<String> {
             items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
             valueProperty().bindBidirectional(viewModel.consumeFromProperty)
@@ -113,7 +123,9 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             hgrow = Priority.ALWAYS
         }
 
-    override fun onError(throwable: Throwable) { close() }
+    override fun onError(throwable: Throwable) {
+        close()
+    }
 
     override fun onTabClosed() {
         viewModel.stop()
