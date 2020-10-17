@@ -41,7 +41,6 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
             }
         }
 
-
     fun isRunning() = running
 
     override fun close() {

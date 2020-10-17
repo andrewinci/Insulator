@@ -27,6 +27,9 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
 
+    private val CONSUME = "Consume"
+    private val STOP = "Stop"
+
     private val cluster: Cluster by di()
 
     override val root = vbox {
@@ -41,7 +44,9 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
                 blueButton("Produce") { viewModel.showProduceView() }
-                button(viewModel.consumeButtonText) { action { viewModel.dispatch { consume() } } }
+                button(
+                    Bindings.createStringBinding({ if (!viewModel.isConsumingProperty.value) CONSUME else STOP }, viewModel.isConsumingProperty)
+                ) { action { viewModel.dispatch { consume() } } }
                 fieldName("from")
                 consumeFromCombobox()
                 valueFormatOptions()
@@ -59,6 +64,7 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             combobox<String> {
                 items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
                 valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+                enableWhen(viewModel.isConsumingProperty.not())
             }
         }
     }
@@ -67,6 +73,7 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
         combobox<String> {
             items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
             valueProperty().bindBidirectional(viewModel.consumeFromProperty)
+            enableWhen(viewModel.isConsumingProperty.not())
         }
 
     private fun EventTarget.deleteButton() =

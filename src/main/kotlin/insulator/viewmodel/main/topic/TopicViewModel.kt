@@ -26,9 +26,6 @@ import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.LinkedList
 
-private const val CONSUME = "Consume"
-private const val STOP = "Stop"
-
 class TopicViewModel(val topicName: String) : InsulatorViewModel() {
 
     private val cluster: Cluster by di()
@@ -52,7 +49,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     private val messageConsumedCountProperty = SimpleIntegerProperty()
 
     val nameProperty = SimpleStringProperty(topicName)
-    val consumeButtonText = SimpleStringProperty(CONSUME)
+    val isConsumingProperty = SimpleBooleanProperty(false)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.LastDay.toString())
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.toString())
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
@@ -76,21 +73,18 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     }
 
     fun clear() = records.clear()
-    suspend fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
+    suspend fun stop() = consumer.stop().also { isConsumingProperty.value = false }
     suspend fun delete() = adminApi.deleteTopic(this.nameProperty.value)
 
     suspend fun consume() {
-        if (consumeButtonText.value == CONSUME) {
-            consumeButtonText.value = STOP
+        if (!isConsumingProperty.value) {
+            isConsumingProperty.value = true
             clear()
             consume(
                 from = ConsumeFrom.valueOf(consumeFromProperty.value),
                 valueFormat = DeserializationFormat.valueOf(deserializeValueProperty.value)
             )
-        } else {
-            consumeButtonText.value = CONSUME
-            consumer.stop()
-        }
+        } else stop()
     }
 
     fun copySelectedRecordToClipboard() {
