@@ -3,6 +3,8 @@ package insulator.lib.kafka
 import arrow.core.Tuple3
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -13,28 +15,40 @@ import org.koin.ext.scope
 import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class Consumer(private val cluster: Cluster, private val converter: AvroToJsonConverter) : KoinComponent {
 
     private var threadLoop: Thread? = null
     private var running = false
 
-    fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
-        if (isRunning()) throw Throwable("Consumer already running")
-        val consumer: Consumer<Any, Any> = when (valueFormat) {
-            DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
-            DeserializationFormat.String -> cluster.scope.get()
+    suspend fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
+        val job = GlobalScope.launch {
+            if (isRunning()) throw Throwable("Consumer already running")
+            val consumer: Consumer<Any, Any> = when (valueFormat) {
+                DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
+                DeserializationFormat.String -> cluster.scope.get()
+            }
+            initializeConsumer(consumer, topic, from)
+            running = true
+            loop(consumer, callback)
         }
-        initializeConsumer(consumer, topic, from)
-        running = true
-        loop(consumer, callback)
+        suspendCoroutine<Unit> { continuation ->
+            job.invokeOnCompletion { exception ->
+                if (exception == null) continuation.resume(Unit) else continuation.resumeWithException(exception)
+            }
+        }
     }
 
     fun isRunning() = running
 
-    fun stop() {
-        running = false
-        threadLoop?.join()
+    suspend fun stop() = suspendCoroutine<Unit> { continuation ->
+        GlobalScope.launch {
+            running = false
+            threadLoop?.join()
+        }.invokeOnCompletion { continuation.resume(Unit) }
     }
 
     private fun loop(consumer: Consumer<Any, Any>, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {

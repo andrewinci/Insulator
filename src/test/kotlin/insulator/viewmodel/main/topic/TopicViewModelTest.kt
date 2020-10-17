@@ -116,12 +116,12 @@ private class TestContext : FxContext() {
                 coEvery { deleteTopic(any()) } returns null.right()
             },
             Consumer::class to mockk<Consumer> {
-                every { start(any(), any(), any(), any()) } answers {
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+                coEvery { start(any(), any(), any(), any()) } answers {
+                    arg<(List<Tuple3<String?, String, Long>>) -> Unit>(3)(listOf(Tuple3("1", "2", 3L)))
+                    arg<(List<Tuple3<String?, String, Long>>) -> Unit>(3)(listOf(Tuple3("1", "2", 3L)))
+                    arg<(List<Tuple3<String?, String, Long>>) -> Unit>(3)(listOf(Tuple3("1", "2", 3L)))
                 }
-                every { stop() } just runs
+                coEvery { stop() } just runs
                 every { isRunning() } returns false
             }
         )

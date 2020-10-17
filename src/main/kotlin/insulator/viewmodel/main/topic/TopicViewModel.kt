@@ -76,10 +76,10 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
     }
 
     fun clear() = records.clear()
-    fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
+    suspend fun stop() = consumer.stop().also { consumeButtonText.value = CONSUME }
     suspend fun delete() = adminApi.deleteTopic(this.nameProperty.value)
 
-    fun consume() {
+    suspend fun consume() {
         if (consumeButtonText.value == CONSUME) {
             consumeButtonText.value = STOP
             clear()
@@ -114,7 +114,7 @@ class TopicViewModel(val topicName: String) : InsulatorViewModel() {
         }
     }
 
-    private fun consume(from: ConsumeFrom, valueFormat: DeserializationFormat) {
+    private suspend fun consume(from: ConsumeFrom, valueFormat: DeserializationFormat) {
         if (consumer.isRunning()) return
         consumer.start(nameProperty.value, from, valueFormat) {
             val recordViewModels = it.map { (k, v, t) -> RecordViewModel(k, v, t) }

@@ -41,7 +41,7 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
                 blueButton("Produce") { viewModel.showProduceView() }
-                button(viewModel.consumeButtonText) { action { viewModel.consume() } }
+                button(viewModel.consumeButtonText) { action { viewModel.dispatch { consume() } } }
                 fieldName("from")
                 consumeFromCombobox()
                 valueFormatOptions()
@@ -119,6 +119,6 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
     }
 
     override fun onTabClosed() {
-        viewModel.stop()
+        viewModel.dispatch { stop() }
     }
 }
