@@ -1,7 +1,6 @@
 package insulator.viewmodel.main.topic
 
 import arrow.core.Tuple3
-import helper.FxContext
 import insulator.lib.kafka.Consumer
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

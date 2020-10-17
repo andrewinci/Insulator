@@ -12,9 +12,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import javafx.collections.FXCollections
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
@@ -63,7 +61,7 @@ class ListTopicViewModelTest : StringSpec({
         }
     }
 
-    "show topic is showing the selected topic"{
+    "show topic is showing the selected topic" {
         ListTopicViewModelTestContext().use {
             // arrange
             val sut = ListTopicViewModel()
@@ -75,7 +73,7 @@ class ListTopicViewModelTest : StringSpec({
         }
     }
 
-    "refresh list of topic when a topic view is closed"{
+    "refresh list of topic when a topic view is closed" {
         ListTopicViewModelTestContext().use {
             // arrange
             val sut = ListTopicViewModel()
@@ -98,8 +96,10 @@ class ListTopicViewModelTestContext : FxContext() {
     }
 
     init {
-        addToDI(AdminApi::class to adminMock,
+        addToDI(
+            AdminApi::class to adminMock,
             Consumer::class to mockk<Consumer>(),
-            MainViewModel::class to mockk<MainViewModel>(relaxed = true))
+            MainViewModel::class to mockk<MainViewModel>(relaxed = true)
+        )
     }
 }
