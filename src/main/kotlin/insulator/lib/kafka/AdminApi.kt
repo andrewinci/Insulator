@@ -14,8 +14,9 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.config.ConfigResource
 import org.apache.kafka.common.config.TopicConfig
+import java.io.Closeable
 
-class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) {
+class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) : Closeable {
 
     suspend fun listTopics() = admin.listTopics().names().toSuspendCoroutine().map { it.toList() }
 
@@ -59,4 +60,6 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
     private fun compactedConfig(isCompacted: Boolean): String =
         if (isCompacted) TopicConfig.CLEANUP_POLICY_COMPACT
         else TopicConfig.CLEANUP_POLICY_DELETE
+
+    override fun close() = admin.close()
 }

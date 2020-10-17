@@ -14,6 +14,7 @@ import insulator.ui.style.ScrollPaneStyle
 import insulator.ui.style.TableViewStyle
 import insulator.ui.style.TextStyle
 import insulator.views.configurations.ListClusterView
+import org.koin.core.context.KoinContextHandler
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class Insulator : App(
@@ -33,6 +34,8 @@ class Insulator : App(
 )
 
 fun main(args: Array<String>) {
-    FX.dicontainer = DIContainer()
+    val koinContainer = DIContainer()
+    FX.dicontainer =koinContainer
     runCatching { launch<Insulator>(args) }
+    koinContainer.close()
 }
