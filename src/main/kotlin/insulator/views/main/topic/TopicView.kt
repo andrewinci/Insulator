@@ -44,27 +44,33 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
                 blueButton("Produce") { viewModel.showProduceView() }
-                button(
-                    Bindings.createStringBinding({ if (!viewModel.isConsumingProperty.value) CONSUME else STOP }, viewModel.isConsumingProperty)
-                ) { action { viewModel.dispatch { consume() } } }
+                consumeStopButton()
                 fieldName("from")
                 consumeFromCombobox()
                 valueFormatOptions()
-                button("Clear") { action { viewModel.clear() } }
+                button("Clear") { action { viewModel.consumerViewModel.clearRecords() } }
             }
-            right = searchBox(viewModel.searchItem, this@TopicView)
+            right = searchBox(viewModel.consumerViewModel.searchItem, this@TopicView)
         }
         recordsTable()
     }
 
+    private fun EventTarget.consumeStopButton() {
+        button(
+            with(viewModel.consumerViewModel.isConsumingProperty) {
+                Bindings.createStringBinding({ if (!this.value) CONSUME else STOP }, this)
+            }
+        ) { action { viewModel.dispatch { consumerViewModel.consume() } } }
+    }
+
     private fun EventTarget.valueFormatOptions() {
         if (cluster.isSchemaRegistryConfigured()) {
-            viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
+            viewModel.consumerViewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
             fieldName("value format")
             combobox<String> {
                 items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
-                valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
-                enableWhen(viewModel.isConsumingProperty.not())
+                valueProperty().bindBidirectional(viewModel.consumerViewModel.deserializeValueProperty)
+                enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
             }
         }
     }
@@ -72,8 +78,8 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
     private fun EventTarget.consumeFromCombobox() =
         combobox<String> {
             items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
-            valueProperty().bindBidirectional(viewModel.consumeFromProperty)
-            enableWhen(viewModel.isConsumingProperty.not())
+            valueProperty().bindBidirectional(viewModel.consumerViewModel.consumeFromProperty)
+            enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
         }
 
     private fun EventTarget.deleteButton() =
@@ -105,9 +111,8 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
                     prefHeight = Control.USE_COMPUTED_SIZE
                 }
             }
-
-            viewModel.configureFilteredRecords(this.comparatorProperty())
-            itemsProperty().bind(viewModel.filteredRecords)
+            viewModel.consumerViewModel.comparatorProperty.bind(this.comparatorProperty())
+            itemsProperty().bind(viewModel.consumerViewModel.filteredRecords)
 
             contextMenu = contextmenu {
                 item("Copy") { action { viewModel.copySelectedRecordToClipboard() } }
@@ -126,6 +131,6 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
     }
 
     override fun onTabClosed() {
-        viewModel.dispatch { stop() }
+        viewModel.dispatch { viewModel.consumerViewModel.stop() }
     }
 }

@@ -6,7 +6,7 @@ import helper.FxContext
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.model.Topic
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
@@ -21,7 +21,7 @@ import javafx.scene.input.Clipboard
 import kotlinx.coroutines.delay
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-class TopicViewModelTest : StringSpec({
+class TopicViewModelTest : FreeSpec({
 
     val topicName = "topic-name"
 
@@ -31,7 +31,7 @@ class TopicViewModelTest : StringSpec({
             val sut = TopicViewModel(topicName)
             sut.records.add(mockk())
             // act
-            sut.clear()
+            sut.clearRecords()
             // assert
             sut.records.size shouldBe 0
         }
@@ -104,6 +104,46 @@ class TopicViewModelTest : StringSpec({
             sut.copyAllRecordsToClipboard()
             // assert
             verify(exactly = 1) { mockClipboard.putString("2020-09-12 12:20:30\tkey1\tvalue1\n2020-09-12 12:20:30\tkey2\tvalue2") }
+        }
+    }
+
+    "subtitle stats are correct" - {
+        TestContext().use {
+            // arrange
+            val messageCount = 100L
+            it.addToDI(
+                AdminApi::class to mockk<AdminApi> {
+                    coEvery { describeTopic(any()) } returns Topic("Topic name", messageCount = messageCount, isCompacted = true, partitionCount = 3).right()
+                    coEvery { deleteTopic(any()) } returns null.right()
+                }
+            )
+            val sut = TopicViewModel("test-topic-name")
+//            sut.configureFilteredRecords(SimpleObjectProperty(
+//                Comparator { o1, o2 -> o1.timestampProperty.value.compareTo(o2.timestampProperty.value) }
+//            ))
+            "happy path" {
+                // act
+                sut.records.addAll((1..10).map { RecordViewModel("k", "v", 1) })
+                // assert
+                sut.subtitleProperty.value shouldBe
+                    "Message count: 10/$messageCount - " +
+                    "Is internal: false - " +
+                    "Partitions count: 3 - " +
+                    "Compacted: true"
+            }
+
+            "subtitle with filtered elements" {
+                // act
+                sut.searchItem.value = "123"
+                sut.records.addAll((1..10).map { RecordViewModel("k", "v", 1) })
+                sut.records.add(RecordViewModel("123", "v", 1))
+                // assert
+                sut.subtitleProperty.value shouldBe
+                    "Message count: 1/$messageCount - " +
+                    "Is internal: false - " +
+                    "Partitions count: 3 - " +
+                    "Compacted: true"
+            }
         }
     }
 })
