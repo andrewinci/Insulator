@@ -57,14 +57,14 @@ class ListTopicViewModel : InsulatorViewModel() {
             }
         )
 
-    fun showTopic() {
-        val selectedTopicName = selectedItemProperty.value ?: return
-        selectedItemProperty.value.topicScope(cluster)
-            .withComponent(TopicViewModel(selectedTopicName))
-            .let { topicView -> find<TopicView>(topicView) }
-            .also { topicView -> topicView.setOnCloseListener { dispatch { refresh() } } }
-            .let { topicView -> setMainContent(selectedTopicName, topicView) }
-    }
+    fun showTopic() =
+        selectedItemProperty.value?.let {
+            it.topicScope(cluster)
+                .withComponent(TopicViewModel(selectedItemProperty.value))
+                .let { topicView -> find<TopicView>(topicView) }
+                .also { topicView -> topicView.setOnCloseListener { dispatch { refresh() } } }
+                .also { topicView -> setMainContent(selectedItemProperty.value, topicView) }
+        }
 
     fun createNewTopic() = "new-topic".topicScope(cluster)
         .withComponent(CreateTopicViewModel())

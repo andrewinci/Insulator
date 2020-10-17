@@ -6,6 +6,7 @@ import helper.FxContext
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.model.Topic
+import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -18,36 +19,17 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import javafx.collections.FXCollections
 import javafx.scene.input.Clipboard
-import kotlinx.coroutines.delay
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
+@ExperimentalTime
 class TopicViewModelTest : FreeSpec({
 
     val topicName = "topic-name"
 
-    "clear remove all records from the list" {
-        TestContext().use {
-            // arrange
-            val sut = TopicViewModel(topicName)
-            sut.records.add(mockk())
-            // act
-            sut.clearRecords()
-            // assert
-            sut.records.size shouldBe 0
-        }
-    }
-
-    "stop an already stopped consumer is ignored" {
-        TestContext().use {
-            // arrange
-            val sut = TopicViewModel(topicName)
-            // act
-            sut.stop()
-        }
-    }
-
     "delete call the deleteTopic function from lib with the topic name" {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
             val sut = TopicViewModel(topicName)
             // act
@@ -56,20 +38,8 @@ class TopicViewModelTest : FreeSpec({
         }
     }
 
-    "consume" {
-        TestContext().use {
-            // arrange
-            val sut = TopicViewModel(topicName)
-            // act
-            sut.consume()
-            delay(1000)
-            // assert
-            sut.records.count() shouldBe 3
-        }
-    }
-
     "copy single element happy path" {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
             val mockClipboard = mockk<Clipboard>(relaxed = true)
             unmockkAll()
@@ -85,14 +55,14 @@ class TopicViewModelTest : FreeSpec({
     }
 
     "copy all happy path" {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
             val mockClipboard = mockk<Clipboard>(relaxed = true)
             unmockkAll()
             mockkStatic(Clipboard::class)
             every { Clipboard.getSystemClipboard() } returns mockClipboard
             val sut = TopicViewModel(topicName)
-            sut.filteredRecords.set(
+            sut.consumerViewModel.filteredRecords.set(
                 FXCollections.observableList(
                     listOf(
                         RecordViewModel("key1", "value1", 1599913230000L),
@@ -108,7 +78,7 @@ class TopicViewModelTest : FreeSpec({
     }
 
     "subtitle stats are correct" - {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
             val messageCount = 100L
             it.addToDI(
@@ -123,32 +93,28 @@ class TopicViewModelTest : FreeSpec({
 //            ))
             "happy path" {
                 // act
-                sut.records.addAll((1..10).map { RecordViewModel("k", "v", 1) })
+                sut.consumerViewModel.records.addAll((1..10).map { RecordViewModel("k", "v", 1) })
                 // assert
-                sut.subtitleProperty.value shouldBe
-                    "Message count: 10/$messageCount - " +
-                    "Is internal: false - " +
-                    "Partitions count: 3 - " +
-                    "Compacted: true"
+                eventually(1.seconds) {
+                    sut.subtitleProperty.value shouldBe "Message count: 10/10 - Total records: 100 - Is internal: null - Partitions count: 3 - Compacted: true"
+                }
             }
 
             "subtitle with filtered elements" {
                 // act
-                sut.searchItem.value = "123"
-                sut.records.addAll((1..10).map { RecordViewModel("k", "v", 1) })
-                sut.records.add(RecordViewModel("123", "v", 1))
+                sut.consumerViewModel.searchItem.value = "123"
+                sut.consumerViewModel.records.addAll((1..10).map { RecordViewModel("k", "v", 1) })
+                sut.consumerViewModel.records.add(RecordViewModel("123", "v", 1))
                 // assert
-                sut.subtitleProperty.value shouldBe
-                    "Message count: 1/$messageCount - " +
-                    "Is internal: false - " +
-                    "Partitions count: 3 - " +
-                    "Compacted: true"
+                eventually(1.seconds) {
+                    sut.subtitleProperty.value shouldBe "Message count: 1/21 - Total records: 100 - Is internal: null - Partitions count: 3 - Compacted: true"
+                }
             }
         }
     }
 })
 
-private class TestContext : FxContext() {
+private class TopicViewModelTestContext : FxContext() {
     init {
         addToDI(
             AdminApi::class to mockk<AdminApi> {
