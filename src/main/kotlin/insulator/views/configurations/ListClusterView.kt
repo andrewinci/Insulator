@@ -22,8 +22,11 @@ import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ListClusterView(override val viewModel: ListClusterViewModel) : InsulatorView2<ListClusterViewModel>("Insulator") {
+@Singleton
+class ListClusterView @Inject constructor(override val viewModel: ListClusterViewModel) : InsulatorView2<ListClusterViewModel>("Insulator") {
 
     override val root = vbox(spacing = 15) {
         h1("Clusters")

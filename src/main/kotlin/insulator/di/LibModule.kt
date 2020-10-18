@@ -23,7 +23,6 @@ val libModule = module {
 
     // Configurations and helpers
     single { Json {} }
-    single { ConfigurationRepo(get()) }
     single { JsonFormatter(get()) }
 
     // JsonToAvro

@@ -1,6 +1,7 @@
 package insulator
 
 import insulator.di.DIContainer
+import insulator.di.dagger.DaggerInsulator
 import insulator.ui.style.AppBarStyle
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.CheckBoxStyle
@@ -33,9 +34,11 @@ class Insulator : App(
     MainViewStyle::class,
     ScrollBarStyle::class
 ) {
+    private val daggerInsulator = DaggerInsulator.builder().build()
+
     override fun start(stage: Stage) {
         super.start(stage)
-        val view = ListClusterView(ListClusterViewModel())
+        val view = daggerInsulator.getListClusterView()
         stage.scene = createPrimaryScene(view)
         FX.applyStylesheetsTo(stage.scene)
         stage.show()
