@@ -13,6 +13,7 @@ import insulator.ui.style.ScrollBarStyle
 import insulator.ui.style.ScrollPaneStyle
 import insulator.ui.style.TableViewStyle
 import insulator.ui.style.TextStyle
+import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.configurations.ListClusterView
 import javafx.stage.Stage
 import tornadofx.* // ktlint-disable no-wildcard-imports
@@ -34,7 +35,7 @@ class Insulator : App(
 ) {
     override fun start(stage: Stage) {
         super.start(stage)
-        val view = ListClusterView()
+        val view = ListClusterView(ListClusterViewModel())
         stage.scene = createPrimaryScene(view)
         FX.applyStylesheetsTo(stage.scene)
         stage.show()

@@ -4,7 +4,7 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.dispatch
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.update.VersionChecker
-import insulator.ui.common.InsulatorView
+import insulator.ui.common.InsulatorView2
 import insulator.ui.common.scope
 import insulator.ui.component.action
 import insulator.ui.component.h1
@@ -23,7 +23,7 @@ import javafx.stage.StageStyle
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClusterViewModel::class) {
+class ListClusterView(override val viewModel: ListClusterViewModel) : InsulatorView2<ListClusterViewModel>("Insulator") {
 
     override val root = vbox(spacing = 15) {
         h1("Clusters")

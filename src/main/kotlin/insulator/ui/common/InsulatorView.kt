@@ -44,3 +44,31 @@ abstract class InsulatorTabView<T : InsulatorViewModel>(viewModelClazz: KClass<T
 
     fun closeTab() = listeners.forEach { it() }
 }
+
+abstract class InsulatorView2<T: InsulatorViewModel>(title: String? = null) : View(title) {
+
+    abstract val viewModel: T
+
+    open fun onError(throwable: Throwable) {}
+
+    override fun onDock() {
+        val handleError: (Throwable?) -> Unit = {
+            if (it != null) {
+                alert(Alert.AlertType.WARNING, it.message ?: it.toString())
+                onError(it)
+            }
+        }
+        if (viewModel.error.value != null) handleError(viewModel.error.value)
+        viewModel.error.onChange { handleError(it) }
+        super.onDock()
+        center()
+    }
+
+    fun center() {
+        val screenSize = Screen.getPrimary().bounds
+        if (super.currentStage == null) return
+        with(super.currentStage!!) {
+            x = (screenSize.width - width) / 2
+        }
+    }
+}
