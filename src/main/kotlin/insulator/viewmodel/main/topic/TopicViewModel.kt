@@ -1,6 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import insulator.di.TopicScope
+import insulator.di.components.TopicComponent
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
@@ -9,7 +10,6 @@ import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.DeserializationFormat
 import insulator.lib.kafka.model.Topic
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.main.topic.ProducerView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
@@ -35,7 +35,7 @@ class TopicViewModel @Inject constructor(
     val topic: Topic,
     val adminApi: AdminApi,
     val consumer: Consumer,
-    private val producerView: ProducerView,
+    val topicComponent: TopicComponent
 ) : InsulatorViewModel() {
 
     private val isInternalProperty = SimpleBooleanProperty()
@@ -126,10 +126,8 @@ class TopicViewModel @Inject constructor(
         }
     }
 
-    fun showProduceView() = producerView
-//    topicName.topicScope(cluster)
-//        .withComponent(ProducerViewModel(topicName))
-//        .let { find<ProducerView>(it) }
+    fun showProduceView() = topicComponent
+        .getProducerView()
         .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
 
     fun configureFilteredRecords(comparator: ObservableValue<Comparator<RecordViewModel>>) {

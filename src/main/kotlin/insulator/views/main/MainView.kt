@@ -9,6 +9,7 @@ import insulator.ui.component.themeButton
 import insulator.ui.style.MainViewStyle
 import insulator.ui.style.changeTheme
 import insulator.viewmodel.main.MainViewModel
+import insulator.viewmodel.main.TabViewModel
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.collections.FXCollections
@@ -29,7 +30,11 @@ const val CONTENT_LIST_WIDTH = 450.0
 const val CONTENT_WIDTH = 780.0
 
 @ClusterScope
-class MainView @Inject constructor(override val viewModel: MainViewModel, val cluster: Cluster) : InsulatorView("Insulator") {
+class MainView @Inject constructor(
+    override val viewModel: MainViewModel,
+    private val tabViewModel: TabViewModel,
+    val cluster: Cluster
+) : InsulatorView("Insulator") {
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
@@ -38,7 +43,7 @@ class MainView @Inject constructor(override val viewModel: MainViewModel, val cl
     }
 
     private val content = tabpane {
-        viewModel.contentTabs = tabs
+        tabViewModel.contentTabs = tabs
         minWidth = CONTENT_WIDTH
         side = Side.BOTTOM
         addClass(MainViewStyle.content)
@@ -52,9 +57,9 @@ class MainView @Inject constructor(override val viewModel: MainViewModel, val cl
     override val root = splitpane { items.bind(nodes) { it } }
 
     init {
-        viewModel.contentTabs.onChange {
+        tabViewModel.contentTabs.onChange {
             when {
-                viewModel.contentTabs.size == 0 -> {
+                tabViewModel.contentTabs.size == 0 -> {
                     val contentListWidth = contentList.width
                     nodes.removeAt(2)
                     super.currentStage?.width = SIDEBAR_WIDTH + contentListWidth

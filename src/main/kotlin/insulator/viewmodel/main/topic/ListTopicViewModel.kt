@@ -9,6 +9,7 @@ import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.model.Topic
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
@@ -23,20 +24,19 @@ import javax.inject.Inject
 class ListTopicViewModel @Inject constructor(
     val cluster: Cluster,
     val adminApi: AdminApi,
-    private val viewFactory: Factory<Topic, TopicComponent>
+    private val viewFactory: Factory<Topic, TopicComponent>,
+    val tabViewModel: TabViewModel
 ) : InsulatorViewModel() {
 
     private val topicListProperty: ObservableList<String> = FXCollections.observableArrayList()
 
     val selectedItemProperty = SimpleStringProperty(null)
     val searchItemProperty = SimpleStringProperty(null)
-    val filteredTopicsProperty: ObservableList<String> = SortedFilteredList(topicListProperty).apply {
-        filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
-    }.filteredItems
+    val filteredTopicsProperty: ObservableList<String> = SortedFilteredList(topicListProperty)
+        .apply { filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) } }
+        .filteredItems
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
-        {
-            "Topic count: ${filteredTopicsProperty.size}/${topicListProperty.size}"
-        },
+        { "Topic count: ${filteredTopicsProperty.size}/${topicListProperty.size}" },
         topicListProperty,
         filteredTopicsProperty
     )
@@ -64,7 +64,7 @@ class ListTopicViewModel @Inject constructor(
                     .build(it)
                     .getTopicView()
                     .also { topicView -> topicView.setOnCloseListener { refresh() } }
-                    .let { topicView -> setMainContent(selectedTopicName, topicView) }
+                    .let { topicView -> tabViewModel.setMainContent(selectedTopicName, topicView) }
             }
 
 //        selectedItemProperty.value.topicScope(cluster)

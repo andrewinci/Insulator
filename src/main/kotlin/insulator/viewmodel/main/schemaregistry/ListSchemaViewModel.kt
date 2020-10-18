@@ -9,6 +9,7 @@ import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
 import insulator.lib.kafka.model.Subject
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class ListSchemaViewModel @Inject constructor(
     val cluster: Cluster,
     val schemaRegistryClient: SchemaRegistry,
-    private val viewFactory: Factory<Subject, SubjectComponent>
+    private val viewFactory: Factory<Subject, SubjectComponent>,
+    private val tabViewModel: TabViewModel
 ) : InsulatorViewModel() {
 
     private val schemasProperty: ObservableList<String> = FXCollections.observableArrayList()
@@ -64,7 +66,7 @@ class ListSchemaViewModel @Inject constructor(
                 viewFactory.build(it)
                     .getSchemaView()
                     .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }
-                    .let { schemaViewTab -> setMainContent(it.name, schemaViewTab) }
+                    .let { schemaViewTab -> tabViewModel.setMainContent(it.name, schemaViewTab) }
             }
             .mapLeft { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) }
     }

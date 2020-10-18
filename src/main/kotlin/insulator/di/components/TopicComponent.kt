@@ -6,6 +6,7 @@ import insulator.di.TopicScope
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.model.Topic
 import insulator.views.main.topic.CreateTopicView
+import insulator.views.main.topic.ProducerView
 import insulator.views.main.topic.TopicView
 
 @TopicScope
@@ -21,4 +22,5 @@ interface TopicComponent {
     fun topic(): Topic
     fun getCreateTopicView(): CreateTopicView
     fun getTopicView(): TopicView
+    fun getProducerView(): ProducerView
 }
