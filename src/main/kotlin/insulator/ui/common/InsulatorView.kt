@@ -35,16 +35,6 @@ abstract class InsulatorView<T : InsulatorViewModel>(title: String? = null, view
     }
 }
 
-abstract class InsulatorTabView<T : InsulatorViewModel>(viewModelClazz: KClass<T>) : InsulatorView<T>(null, viewModelClazz) {
-    private val listeners = mutableListOf<() -> Unit>()
-
-    open fun onTabClosed() = Unit
-
-    fun setOnCloseListener(op: () -> Unit) = listeners.add(op)
-
-    fun closeTab() = listeners.forEach { it() }
-}
-
 abstract class InsulatorView2(title: String? = null) : View(title) {
 
     abstract val viewModel: InsulatorViewModel
@@ -71,4 +61,14 @@ abstract class InsulatorView2(title: String? = null) : View(title) {
             x = (screenSize.width - width) / 2
         }
     }
+}
+
+abstract class InsulatorTabView : InsulatorView2() {
+    private val listeners = mutableListOf<() -> Unit>()
+
+    open fun onTabClosed() = Unit
+
+    fun setOnCloseListener(op: () -> Unit) = listeners.add(op)
+
+    fun closeTab() = listeners.forEach { it() }
 }

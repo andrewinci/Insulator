@@ -1,10 +1,14 @@
 package insulator.views.main.schemaregistry
 
+import insulator.di.dagger.ClusterScope
+import insulator.di.dagger.components.TopicComponent
+import insulator.di.dagger.factories.Factory
 import insulator.lib.helpers.dispatch
-import insulator.ui.common.InsulatorView
+import insulator.lib.kafka.model.Topic
+import insulator.ui.common.InsulatorView2
 import insulator.ui.component.appBar
 import insulator.ui.component.h1
-import insulator.ui.component.searchBox
+import insulator.ui.component.searchBox2
 import insulator.ui.component.subTitle
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
@@ -12,8 +16,12 @@ import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", ListSchemaViewModel::class) {
+@ClusterScope
+class ListSchemaView @Inject constructor(
+    override val viewModel: ListSchemaViewModel
+) : InsulatorView2("Schema registry") {
 
     override val root = vbox(spacing = 5.0) {
         appBar {
@@ -22,7 +30,7 @@ class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", Lis
             }
             subTitle(viewModel.subtitleProperty)
         }
-        searchBox(viewModel.searchItemProperty, currentView = this@ListSchemaView)
+        searchBox2(viewModel.searchItemProperty, currentView = this@ListSchemaView)
         schemasListView()
     }
 

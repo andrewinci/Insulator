@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.di.dagger.TopicScope
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
@@ -10,6 +11,7 @@ import insulator.ui.component.confirmationButton
 import insulator.ui.component.fieldName
 import insulator.ui.component.h1
 import insulator.ui.component.searchBox
+import insulator.ui.component.searchBox2
 import insulator.ui.component.subTitle
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
@@ -23,10 +25,13 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
-
-    private val cluster: Cluster by di()
+@TopicScope
+class TopicView @Inject constructor(
+    override val viewModel: TopicViewModel,
+    private val cluster: Cluster
+) : InsulatorTabView() {
 
     override val root = vbox {
         appBar {
@@ -46,7 +51,7 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
                 valueFormatOptions()
                 button("Clear") { action { viewModel.clear() } }
             }
-            right = searchBox(viewModel.searchItem, this@TopicView)
+            right = searchBox2(viewModel.searchItem, this@TopicView)
         }
         recordsTable()
     }
@@ -113,7 +118,9 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             hgrow = Priority.ALWAYS
         }
 
-    override fun onError(throwable: Throwable) { close() }
+    override fun onError(throwable: Throwable) {
+        close()
+    }
 
     override fun onTabClosed() {
         viewModel.stop()

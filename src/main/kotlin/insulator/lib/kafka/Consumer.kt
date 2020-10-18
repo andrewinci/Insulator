@@ -14,7 +14,11 @@ import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
 
-class Consumer(private val cluster: Cluster, private val converter: AvroToJsonConverter) : KoinComponent {
+class Consumer(
+    private val converter: AvroToJsonConverter,
+    private val stringConsumer: Consumer<Any, Any>,
+    private val avroConsumer: Consumer<Any, Any>,
+) {
 
     private var threadLoop: Thread? = null
     private var running = false
@@ -22,8 +26,8 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
     fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
         val consumer: Consumer<Any, Any> = when (valueFormat) {
-            DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
-            DeserializationFormat.String -> cluster.scope.get()
+            DeserializationFormat.Avro -> avroConsumer
+            DeserializationFormat.String -> stringConsumer
         }
         initializeConsumer(consumer, topic, from)
         running = true

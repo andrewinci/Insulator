@@ -7,9 +7,7 @@ import insulator.viewmodel.common.InsulatorViewModel
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ListClusterViewModel @Inject constructor(configurationRepo: ConfigurationRepo) : InsulatorViewModel() {
 
     val clustersProperty: ObservableList<Cluster> = FXCollections.observableArrayList()

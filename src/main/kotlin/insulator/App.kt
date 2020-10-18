@@ -1,7 +1,7 @@
 package insulator
 
 import insulator.di.DIContainer
-import insulator.di.dagger.DaggerInsulator
+import insulator.di.dagger.components.DaggerInsulatorComponent
 import insulator.ui.style.AppBarStyle
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.CheckBoxStyle
@@ -14,8 +14,6 @@ import insulator.ui.style.ScrollBarStyle
 import insulator.ui.style.ScrollPaneStyle
 import insulator.ui.style.TableViewStyle
 import insulator.ui.style.TextStyle
-import insulator.viewmodel.configurations.ListClusterViewModel
-import insulator.views.configurations.ListClusterView
 import javafx.stage.Stage
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -34,7 +32,7 @@ class Insulator : App(
     MainViewStyle::class,
     ScrollBarStyle::class
 ) {
-    private val daggerInsulator = DaggerInsulator.builder().build()
+    private val daggerInsulator = DaggerInsulatorComponent.builder().build()
 
     override fun start(stage: Stage) {
         super.start(stage)

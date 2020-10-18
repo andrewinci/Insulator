@@ -1,7 +1,8 @@
 package insulator.views.main
 
+import insulator.di.dagger.ClusterScope
 import insulator.lib.configuration.model.Cluster
-import insulator.ui.common.InsulatorView
+import insulator.ui.common.InsulatorView2
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.themeButton
@@ -19,6 +20,7 @@ import javafx.geometry.Side
 import javafx.scene.Parent
 import javafx.scene.image.Image
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
 private const val ICON_TOPICS = "icons/topics.png"
 private const val ICON_REGISTRY = "icons/schemaRegistryIcon.png"
@@ -26,9 +28,8 @@ const val SIDEBAR_WIDTH = 250.0
 const val CONTENT_LIST_WIDTH = 450.0
 const val CONTENT_WIDTH = 780.0
 
-class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
-
-    val cluster: Cluster by di()
+@ClusterScope
+class MainView @Inject constructor(override val viewModel: MainViewModel, val cluster: Cluster) : InsulatorView2("Insulator") {
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)

@@ -7,15 +7,8 @@ import insulator.lib.configuration.model.Configuration
 import insulator.lib.helpers.runCatchingE
 import kotlinx.serialization.json.Json
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
-class ConfigurationRepo @Inject constructor(
-    private val json: Json,
-    @Named("configurationPath") private val configPath: String
-) {
+class ConfigurationRepo constructor(private val json: Json, private val configPath: String) {
 
     private val callbacks = ArrayList<(Configuration) -> Unit>()
 

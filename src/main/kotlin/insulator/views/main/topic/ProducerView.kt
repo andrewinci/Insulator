@@ -1,7 +1,8 @@
 package insulator.views.main.topic
 
+import insulator.di.dagger.TopicScope
 import insulator.lib.helpers.dispatch
-import insulator.ui.common.InsulatorView
+import insulator.ui.common.InsulatorView2
 import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
 import insulator.ui.component.h1
@@ -13,13 +14,17 @@ import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class ProducerView : InsulatorView<ProducerViewModel>(viewModelClazz = ProducerViewModel::class) {
+@TopicScope
+class ProducerView @Inject constructor(
+    override val viewModel: ProducerViewModel
+) : InsulatorView2(){
 
     private val recordValueTextArea = TextArea()
 
     override val root = vbox(spacing = 10.0) {
-        appBar { h1(viewModel.topicName) }
+        appBar { h1(viewModel.topic.name) }
 
         fieldName("Key")
         textfield(viewModel.keyProperty)
