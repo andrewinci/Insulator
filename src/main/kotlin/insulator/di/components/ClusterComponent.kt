@@ -14,6 +14,7 @@ import insulator.lib.kafka.StringProducer
 import insulator.views.configurations.ClusterView
 import insulator.views.main.MainView
 import org.apache.kafka.clients.consumer.Consumer
+import javax.inject.Named
 
 @ClusterScope
 @Component(dependencies = [InsulatorComponent::class], modules = [KafkaModule::class, ClusterModule::class])
@@ -35,6 +36,8 @@ interface ClusterComponent {
 
     // Consumers
     fun genericConsumer(): Consumer<Any, Any>
+    @Named("avroConsumer")
+    fun avroConsumer(): Consumer<Any, Any>
     fun consumer(): insulator.lib.kafka.Consumer
 
     // Producers

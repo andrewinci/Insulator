@@ -2,6 +2,7 @@ package insulator.lib.kafka
 
 import arrow.core.Tuple3
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
+import insulator.lib.kafka.helpers.ConsumerFactory
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -12,8 +13,7 @@ import kotlin.concurrent.thread
 
 class Consumer(
     private val converter: AvroToJsonConverter,
-    private val stringConsumer: Consumer<Any, Any>,
-    private val avroConsumer: Consumer<Any, Any>,
+    private val consumerFactory: ConsumerFactory
 ) {
 
     private var threadLoop: Thread? = null
@@ -21,10 +21,7 @@ class Consumer(
 
     fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
-        val consumer: Consumer<Any, Any> = when (valueFormat) {
-            DeserializationFormat.Avro -> avroConsumer
-            DeserializationFormat.String -> stringConsumer
-        }
+        val consumer = consumerFactory.build(valueFormat)
         initializeConsumer(consumer, topic, from)
         running = true
         loop(consumer, callback)
