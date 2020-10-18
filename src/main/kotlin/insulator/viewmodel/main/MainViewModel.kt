@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 
 @ClusterScope
 class MainViewModel @Inject constructor(
-    val cluster: Cluster,
+    private val cluster: Cluster,
     private val listTopicView: ListTopicView,
     private val listSchemaView: ListSchemaView
 ) : InsulatorViewModel() {

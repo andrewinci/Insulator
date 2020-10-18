@@ -1,7 +1,6 @@
 package insulator.lib.kafka
 
 import arrow.core.Tuple3
-import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer

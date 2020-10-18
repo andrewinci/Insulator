@@ -11,7 +11,7 @@ abstract class InsulatorViewModel : ViewModel() {
     private lateinit var mainViewModel: MainViewModel
 
     fun setParent(mvm: MainViewModel) {
-            mainViewModel = mvm
+        mainViewModel = mvm
     }
 
     fun setMainContent(title: String, view: InsulatorTabView): Unit =

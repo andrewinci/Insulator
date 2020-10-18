@@ -2,8 +2,8 @@ package insulator.di.components
 
 import dagger.BindsInstance
 import dagger.Component
-import insulator.di.modules.ClusterModule
 import insulator.di.ClusterScope
+import insulator.di.modules.ClusterModule
 import insulator.di.modules.KafkaModule
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter

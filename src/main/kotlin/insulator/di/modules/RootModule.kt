@@ -58,5 +58,4 @@ class RootModule {
     @Singleton
     @Provides
     fun providesJsonFormatter(json: Json) = JsonFormatter(json)
-
 }

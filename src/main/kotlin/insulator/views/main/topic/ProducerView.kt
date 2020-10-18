@@ -19,7 +19,7 @@ import javax.inject.Inject
 @TopicScope
 class ProducerView @Inject constructor(
     override val viewModel: ProducerViewModel
-) : InsulatorView(){
+) : InsulatorView() {
 
     private val recordValueTextArea = TextArea()
 
