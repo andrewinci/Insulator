@@ -15,7 +15,6 @@ import insulator.di.LATEST_RELEASE_API_ENDPOINT
 import insulator.di.VERSION_PROPERTY
 import insulator.lib.helpers.runCatchingE
 import insulator.lib.helpers.toEitherOfList
-import org.koin.core.error.MissingPropertyException
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -46,7 +45,7 @@ class VersionChecker(private val customJarPath: String? = null) {
             Properties()
                 .also { it.load(FileInputStream(configPath)) }
                 .getProperty(VERSION_PROPERTY)?.right()
-                ?: MissingPropertyException(VERSION_PROPERTY).left()
+                ?: Error(VERSION_PROPERTY).left()
         else FileNotFoundException().left()
     }
 

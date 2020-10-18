@@ -23,76 +23,63 @@ import java.util.concurrent.CompletableFuture
 
 class TopicViewModelTest : StringSpec({
 
-    val topicName = "topic-name"
-
     "clear remove all records from the list" {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
-            val sut = TopicViewModel(topicName)
-            sut.records.add(mockk())
+            it.sut.records.add(mockk())
             // act
-            sut.clear()
+            it.sut.clear()
             // assert
-            sut.records.size shouldBe 0
+            it.sut.records.size shouldBe 0
         }
     }
 
     "stop an already stopped consumer is ignored" {
-        TestContext().use {
-            // arrange
-            val sut = TopicViewModel(topicName)
-            // act
-            sut.stop()
+        TopicViewModelTestContext().use {
+            it.sut.stop()
         }
     }
 
     "delete call the deleteTopic function from lib with the topic name" {
-        TestContext().use {
-            // arrange
-            val sut = TopicViewModel(topicName)
-            // act
-            sut.delete()
-            // assert
+        TopicViewModelTestContext().use {
+            it.sut.delete()
         }
     }
 
     "consume" {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
-            val sut = TopicViewModel(topicName)
             // act
-            sut.consume()
+            it.sut.consume()
             delay(1000)
             // assert
-            sut.records.count() shouldBe 3
+            it.sut.records.count() shouldBe 3
         }
     }
 
     "copy single element happy path" {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
             val mockClipboard = mockk<Clipboard>(relaxed = true)
             unmockkAll()
             mockkStatic(Clipboard::class)
             every { Clipboard.getSystemClipboard() } returns mockClipboard
-            val sut = TopicViewModel(topicName)
-            sut.selectedItem.set(RecordViewModel("key", "value", 1599913230000L))
+            it.sut.selectedItem.set(RecordViewModel("key", "value", 1599913230000L))
             // act
-            sut.copySelectedRecordToClipboard()
+            it.sut.copySelectedRecordToClipboard()
             // assert
             verify(exactly = 1) { mockClipboard.putString("2020-09-12 12:20:30\tkey\tvalue") }
         }
     }
 
     "copy all happy path" {
-        TestContext().use {
+        TopicViewModelTestContext().use {
             // arrange
             val mockClipboard = mockk<Clipboard>(relaxed = true)
             unmockkAll()
             mockkStatic(Clipboard::class)
             every { Clipboard.getSystemClipboard() } returns mockClipboard
-            val sut = TopicViewModel(topicName)
-            sut.filteredRecords.set(
+            it.sut.filteredRecords.set(
                 FXCollections.observableList(
                     listOf(
                         RecordViewModel("key1", "value1", 1599913230000L),
@@ -101,29 +88,28 @@ class TopicViewModelTest : StringSpec({
                 )
             )
             // act
-            sut.copyAllRecordsToClipboard()
+            it.sut.copyAllRecordsToClipboard()
             // assert
             verify(exactly = 1) { mockClipboard.putString("2020-09-12 12:20:30\tkey1\tvalue1\n2020-09-12 12:20:30\tkey2\tvalue2") }
         }
     }
 })
 
-private class TestContext : FxContext() {
-    init {
-        addToDI(
-            AdminApi::class to mockk<AdminApi> {
-                every { describeTopic(any()) } returns CompletableFuture.completedFuture(Topic("Topic name").right())
-                every { deleteTopic(any()) } returns CompletableFuture.completedFuture(null.right())
-            },
-            Consumer::class to mockk<Consumer> {
-                every { start(any(), any(), any(), any()) } answers {
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                    lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
-                }
-                every { stop() } just runs
-                every { isRunning() } returns false
-            }
-        )
+private class TopicViewModelTestContext : FxContext() {
+    val mockkTopic = Topic.empty()
+    val mockAdminApi = mockk<AdminApi> {
+        every { describeTopic(any()) } returns CompletableFuture.completedFuture(Topic("Topic name").right())
+        every { deleteTopic(any()) } returns CompletableFuture.completedFuture(null.right())
     }
+    val mockConsumer = mockk<Consumer> {
+        every { start(any(), any(), any(), any()) } answers {
+            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+            lastArg<(List<Tuple3<String?, String, Long>>) -> Unit>()(listOf(Tuple3("1", "2", 3L)))
+        }
+        every { stop() } just runs
+        every { isRunning() } returns false
+    }
+
+    val sut = TopicViewModel(mockkTopic, mockAdminApi, mockConsumer, mockk(relaxed = true))
 }

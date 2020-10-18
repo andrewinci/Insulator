@@ -12,8 +12,9 @@ import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class ListTopicView : InsulatorView<ListTopicViewModel>("Topics", ListTopicViewModel::class) {
+class ListTopicView @Inject constructor(override val viewModel: ListTopicViewModel) : InsulatorView("Topics") {
 
     override val root = vbox(spacing = 5.0) {
         appBar {

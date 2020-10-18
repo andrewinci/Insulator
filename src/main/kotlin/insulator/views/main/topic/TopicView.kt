@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.di.TopicScope
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
@@ -23,10 +24,13 @@ import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewModel::class) {
-
-    private val cluster: Cluster by di()
+@TopicScope
+class TopicView @Inject constructor(
+    override val viewModel: TopicViewModel,
+    private val cluster: Cluster
+) : InsulatorTabView() {
 
     override val root = vbox {
         appBar {
@@ -113,7 +117,9 @@ class TopicView : InsulatorTabView<TopicViewModel>(viewModelClazz = TopicViewMod
             hgrow = Priority.ALWAYS
         }
 
-    override fun onError(throwable: Throwable) { close() }
+    override fun onError(throwable: Throwable) {
+        close()
+    }
 
     override fun onTabClosed() {
         viewModel.stop()

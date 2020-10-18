@@ -4,12 +4,10 @@ import insulator.viewmodel.common.InsulatorViewModel
 import javafx.scene.control.Alert
 import javafx.stage.Screen
 import tornadofx.* // ktlint-disable no-wildcard-imports
-import kotlin.reflect.KClass
 
-abstract class InsulatorView<T : InsulatorViewModel>(title: String? = null, viewModelClazz: KClass<T>) : View(title) {
-    protected val viewModel: T by lazy {
-        find(viewModelClazz, scope = scope)
-    }
+abstract class InsulatorView(title: String? = null) : View(title) {
+
+    abstract val viewModel: InsulatorViewModel
 
     open fun onError(throwable: Throwable) {}
 
@@ -35,7 +33,7 @@ abstract class InsulatorView<T : InsulatorViewModel>(title: String? = null, view
     }
 }
 
-abstract class InsulatorTabView<T : InsulatorViewModel>(viewModelClazz: KClass<T>) : InsulatorView<T>(null, viewModelClazz) {
+abstract class InsulatorTabView : InsulatorView() {
     private val listeners = mutableListOf<() -> Unit>()
 
     open fun onTabClosed() = Unit

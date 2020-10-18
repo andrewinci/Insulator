@@ -7,8 +7,8 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.jsonhelper.jsontoavro.JsonToAvroException
 import insulator.lib.kafka.AvroProducer
-import insulator.lib.kafka.Producer
 import insulator.lib.kafka.StringProducer
+import insulator.lib.kafka.model.Topic
 import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -24,15 +24,12 @@ class ProducerViewModelTest : StringSpec({
     val errorMessage = "Example error"
 
     "string producer show a validation error if the message is invalid" {
-        FxContext().use {
+        ProducerViewModelTestFixture().use {
             // arrange
-            it.addToDI(
-                Cluster::class to Cluster.empty(),
-                StringProducer::class to mockk<Producer> {
-                    coEvery { validate(any(), any()) } returns JsonToAvroException(errorMessage).left()
-                }
-            )
-            val sut = ProducerViewModel("test-topic")
+            val mockkProducer = mockk<StringProducer> {
+                coEvery { validate(any(), any()) } returns JsonToAvroException(errorMessage).left()
+            }
+            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(), mockkProducer)
             // act
             sut.valueProperty.set("test")
             // assert
@@ -44,71 +41,46 @@ class ProducerViewModelTest : StringSpec({
     }
 
     "send message without value fails" {
-        FxContext().use {
+        ProducerViewModelTestFixture().use {
             // arrange
-            it.addToDI(
-                Cluster::class to Cluster.empty(),
-                StringProducer::class to mockk<Producer> {
-                    coEvery { validate(any(), any()) } returns Unit.right()
-                }
-            )
-            val sut = ProducerViewModel("test-topic")
-            sut.valueProperty.set(null)
-            sut.keyProperty.set("test")
+            it.sut.valueProperty.set(null)
+            it.sut.keyProperty.set("test")
             // act
-            sut.send()
+            it.sut.send()
             // assert
-            sut.error.value shouldBe Exception("Invalid value. Value must be not empty")
-            sut.canSendProperty.value shouldBe false
+            it.sut.error.value shouldBe Exception("Invalid value. Value must be not empty")
+            it.sut.canSendProperty.value shouldBe false
         }
     }
 
-    "Use avro producer if schema registry is configured" {
-        FxContext().use {
+    "use avro producer if schema registry is configured" {
+        ProducerViewModelTestFixture().use {
             // arrange
-            it.addToDI(
-                Cluster::class to Cluster.empty().copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample")),
-                AvroProducer::class to mockk<Producer> {
-                    coEvery { validate(any(), any()) } returns Unit.right()
-                }
-            )
+            val cluster = Cluster.empty().copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample"))
             // act
-            val sut = ProducerViewModel("test-topic")
+            val sut = ProducerViewModel(it.mockTopic, cluster, it.avroProducer, mockk())
             // assert
             sut.producerTypeProperty.value.toString() shouldBe "Avro"
         }
     }
 
     "send message without key fails" {
-        FxContext().use {
+        ProducerViewModelTestFixture().use {
             // arrange
-            it.addToDI(
-                Cluster::class to Cluster.empty(),
-                StringProducer::class to mockk<Producer> {
-                    coEvery { validate(any(), any()) } returns Unit.right()
-                }
-            )
-            val sut = ProducerViewModel("test-topic")
-            sut.valueProperty.set("test")
-            sut.keyProperty.set(null)
+            it.sut.valueProperty.set("test")
+            it.sut.keyProperty.set(null)
             // act
-            sut.send()
+            it.sut.send()
             // assert
-            sut.error.value shouldBe Exception("Invalid key. Key must be not empty")
-            sut.canSendProperty.value shouldBe false
+            it.sut.error.value shouldBe Exception("Invalid key. Key must be not empty")
+            it.sut.canSendProperty.value shouldBe false
         }
     }
+
     "send happy path" {
-        FxContext().use {
+        ProducerViewModelTestFixture().use {
             // arrange
-            it.addToDI(
-                Cluster::class to Cluster.empty(),
-                StringProducer::class to mockk<Producer> {
-                    coEvery { validate(any(), any()) } returns Unit.right()
-                    coEvery { send(any(), any(), any()) } returns Unit.right()
-                }
-            )
-            val sut = ProducerViewModel("test-topic")
+            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(relaxed = true), it.stringProducer)
             sut.valueProperty.set("test")
             sut.keyProperty.set("test")
             // act
@@ -118,17 +90,15 @@ class ProducerViewModelTest : StringSpec({
             sut.canSendProperty.value shouldBe true
         }
     }
+
     "show an error if send fails" {
-        FxContext().use {
+        ProducerViewModelTestFixture().use {
             // arrange
-            it.addToDI(
-                Cluster::class to Cluster.empty(),
-                StringProducer::class to mockk<Producer> {
-                    coEvery { validate(any(), any()) } returns Unit.right()
-                    coEvery { send(any(), any(), any()) } returns Throwable("sample").left()
-                }
-            )
-            val sut = ProducerViewModel("test-topic")
+            val mockProducer = mockk<StringProducer> {
+                coEvery { validate(any(), any()) } returns Unit.right()
+                coEvery { send(any(), any(), any()) } returns Throwable("sample").left()
+            }
+            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(relaxed = true), mockProducer)
             sut.valueProperty.set("test")
             sut.keyProperty.set("test")
             // act
@@ -139,3 +109,18 @@ class ProducerViewModelTest : StringSpec({
         }
     }
 })
+
+class ProducerViewModelTestFixture : FxContext() {
+    val mockTopic = Topic.empty()
+    val avroProducer = mockk<AvroProducer> { coEvery { validate(any(), any()) } returns Unit.right() }
+    val stringProducer = mockk<StringProducer> {
+        coEvery { validate(any(), any()) } returns Unit.right()
+        coEvery { send(any(), any(), any()) } returns Unit.right()
+    }
+    val sut = ProducerViewModel(
+        mockTopic,
+        cluster,
+        avroProducer,
+        stringProducer
+    )
+}

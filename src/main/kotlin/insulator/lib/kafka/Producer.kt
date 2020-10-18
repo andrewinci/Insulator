@@ -47,7 +47,7 @@ class AvroProducer(
 }
 
 class StringProducer(private val stringProducer: KafkaProducer<String, String>) : Producer {
-    override suspend fun validate(value: String, topic: String) = Unit.right()
+    override suspend fun validate(value: String, topic: String): Either<Throwable, Unit> = Unit.right()
     override suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit> {
         val record = ProducerRecord(topic, key, value)
         return stringProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })

@@ -6,9 +6,9 @@ import insulator.viewmodel.main.topic.CreateTopicViewModel
 import javafx.event.EventTarget
 import javafx.scene.control.Alert
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class CreateTopicView : View() {
-    private val viewModel: CreateTopicViewModel by inject()
+class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) : View() {
 
     override val root = form {
         fieldset {

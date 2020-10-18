@@ -27,8 +27,7 @@ class ClusterViewModelTest : StringSpec({
             FxContext().use {
                 // arrange
                 val mockConfigurationRepo = mockConfigurationRepo()
-                it.addToDI(ConfigurationRepo::class to mockConfigurationRepo)
-                val sut = ClusterViewModel(ClusterModel(cluster))
+                val sut = ClusterViewModel(ClusterModel(cluster), mockConfigurationRepo)
                 // act
                 sut.save()
                 // assert
@@ -55,9 +54,8 @@ class ClusterViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val mockConfigurationRepo = mockConfigurationRepo()
-            it.addToDI(ConfigurationRepo::class to mockConfigurationRepo)
             val mockCluster = Cluster.empty()
-            val sut = ClusterViewModel(ClusterModel(mockCluster))
+            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
             // act
             sut.delete()
             // assert
@@ -69,11 +67,9 @@ class ClusterViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val mockConfigurationRepo = mockConfigurationRepo()
-            it.addToDI(ConfigurationRepo::class to mockConfigurationRepo)
             val mockCluster = Cluster.empty()
-
             // act
-            val sut = ClusterViewModel(ClusterModel(mockCluster))
+            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
             // assert
             with(sut) {
                 nameProperty.value shouldBe ""
@@ -100,11 +96,10 @@ class ClusterViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val mockConfigurationRepo = mockConfigurationRepo()
-            it.addToDI(ConfigurationRepo::class to mockConfigurationRepo)
             val mockCluster = Cluster.empty()
 
             // act
-            val sut = ClusterViewModel(ClusterModel(mockCluster))
+            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
             with(sut) {
                 nameProperty.set("test-name")
                 endpointProperty.set("test-endpoint")
