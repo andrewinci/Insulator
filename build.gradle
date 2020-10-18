@@ -31,7 +31,6 @@ apply plugin: 'org.openjfx.javafxplugin'
 
 def arrow_version = "0.11.0"
 def kotest_version = "4.3.0"
-def koin_version = "2.1.6"
 def testfx_version = "4.0.16-alpha"
 def testcontainer_version = "1.14.3"
 def fuel_version = "2.3.0"
@@ -65,11 +64,6 @@ dependencies {
     // Dagger
     implementation(group: 'com.google.dagger', name: 'dagger', version: "$dagger_version")
     kapt(group: 'com.google.dagger', name: 'dagger-compiler', version: "$dagger_version")
-
-    // Koin
-    implementation(group: 'org.koin', name: 'koin-core', version: "$koin_version")
-    implementation(group: 'org.koin', name: 'koin-core-ext', version: "$koin_version")
-    testImplementation(group: 'org.koin', name: 'koin-test', version: "$koin_version")
 
     // kotlinx-coroutines-javafx
     implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-javafx', version: '1.4.0-M1')

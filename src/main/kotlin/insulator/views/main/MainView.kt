@@ -2,7 +2,7 @@ package insulator.views.main
 
 import insulator.di.dagger.ClusterScope
 import insulator.lib.configuration.model.Cluster
-import insulator.ui.common.InsulatorView2
+import insulator.ui.common.InsulatorView
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.themeButton
@@ -29,7 +29,7 @@ const val CONTENT_LIST_WIDTH = 450.0
 const val CONTENT_WIDTH = 780.0
 
 @ClusterScope
-class MainView @Inject constructor(override val viewModel: MainViewModel, val cluster: Cluster) : InsulatorView2("Insulator") {
+class MainView @Inject constructor(override val viewModel: MainViewModel, val cluster: Cluster) : InsulatorView("Insulator") {
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)

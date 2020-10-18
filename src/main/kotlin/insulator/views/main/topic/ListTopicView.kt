@@ -1,10 +1,10 @@
 package insulator.views.main.topic
 
-import insulator.ui.common.InsulatorView2
+import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
 import insulator.ui.component.appBar
 import insulator.ui.component.h1
-import insulator.ui.component.searchBox2
+import insulator.ui.component.searchBox
 import insulator.ui.component.subTitle
 import insulator.viewmodel.main.topic.ListTopicViewModel
 import insulator.views.configurations.ListClusterView
@@ -14,7 +14,7 @@ import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
 import javax.inject.Inject
 
-class ListTopicView @Inject constructor(override val viewModel: ListTopicViewModel) : InsulatorView2("Topics") {
+class ListTopicView @Inject constructor(override val viewModel: ListTopicViewModel) : InsulatorView("Topics") {
 
     override val root = vbox(spacing = 5.0) {
         appBar {
@@ -25,7 +25,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
         }
         borderpane {
             left = createTopicButton()
-            right = searchBox2(viewModel.searchItemProperty, this@ListTopicView)
+            right = searchBox(viewModel.searchItemProperty, this@ListTopicView)
         }
         topicsListView()
     }

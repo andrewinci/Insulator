@@ -2,7 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.dagger.TopicScope
 import insulator.lib.helpers.dispatch
-import insulator.ui.common.InsulatorView2
+import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
 import insulator.ui.component.h1
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @TopicScope
 class ProducerView @Inject constructor(
     override val viewModel: ProducerViewModel
-) : InsulatorView2(){
+) : InsulatorView(){
 
     private val recordValueTextArea = TextArea()
 

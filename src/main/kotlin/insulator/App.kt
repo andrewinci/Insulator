@@ -1,6 +1,5 @@
 package insulator
 
-import insulator.di.DIContainer
 import insulator.di.dagger.components.DaggerInsulatorComponent
 import insulator.ui.style.AppBarStyle
 import insulator.ui.style.ButtonStyle
@@ -45,6 +44,5 @@ class Insulator : App(
 }
 
 fun main(args: Array<String>) {
-    FX.dicontainer = DIContainer()
     runCatching { launch<Insulator>(args) }
 }

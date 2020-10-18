@@ -6,7 +6,7 @@ import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.dispatch
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.update.VersionChecker
-import insulator.ui.common.InsulatorView2
+import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
 import insulator.ui.component.h1
 import insulator.ui.component.h2
@@ -25,7 +25,7 @@ import javax.inject.Inject
 class ListClusterView @Inject constructor(
     override val viewModel: ListClusterViewModel,
     val factory: Factory<Cluster, ClusterComponent>
-) : InsulatorView2("Insulator") {
+) : InsulatorView("Insulator") {
 
     override val root = vbox(spacing = 15) {
         h1("Clusters")

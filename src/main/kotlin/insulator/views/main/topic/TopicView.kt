@@ -11,7 +11,6 @@ import insulator.ui.component.confirmationButton
 import insulator.ui.component.fieldName
 import insulator.ui.component.h1
 import insulator.ui.component.searchBox
-import insulator.ui.component.searchBox2
 import insulator.ui.component.subTitle
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
@@ -51,7 +50,7 @@ class TopicView @Inject constructor(
                 valueFormatOptions()
                 button("Clear") { action { viewModel.clear() } }
             }
-            right = searchBox2(viewModel.searchItem, this@TopicView)
+            right = searchBox(viewModel.searchItem, this@TopicView)
         }
         recordsTable()
     }

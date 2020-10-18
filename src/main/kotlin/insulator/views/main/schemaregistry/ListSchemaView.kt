@@ -1,14 +1,11 @@
 package insulator.views.main.schemaregistry
 
 import insulator.di.dagger.ClusterScope
-import insulator.di.dagger.components.TopicComponent
-import insulator.di.dagger.factories.Factory
 import insulator.lib.helpers.dispatch
-import insulator.lib.kafka.model.Topic
-import insulator.ui.common.InsulatorView2
+import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.h1
-import insulator.ui.component.searchBox2
+import insulator.ui.component.searchBox
 import insulator.ui.component.subTitle
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
@@ -21,7 +18,7 @@ import javax.inject.Inject
 @ClusterScope
 class ListSchemaView @Inject constructor(
     override val viewModel: ListSchemaViewModel
-) : InsulatorView2("Schema registry") {
+) : InsulatorView("Schema registry") {
 
     override val root = vbox(spacing = 5.0) {
         appBar {
@@ -30,7 +27,7 @@ class ListSchemaView @Inject constructor(
             }
             subTitle(viewModel.subtitleProperty)
         }
-        searchBox2(viewModel.searchItemProperty, currentView = this@ListSchemaView)
+        searchBox(viewModel.searchItemProperty, currentView = this@ListSchemaView)
         schemasListView()
     }
 

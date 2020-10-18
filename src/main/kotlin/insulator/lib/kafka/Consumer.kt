@@ -7,9 +7,6 @@ import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
-import org.koin.core.KoinComponent
-import org.koin.core.qualifier.named
-import org.koin.ext.scope
 import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
