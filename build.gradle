@@ -35,6 +35,7 @@ def koin_version = "2.1.6"
 def testfx_version = "4.0.16-alpha"
 def testcontainer_version = "1.14.3"
 def fuel_version = "2.3.0"
+def dagger_version = "2.23.2"
 
 testSets { integrationTest }
 
@@ -60,6 +61,10 @@ dependencies {
         implementation(group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.32')
     }
     implementation(group: 'io.confluent', name: 'kafka-avro-serializer', version: '6.0.0')
+
+    // Dagger
+    implementation(group: 'com.google.dagger', name: 'dagger', version: "$dagger_version")
+    kapt(group: 'com.google.dagger', name: 'dagger-compiler', version: "$dagger_version")
 
     // Koin
     implementation(group: 'org.koin', name: 'koin-core', version: "$koin_version")
