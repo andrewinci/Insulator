@@ -45,9 +45,9 @@ abstract class InsulatorTabView<T : InsulatorViewModel>(viewModelClazz: KClass<T
     fun closeTab() = listeners.forEach { it() }
 }
 
-abstract class InsulatorView2<T: InsulatorViewModel>(title: String? = null) : View(title) {
+abstract class InsulatorView2(title: String? = null) : View(title) {
 
-    abstract val viewModel: T
+    abstract val viewModel: InsulatorViewModel
 
     open fun onError(throwable: Throwable) {}
 
