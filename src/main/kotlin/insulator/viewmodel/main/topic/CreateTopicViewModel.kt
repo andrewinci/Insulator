@@ -7,10 +7,9 @@ import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel
+import javax.inject.Inject
 
-class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : ItemViewModel<CreateTopicModel>(cluster) {
-
-    private val admin: AdminApi by di()
+class CreateTopicViewModel @Inject constructor(cluster: CreateTopicModel, val admin: AdminApi) : ItemViewModel<CreateTopicModel>(cluster) {
 
     val nameProperty = bind { item.nameProperty }
     val partitionCountProperty = bind { item.partitionCountProperty }
@@ -20,7 +19,7 @@ class CreateTopicViewModel(cluster: CreateTopicModel = CreateTopicModel()) : Ite
     fun save(): Either<Throwable, Unit> = admin.createTopics(this.item.toTopic()).get()
 }
 
-class CreateTopicModel(topic: Topic = Topic.empty()) {
+class CreateTopicModel @Inject constructor(topic: Topic) {
     val nameProperty = SimpleStringProperty(topic.name)
     val partitionCountProperty = SimpleIntegerProperty(topic.partitionCount)
     val replicationFactorProperty = SimpleIntegerProperty(topic.replicationFactor.toInt())

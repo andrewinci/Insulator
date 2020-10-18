@@ -8,7 +8,7 @@ import insulator.lib.helpers.runCatchingE
 import kotlinx.serialization.json.Json
 import java.io.File
 
-class ConfigurationRepo(private val json: Json, private val configPath: String = "${System.getProperty("user.home")}/.insulator.config") {
+class ConfigurationRepo constructor(private val json: Json, private val configPath: String) {
 
     private val callbacks = ArrayList<(Configuration) -> Unit>()
 

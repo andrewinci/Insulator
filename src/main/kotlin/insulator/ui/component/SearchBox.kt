@@ -6,7 +6,7 @@ import javafx.event.EventTarget
 import javafx.geometry.Pos
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
-fun EventTarget.searchBox(searchText: Property<String>, currentView: InsulatorView<*>) =
+fun EventTarget.searchBox(searchText: Property<String>, currentView: InsulatorView) =
     hbox {
         fieldName("Search")
         textfield(searchText) { minWidth = 200.0 }.also { it.parent.focusedProperty().addListener(ChangeListener { _, _, _ -> it.requestFocus() }) }

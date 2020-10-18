@@ -8,10 +8,9 @@ import insulator.lib.configuration.model.SslConfiguration
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel
+import javax.inject.Inject
 
-class ClusterViewModel(cluster: ClusterModel = ClusterModel(Cluster.empty())) : ItemViewModel<ClusterModel>(cluster) {
-
-    private val configurationRepo: ConfigurationRepo by di()
+class ClusterViewModel @Inject constructor(cluster: ClusterModel, private val configurationRepo: ConfigurationRepo) : ItemViewModel<ClusterModel>(cluster) {
 
     val nameProperty = bind { item.nameProperty }
     val endpointProperty = bind { item.endpointProperty }
@@ -34,7 +33,7 @@ class ClusterViewModel(cluster: ClusterModel = ClusterModel(Cluster.empty())) : 
     suspend fun delete() = configurationRepo.delete(item.toClusterConfig())
 }
 
-class ClusterModel(cluster: Cluster) {
+class ClusterModel @Inject constructor(cluster: Cluster) {
     private val guid = cluster.guid
     val nameProperty = SimpleStringProperty(cluster.name)
     val endpointProperty = SimpleStringProperty(cluster.endpoint)

@@ -6,9 +6,10 @@ import insulator.ui.component.h1
 import insulator.viewmodel.configurations.ClusterViewModel
 import javafx.event.EventTarget
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class ClusterView : View() {
-    private val viewModel: ClusterViewModel by inject()
+class ClusterView @Inject constructor(private val viewModel: ClusterViewModel) : View() {
+
     private val isNewCluster: Boolean by lazy { viewModel.nameProperty.value.isNullOrEmpty() }
 
     override val root = form {

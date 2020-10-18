@@ -14,11 +14,14 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class SchemaViewModel(val subject: Subject) : InsulatorViewModel() {
-    val cluster: Cluster by di()
-    private val formatter: JsonFormatter by di()
-    private val schemaRegistry: SchemaRegistry by di()
+class SchemaViewModel @Inject constructor(
+    val cluster: Cluster,
+    val subject: Subject,
+    private val formatter: JsonFormatter,
+    private val schemaRegistry: SchemaRegistry,
+) : InsulatorViewModel() {
 
     val nameProperty = SimpleStringProperty(subject.name)
     val versionsProperty: ObservableList<Schema> = FXCollections.observableArrayList(subject.schemas)

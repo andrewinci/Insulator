@@ -15,8 +15,16 @@ class ProducerViewTest : StringSpec({
     "Render view without exceptions" {
         FxContext().use {
             // arrange
-            it.setup()
-            val sut = ProducerView()
+            val producerViewModel = mockk<ProducerViewModel>(relaxed = true) {
+                every { producerTypeProperty } returns SimpleObjectProperty()
+                every { nextFieldProperty } returns SimpleStringProperty("")
+                every { validationErrorProperty } returns SimpleStringProperty(null)
+                every { keyProperty } returns SimpleStringProperty()
+                every { valueProperty } returns SimpleStringProperty()
+                every { canSendProperty } returns SimpleBooleanProperty()
+                every { error } returns SimpleObjectProperty<Throwable?>(null)
+            }
+            val sut = ProducerView(producerViewModel)
             // act
             val res = sut.root
             // assert
@@ -24,15 +32,3 @@ class ProducerViewTest : StringSpec({
         }
     }
 })
-
-private fun FxContext.setup() = this.configureFxDi(
-    mockk<ProducerViewModel>(relaxed = true) {
-        every { producerTypeProperty } returns SimpleObjectProperty()
-        every { nextFieldProperty } returns SimpleStringProperty("")
-        every { validationErrorProperty } returns SimpleStringProperty(null)
-        every { keyProperty } returns SimpleStringProperty()
-        every { valueProperty } returns SimpleStringProperty()
-        every { canSendProperty } returns SimpleBooleanProperty()
-        every { error } returns SimpleObjectProperty<Throwable?>(null)
-    }
-)

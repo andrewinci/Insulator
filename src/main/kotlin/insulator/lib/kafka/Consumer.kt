@@ -1,30 +1,27 @@
 package insulator.lib.kafka
 
 import arrow.core.Tuple3
-import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
+import insulator.lib.kafka.helpers.ConsumerFactory
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.TopicPartition
-import org.koin.core.KoinComponent
-import org.koin.core.qualifier.named
-import org.koin.ext.scope
 import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
 
-class Consumer(private val cluster: Cluster, private val converter: AvroToJsonConverter) : KoinComponent {
+class Consumer(
+    private val converter: AvroToJsonConverter,
+    private val consumerFactory: ConsumerFactory
+) {
 
     private var threadLoop: Thread? = null
     private var running = false
 
     fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
         if (isRunning()) throw Throwable("Consumer already running")
-        val consumer: Consumer<Any, Any> = when (valueFormat) {
-            DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
-            DeserializationFormat.String -> cluster.scope.get()
-        }
+        val consumer = consumerFactory.build(valueFormat)
         initializeConsumer(consumer, topic, from)
         running = true
         loop(consumer, callback)
@@ -54,7 +51,7 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
         when (from) {
             ConsumeFrom.Now -> consumer.seekToEnd(partitions)
             ConsumeFrom.LastHour -> {
-                val time = Instant.now().minus(Duration.ofMinutes(30)).toEpochMilli()
+                val time = Instant.now().minus(Duration.ofMinutes(60)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
             }
             ConsumeFrom.LastDay -> {

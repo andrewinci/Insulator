@@ -25,13 +25,11 @@ class ListClusterViewModelTest : StringSpec({
     "Show an error if unable to retrieve the configuration" {
         FxContext().use {
             // arrange
-            it.addToDI(
-                ConfigurationRepo::class to mockk<ConfigurationRepo> {
-                    every { addNewClusterCallback(any()) } just runs
-                    coEvery { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
-                }
-            )
-            val sut = ListClusterViewModel()
+            val configurationRepo = mockk<ConfigurationRepo> {
+                every { addNewClusterCallback(any()) } just runs
+                coEvery { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
+            }
+            val sut = ListClusterViewModel(configurationRepo)
             // act
             val clusters = sut.clustersProperty
             // assert
@@ -47,13 +45,11 @@ class ListClusterViewModelTest : StringSpec({
             // arrange
             val newMockConfiguration = mockk<Configuration> { every { clusters } returns listOf(Cluster.empty(), Cluster.empty(), Cluster.empty()) }
             lateinit var callback: (Configuration) -> Unit
-            it.addToDI(
-                ConfigurationRepo::class to mockk<ConfigurationRepo> {
-                    every { addNewClusterCallback(any()) } answers { callback = firstArg() }
-                    coEvery { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
-                }
-            )
-            val sut = ListClusterViewModel()
+            val configurationRepo = mockk<ConfigurationRepo> {
+                every { addNewClusterCallback(any()) } answers { callback = firstArg() }
+                coEvery { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
+            }
+            val sut = ListClusterViewModel(configurationRepo)
             val cluster = sut.clustersProperty
             cluster.size shouldBe 0
             // act

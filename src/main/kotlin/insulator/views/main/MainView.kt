@@ -1,5 +1,6 @@
 package insulator.views.main
 
+import insulator.di.ClusterScope
 import insulator.lib.configuration.model.Cluster
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.h1
@@ -8,6 +9,7 @@ import insulator.ui.component.themeButton
 import insulator.ui.style.MainViewStyle
 import insulator.ui.style.changeTheme
 import insulator.viewmodel.main.MainViewModel
+import insulator.viewmodel.main.TabViewModel
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.collections.FXCollections
@@ -19,6 +21,7 @@ import javafx.geometry.Side
 import javafx.scene.Parent
 import javafx.scene.image.Image
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
 private const val ICON_TOPICS = "icons/topics.png"
 private const val ICON_REGISTRY = "icons/schemaRegistryIcon.png"
@@ -26,9 +29,12 @@ const val SIDEBAR_WIDTH = 250.0
 const val CONTENT_LIST_WIDTH = 450.0
 const val CONTENT_WIDTH = 780.0
 
-class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class) {
-
-    val cluster: Cluster by di()
+@ClusterScope
+class MainView @Inject constructor(
+    override val viewModel: MainViewModel,
+    private val tabViewModel: TabViewModel,
+    val cluster: Cluster
+) : InsulatorView("Insulator") {
 
     private val contentList = borderpane {
         centerProperty().bind(viewModel.contentList)
@@ -37,7 +43,7 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     }
 
     private val content = tabpane {
-        viewModel.contentTabs = tabs
+        tabViewModel.contentTabs = tabs
         minWidth = CONTENT_WIDTH
         side = Side.BOTTOM
         addClass(MainViewStyle.content)
@@ -51,9 +57,9 @@ class MainView : InsulatorView<MainViewModel>("Insulator", MainViewModel::class)
     override val root = splitpane { items.bind(nodes) { it } }
 
     init {
-        viewModel.contentTabs.onChange {
+        tabViewModel.contentTabs.onChange {
             when {
-                viewModel.contentTabs.size == 0 -> {
+                tabViewModel.contentTabs.size == 0 -> {
                     val contentListWidth = contentList.width
                     nodes.removeAt(2)
                     super.currentStage?.width = SIDEBAR_WIDTH + contentListWidth

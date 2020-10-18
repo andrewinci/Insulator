@@ -1,5 +1,6 @@
 package insulator.views.main.schemaregistry
 
+import insulator.di.SubjectScope
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
 import insulator.ui.common.InsulatorTabView
@@ -15,8 +16,12 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Priority
 import javafx.scene.text.Font
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class SchemaView : InsulatorTabView<SchemaViewModel>(viewModelClazz = SchemaViewModel::class) {
+@SubjectScope
+class SchemaView @Inject constructor(
+    override val viewModel: SchemaViewModel
+) : InsulatorTabView() {
 
     override val root = vbox {
         appBar {

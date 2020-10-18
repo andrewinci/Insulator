@@ -1,5 +1,6 @@
 package insulator.views.main.schemaregistry
 
+import insulator.di.ClusterScope
 import insulator.lib.helpers.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
@@ -12,8 +13,12 @@ import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class ListSchemaView : InsulatorView<ListSchemaViewModel>("Schema registry", ListSchemaViewModel::class) {
+@ClusterScope
+class ListSchemaView @Inject constructor(
+    override val viewModel: ListSchemaViewModel
+) : InsulatorView("Schema registry") {
 
     override val root = vbox(spacing = 5.0) {
         appBar {

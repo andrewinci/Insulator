@@ -16,10 +16,10 @@ import io.mockk.verify
 class SchemaViewModelTest : StringSpec({
 
     "happy path delete" {
-        TestContext().use {
+        SchemaViewModelTestFixture().use {
             // arrange
             val subject = Subject(name = it.targetSubject, schemas = listOf(Schema("{}", 1, 4)))
-            val sut = SchemaViewModel(subject)
+            val sut = SchemaViewModel(it.cluster, subject, it.mockJsonFormatter, it.mockSchemaRegistry)
             // act
             sut.delete()
             // assert
@@ -29,19 +29,12 @@ class SchemaViewModelTest : StringSpec({
     }
 })
 
-private class TestContext : FxContext() {
-
+private class SchemaViewModelTestFixture : FxContext() {
+    val mockJsonFormatter = mockk<JsonFormatter> {
+        every { formatJsonString(any()) } returns listOf(Token.COLON).right()
+    }
     var mockSchemaRegistry = mockk<SchemaRegistry>(relaxed = true) {
         every { getAllSubjects() } returns listOf(targetSubject).right()
     }
     val targetSubject = "subject"
-
-    init {
-        addToDI(
-            SchemaRegistry::class to mockSchemaRegistry,
-            JsonFormatter::class to mockk<JsonFormatter> {
-                every { formatJsonString(any()) } returns listOf(Token.COLON).right()
-            }
-        )
-    }
 }

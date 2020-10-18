@@ -1,23 +1,28 @@
 package insulator.viewmodel.main.schemaregistry
 
 import arrow.core.extensions.either.applicativeError.handleError
+import insulator.di.ClusterScope
+import insulator.di.factories.SubjectComponentFactory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
-import insulator.ui.common.scope
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.main.schemaregistry.SchemaView
+import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import javax.inject.Inject
 
-class ListSchemaViewModel : InsulatorViewModel() {
-
-    private val cluster: Cluster by di()
-    private val schemaRegistryClient: SchemaRegistry by di()
+@ClusterScope
+class ListSchemaViewModel @Inject constructor(
+    val cluster: Cluster,
+    val schemaRegistry: SchemaRegistry,
+    private val subjectComponentFactory: SubjectComponentFactory,
+    private val tabViewModel: TabViewModel
+) : InsulatorViewModel() {
 
     private val schemasProperty: ObservableList<String> = FXCollections.observableArrayList()
 
@@ -40,7 +45,7 @@ class ListSchemaViewModel : InsulatorViewModel() {
         refresh()
     }
 
-    fun refresh() = schemaRegistryClient
+    fun refresh() = schemaRegistry
         .getAllSubjects()
         .map { it.sorted() }
         .map {
@@ -54,18 +59,14 @@ class ListSchemaViewModel : InsulatorViewModel() {
 
     suspend fun showSchema() {
         if (selectedSchemaProperty.value.isNullOrEmpty()) return
-        schemaRegistryClient.getSubject(selectedSchemaProperty.value!!)
-            .map { SchemaViewModel(it) }
-            .fold(
-                { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) },
-                {
-                    it.subject.scope(cluster)
-                        .withComponent(it)
-                        .let { schemaView -> find<SchemaView>(schemaView) }
-                        .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }
-                        .let { schemaViewTab -> setMainContent(it.nameProperty.value, schemaViewTab) }
-                }
-            )
+        schemaRegistry.getSubject(selectedSchemaProperty.value!!)
+            .map {
+                subjectComponentFactory.build(it)
+                    .getSchemaView()
+                    .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }
+                    .let { schemaViewTab -> tabViewModel.setMainContent(it.name, schemaViewTab) }
+            }
+            .mapLeft { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) }
     }
 }
 

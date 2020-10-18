@@ -1,14 +1,14 @@
 package insulator.viewmodel.main.topic
 
+import insulator.di.factories.TopicComponentFactory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
 import insulator.lib.helpers.map
 import insulator.lib.kafka.AdminApi
-import insulator.ui.common.topicScope
+import insulator.lib.kafka.model.Topic
 import insulator.viewmodel.common.InsulatorViewModel
-import insulator.views.main.topic.CreateTopicView
-import insulator.views.main.topic.TopicView
+import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
@@ -17,24 +17,25 @@ import javafx.collections.ObservableList
 import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.SortedFilteredList
-import tornadofx.find
 import tornadofx.whenUndockedOnce
+import javax.inject.Inject
 
-class ListTopicViewModel : InsulatorViewModel() {
+class ListTopicViewModel @Inject constructor(
+    val cluster: Cluster,
+    val adminApi: AdminApi,
+    private val viewFactory: TopicComponentFactory,
+    val tabViewModel: TabViewModel
+) : InsulatorViewModel() {
 
-    private val cluster: Cluster by di()
-    private val adminApi: AdminApi by di()
     private val topicListProperty: ObservableList<String> = FXCollections.observableArrayList()
 
     val selectedItemProperty = SimpleStringProperty(null)
     val searchItemProperty = SimpleStringProperty(null)
-    val filteredTopicsProperty: ObservableList<String> = SortedFilteredList(topicListProperty).apply {
-        filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
-    }.filteredItems
+    val filteredTopicsProperty: ObservableList<String> = SortedFilteredList(topicListProperty)
+        .apply { filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) } }
+        .filteredItems
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
-        {
-            "Topic count: ${filteredTopicsProperty.size}/${topicListProperty.size}"
-        },
+        { "Topic count: ${filteredTopicsProperty.size}/${topicListProperty.size}" },
         topicListProperty,
         filteredTopicsProperty
     )
@@ -56,15 +57,24 @@ class ListTopicViewModel : InsulatorViewModel() {
 
     fun showTopic() {
         val selectedTopicName = selectedItemProperty.value ?: return
-        selectedItemProperty.value.topicScope(cluster)
-            .withComponent(TopicViewModel(selectedTopicName))
-            .let { topicView -> find<TopicView>(topicView) }
-            .also { topicView -> topicView.setOnCloseListener { refresh() } }
-            .let { topicView -> setMainContent(selectedTopicName, topicView) }
+        adminApi.describeTopic(selectedTopicName)
+            .map {
+                viewFactory
+                    .build(it)
+                    .getTopicView()
+                    .also { topicView -> topicView.setOnCloseListener { refresh() } }
+                    .let { topicView -> tabViewModel.setMainContent(selectedTopicName, topicView) }
+            }
+
+//        selectedItemProperty.value.topicScope(cluster)
+//            .withComponent(TopicViewModel(selectedTopicName))
+//            .let { topicView -> find<TopicView>(topicView) }
+//            .also { topicView -> topicView.setOnCloseListener { refresh() } }
+//            .let { topicView -> setMainContent(selectedTopicName, topicView) }
     }
 
-    fun createNewTopic() = "new-topic".topicScope(cluster)
-        .withComponent(CreateTopicViewModel())
-        .let { scope -> find<CreateTopicView>(scope).also { it.whenUndockedOnce { refresh(); scope.close() } } }
+    fun createNewTopic() = viewFactory.build(Topic.empty())
+        .getCreateTopicView()
+        .also { it.whenUndockedOnce { refresh() } }
         .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
 }

@@ -21,9 +21,8 @@ class CreateTopicViewModelTest : StringSpec({
             val mockAdminApi = mockk<AdminApi> {
                 every { createTopics(any()) } returns CompletableFuture.completedFuture(Unit.right())
             }
-            it.addToDI(AdminApi::class to mockAdminApi)
             val sampleTopic = Topic(name = "sampleTopic")
-            val sut = CreateTopicViewModel(CreateTopicModel(sampleTopic))
+            val sut = CreateTopicViewModel(CreateTopicModel(sampleTopic), mockAdminApi)
             // act
             sut.save()
             // assert
@@ -38,8 +37,7 @@ class CreateTopicViewModelTest : StringSpec({
             val mockAdminApi = mockk<AdminApi> {
                 every { createTopics(capture(captureSlot)) } returns CompletableFuture.completedFuture(Unit.right())
             }
-            it.addToDI(AdminApi::class to mockAdminApi)
-            val sut = CreateTopicViewModel()
+            val sut = CreateTopicViewModel(CreateTopicModel(Topic.empty()), mockAdminApi)
 
             // act
             sut.runOnFXThread {
