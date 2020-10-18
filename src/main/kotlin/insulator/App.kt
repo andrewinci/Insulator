@@ -14,10 +14,11 @@ import insulator.ui.style.ScrollPaneStyle
 import insulator.ui.style.TableViewStyle
 import insulator.ui.style.TextStyle
 import insulator.views.configurations.ListClusterView
+import javafx.stage.Stage
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class Insulator : App(
-    ListClusterView::class,
+    NoPrimaryViewSpecified::class,
     Root::class,
     AppBarStyle::class,
     ButtonStyle::class,
@@ -30,7 +31,16 @@ class Insulator : App(
     ScrollPaneStyle::class,
     MainViewStyle::class,
     ScrollBarStyle::class
-)
+) {
+    override fun start(stage: Stage) {
+        super.start(stage)
+        val view = ListClusterView()
+        stage.scene = createPrimaryScene(view)
+        FX.applyStylesheetsTo(stage.scene)
+        stage.show()
+        view.onDock()
+    }
+}
 
 fun main(args: Array<String>) {
     FX.dicontainer = DIContainer()
