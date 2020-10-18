@@ -1,6 +1,6 @@
 package insulator
 
-import insulator.di.dagger.components.DaggerInsulatorComponent
+import insulator.di.components.DaggerInsulatorComponent
 import insulator.ui.style.AppBarStyle
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.CheckBoxStyle

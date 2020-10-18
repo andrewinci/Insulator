@@ -1,15 +1,15 @@
-package insulator.di.dagger.modules
+package insulator.di.modules
 
 import dagger.Module
 import dagger.Provides
-import insulator.di.dagger.ClusterScope
-import insulator.di.dagger.components.ClusterComponent
-import insulator.di.dagger.components.DaggerSubjectComponent
-import insulator.di.dagger.components.DaggerTopicComponent
-import insulator.di.dagger.components.SubjectComponent
-import insulator.di.dagger.components.TopicComponent
-import insulator.di.dagger.factories.Factory
-import insulator.di.dagger.factories.cachedFactory
+import insulator.di.ClusterScope
+import insulator.di.components.ClusterComponent
+import insulator.di.components.DaggerSubjectComponent
+import insulator.di.components.DaggerTopicComponent
+import insulator.di.components.SubjectComponent
+import insulator.di.components.TopicComponent
+import insulator.di.factories.Factory
+import insulator.di.factories.cachedFactory
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
 import insulator.lib.jsonhelper.jsontoavro.JsonToAvroConverter
 import insulator.lib.kafka.AdminApi

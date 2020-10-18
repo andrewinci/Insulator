@@ -1,13 +1,13 @@
-package insulator.di.dagger.modules
+package insulator.di.modules
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import dagger.Module
 import dagger.Provides
-import insulator.di.dagger.components.ClusterComponent
-import insulator.di.dagger.components.DaggerClusterComponent
-import insulator.di.dagger.components.InsulatorComponent
-import insulator.di.dagger.factories.Factory
-import insulator.di.dagger.factories.cachedFactory
+import insulator.di.components.ClusterComponent
+import insulator.di.components.DaggerClusterComponent
+import insulator.di.components.InsulatorComponent
+import insulator.di.factories.Factory
+import insulator.di.factories.cachedFactory
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter

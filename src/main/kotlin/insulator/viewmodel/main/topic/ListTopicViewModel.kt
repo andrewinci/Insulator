@@ -1,7 +1,7 @@
 package insulator.viewmodel.main.topic
 
-import insulator.di.dagger.components.TopicComponent
-import insulator.di.dagger.factories.Factory
+import insulator.di.components.TopicComponent
+import insulator.di.factories.Factory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith

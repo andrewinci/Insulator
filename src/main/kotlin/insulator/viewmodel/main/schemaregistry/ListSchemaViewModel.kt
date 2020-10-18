@@ -1,9 +1,9 @@
 package insulator.viewmodel.main.schemaregistry
 
 import arrow.core.extensions.either.applicativeError.handleError
-import insulator.di.dagger.ClusterScope
-import insulator.di.dagger.components.SubjectComponent
-import insulator.di.dagger.factories.Factory
+import insulator.di.ClusterScope
+import insulator.di.components.SubjectComponent
+import insulator.di.factories.Factory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry

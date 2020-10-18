@@ -1,6 +1,6 @@
 package insulator.viewmodel.main
 
-import insulator.di.dagger.ClusterScope
+import insulator.di.ClusterScope
 import insulator.lib.configuration.model.Cluster
 import insulator.ui.common.InsulatorTabView
 import insulator.viewmodel.common.InsulatorViewModel

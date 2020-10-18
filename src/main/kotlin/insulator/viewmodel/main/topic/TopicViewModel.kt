@@ -1,6 +1,6 @@
 package insulator.viewmodel.main.topic
 
-import insulator.di.dagger.TopicScope
+import insulator.di.TopicScope
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi

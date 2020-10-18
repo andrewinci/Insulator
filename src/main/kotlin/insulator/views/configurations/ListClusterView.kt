@@ -1,7 +1,7 @@
 package insulator.views.configurations
 
-import insulator.di.dagger.components.ClusterComponent
-import insulator.di.dagger.factories.Factory
+import insulator.di.components.ClusterComponent
+import insulator.di.factories.Factory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.dispatch
 import insulator.lib.helpers.runOnFXThread

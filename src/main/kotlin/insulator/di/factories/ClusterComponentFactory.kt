@@ -1,4 +1,4 @@
-package insulator.di.dagger.factories
+package insulator.di.factories
 
 interface Factory<K, V> {
     fun build(key: K): V

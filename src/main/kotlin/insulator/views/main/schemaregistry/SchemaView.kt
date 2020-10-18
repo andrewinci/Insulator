@@ -1,6 +1,6 @@
 package insulator.views.main.schemaregistry
 
-import insulator.di.dagger.SubjectScope
+import insulator.di.SubjectScope
 import insulator.lib.jsonhelper.Token
 import insulator.lib.kafka.model.Schema
 import insulator.ui.common.InsulatorTabView

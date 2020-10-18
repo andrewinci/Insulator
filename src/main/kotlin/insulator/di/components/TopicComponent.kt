@@ -1,8 +1,8 @@
-package insulator.di.dagger.components
+package insulator.di.components
 
 import dagger.BindsInstance
 import dagger.Component
-import insulator.di.dagger.TopicScope
+import insulator.di.TopicScope
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.model.Topic
 import insulator.views.main.topic.CreateTopicView

@@ -1,7 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import arrow.core.extensions.either.applicativeError.handleError
-import insulator.di.dagger.TopicScope
+import insulator.di.TopicScope
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.dispatch
 import insulator.lib.jsonhelper.jsontoavro.JsonFieldParsingException

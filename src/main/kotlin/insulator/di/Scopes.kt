@@ -1,4 +1,4 @@
-package insulator.di.dagger
+package insulator.di
 
 import javax.inject.Scope
 

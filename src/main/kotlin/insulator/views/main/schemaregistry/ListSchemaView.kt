@@ -1,6 +1,6 @@
 package insulator.views.main.schemaregistry
 
-import insulator.di.dagger.ClusterScope
+import insulator.di.ClusterScope
 import insulator.lib.helpers.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar

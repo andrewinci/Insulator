@@ -1,7 +1,7 @@
-package insulator.di.dagger.components
+package insulator.di.components
 
 import dagger.Component
-import insulator.di.dagger.modules.RootModule
+import insulator.di.modules.RootModule
 import insulator.lib.configuration.ConfigurationRepo
 import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter

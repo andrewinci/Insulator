@@ -1,6 +1,6 @@
 package insulator.views.main.topic
 
-import insulator.di.dagger.TopicScope
+import insulator.di.TopicScope
 import insulator.lib.helpers.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar

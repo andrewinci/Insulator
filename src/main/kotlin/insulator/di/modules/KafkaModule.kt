@@ -1,8 +1,8 @@
-package insulator.di.dagger.modules
+package insulator.di.modules
 
 import dagger.Module
 import dagger.Provides
-import insulator.di.dagger.ClusterScope
+import insulator.di.ClusterScope
 import insulator.lib.configuration.model.Cluster
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient

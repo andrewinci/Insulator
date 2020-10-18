@@ -1,6 +1,6 @@
 package insulator.views.main.topic
 
-import insulator.di.dagger.TopicScope
+import insulator.di.TopicScope
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
