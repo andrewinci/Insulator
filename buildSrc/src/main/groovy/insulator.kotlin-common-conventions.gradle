@@ -1,0 +1,41 @@
+plugins {
+    id 'idea'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'com.adarshr.test-logger'
+    id 'org.jlleitschuh.gradle.ktlint'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'jacoco'
+}
+
+repositories {
+    jcenter()
+    maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
+}
+
+def arrow_version = "0.11.0"
+def kotest_version = "4.3.0"
+
+dependencies {
+    // Kotlin
+    implementation platform('org.jetbrains.kotlin:kotlin-bom')
+    implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8')
+
+    // Arrow
+    implementation(group: 'io.arrow-kt', name: 'arrow-fx', version: "$arrow_version")
+    implementation(group: 'io.arrow-kt', name: 'arrow-syntax', version: "$arrow_version")
+    kapt(group: 'io.arrow-kt', name: 'arrow-meta', version: "$arrow_version")
+
+    // Kotest
+    testImplementation(group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version")
+    testImplementation(group: 'io.kotest', name: 'kotest-assertions-core', version: "$kotest_version")
+    testImplementation(group: 'io.kotest', name: 'kotest-property', version: "$kotest_version")
+    testImplementation(group: 'io.kotest', name: 'kotest-assertions-arrow', version: "$kotest_version")
+
+    // Mock
+    testImplementation(group: 'io.mockk', name: 'mockk', version: '1.10.2')
+}
+
+compileKotlin { kotlinOptions.jvmTarget = "1.8" }
+
+compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
