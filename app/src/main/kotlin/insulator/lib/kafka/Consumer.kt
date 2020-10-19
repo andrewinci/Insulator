@@ -3,6 +3,8 @@ package insulator.lib.kafka
 import arrow.core.Tuple3
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -10,31 +12,46 @@ import org.apache.kafka.common.TopicPartition
 import org.koin.core.KoinComponent
 import org.koin.core.qualifier.named
 import org.koin.ext.scope
+import java.io.Closeable
 import java.time.Duration
 import java.time.Instant
 import kotlin.concurrent.thread
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
-class Consumer(private val cluster: Cluster, private val converter: AvroToJsonConverter) : KoinComponent {
+class Consumer(private val cluster: Cluster, private val converter: AvroToJsonConverter) : KoinComponent, Closeable {
 
     private var threadLoop: Thread? = null
     private var running = false
 
-    fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
-        if (isRunning()) throw Throwable("Consumer already running")
-        val consumer: Consumer<Any, Any> = when (valueFormat) {
-            DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
-            DeserializationFormat.String -> cluster.scope.get()
+    suspend fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) =
+        suspendCoroutine<Unit> { continuation ->
+            GlobalScope.launch {
+                if (isRunning()) throw Throwable("Consumer already running")
+                val consumer: Consumer<Any, Any> = when (valueFormat) {
+                    DeserializationFormat.Avro -> cluster.scope.get(named("avroConsumer"))
+                    DeserializationFormat.String -> cluster.scope.get()
+                }
+                initializeConsumer(consumer, topic, from)
+                running = true
+                loop(consumer, callback)
+            }.invokeOnCompletion { exception ->
+                if (exception == null) continuation.resume(Unit) else continuation.resumeWithException(exception)
+            }
         }
-        initializeConsumer(consumer, topic, from)
-        running = true
-        loop(consumer, callback)
-    }
 
     fun isRunning() = running
 
-    fun stop() {
+    override fun close() {
         running = false
         threadLoop?.join()
+    }
+
+    suspend fun stop() = suspendCoroutine<Unit> { continuation ->
+        GlobalScope.launch {
+            close()
+        }.invokeOnCompletion { continuation.resume(Unit) }
     }
 
     private fun loop(consumer: Consumer<Any, Any>, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
@@ -44,6 +61,7 @@ class Consumer(private val cluster: Cluster, private val converter: AvroToJsonCo
                 if (records.isEmpty) continue
                 callback(records.toList().map { parse(it) })
             }
+            consumer.close()
         }
     }
 

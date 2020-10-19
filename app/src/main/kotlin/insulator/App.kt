@@ -33,6 +33,8 @@ class Insulator : App(
 )
 
 fun main(args: Array<String>) {
-    FX.dicontainer = DIContainer()
+    val koinContainer = DIContainer()
+    FX.dicontainer = koinContainer
     runCatching { launch<Insulator>(args) }
+    koinContainer.close()
 }

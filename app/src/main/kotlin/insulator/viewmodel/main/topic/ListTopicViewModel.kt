@@ -1,9 +1,8 @@
 package insulator.viewmodel.main.topic
 
 import insulator.lib.configuration.model.Cluster
-import insulator.lib.helpers.completeOnFXThread
-import insulator.lib.helpers.handleErrorWith
-import insulator.lib.helpers.map
+import insulator.lib.helpers.dispatch
+import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.ui.common.topicScope
 import insulator.viewmodel.common.InsulatorViewModel
@@ -40,31 +39,35 @@ class ListTopicViewModel : InsulatorViewModel() {
     )
 
     init {
-        refresh()
+        dispatch { refresh() }
     }
 
-    fun refresh() = adminApi
+    suspend fun refresh() = adminApi
         .listTopics()
         .map { it.sorted() }
-        .completeOnFXThread {
-            topicListProperty.clear()
-            topicListProperty.addAll(it)
-        }
-        .handleErrorWith {
-            error.set(it)
-        }
+        .fold(
+            {
+                error.set(it)
+            },
+            {
+                runOnFXThread {
+                    topicListProperty.clear()
+                    topicListProperty.addAll(it)
+                }
+            }
+        )
 
-    fun showTopic() {
-        val selectedTopicName = selectedItemProperty.value ?: return
-        selectedItemProperty.value.topicScope(cluster)
-            .withComponent(TopicViewModel(selectedTopicName))
-            .let { topicView -> find<TopicView>(topicView) }
-            .also { topicView -> topicView.setOnCloseListener { refresh() } }
-            .let { topicView -> setMainContent(selectedTopicName, topicView) }
-    }
+    fun showTopic() =
+        selectedItemProperty.value?.let {
+            it.topicScope(cluster)
+                .withComponent(TopicViewModel(selectedItemProperty.value))
+                .let { topicView -> find<TopicView>(topicView) }
+                .also { topicView -> topicView.setOnCloseListener { dispatch { refresh() } } }
+                .also { topicView -> setMainContent(selectedItemProperty.value, topicView) }
+        }
 
     fun createNewTopic() = "new-topic".topicScope(cluster)
         .withComponent(CreateTopicViewModel())
-        .let { scope -> find<CreateTopicView>(scope).also { it.whenUndockedOnce { refresh(); scope.close() } } }
+        .let { scope -> find<CreateTopicView>(scope).also { it.whenUndockedOnce { dispatch { refresh(); scope.close() } } } }
         .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
 }

@@ -13,6 +13,7 @@ import insulator.views.main.topic.TopicView
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import javafx.scene.control.TabPane
@@ -87,7 +88,9 @@ class MainViewModelTest : StringSpec({
 })
 
 private fun FxContext.setup() = this.addToDI(
-    AdminApi::class to mockk<AdminApi>(relaxed = true),
+    AdminApi::class to mockk<AdminApi>(relaxed = true) {
+        coEvery { listTopics() } returns emptyList<String>().right()
+    },
     SchemaRegistry::class to mockk<SchemaRegistry>(relaxed = true) {
         every { getAllSubjects() } returns listOf("").right()
     }
