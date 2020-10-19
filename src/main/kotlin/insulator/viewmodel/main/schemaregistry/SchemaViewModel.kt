@@ -17,8 +17,8 @@ import tornadofx.* // ktlint-disable no-wildcard-imports
 import javax.inject.Inject
 
 class SchemaViewModel @Inject constructor(
-    val subject: Subject,
     val cluster: Cluster,
+    val subject: Subject,
     private val formatter: JsonFormatter,
     private val schemaRegistry: SchemaRegistry,
 ) : InsulatorViewModel() {

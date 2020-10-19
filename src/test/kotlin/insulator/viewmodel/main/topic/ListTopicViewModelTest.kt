@@ -17,12 +17,10 @@ class ListTopicViewModelTest : StringSpec({
     "topicList error on loading the list of topics" {
         FxContext().use {
             // arrange
-            it.addToDI(
-                AdminApi::class to mockk<AdminApi> {
-                    every { listTopics() } returns CompletableFuture.completedFuture(Throwable(errorMessage).left())
-                }
-            )
-            val sut = ListTopicViewModel()
+            val adminApi = mockk<AdminApi> {
+                every { listTopics() } returns CompletableFuture.completedFuture(Throwable(errorMessage).left())
+            }
+            val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk())
             // act
             val res = sut.filteredTopicsProperty
             // assert
@@ -35,12 +33,10 @@ class ListTopicViewModelTest : StringSpec({
     "happy path" {
         FxContext().use {
             // arrange
-            it.addToDI(
-                AdminApi::class to mockk<AdminApi> {
-                    every { listTopics() } returns CompletableFuture.completedFuture(listOf("tppic1", "topic2").right())
-                }
-            )
-            val sut = ListTopicViewModel()
+            val adminApi = mockk<AdminApi> {
+                every { listTopics() } returns CompletableFuture.completedFuture(listOf("tppic1", "topic2").right())
+            }
+            val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk())
             // act
             val res = sut.filteredTopicsProperty
             // assert
