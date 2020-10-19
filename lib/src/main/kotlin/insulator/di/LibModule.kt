@@ -15,7 +15,6 @@ import insulator.lib.kafka.Consumer
 import insulator.lib.kafka.SchemaRegistry
 import insulator.lib.kafka.StringProducer
 import kotlinx.serialization.json.Json
-import org.apache.avro.generic.GenericData
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -29,7 +28,7 @@ val libModule = module {
     // JsonToAvro
     single { ObjectMapper() }
     single { FieldParser(SimpleTypeParsersFactory(), ComplexTypeParsersFactory()) }
-    single { JsonToAvroConverter(get(), get(), GenericData.get()) }
+    single { JsonToAvroConverter(get(), get(), get()) }
 
     scope<Cluster> {
         factory { AdminApi(get(), get()) }

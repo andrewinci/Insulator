@@ -6,6 +6,7 @@ import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.rest.RestService
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroSerializer
+import org.apache.avro.generic.GenericData
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.consumer.Consumer
@@ -28,6 +29,8 @@ fun setGlobalCluster(cluster: Cluster) {
 }
 
 val kafkaModule = module {
+
+    single { GenericData.get() }
 
     factory { currentCluster }
 

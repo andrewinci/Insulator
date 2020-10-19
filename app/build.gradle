@@ -28,7 +28,7 @@ def testcontainer_version = "1.14.3"
 testSets { integrationTest }
 
 dependencies {
-
+    implementation project(":lib")
     // Tornado
     implementation(group: 'no.tornado', name: 'tornadofx', version: "1.7.20")
 

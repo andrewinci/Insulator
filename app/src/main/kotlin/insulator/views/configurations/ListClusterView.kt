@@ -74,7 +74,7 @@ class ListClusterView : InsulatorView<ListClusterViewModel>("Insulator", ListClu
             VersionChecker().dispatch {
                 getCurrentVersion().map {
                     if (it.latestRelease != null)
-                        UpdateInfoView(it.latestRelease)
+                        UpdateInfoView(it.latestRelease!!)
                             .runOnFXThread { openWindow(modality = Modality.WINDOW_MODAL) }
                 }
             }
