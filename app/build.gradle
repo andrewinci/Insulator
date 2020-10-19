@@ -8,8 +8,6 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url "https://kotlin.bintray.com/kotlinx/" }
-    maven { url "https://packages.confluent.io/maven/" }
-    maven { url "https://repository.mulesoft.org/nexus/content/repositories/public/" }
 }
 
 javafx {
@@ -24,7 +22,6 @@ apply plugin: 'org.openjfx.javafxplugin'
 def koin_version = "2.1.6"
 def testfx_version = "4.0.16-alpha"
 def testcontainer_version = "1.14.3"
-def fuel_version = "2.3.0"
 
 testSets { integrationTest }
 
@@ -33,16 +30,6 @@ dependencies {
     // Tornado
     implementation(group: 'no.tornado', name: 'tornadofx', version: "1.7.20")
 
-    // Kafka
-    implementation(group: 'org.apache.kafka', name: 'kafka-clients', version: '6.0.0-ce')
-    implementation(group: 'io.confluent', name: 'kafka-schema-registry', version: '6.0.0') {
-        because("Improper Input Validation [Medium Severity][https://snyk.io/vuln/SNYK-JAVA-ORGHIBERNATEVALIDATOR-568163] in org.hibernate.validator:hibernate-validator@6.0.17.Final")
-        implementation(group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.6.Final')
-        because("XML Entity Expansion [High Severity][https://snyk.io/vuln/SNYK-JAVA-ORGGLASSFISHJERSEYMEDIA-595972] in org.glassfish.jersey.media:jersey-media-jaxb@2.30")
-        implementation(group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.32')
-    }
-    implementation(group: 'io.confluent', name: 'kafka-avro-serializer', version: '6.0.0')
-
     // Koin
     implementation(group: 'org.koin', name: 'koin-core', version: "$koin_version")
     implementation(group: 'org.koin', name: 'koin-core-ext', version: "$koin_version")
@@ -50,18 +37,6 @@ dependencies {
 
     // kotlinx-coroutines-javafx
     implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-javafx', version: '1.4.0-M1')
-
-    // Json
-    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218')
-    implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3')
-
-    // Fuel
-    implementation(group: 'com.github.kittinunf.fuel', name: 'fuel', version: "$fuel_version")
-    implementation(group: 'com.github.kittinunf.fuel', name: 'fuel-json', version: "$fuel_version")
-    implementation(group: 'com.github.kittinunf.fuel', name: 'fuel-coroutines', version: "$fuel_version")
-
-    // Semver4j
-    implementation(group: 'com.vdurmont', name: 'semver4j', version: "3.1.0")
 
     // JavaFX test helpers
     testCompile(group: 'org.testfx', name: 'testfx-junit5', version: "$testfx_version")

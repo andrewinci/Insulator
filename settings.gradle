@@ -1,2 +1,2 @@
 rootProject.name = 'insulator'
-include("app")
+include("app", "lib")

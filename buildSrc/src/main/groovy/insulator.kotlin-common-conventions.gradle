@@ -17,6 +17,11 @@ def arrow_version = "0.11.0"
 def kotest_version = "4.3.0"
 
 dependencies {
+
+    // Json
+    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218')
+    implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3')
+
     // Kotlin
     implementation platform('org.jetbrains.kotlin:kotlin-bom')
     implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8')
