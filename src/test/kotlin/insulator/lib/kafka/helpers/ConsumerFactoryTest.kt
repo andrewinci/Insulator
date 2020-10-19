@@ -13,7 +13,7 @@ class ConsumerFactoryTest : FreeSpec({
         val clusterComponent = mockk<ClusterComponent>(relaxed = true)
         val sut = ConsumerFactory(clusterComponent)
 
-        "avro consumer"{
+        "avro consumer" {
             // act
             sut.build(DeserializationFormat.Avro)
             sut.build(DeserializationFormat.Avro)
@@ -29,5 +29,4 @@ class ConsumerFactoryTest : FreeSpec({
             verify(exactly = 1) { clusterComponent.stringConsumer() }
         }
     }
-
 })

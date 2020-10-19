@@ -16,7 +16,8 @@ class JsonToAvroIntegrationTest : FreeSpec({
 
         "parse a schema with only a string" {
             val schema = schemaTemplate("""{"name":"test", "type":"string"}""")
-            val json = """{"test":"123"}"""
+            val json =
+                """{"test":"123"}"""
             // act
             val res = sut.parse(json, schema)
             // assert
