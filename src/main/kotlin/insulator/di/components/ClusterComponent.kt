@@ -30,14 +30,14 @@ interface ClusterComponent {
     fun cluster(): Cluster
 
     // Views
-    fun getClusterView(): ClusterView
-    fun getMainView(): MainView
+    fun clusterView(): ClusterView
+    fun mainView(): MainView
 
     // Admin
     fun adminApi(): AdminApi
 
     // Consumers
-    fun genericConsumer(): Consumer<Any, Any>
+    fun stringConsumer(): Consumer<Any, Any>
     @Named("avroConsumer")
     fun avroConsumer(): Consumer<Any, Any>
     fun consumer(): insulator.lib.kafka.Consumer

@@ -11,7 +11,7 @@ class ConsumerFactory @Inject constructor(val clusterComponent: ClusterComponent
         { valueFormat ->
             when (valueFormat) {
                 DeserializationFormat.Avro -> clusterComponent.avroConsumer()
-                DeserializationFormat.String -> clusterComponent.genericConsumer()
+                DeserializationFormat.String -> clusterComponent.stringConsumer()
             }
         }
     )

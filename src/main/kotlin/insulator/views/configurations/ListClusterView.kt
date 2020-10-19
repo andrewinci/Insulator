@@ -38,7 +38,7 @@ class ListClusterView @Inject constructor(
         button("Add new cluster") {
             action {
                 clusterComponentFactory.build(Cluster.empty())
-                    .getClusterView()
+                    .clusterView()
                     .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
             }
         }
@@ -49,7 +49,7 @@ class ListClusterView @Inject constructor(
             action { cluster ->
                 currentStage?.hide()
                 clusterComponentFactory.build(cluster)
-                    .getMainView()
+                    .mainView()
                     .also { it.whenUndocked { currentStage?.show() } }
                     .openWindow(modality = Modality.WINDOW_MODAL)
             }
@@ -64,7 +64,7 @@ class ListClusterView @Inject constructor(
             right = vbox(alignment = Pos.CENTER_RIGHT) {
                 settingsButton {
                     clusterComponentFactory.build(cluster)
-                        .getClusterView()
+                        .clusterView()
                         .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
                 }
             }
