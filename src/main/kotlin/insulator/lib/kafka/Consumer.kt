@@ -51,7 +51,7 @@ class Consumer(
         when (from) {
             ConsumeFrom.Now -> consumer.seekToEnd(partitions)
             ConsumeFrom.LastHour -> {
-                val time = Instant.now().minus(Duration.ofMinutes(30)).toEpochMilli()
+                val time = Instant.now().minus(Duration.ofMinutes(60)).toEpochMilli()
                 assignPartitionByTime(consumer, partitions, time)
             }
             ConsumeFrom.LastDay -> {
