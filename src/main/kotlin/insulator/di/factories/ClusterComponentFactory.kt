@@ -1,10 +1,12 @@
 package insulator.di.factories
 
-interface Factory<K, V> {
-    fun build(key: K): V
-}
+import insulator.di.components.ClusterComponent
+import insulator.di.components.DaggerClusterComponent
+import insulator.di.components.InsulatorComponent
+import insulator.lib.configuration.model.Cluster
+import javax.inject.Inject
 
-fun <K, V> cachedFactory(op: (K) -> V) = object : Factory<K, V> {
-    private val cache = mutableMapOf<K, V>()
-    override fun build(key: K): V = cache.getOrPut(key) { op(key) }
-}
+class ClusterComponentFactory @Inject constructor(insulatorComponent: InsulatorComponent) :
+    CachedFactory<Cluster, ClusterComponent>({ cluster ->
+        DaggerClusterComponent.factory().build(insulatorComponent, cluster)
+    })

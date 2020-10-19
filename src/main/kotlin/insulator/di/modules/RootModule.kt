@@ -3,13 +3,7 @@ package insulator.di.modules
 import com.fasterxml.jackson.databind.ObjectMapper
 import dagger.Module
 import dagger.Provides
-import insulator.di.components.ClusterComponent
-import insulator.di.components.DaggerClusterComponent
-import insulator.di.components.InsulatorComponent
-import insulator.di.factories.Factory
-import insulator.di.factories.cachedFactory
 import insulator.lib.configuration.ConfigurationRepo
-import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.JsonFormatter
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
 import insulator.lib.jsonhelper.jsontoavro.FieldParser
@@ -32,11 +26,6 @@ class RootModule {
     @Provides
     @Named("configurationPath")
     fun provideConfigurationPath() = "${System.getProperty("user.home")}/.insulator.config"
-
-    @Singleton
-    @Provides
-    fun providesClusterComponentFactory(insulatorComponent: InsulatorComponent): Factory<Cluster, ClusterComponent> =
-        cachedFactory { cluster: Cluster -> DaggerClusterComponent.factory().build(insulatorComponent, cluster) }
 
     @Singleton
     @Provides

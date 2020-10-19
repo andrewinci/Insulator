@@ -21,7 +21,7 @@ class MainViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val cluster = it.cluster.copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample endpoint"))
-            val sut = MainViewModel(cluster, mockk(), mockk())
+            val sut = MainViewModel(cluster, mockk())
             val newView = ListSchemaView::class
             // act
             sut.runOnFXThread { setContentList(newView) }
@@ -35,7 +35,7 @@ class MainViewModelTest : StringSpec({
     "do not show the schema list if schema registry is not configured" {
         FxContext().use {
             // arrange
-            val sut = MainViewModel(it.cluster, mockk(), mockk())
+            val sut = MainViewModel(it.cluster, mockk())
             val topicView = sut.contentList.value
             // act
             sut.runOnFXThread { setContentList(ListSchemaView::class) }
@@ -49,7 +49,7 @@ class MainViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val cluster = it.cluster.copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample endpoint"))
-            val sut = MainViewModel(cluster, mockk(), mockk())
+            val sut = MainViewModel(cluster, mockk())
             val newView = ClusterView::class
             // act
             sut.runOnFXThread { setContentList(newView) }
@@ -78,10 +78,3 @@ class MainViewModelTest : StringSpec({
 //        }
 //    }
 })
-
-class MainViewModelTestContext : FxContext() {
-    val mockAdminAny = mockk<AdminApi>(relaxed = true)
-    val mockSchemaRegistry = mockk<SchemaRegistry>(relaxed = true) {
-        every { getAllSubjects() } returns listOf("").right()
-    }
-}

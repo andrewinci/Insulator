@@ -1,7 +1,6 @@
 package insulator.views.configurations
 
-import insulator.di.components.ClusterComponent
-import insulator.di.factories.Factory
+import insulator.di.factories.ClusterComponentFactory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.dispatch
 import insulator.lib.helpers.runOnFXThread
@@ -24,7 +23,7 @@ import javax.inject.Inject
 
 class ListClusterView @Inject constructor(
     override val viewModel: ListClusterViewModel,
-    val factory: Factory<Cluster, ClusterComponent>
+    private val clusterComponentFactory: ClusterComponentFactory
 ) : InsulatorView("Insulator") {
 
     override val root = vbox(spacing = 15) {
@@ -38,7 +37,7 @@ class ListClusterView @Inject constructor(
     private fun EventTarget.addNewClusterButton() =
         button("Add new cluster") {
             action {
-                factory.build(Cluster.empty())
+                clusterComponentFactory.build(Cluster.empty())
                     .getClusterView()
                     .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
             }
@@ -49,7 +48,7 @@ class ListClusterView @Inject constructor(
             cellFormat { graphic = buildClusterCell(it) }
             action { cluster ->
                 currentStage?.hide()
-                factory.build(cluster)
+                clusterComponentFactory.build(cluster)
                     .getMainView()
                     .also { it.whenUndocked { currentStage?.show() } }
                     .openWindow(modality = Modality.WINDOW_MODAL)
@@ -64,7 +63,7 @@ class ListClusterView @Inject constructor(
             }
             right = vbox(alignment = Pos.CENTER_RIGHT) {
                 settingsButton {
-                    factory.build(cluster)
+                    clusterComponentFactory.build(cluster)
                         .getClusterView()
                         .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
                 }

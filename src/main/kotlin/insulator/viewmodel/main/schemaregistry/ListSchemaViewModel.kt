@@ -2,12 +2,10 @@ package insulator.viewmodel.main.schemaregistry
 
 import arrow.core.extensions.either.applicativeError.handleError
 import insulator.di.ClusterScope
-import insulator.di.components.SubjectComponent
-import insulator.di.factories.Factory
+import insulator.di.factories.SubjectComponentFactory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.SchemaRegistry
-import insulator.lib.kafka.model.Subject
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
@@ -21,8 +19,8 @@ import javax.inject.Inject
 @ClusterScope
 class ListSchemaViewModel @Inject constructor(
     val cluster: Cluster,
-    val schemaRegistryClient: SchemaRegistry,
-    private val viewFactory: Factory<Subject, SubjectComponent>,
+    val schemaRegistry: SchemaRegistry,
+    private val subjectComponentFactory: SubjectComponentFactory,
     private val tabViewModel: TabViewModel
 ) : InsulatorViewModel() {
 
@@ -47,7 +45,7 @@ class ListSchemaViewModel @Inject constructor(
         refresh()
     }
 
-    fun refresh() = schemaRegistryClient
+    fun refresh() = schemaRegistry
         .getAllSubjects()
         .map { it.sorted() }
         .map {
@@ -61,9 +59,9 @@ class ListSchemaViewModel @Inject constructor(
 
     suspend fun showSchema() {
         if (selectedSchemaProperty.value.isNullOrEmpty()) return
-        schemaRegistryClient.getSubject(selectedSchemaProperty.value!!)
+        schemaRegistry.getSubject(selectedSchemaProperty.value!!)
             .map {
-                viewFactory.build(it)
+                subjectComponentFactory.build(it)
                     .getSchemaView()
                     .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }
                     .let { schemaViewTab -> tabViewModel.setMainContent(it.name, schemaViewTab) }

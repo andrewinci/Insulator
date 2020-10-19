@@ -1,7 +1,6 @@
 package insulator.viewmodel.main.topic
 
-import insulator.di.components.TopicComponent
-import insulator.di.factories.Factory
+import insulator.di.factories.TopicComponentFactory
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.helpers.completeOnFXThread
 import insulator.lib.helpers.handleErrorWith
@@ -24,7 +23,7 @@ import javax.inject.Inject
 class ListTopicViewModel @Inject constructor(
     val cluster: Cluster,
     val adminApi: AdminApi,
-    private val viewFactory: Factory<Topic, TopicComponent>,
+    private val viewFactory: TopicComponentFactory,
     val tabViewModel: TabViewModel
 ) : InsulatorViewModel() {
 
