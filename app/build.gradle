@@ -80,3 +80,6 @@ project.integrationTest { outputs.upToDateWhen { false } }
 
 check.dependsOn test
 check.doLast { tasks.jacocoTestReport }
+
+compileKotlin { kotlinOptions.jvmTarget = "1.8" }
+compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }

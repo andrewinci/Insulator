@@ -1,5 +1,8 @@
-package insulator.di
+package insulator.di.insulator.di
 
+import insulator.di.kafkaModule
+import insulator.di.libModule
+import insulator.di.setGlobalCluster
 import insulator.lib.configuration.model.Cluster
 import insulator.lib.configuration.model.SaslConfiguration
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
