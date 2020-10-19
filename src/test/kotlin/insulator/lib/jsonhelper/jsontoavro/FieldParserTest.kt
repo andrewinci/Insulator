@@ -23,14 +23,3 @@ class FieldParserTest : StringSpec({
         res shouldBeLeft {}
     }
 })
-
-private fun schemaTemplate(vararg fieldDef: String) =
-    """
-        {
-          "type": "record",
-          "name": "Sample",
-          "fields" : [
-            ${fieldDef.joinToString()}
-          ]
-        }
-    """.trimIndent()
