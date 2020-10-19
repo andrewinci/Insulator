@@ -15,8 +15,14 @@ repositories {
 
 def arrow_version = "0.11.0"
 def kotest_version = "4.3.0"
+def koin_version = "2.1.6"
 
 dependencies {
+
+    // Koin
+    implementation(group: 'org.koin', name: 'koin-core', version: "$koin_version")
+    implementation(group: 'org.koin', name: 'koin-core-ext', version: "$koin_version")
+    testImplementation(group: 'org.koin', name: 'koin-test', version: "$koin_version")
 
     // Json
     implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218')
@@ -42,5 +48,6 @@ dependencies {
 }
 
 compileKotlin { kotlinOptions.jvmTarget = "1.8" }
-
 compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
+
+tasks.withType(Test) { useJUnitPlatform() }

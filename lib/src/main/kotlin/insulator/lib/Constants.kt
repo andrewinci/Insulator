@@ -1,4 +1,4 @@
-package insulator.di
+package insulator.lib
 
 const val CONFIG_FILE_NAME = "Insulator.cfg"
 const val VERSION_PROPERTY = "app.version"

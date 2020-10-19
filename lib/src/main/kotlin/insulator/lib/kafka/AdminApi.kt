@@ -1,0 +1,65 @@
+package insulator.lib.kafka
+
+import arrow.core.Either
+import arrow.core.computations.either
+import arrow.core.flatMap
+import arrow.core.rightIfNotNull
+import insulator.lib.helpers.toSuspendCoroutine
+import insulator.lib.kafka.model.Topic
+import insulator.lib.kafka.model.TopicConfiguration
+import org.apache.kafka.clients.admin.AdminClient
+import org.apache.kafka.clients.admin.NewTopic
+import org.apache.kafka.clients.admin.TopicDescription
+import org.apache.kafka.clients.consumer.Consumer
+import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.config.ConfigResource
+import org.apache.kafka.common.config.TopicConfig
+import java.io.Closeable
+
+class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) : Closeable {
+
+    suspend fun listTopics() = admin.listTopics().names().toSuspendCoroutine().map { it.toList() }
+
+    suspend fun describeTopic(topicName: String): Either<Throwable, Topic> = either {
+        val configResource = ConfigResource(ConfigResource.Type.TOPIC, topicName)
+        val configuration = !admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
+            .map {
+                TopicConfiguration(
+                    isCompacted = it.get(TopicConfig.CLEANUP_POLICY_CONFIG).value() == TopicConfig.CLEANUP_POLICY_COMPACT
+                )
+            }
+
+        val description = !(
+            admin.describeTopics(listOf(topicName)).all()
+                .toSuspendCoroutine()
+                .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
+            )
+
+        Topic(
+            name = description.name(),
+            isInternal = description.isInternal,
+            partitionCount = description.partitions().size,
+            messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(description.toTopicPartitions()).values.sum(),
+            replicationFactor = description.partitions()[0].replicas().count().toShort(),
+            isCompacted = configuration.isCompacted
+        )
+    }
+
+    suspend fun createTopics(vararg topics: Topic) =
+        admin.createTopics(
+            topics.map {
+                NewTopic(it.name, it.partitionCount, it.replicationFactor)
+                    .configs(mapOf(TopicConfig.CLEANUP_POLICY_CONFIG to compactedConfig(it.isCompacted)))
+            }
+        ).all().thenApply { Unit }.toSuspendCoroutine()
+
+    suspend fun deleteTopic(topicName: String) = admin.deleteTopics(listOf(topicName)).all().toSuspendCoroutine()
+
+    private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
+
+    private fun compactedConfig(isCompacted: Boolean): String =
+        if (isCompacted) TopicConfig.CLEANUP_POLICY_COMPACT
+        else TopicConfig.CLEANUP_POLICY_DELETE
+
+    override fun close() = admin.close()
+}
