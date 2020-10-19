@@ -14,7 +14,6 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
@@ -113,8 +112,8 @@ class ProducerViewModelTest : StringSpec({
 
 class ProducerViewModelTestFixture : FxContext() {
     val mockTopic = Topic.empty()
-    val avroProducer =  mockk<AvroProducer> { coEvery { validate(any(), any()) } returns Unit.right() }
-    val stringProducer =  mockk<StringProducer> {
+    val avroProducer = mockk<AvroProducer> { coEvery { validate(any(), any()) } returns Unit.right() }
+    val stringProducer = mockk<StringProducer> {
         coEvery { validate(any(), any()) } returns Unit.right()
         coEvery { send(any(), any(), any()) } returns Unit.right()
     }
