@@ -11,7 +11,6 @@ import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.AvroProducer
 import insulator.lib.kafka.SchemaRegistry
 import insulator.lib.kafka.StringProducer
-import insulator.ui.common.InsulatorView
 import insulator.views.configurations.ClusterView
 import insulator.views.main.MainView
 import insulator.views.main.schemaregistry.ListSchemaView

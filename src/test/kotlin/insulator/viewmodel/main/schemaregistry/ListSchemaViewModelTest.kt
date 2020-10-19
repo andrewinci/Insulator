@@ -41,7 +41,7 @@ class ListSchemaViewModelTest : StringSpec({
             sut.error.value!!.message shouldBe it.errorMessage
         }
     }
-//todo:Move to tabViewModel
+// todo:Move to tabViewModel
 //    "Happy path show schema" {
 //        ListSchemaViewModelTestFixture().use {
 //            // arrange

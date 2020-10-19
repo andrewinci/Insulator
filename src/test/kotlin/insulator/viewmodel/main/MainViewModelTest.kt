@@ -1,17 +1,13 @@
 package insulator.viewmodel.main
 
-import arrow.core.right
 import helper.FxContext
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.helpers.runOnFXThread
-import insulator.lib.kafka.AdminApi
-import insulator.lib.kafka.SchemaRegistry
 import insulator.views.configurations.ClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.mockk.every
 import io.mockk.mockk
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
@@ -59,7 +55,7 @@ class MainViewModelTest : StringSpec({
         }
     }
 
-    //todo: move to tabViewModel tests
+    // todo: move to tabViewModel tests
 //    "showTab doesn't create twice the same tab" {
 //        MainViewModelTestContext().use {
 //            // arrange

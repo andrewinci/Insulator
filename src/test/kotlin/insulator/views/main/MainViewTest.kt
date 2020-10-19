@@ -1,18 +1,10 @@
 package insulator.views.main
 
 import helper.FxContext
-import insulator.viewmodel.main.MainViewModel
-import insulator.views.main.topic.ListTopicView
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.mockk.every
 import io.mockk.mockk
-import javafx.beans.property.SimpleObjectProperty
-import javafx.collections.FXCollections
-import javafx.scene.Parent
-import javafx.scene.control.Tab
-import javafx.scene.layout.VBox
 
 class MainViewTest : StringSpec({
 
@@ -38,7 +30,7 @@ class MainViewTest : StringSpec({
         }
     }
 
-    //todo: move to tab viewmodel unittest
+    // todo: move to tab viewmodel unittest
 //    "Check default main view + a tab len should" {
 //        TestContext().use {
 //            // arrange
@@ -50,7 +42,6 @@ class MainViewTest : StringSpec({
 //            sut.currentStage?.minWidth shouldBe SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + CONTENT_WIDTH
 //        }
 //    }
-
 
 //    "Add and remove a tab leave the width unchanged" {
 //        TestContext().use {
