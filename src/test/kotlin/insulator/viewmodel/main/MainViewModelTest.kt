@@ -1,6 +1,7 @@
 package insulator.viewmodel.main
 
 import helper.FxContext
+import insulator.di.components.ClusterComponent
 import insulator.lib.configuration.model.SchemaRegistryConfiguration
 import insulator.lib.helpers.runOnFXThread
 import insulator.views.configurations.ClusterView
@@ -8,7 +9,9 @@ import insulator.views.main.schemaregistry.ListSchemaView
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.mockk.every
 import io.mockk.mockk
+import javafx.scene.layout.VBox
 import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainViewModelTest : StringSpec({
@@ -17,21 +20,25 @@ class MainViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val cluster = it.cluster.copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample endpoint"))
-            val sut = MainViewModel(cluster, mockk())
+            val mockListSchemaView = mockk<ListSchemaView> { every { root } returns VBox() }
+            val mockClusterComponent = mockk<ClusterComponent> {
+                every { getListSchemaView() } returns mockListSchemaView
+                every { getListTopicView() } returns mockk(relaxed = true)
+            }
+            val sut = MainViewModel(cluster, mockClusterComponent)
             val newView = ListSchemaView::class
             // act
             sut.runOnFXThread { setContentList(newView) }
             it.waitFXThread()
             // assert
-            val currentView = find<ListSchemaView>()
-            sut.contentList.value shouldBe currentView.root
+            sut.contentList.value shouldBe mockListSchemaView.root
         }
     }
 
     "do not show the schema list if schema registry is not configured" {
         FxContext().use {
             // arrange
-            val sut = MainViewModel(it.cluster, mockk())
+            val sut = MainViewModel(it.cluster, mockk(relaxed = true))
             val topicView = sut.contentList.value
             // act
             sut.runOnFXThread { setContentList(ListSchemaView::class) }
@@ -45,7 +52,7 @@ class MainViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val cluster = it.cluster.copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample endpoint"))
-            val sut = MainViewModel(cluster, mockk())
+            val sut = MainViewModel(cluster, mockk(relaxed = true))
             val newView = ClusterView::class
             // act
             sut.runOnFXThread { setContentList(newView) }

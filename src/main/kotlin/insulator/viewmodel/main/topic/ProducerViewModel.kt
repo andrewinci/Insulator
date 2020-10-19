@@ -27,15 +27,15 @@ class ProducerViewModel @Inject constructor(
     private val stringProducer: StringProducer
 ) : InsulatorViewModel() {
 
+    val producerTypeProperty = SimpleObjectProperty(
+        if (cluster.isSchemaRegistryConfigured()) SerializationFormat.Avro else SerializationFormat.String
+    )
+
     private val producer: Producer
         get() = when (producerTypeProperty.value!!) {
             SerializationFormat.Avro -> avroProducer
             SerializationFormat.String -> stringProducer
         }
-
-    val producerTypeProperty = SimpleObjectProperty(
-        if (cluster.isSchemaRegistryConfigured()) SerializationFormat.Avro else SerializationFormat.String
-    )
 
     val nextFieldProperty = SimpleStringProperty("")
     val validationErrorProperty = SimpleStringProperty(null)
