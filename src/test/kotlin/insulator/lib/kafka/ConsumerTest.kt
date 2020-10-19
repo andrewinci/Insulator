@@ -2,7 +2,6 @@ package insulator.lib.kafka
 
 import arrow.core.left
 import arrow.core.right
-import insulator.lib.configuration.model.Cluster
 import insulator.lib.jsonhelper.avrotojson.AvroToJsonConverter
 import insulator.lib.jsonhelper.avrotojson.UnsupportedTypeException
 import insulator.lib.kafka.helpers.ConsumerFactory
@@ -25,7 +24,7 @@ import java.io.Closeable
 class ConsumerTest : StringSpec({
 
     "start happy path" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             val messages = mutableListOf<String>()
             // act
@@ -38,7 +37,7 @@ class ConsumerTest : StringSpec({
     }
 
     "start happy path - avro consumer" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             val messages = mutableListOf<String>()
             // act
@@ -51,7 +50,7 @@ class ConsumerTest : StringSpec({
     }
 
     "start happy path - last hour" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             val messages = mutableListOf<String>()
             // act
@@ -64,7 +63,7 @@ class ConsumerTest : StringSpec({
     }
 
     "start happy path - last week" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             val messages = mutableListOf<String>()
             // act
@@ -77,7 +76,7 @@ class ConsumerTest : StringSpec({
     }
 
     "start happy path - unsupported schema for custom avro converter" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             val mockInvalidSchemaConverter = mockk<AvroToJsonConverter> { every { parse(any()) } returns UnsupportedTypeException("").left() }
             val messages = mutableListOf<String>()
@@ -92,7 +91,7 @@ class ConsumerTest : StringSpec({
     }
 
     "start happy path - now" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             val messages = mutableListOf<String>()
             // act
@@ -105,7 +104,7 @@ class ConsumerTest : StringSpec({
     }
 
     "isRunning" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             val messages = mutableListOf<String>()
             // act
@@ -118,7 +117,7 @@ class ConsumerTest : StringSpec({
     }
 
     "stop without start doesn't throw" {
-        TestConsumerFixture().use {
+        TestConsumerScenario().use {
             // arrange
             // act/assert
             it.sut.stop()
@@ -126,11 +125,15 @@ class ConsumerTest : StringSpec({
     }
 })
 
-class TestConsumerFixture : Closeable {
-    val mockConverter = mockk<AvroToJsonConverter> { every { parse(any()) } answers { firstArg<GenericRecord>().toString().right() } }
+class TestConsumerScenario : Closeable {
+    private val mockConverter = mockk<AvroToJsonConverter> { every { parse(any()) } answers { firstArg<GenericRecord>().toString().right() } }
     val consumerFactory = mockk<ConsumerFactory>() {
-        every { build(DeserializationFormat.Avro) } returns avroConsumer
-        every { build(DeserializationFormat.String) } returns stringConsumer
+        every { build(any()) } answers {
+            when (firstArg<DeserializationFormat>()) {
+                DeserializationFormat.String -> stringConsumer
+                DeserializationFormat.Avro -> avroConsumer
+            }
+        }
     }
     val sut = Consumer(mockConverter, consumerFactory)
 
