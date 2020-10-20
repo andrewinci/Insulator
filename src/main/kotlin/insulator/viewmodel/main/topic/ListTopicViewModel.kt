@@ -2,9 +2,8 @@ package insulator.viewmodel.main.topic
 
 import insulator.di.factories.TopicComponentFactory
 import insulator.lib.configuration.model.Cluster
-import insulator.lib.helpers.completeOnFXThread
-import insulator.lib.helpers.handleErrorWith
-import insulator.lib.helpers.map
+import insulator.lib.helpers.dispatch
+import insulator.lib.helpers.runOnFXThread
 import insulator.lib.kafka.AdminApi
 import insulator.lib.kafka.model.Topic
 import insulator.viewmodel.common.InsulatorViewModel
@@ -41,40 +40,38 @@ class ListTopicViewModel @Inject constructor(
     )
 
     init {
-        refresh()
+        dispatch { refresh() }
     }
 
-    fun refresh() = adminApi
+    suspend fun refresh() = adminApi
         .listTopics()
         .map { it.sorted() }
-        .completeOnFXThread {
-            topicListProperty.clear()
-            topicListProperty.addAll(it)
-        }
-        .handleErrorWith {
-            error.set(it)
-        }
+        .fold(
+            {
+                error.set(it)
+            },
+            {
+                runOnFXThread {
+                    topicListProperty.clear()
+                    topicListProperty.addAll(it)
+                }
+            }
+        )
 
-    fun showTopic() {
+    suspend fun showTopic() {
         val selectedTopicName = selectedItemProperty.value ?: return
         adminApi.describeTopic(selectedTopicName)
             .map {
                 viewFactory
                     .build(it)
                     .getTopicView()
-                    .also { topicView -> topicView.setOnCloseListener { refresh() } }
+                    .also { topicView -> topicView.setOnCloseListener { dispatch { refresh() } } }
                     .let { topicView -> tabViewModel.setMainContent(selectedTopicName, topicView) }
             }
-
-//        selectedItemProperty.value.topicScope(cluster)
-//            .withComponent(TopicViewModel(selectedTopicName))
-//            .let { topicView -> find<TopicView>(topicView) }
-//            .also { topicView -> topicView.setOnCloseListener { refresh() } }
-//            .let { topicView -> setMainContent(selectedTopicName, topicView) }
     }
 
     fun createNewTopic() = viewFactory.build(Topic.empty())
         .getCreateTopicView()
-        .also { it.whenUndockedOnce { refresh() } }
+        .also { it.whenUndockedOnce { dispatch { refresh() } } }
         .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
 }

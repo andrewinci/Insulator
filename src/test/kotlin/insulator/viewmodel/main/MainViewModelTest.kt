@@ -12,7 +12,6 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import javafx.scene.layout.VBox
-import tornadofx.* // ktlint-disable no-wildcard-imports
 
 class MainViewModelTest : StringSpec({
 

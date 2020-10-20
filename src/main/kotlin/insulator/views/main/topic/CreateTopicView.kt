@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.lib.helpers.dispatch
 import insulator.ui.component.h1
 import insulator.ui.component.insulatorAlert
 import insulator.viewmodel.main.topic.CreateTopicViewModel
@@ -28,10 +29,12 @@ class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) :
             enableWhen(viewModel.valid)
             action {
                 viewModel.commit()
-                viewModel.save().fold(
-                    { insulatorAlert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") },
-                    { close() }
-                )
+                viewModel.dispatch {
+                    save().fold(
+                        { insulatorAlert(Alert.AlertType.WARNING, it.message ?: "Unable to create the topic.") },
+                        { close() }
+                    )
+                }
             }
         }
 

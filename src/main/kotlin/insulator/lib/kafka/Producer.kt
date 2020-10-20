@@ -8,9 +8,10 @@ import insulator.lib.helpers.runCatchingE
 import insulator.lib.jsonhelper.jsontoavro.JsonToAvroConverter
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
+import java.io.Closeable
 import org.apache.kafka.clients.producer.Producer as KafkaProducer
 
-interface Producer {
+interface Producer : Closeable {
     suspend fun validate(value: String, topic: String): Either<Throwable, Unit>
     suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit>
 }
@@ -32,6 +33,8 @@ class AvroProducer(
             .flatMap { avroProducer.runCatchingE { send(it) } }
             .map { Unit }
 
+    override fun close() = avroProducer.close()
+
     private suspend fun internalValidate(value: String, topic: String) =
         getCachedSchema(topic).flatMap { jsonAvroConverter.parse(jsonString = value, schemaString = it) }
 
@@ -52,6 +55,8 @@ class StringProducer(private val stringProducer: KafkaProducer<String, String>) 
         val record = ProducerRecord(topic, key, value)
         return stringProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })
     }
+
+    override fun close() = stringProducer.close()
 }
 
 enum class SerializationFormat {

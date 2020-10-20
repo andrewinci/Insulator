@@ -4,12 +4,15 @@ import arrow.core.left
 import arrow.core.right
 import helper.FxContext
 import insulator.lib.kafka.AdminApi
+import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
-import java.util.concurrent.CompletableFuture
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
+@ExperimentalTime
 class ListTopicViewModelTest : StringSpec({
 
     val errorMessage = "Example error"
@@ -18,15 +21,17 @@ class ListTopicViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val adminApi = mockk<AdminApi> {
-                every { listTopics() } returns CompletableFuture.completedFuture(Throwable(errorMessage).left())
+                coEvery { listTopics() } returns Throwable(errorMessage).left()
             }
             val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk())
             // act
             val res = sut.filteredTopicsProperty
             // assert
-            sut.refresh().get() // force and wait refresh
-            res.size shouldBe 0
-            sut.error.value!!.message shouldBe errorMessage
+            sut.refresh()
+            eventually(1.seconds) {
+                res.size shouldBe 0
+                sut.error.value!!.message shouldBe errorMessage
+            }
         }
     }
 
@@ -34,15 +39,17 @@ class ListTopicViewModelTest : StringSpec({
         FxContext().use {
             // arrange
             val adminApi = mockk<AdminApi> {
-                every { listTopics() } returns CompletableFuture.completedFuture(listOf("tppic1", "topic2").right())
+                coEvery { listTopics() } returns listOf("topic1", "topic2").right()
             }
             val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk())
             // act
             val res = sut.filteredTopicsProperty
             // assert
-            sut.refresh().get() // force and wait refresh
-            res.size shouldBe 2
-            sut.error.value shouldBe null
+            sut.refresh()
+            eventually(1.seconds) {
+                res.size shouldBe 2
+                sut.error.value shouldBe null
+            }
         }
     }
 })

@@ -16,7 +16,7 @@ class CreateTopicViewModel @Inject constructor(cluster: CreateTopicModel, val ad
     val replicationFactorProperty = bind { item.replicationFactorProperty }
     val isCompactedProperty = bind { item.isCompactedProperty }
 
-    fun save(): Either<Throwable, Unit> = admin.createTopics(this.item.toTopic()).get()
+    suspend fun save(): Either<Throwable, Unit> = admin.createTopics(this.item.toTopic())
 }
 
 class CreateTopicModel @Inject constructor(topic: Topic) {
