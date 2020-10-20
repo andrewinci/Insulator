@@ -35,7 +35,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.listTopics()
         // assert
-        res.get() shouldBeRight listOf("Sample topic")
+        res shouldBeRight listOf("Sample topic")
     }
 
     "listTopics throws" {
@@ -51,7 +51,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.listTopics()
         // assert
-        res.get() shouldBeLeft exception
+        res shouldBeLeft exception
     }
 
     "describeTopic happy path" {
@@ -83,7 +83,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.describeTopic("topic2")
         // assert
-        res.get() shouldBeRight Topic("topic2", false, 2, 5, 1, true)
+        res shouldBeRight Topic("topic2", false, 2, 5, 1, true)
     }
 
     "Create topic happy path" {
@@ -98,7 +98,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.createTopics(Topic("name", null, 2, null, 1, false))
         // assert
-        res.get() shouldBeRight {}
+        res shouldBeRight {}
     }
 
     "Create compacted topic happy path" {
@@ -113,6 +113,6 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.createTopics(Topic("name", null, 2, null, 1, true))
         // assert
-        res.get() shouldBeRight {}
+        res shouldBeRight {}
     }
 })

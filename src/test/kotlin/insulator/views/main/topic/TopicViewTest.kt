@@ -17,8 +17,8 @@ class TopicViewTest : StringSpec({
         FxContext().use {
             // arrange
             val viewModel = mockk<TopicViewModel>(relaxed = true) {
-                every { records } returns FXCollections.observableList(mutableListOf())
-                every { filteredRecords } returns SimpleObjectProperty<ObservableList<RecordViewModel>>()
+                every { consumerViewModel.records } returns FXCollections.observableList(mutableListOf())
+                every { consumerViewModel.filteredRecords } returns SimpleObjectProperty<ObservableList<RecordViewModel>>()
             }
             val sut = TopicView(viewModel, it.cluster)
             // act

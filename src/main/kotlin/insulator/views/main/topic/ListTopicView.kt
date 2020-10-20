@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.lib.helpers.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
 import insulator.ui.component.appBar
@@ -34,7 +35,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
         listview<String> {
             cellFormat { graphic = label(it) { id = "topic-$it" } }
             bindSelected(viewModel.selectedItemProperty)
-            action { viewModel.showTopic() }
+            action { viewModel.dispatch { showTopic() } }
             itemsProperty().set(viewModel.filteredTopicsProperty)
 
             placeholder = label("No topic found")

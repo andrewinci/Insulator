@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.TopicScope
 import insulator.lib.configuration.model.Cluster
+import insulator.lib.helpers.dispatch
 import insulator.lib.kafka.ConsumeFrom
 import insulator.lib.kafka.DeserializationFormat
 import insulator.ui.common.InsulatorTabView
@@ -32,6 +33,9 @@ class TopicView @Inject constructor(
     private val cluster: Cluster
 ) : InsulatorTabView() {
 
+    private val CONSUME = "Consume"
+    private val STOP = "Stop"
+
     override val root = vbox {
         appBar {
             hbox(alignment = Pos.CENTER_LEFT, spacing = 5.0) {
@@ -43,25 +47,34 @@ class TopicView @Inject constructor(
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                blueButton("Produce") { viewModel.showProduceView() }
-                button(viewModel.consumeButtonText) { action { viewModel.consume() } }
+                blueButton("Produce") { viewModel.showProducerView() }
+                consumeStopButton()
                 fieldName("from")
                 consumeFromCombobox()
                 valueFormatOptions()
-                button("Clear") { action { viewModel.clear() } }
+                button("Clear") { action { viewModel.consumerViewModel.clearRecords() } }
             }
-            right = searchBox(viewModel.searchItem, this@TopicView)
+            right = searchBox(viewModel.consumerViewModel.searchItem, this@TopicView)
         }
         recordsTable()
     }
 
+    private fun EventTarget.consumeStopButton() {
+        button(
+            with(viewModel.consumerViewModel.isConsumingProperty) {
+                Bindings.createStringBinding({ if (!this.value) CONSUME else STOP }, this)
+            }
+        ) { action { viewModel.dispatch { consumerViewModel.consume() } } }
+    }
+
     private fun EventTarget.valueFormatOptions() {
         if (cluster.isSchemaRegistryConfigured()) {
-            viewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
+            viewModel.consumerViewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
             fieldName("value format")
             combobox<String> {
                 items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
-                valueProperty().bindBidirectional(viewModel.deserializeValueProperty)
+                valueProperty().bindBidirectional(viewModel.consumerViewModel.deserializeValueProperty)
+                enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
             }
         }
     }
@@ -69,12 +82,13 @@ class TopicView @Inject constructor(
     private fun EventTarget.consumeFromCombobox() =
         combobox<String> {
             items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
-            valueProperty().bindBidirectional(viewModel.consumeFromProperty)
+            valueProperty().bindBidirectional(viewModel.consumerViewModel.consumeFromProperty)
+            enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
         }
 
     private fun EventTarget.deleteButton() =
         confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
-            viewModel.delete()
+            viewModel.dispatch { delete() }
             closeTab()
         }
 
@@ -101,9 +115,8 @@ class TopicView @Inject constructor(
                     prefHeight = Control.USE_COMPUTED_SIZE
                 }
             }
-
-            viewModel.configureFilteredRecords(this.comparatorProperty())
-            itemsProperty().bind(viewModel.filteredRecords)
+            viewModel.consumerViewModel.comparatorProperty.bind(this.comparatorProperty())
+            itemsProperty().bind(viewModel.consumerViewModel.filteredRecords)
 
             contextMenu = contextmenu {
                 item("Copy") { action { viewModel.copySelectedRecordToClipboard() } }
@@ -122,6 +135,6 @@ class TopicView @Inject constructor(
     }
 
     override fun onTabClosed() {
-        viewModel.stop()
+        viewModel.dispatch { viewModel.consumerViewModel.stop() }
     }
 }
