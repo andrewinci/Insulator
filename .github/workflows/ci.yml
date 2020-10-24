@@ -48,6 +48,14 @@ jobs:
         with:
           java-version: 14
           java-package: jdk
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
       - name: Run tests
         run: "./gradlew check codeCoverageReport"
       - name: Codecov upload
@@ -65,6 +73,14 @@ jobs:
       with:
         java-version: 14
         java-package: jdk
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: ${{ runner.os }}-gradle-
     - name: Run tests
       run: "xvfb-run --auto-servernum ./gradlew check codeCoverageReport"
 #    - name: Run integration tests
@@ -80,5 +96,13 @@ jobs:
       with:
         java-version: 14
         java-package: jdk
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: ${{ runner.os }}-gradle-
     - name: Run tests
       run: "./gradlew check codeCoverageReport"
