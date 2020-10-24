@@ -5,7 +5,19 @@ import insulator.ui.component.confirmationButton
 import insulator.ui.component.h1
 import insulator.viewmodel.configurations.ClusterViewModel
 import javafx.event.EventTarget
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.View
+import tornadofx.action
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.checkbox
+import tornadofx.disableWhen
+import tornadofx.enableWhen
+import tornadofx.field
+import tornadofx.fieldset
+import tornadofx.form
+import tornadofx.required
+import tornadofx.requiredWhen
+import tornadofx.textfield
 import javax.inject.Inject
 
 class ClusterView @Inject constructor(private val viewModel: ClusterViewModel) : View() {

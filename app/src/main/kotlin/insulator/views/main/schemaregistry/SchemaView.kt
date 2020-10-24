@@ -15,7 +15,18 @@ import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Priority
 import javafx.scene.text.Font
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.action
+import tornadofx.bind
+import tornadofx.combobox
+import tornadofx.contextmenu
+import tornadofx.hbox
+import tornadofx.hgrow
+import tornadofx.item
+import tornadofx.scrollpane
+import tornadofx.text
+import tornadofx.textflow
+import tornadofx.vbox
+import tornadofx.vgrow
 import javax.inject.Inject
 
 @SubjectScope

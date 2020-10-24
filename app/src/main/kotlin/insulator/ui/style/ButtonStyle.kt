@@ -1,7 +1,11 @@
 package insulator.ui.style
 
 import javafx.scene.paint.Color
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.Stylesheet
+import tornadofx.box
+import tornadofx.cssclass
+import tornadofx.em
+import tornadofx.multi
 
 class ButtonStyle : Stylesheet() {
     companion object {

@@ -13,7 +13,17 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.action
+import tornadofx.attachTo
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.enableWhen
+import tornadofx.label
+import tornadofx.onDoubleClick
+import tornadofx.scrollpane
+import tornadofx.textfield
+import tornadofx.vbox
+import tornadofx.vgrow
 import javax.inject.Inject
 
 @TopicScope

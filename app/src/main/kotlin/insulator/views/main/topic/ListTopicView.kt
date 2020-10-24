@@ -12,7 +12,15 @@ import insulator.views.configurations.ListClusterView
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.action
+import tornadofx.bindSelected
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.hbox
+import tornadofx.label
+import tornadofx.listview
+import tornadofx.vbox
+import tornadofx.vgrow
 import javax.inject.Inject
 
 class ListTopicView @Inject constructor(override val viewModel: ListTopicViewModel) : InsulatorView("Topics") {

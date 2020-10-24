@@ -7,7 +7,7 @@ import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.SVGIcon
 import tornadofx.action
 import tornadofx.addClass
 import tornadofx.button

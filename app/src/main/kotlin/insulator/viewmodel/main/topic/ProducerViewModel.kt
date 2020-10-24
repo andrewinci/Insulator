@@ -16,7 +16,7 @@ import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableBooleanValue
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.onChange
 import javax.inject.Inject
 
 @TopicScope

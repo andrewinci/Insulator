@@ -14,7 +14,10 @@ import insulator.ui.style.ScrollPaneStyle
 import insulator.ui.style.TableViewStyle
 import insulator.ui.style.TextStyle
 import javafx.stage.Stage
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.App
+import tornadofx.FX
+import tornadofx.NoPrimaryViewSpecified
+import tornadofx.launch
 
 class Insulator : App(
     NoPrimaryViewSpecified::class,

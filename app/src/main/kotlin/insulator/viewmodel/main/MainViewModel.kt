@@ -9,7 +9,7 @@ import insulator.views.main.topic.ListTopicView
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.Parent
 import javafx.scene.control.Alert
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.alert
 import javax.inject.Inject
 import kotlin.reflect.KClass
 

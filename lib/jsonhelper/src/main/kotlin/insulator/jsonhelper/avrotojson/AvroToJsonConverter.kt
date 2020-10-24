@@ -7,7 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import insulator.helper.runCatchingE
 import insulator.helper.toEitherOfList
 import org.apache.avro.Schema
-import org.apache.avro.Schema.Type.* // ktlint-disable no-wildcard-imports
+import org.apache.avro.Schema.Type.ARRAY
+import org.apache.avro.Schema.Type.BOOLEAN
+import org.apache.avro.Schema.Type.BYTES
+import org.apache.avro.Schema.Type.DOUBLE
+import org.apache.avro.Schema.Type.ENUM
+import org.apache.avro.Schema.Type.FLOAT
+import org.apache.avro.Schema.Type.INT
+import org.apache.avro.Schema.Type.LONG
+import org.apache.avro.Schema.Type.NULL
+import org.apache.avro.Schema.Type.RECORD
+import org.apache.avro.Schema.Type.STRING
+import org.apache.avro.Schema.Type.UNION
 import org.apache.avro.generic.GenericRecord
 
 open class AvroToJsonParsingException(message: String) : Throwable(message)

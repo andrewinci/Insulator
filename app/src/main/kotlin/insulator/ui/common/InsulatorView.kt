@@ -3,7 +3,9 @@ package insulator.ui.common
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.scene.control.Alert
 import javafx.stage.Screen
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.View
+import tornadofx.alert
+import tornadofx.onChange
 
 abstract class InsulatorView(title: String? = null) : View(title) {
 

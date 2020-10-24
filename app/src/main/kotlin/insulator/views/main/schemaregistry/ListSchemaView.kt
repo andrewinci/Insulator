@@ -12,7 +12,13 @@ import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.bindSelected
+import tornadofx.hbox
+import tornadofx.label
+import tornadofx.listview
+import tornadofx.onDoubleClick
+import tornadofx.vbox
+import tornadofx.vgrow
 import javax.inject.Inject
 
 @ClusterScope

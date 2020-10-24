@@ -13,7 +13,8 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.onChange
+import tornadofx.putString
 import javax.inject.Inject
 
 class SchemaViewModel @Inject constructor(

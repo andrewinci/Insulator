@@ -4,7 +4,14 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.stage.Stage
 import javafx.stage.Window
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.Dimension
+import tornadofx.Stylesheet
+import tornadofx.box
+import tornadofx.c
+import tornadofx.em
+import tornadofx.multi
+import tornadofx.px
+import tornadofx.reloadStylesheets
 
 class Root : Stylesheet() {
     init {
