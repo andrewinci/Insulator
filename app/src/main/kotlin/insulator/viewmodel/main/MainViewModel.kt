@@ -19,12 +19,12 @@ class MainViewModel @Inject constructor(
     private val clusterComponent: ClusterComponent
 ) : InsulatorViewModel() {
 
-    val contentList: SimpleObjectProperty<Parent> = SimpleObjectProperty<Parent>().also { it.value = clusterComponent.getListTopicView().root }
+    val contentList: SimpleObjectProperty<Parent> = SimpleObjectProperty<Parent>().also { it.value = clusterComponent.listTopicView().root }
 
     fun <T : Any> setContentList(clazz: KClass<T>): Unit = when (clazz) {
-        ListTopicView::class -> contentList.set(clusterComponent.getListTopicView().root)
+        ListTopicView::class -> contentList.set(clusterComponent.listTopicView().root)
         ListSchemaView::class -> {
-            if (cluster.isSchemaRegistryConfigured()) contentList.set(clusterComponent.getListSchemaView().root)
+            if (cluster.isSchemaRegistryConfigured()) contentList.set(clusterComponent.listSchemaView().root)
             else alert(Alert.AlertType.WARNING, "Schema registry configuration not found"); Unit
         }
         else -> error.set(Throwable("UI: Unable to navigate to ${clazz.qualifiedName}"))

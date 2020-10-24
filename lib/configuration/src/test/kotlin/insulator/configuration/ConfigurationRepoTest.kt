@@ -12,19 +12,17 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import kotlinx.serialization.json.Json
 import java.io.File
 import java.nio.file.Paths
 import java.util.UUID
 
 class ConfigurationRepoTest : FreeSpec({
-    val json = Json {}
     fun mockConfigPath() = Paths.get(getTestSandboxFolder().toString(), ".insulator.test").toString()
 
     "getConfiguration invokes the callback on change" - {
         // arrange
         val testConfig = mockConfigPath()
-        val sut = ConfigurationRepo(json, testConfig)
+        val sut = ConfigurationRepo(testConfig)
         val testCluster = Cluster.empty()
         var callbackCalled: Configuration? = null
 
@@ -48,7 +46,7 @@ class ConfigurationRepoTest : FreeSpec({
     "getConfiguration return left with invalid files" - {
         // arrange
         val testConfig = "http://something"
-        val sut = ConfigurationRepo(json, testConfig)
+        val sut = ConfigurationRepo(testConfig)
 
         "left on retrieve configurations" {
             // act
@@ -68,7 +66,7 @@ class ConfigurationRepoTest : FreeSpec({
     "getConfiguration the first time create the config file" {
         // arrange
         val testConfig = mockConfigPath()
-        val sut = ConfigurationRepo(json, testConfig)
+        val sut = ConfigurationRepo(testConfig)
         // act
         val res = sut.getConfiguration()
         // assert
@@ -80,7 +78,7 @@ class ConfigurationRepoTest : FreeSpec({
         // arrange
         val testConfig = mockConfigPath()
         File(testConfig).writeText("Wrong content")
-        val sut = ConfigurationRepo(json, testConfig)
+        val sut = ConfigurationRepo(testConfig)
         // act
         val res = sut.getConfiguration()
         // assert
@@ -90,7 +88,7 @@ class ConfigurationRepoTest : FreeSpec({
     "delete a cluster" - {
         // arrange
         val testConfig = mockConfigPath()
-        val sut = ConfigurationRepo(json, testConfig)
+        val sut = ConfigurationRepo(testConfig)
 
         "delete a cluster from the configuration" {
             val testCluster = UUID.randomUUID()
@@ -117,7 +115,7 @@ class ConfigurationRepoTest : FreeSpec({
     "store a new cluster" - {
         // arrange
         val testConfig = mockConfigPath()
-        val sut = ConfigurationRepo(json, testConfig)
+        val sut = ConfigurationRepo(testConfig)
         val uuid = UUID.randomUUID()
 
         "minimal cluster" {
@@ -125,7 +123,7 @@ class ConfigurationRepoTest : FreeSpec({
             val res = sut.store(Cluster(uuid, "", ""))
             // assert
             res shouldBeRight Unit
-            ConfigurationRepo(json, testConfig).getConfiguration() shouldBeRight
+            ConfigurationRepo(testConfig).getConfiguration() shouldBeRight
                 Configuration(clusters = listOf(Cluster(uuid, "", "")))
         }
         "store a cluster with all configs" {
@@ -144,7 +142,7 @@ class ConfigurationRepoTest : FreeSpec({
             )
             // assert
             res shouldBeRight Unit
-            ConfigurationRepo(json, testConfig).getConfiguration() shouldBeRight {}
+            ConfigurationRepo(testConfig).getConfiguration() shouldBeRight {}
         }
     }
 })

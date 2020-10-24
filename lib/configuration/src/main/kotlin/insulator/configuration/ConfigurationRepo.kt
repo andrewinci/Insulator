@@ -10,7 +10,7 @@ import java.io.File
 
 class ConfigurationRepo(private val configPath: String) {
 
-    private val json: Json = Json {  }
+    private val json: Json = Json { }
     private val callbacks = ArrayList<(Configuration) -> Unit>()
 
     suspend fun getConfiguration(): Either<ConfigurationRepoException, Configuration> = either {

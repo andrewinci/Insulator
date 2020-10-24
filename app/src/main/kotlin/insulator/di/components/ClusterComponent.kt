@@ -30,11 +30,13 @@ interface ClusterComponent {
     // Views
     fun clusterView(): ClusterView
     fun mainView(): MainView
+    fun listTopicView(): ListTopicView
+    fun listSchemaView(): ListSchemaView
 
     // Admin
     fun adminApi(): AdminApi
 
-    // Consumers
+    // Consumer
     fun consumer(): Consumer
 
     // Producers
@@ -46,8 +48,4 @@ interface ClusterComponent {
 
     // Helpers
     fun jsonFormatter(): JsonFormatter
-
-    // Views
-    fun getListTopicView(): ListTopicView
-    fun getListSchemaView(): ListSchemaView
 }

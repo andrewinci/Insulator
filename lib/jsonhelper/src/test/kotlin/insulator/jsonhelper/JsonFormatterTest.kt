@@ -12,7 +12,7 @@ class JsonFormatterTest : StringSpec({
 
     "format json return a right collection" {
         // arrange
-        val sut = JsonFormatter(json)
+        val sut = JsonFormatter()
         // act
         val res = sut.formatJsonString("This is not a json")
         // assert
@@ -21,7 +21,7 @@ class JsonFormatterTest : StringSpec({
 
     "format empty object" {
         // arrange
-        val sut = JsonFormatter(json)
+        val sut = JsonFormatter()
         // act
         val res = sut.formatJsonString("{}")
         // assert
@@ -30,7 +30,7 @@ class JsonFormatterTest : StringSpec({
 
     "format empty object without indent" {
         // arrange
-        val sut = JsonFormatter(json)
+        val sut = JsonFormatter()
         // act
         val res = sut.formatJsonString("{}", false)
         // assert
@@ -39,7 +39,7 @@ class JsonFormatterTest : StringSpec({
 
     "format generic object without indent" {
         // arrange
-        val sut = JsonFormatter(json)
+        val sut = JsonFormatter()
         // act
         val res = sut.formatJsonString(
             """{
