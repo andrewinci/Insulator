@@ -26,7 +26,7 @@ jobs:
       - name: Check for changes
         run: |
           if [[ $(git status -s) ]]; then
-            echo "Fixing PR"
+            echo "Fixing PR lint"
             git diff
             git config --local user.email "autolint@lint.local"
             git config --local user.name "Auto Lint"

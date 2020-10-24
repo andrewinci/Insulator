@@ -14,7 +14,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import java.io.File
 import java.nio.file.Paths
-import java.util.*
+import java.util.UUID
 
 class ConfigurationRepoTest : FreeSpec({
     fun mockConfigPath() = Paths.get(getTestSandboxFolder().toString(), ".insulator.test").toString()

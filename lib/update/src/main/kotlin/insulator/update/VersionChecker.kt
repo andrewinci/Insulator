@@ -22,7 +22,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.net.URLDecoder
 import java.nio.file.Paths
-import java.util.*
+import java.util.Properties
 
 class VersionChecker(private val customJarPath: String? = null) {
 

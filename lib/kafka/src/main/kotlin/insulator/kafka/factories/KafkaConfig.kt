@@ -8,7 +8,7 @@ import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
-import java.util.*
+import java.util.Properties
 
 fun kafkaConfig(cluster: Cluster) = Properties().apply {
     put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.endpoint)
