@@ -1,9 +1,11 @@
 package insulator.kafka
 
+import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.kafka.clients.admin.AdminClient
@@ -21,6 +23,15 @@ import org.apache.kafka.common.TopicPartitionInfo
 import org.apache.kafka.common.config.ConfigResource
 
 class AdminApiTest : StringSpec({
+
+    "happy path build admin api" {
+        // arrange
+        val cluster = Cluster(name = "", endpoint = "localhost:9393")
+        // act
+        val res = adminApi(cluster)
+        // assert
+        res shouldNotBe null
+    }
 
     "listTopics happy path" {
         // arrange

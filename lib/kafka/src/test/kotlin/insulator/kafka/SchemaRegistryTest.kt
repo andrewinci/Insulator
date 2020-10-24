@@ -1,12 +1,32 @@
 package insulator.kafka
 
+import insulator.kafka.model.Cluster
+import insulator.kafka.model.SchemaRegistryConfiguration
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 
 class SchemaRegistryTest : StringSpec({
+
+    "happy path build schema registry" {
+        // arrange
+        val cluster = Cluster(
+            name = "name",
+            endpoint = "endpoint",
+            schemaRegistryConfig = SchemaRegistryConfiguration(
+                "endpoint",
+                "username",
+                "password"
+            )
+        )
+        // act
+        val res = schemaRegistry(cluster)
+        // assert
+        res shouldNotBe null
+    }
 
     "happy path getAllSubjects" {
         // arrange
