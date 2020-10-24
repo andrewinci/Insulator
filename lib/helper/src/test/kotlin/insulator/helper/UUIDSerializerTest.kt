@@ -5,7 +5,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import java.util.*
+import java.util.UUID
 
 class UUIDSerializerTest : StringSpec({
 

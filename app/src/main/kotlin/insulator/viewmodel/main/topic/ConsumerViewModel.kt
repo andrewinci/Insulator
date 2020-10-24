@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.SortedFilteredList
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 
 @TopicScope
