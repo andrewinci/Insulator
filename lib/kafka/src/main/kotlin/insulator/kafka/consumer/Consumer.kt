@@ -18,6 +18,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 typealias GenericAvroToJsonConverter = (record: GenericRecord) -> Either<Throwable, String>
+typealias ConsumerCallback = (List<Tuple3<String?, String, Long>>) -> Unit
 
 fun consumer(cluster: Cluster, avroToJson: GenericAvroToJsonConverter) =
     Consumer(ConsumerFactory(cluster), avroToJson)
@@ -30,7 +31,7 @@ class Consumer(
     private var threadLoop: Thread? = null
     private var running = false
 
-    suspend fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) =
+    suspend fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: ConsumerCallback) =
         suspendCoroutine<Unit> { continuation ->
             GlobalScope.launch {
                 if (isRunning()) throw IllegalStateException("Consumer already running")
@@ -56,7 +57,7 @@ class Consumer(
         }.invokeOnCompletion { continuation.resume(Unit) }
     }
 
-    private fun loop(consumer: Consumer<Any, Any>, callback: (List<Tuple3<String?, String, Long>>) -> Unit) {
+    private fun loop(consumer: Consumer<Any, Any>, callback: ConsumerCallback) {
         threadLoop = thread {
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
@@ -66,37 +67,33 @@ class Consumer(
         }
     }
 
+    private fun Duration.ago() = Instant.now().minus(this).toEpochMilli()
+
     private fun initializeConsumer(consumer: Consumer<Any, Any>, topic: String, from: ConsumeFrom) {
         val partitions = consumer.partitionsFor(topic).map { TopicPartition(topic, it.partition()) }
         consumer.assign(partitions)
-
         when (from) {
-            ConsumeFrom.Now -> consumer.seekToEnd(partitions)
-            ConsumeFrom.LastHour -> {
-                val time = Instant.now().minus(Duration.ofMinutes(60)).toEpochMilli()
-                assignPartitionByTime(consumer, partitions, time)
-            }
-            ConsumeFrom.LastDay -> {
-                val time = Instant.now().minus(Duration.ofDays(1)).toEpochMilli()
-                assignPartitionByTime(consumer, partitions, time)
-            }
-            ConsumeFrom.LastWeek -> {
-                val time = Instant.now().minus(Duration.ofDays(7)).toEpochMilli()
-                assignPartitionByTime(consumer, partitions, time)
-            }
-            ConsumeFrom.Beginning -> consumer.seekToBeginning(partitions)
-        }
+            ConsumeFrom.Now -> Long.MAX_VALUE
+            ConsumeFrom.LastHour -> Duration.ofMinutes(60).ago()
+            ConsumeFrom.LastDay -> Duration.ofDays(1).ago()
+            ConsumeFrom.LastWeek -> Duration.ofDays(7).ago()
+            ConsumeFrom.Beginning -> Long.MIN_VALUE
+        }.let { assignPartitionByTime(consumer, partitions, it) }
     }
 
-    private fun assignPartitionByTime(consumer: Consumer<Any, Any>, partitions: List<TopicPartition>, time: Long) {
-        consumer.offsetsForTimes(partitions.map { it to time }.toMap())
-            .forEach {
-                when (val offset = it.value?.offset()) {
-                    null -> consumer.seekToEnd(listOf(it.key))
-                    else -> consumer.seek(it.key, offset)
-                }
-            }
-    }
+    private fun assignPartitionByTime(consumer: Consumer<Any, Any>, partitions: List<TopicPartition>, time: Long) =
+        when (time) {
+            Long.MAX_VALUE -> consumer.seekToEnd(partitions)
+            Long.MIN_VALUE -> consumer.seekToBeginning(partitions)
+            else ->
+                consumer.offsetsForTimes(partitions.map { it to time }.toMap())
+                    .forEach {
+                        when (val offset = it.value?.offset()) {
+                            null -> consumer.seekToEnd(listOf(it.key))
+                            else -> consumer.seek(it.key, offset)
+                        }
+                    }
+        }
 
     private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
         val parsedValue = if (record.value() is GenericRecord) avroToJson(record.value() as GenericRecord)

@@ -4,9 +4,11 @@ import arrow.core.left
 import arrow.core.right
 import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.stringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.delay
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -22,57 +24,28 @@ import kotlin.time.seconds
 @ExperimentalTime
 class ConsumerTest : StringSpec({
 
-    "start happy path" {
-        TestConsumerScenario().use {
-            // arrange
-            val messages = mutableListOf<String>()
-            // act
-            it.sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
-            // assert
-            eventually(3.seconds) {
-                messages.size shouldBe 1
+    fun testScenario(consumerFrom: ConsumeFrom, deserializationFormat: DeserializationFormat, expectedMessages: Int = 1) = stringSpec {
+        "test start consuming from $consumerFrom and format $deserializationFormat" {
+            TestConsumerScenario().use {
+                // arrange
+                val messages = mutableListOf<String>()
+                // act
+                it.sut.start("testTopic", consumerFrom, deserializationFormat) { lst -> messages.addAll(lst.map { record -> record.b }) }
+                // assert
+                delay(300L)
+                eventually(3.seconds) {
+                    messages.size shouldBe expectedMessages
+                }
             }
         }
     }
 
-    "start happy path - avro consumer" {
-        TestConsumerScenario().use {
-            // arrange
-            val messages = mutableListOf<String>()
-            // act
-            it.sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { record -> record.b }) }
-            // assert
-            eventually(3.seconds) {
-                messages.size shouldBe 1
-            }
-        }
-    }
-
-    "start happy path - last hour" {
-        TestConsumerScenario().use {
-            // arrange
-            val messages = mutableListOf<String>()
-            // act
-            it.sut.start("testTopic", ConsumeFrom.LastHour, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
-            // assert
-            eventually(3.seconds) {
-                messages.size shouldBe 1
-            }
-        }
-    }
-
-    "start happy path - last week" {
-        TestConsumerScenario().use {
-            // arrange
-            val messages = mutableListOf<String>()
-            // act
-            it.sut.start("testTopic", ConsumeFrom.LastWeek, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
-            // assert
-            eventually(3.seconds) {
-                messages.size shouldBe 1
-            }
-        }
-    }
+    include(testScenario(ConsumeFrom.Beginning, DeserializationFormat.String))
+    include(testScenario(ConsumeFrom.Beginning, DeserializationFormat.Avro))
+    include(testScenario(ConsumeFrom.LastHour, DeserializationFormat.String))
+    include(testScenario(ConsumeFrom.LastDay, DeserializationFormat.String))
+    include(testScenario(ConsumeFrom.LastWeek, DeserializationFormat.String))
+    include(testScenario(ConsumeFrom.Now, DeserializationFormat.Avro, 0))
 
     "start happy path - unsupported schema for custom avro converter" {
         TestConsumerScenario().use {
@@ -84,19 +57,6 @@ class ConsumerTest : StringSpec({
             // assert
             eventually(10.seconds) {
                 messages.size shouldBe 1
-            }
-        }
-    }
-
-    "start happy path - now" {
-        TestConsumerScenario().use {
-            // arrange
-            val messages = mutableListOf<String>()
-            // act
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
-            // assert
-            eventually(3.seconds) {
-                messages.size shouldBe 0
             }
         }
     }
@@ -119,6 +79,17 @@ class ConsumerTest : StringSpec({
             // arrange
             // act/assert
             it.sut.stop()
+        }
+    }
+
+    "start twice throw an error" {
+        TestConsumerScenario().use {
+            // arrange
+            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { }
+            // act
+            val action = suspend { it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { } }
+            // assert
+            kotlin.runCatching { action.invoke() }.isFailure shouldBe true
         }
     }
 })

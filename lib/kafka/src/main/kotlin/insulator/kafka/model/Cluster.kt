@@ -7,7 +7,7 @@ import java.util.UUID
 @Serializable
 data class Cluster(
     @Serializable(with = UUIDSerializer::class)
-    val guid: UUID,
+    val guid: UUID = UUID.randomUUID(),
     val name: String,
     val endpoint: String,
 
@@ -20,7 +20,7 @@ data class Cluster(
     val schemaRegistryConfig: SchemaRegistryConfiguration = SchemaRegistryConfiguration()
 ) {
     companion object {
-        fun empty() = Cluster(UUID.randomUUID(), "", "")
+        fun empty() = Cluster(name = "", endpoint = "")
     }
 
     fun isSchemaRegistryConfigured() = !schemaRegistryConfig.endpoint.isNullOrEmpty()
