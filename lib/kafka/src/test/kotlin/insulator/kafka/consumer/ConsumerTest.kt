@@ -32,7 +32,6 @@ class ConsumerTest : StringSpec({
             eventually(3.seconds) {
                 messages.size shouldBe 1
             }
-            it.sut.stop()
         }
     }
 
@@ -46,7 +45,6 @@ class ConsumerTest : StringSpec({
             eventually(3.seconds) {
                 messages.size shouldBe 1
             }
-            it.sut.stop()
         }
     }
 
@@ -60,7 +58,6 @@ class ConsumerTest : StringSpec({
             eventually(3.seconds) {
                 messages.size shouldBe 1
             }
-            it.sut.stop()
         }
     }
 
@@ -74,7 +71,6 @@ class ConsumerTest : StringSpec({
             eventually(3.seconds) {
                 messages.size shouldBe 1
             }
-            it.sut.stop()
         }
     }
 
@@ -86,10 +82,9 @@ class ConsumerTest : StringSpec({
             // act
             sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
-            eventually(3.seconds) {
+            eventually(10.seconds) {
                 messages.size shouldBe 1
             }
-            it.sut.stop()
         }
     }
 
@@ -101,9 +96,8 @@ class ConsumerTest : StringSpec({
             it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
             eventually(3.seconds) {
-                messages.size shouldBe 1
+                messages.size shouldBe 0
             }
-            it.sut.stop()
         }
     }
 
