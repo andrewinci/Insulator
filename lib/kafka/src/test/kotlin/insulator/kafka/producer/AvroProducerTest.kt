@@ -17,7 +17,7 @@ import org.apache.kafka.clients.producer.Producer
 
 class AvroProducerTest : StringSpec({
 
-    "factory happy path"{
+    "factory happy path" {
         // arrange
         val mockCluster = Cluster.empty().copy(
             endpoint = "localhost:9090",

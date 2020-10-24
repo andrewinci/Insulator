@@ -4,15 +4,15 @@ import insulator.kafka.model.Cluster
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
-import org.apache.kafka.clients.producer.Producer as KafkaProducer
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.apache.kafka.clients.producer.Producer as KafkaProducer
 
 class StringProducerTest : StringSpec({
 
-    "factory happy path"{
+    "factory happy path" {
         // arrange
         val mockCluster = Cluster.empty().copy(
             endpoint = "localhost:9090"
@@ -34,7 +34,7 @@ class StringProducerTest : StringSpec({
         sut.close()
         // assert
         res shouldBeRight {}
-        verify (exactly = 1) { kafkaProducer.close() }
+        verify(exactly = 1) { kafkaProducer.close() }
     }
 
     "validate always succeed" {

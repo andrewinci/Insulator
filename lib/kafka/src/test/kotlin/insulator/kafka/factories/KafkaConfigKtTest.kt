@@ -14,10 +14,12 @@ class KafkaConfigKtTest : StringSpec({
         // arrange
         val testEndpoint = "testEndpoint"
         // act
-        val config = kafkaConfig(Cluster(
-            name = "name",
-            endpoint = testEndpoint
-        ))
+        val config = kafkaConfig(
+            Cluster(
+                name = "name",
+                endpoint = testEndpoint
+            )
+        )
         // assert
         with(config) {
             get("bootstrap.servers") shouldBe testEndpoint
@@ -35,11 +37,13 @@ class KafkaConfigKtTest : StringSpec({
             "password"
         )
         // act
-        val config = kafkaConfig(Cluster(
-            name = "name",
-            endpoint = "endpoint",
-            schemaRegistryConfig = testSchemaRegistryConfig
-        ))
+        val config = kafkaConfig(
+            Cluster(
+                name = "name",
+                endpoint = "endpoint",
+                schemaRegistryConfig = testSchemaRegistryConfig
+            )
+        )
         // assert
         with(config) {
             get("schema.registry.url") shouldBe "endpoint"
@@ -57,12 +61,14 @@ class KafkaConfigKtTest : StringSpec({
             sslKeyStorePassword = "sslKeystorePassword",
         )
         // act
-        val config = kafkaConfig(Cluster(
-            name = "name",
-            endpoint = "endpoint",
-            useSSL = true,
-            sslConfiguration = testSSLConfig,
-        ))
+        val config = kafkaConfig(
+            Cluster(
+                name = "name",
+                endpoint = "endpoint",
+                useSSL = true,
+                sslConfiguration = testSSLConfig,
+            )
+        )
         // assert
         with(config) {
             get("security.protocol") shouldBe "SSL"
@@ -81,12 +87,14 @@ class KafkaConfigKtTest : StringSpec({
             saslPassword = "saslPassword",
         )
         // act
-        val config = kafkaConfig(Cluster(
-            name = "name",
-            endpoint = "endpoint",
-            useSasl = true,
-            saslConfiguration = testSaslConfiguration
-        ))
+        val config = kafkaConfig(
+            Cluster(
+                name = "name",
+                endpoint = "endpoint",
+                useSasl = true,
+                saslConfiguration = testSaslConfiguration
+            )
+        )
         // assert
         with(config) {
             get("security.protocol") shouldBe "SASL_SSL"
