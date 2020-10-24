@@ -8,9 +8,8 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
-import javax.inject.Inject
 
-class ConsumerFactory @Inject constructor(val cluster: Cluster) :
+class ConsumerFactory(val cluster: Cluster) :
     CachedFactory<DeserializationFormat, Consumer<Any, Any>>(
         { valueFormat ->
             kafkaConfig(cluster)
