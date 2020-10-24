@@ -58,8 +58,8 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
       - name: Run tests
         run: "./gradlew check codeCoverageReport"
-      - name: Codecov upload
-        run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
+#      - name: Codecov upload
+#        run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
 
   build-deb:
     needs: linting
@@ -81,8 +81,17 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle-
-    - name: Run tests
-      run: "xvfb-run --auto-servernum ./gradlew check codeCoverageReport"
+#    - name: Run tests
+#      run: "xvfb-run --auto-servernum ./gradlew check codeCoverageReport"
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v2.7.4
+      env:
+        # Set CC_TEST_REPORTER_ID as secret of your repo
+        CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
+        JACOCO_SOURCE_PATH: "${{github.workspace}}/app/src/main/kotlin"
+      with:
+        coverageCommand: "xvfb-run --auto-servernum ./gradlew check codeCoverageReport"
+        coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
 #    - name: Run integration tests
 #      run: "xvfb-run --auto-servernum ./gradlew integrationTest"
 
