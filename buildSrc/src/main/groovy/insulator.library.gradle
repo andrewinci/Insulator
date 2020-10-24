@@ -1,0 +1,4 @@
+plugins {
+    id 'insulator.common'
+    id 'java-library'
+}

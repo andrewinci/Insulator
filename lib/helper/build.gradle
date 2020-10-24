@@ -1,0 +1,12 @@
+plugins {
+    id 'insulator.library'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+dependencies {
+    implementation(group: 'io.kotest', name: 'kotest-runner-junit5', version: "4.3.0")
+
+    // Json
+    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218')
+    implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3')
+}

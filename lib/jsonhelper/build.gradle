@@ -1,0 +1,11 @@
+plugins {
+    id 'insulator.library'
+}
+
+dependencies {
+    api project(":lib:helper")
+
+    // Json
+    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218')
+    implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3')
+}

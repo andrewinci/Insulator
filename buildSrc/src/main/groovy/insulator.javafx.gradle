@@ -1,0 +1,17 @@
+plugins {
+    id 'org.openjfx.javafxplugin'
+}
+
+def testfx_version = "4.0.16-alpha"
+
+dependencies {
+
+    // Tornado
+    implementation(group: 'no.tornado', name: 'tornadofx', version: "1.7.20")
+
+    // Javafx coroutines
+    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-javafx', version: '1.4.0-M1')
+
+    // JavaFX test helpers
+    testCompile(group: 'org.testfx', name: 'testfx-junit5', version: "$testfx_version")
+}

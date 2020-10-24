@@ -1,0 +1,23 @@
+plugins {
+    id 'insulator.common'
+    id 'jacoco'
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    group = "verification"
+    subprojects { subproject ->
+        subproject.plugins.withType(JacocoPlugin).configureEach {
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
+                sourceSets subproject.sourceSets.main
+                executionData(testTask)
+            }
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
+                rootProject.tasks.codeCoverageReport.dependsOn(it)
+            }
+        }
+    }
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
