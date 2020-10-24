@@ -5,7 +5,6 @@ plugins {
     id 'org.jetbrains.kotlin.kapt'
     id 'org.jlleitschuh.gradle.ktlint'
     id 'com.adarshr.test-logger'
-    id "org.unbroken-dome.test-sets"
 }
 
 repositories {
@@ -50,10 +49,8 @@ dependencies {
 }
 
 subprojects {
-    if (project.hasProperty("integrationTest")) {
-        project.integrationTest { outputs.upToDateWhen { false } }
-    }
-
     check.dependsOn test
-    check.doLast { tasks.jacocoTestReport }
+    if (tasks.hasProperty("jacocoTestReport")) {
+        check.doLast { tasks.jacocoTestReport }
+    }
 }

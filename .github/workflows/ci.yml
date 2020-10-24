@@ -49,7 +49,7 @@ jobs:
           java-version: 14
           java-package: jdk
       - name: Run tests
-        run: "./gradlew check jacocoTestReport"
+        run: "./gradlew check codeCoverageReport"
       - name: Codecov upload
         run: "bash <(curl -s https://codecov.io/bash) -t ${{ secrets.codecovToken }}"
 
@@ -66,9 +66,9 @@ jobs:
         java-version: 14
         java-package: jdk
     - name: Run tests
-      run: "xvfb-run --auto-servernum ./gradlew check"
-    - name: Run integration tests
-      run: "xvfb-run --auto-servernum ./gradlew integrationTest"
+      run: "xvfb-run --auto-servernum ./gradlew check codeCoverageReport"
+#    - name: Run integration tests
+#      run: "xvfb-run --auto-servernum ./gradlew integrationTest"
 
   build-win:
     needs: linting
@@ -81,4 +81,4 @@ jobs:
         java-version: 14
         java-package: jdk
     - name: Run tests
-      run: "./gradlew check"
+      run: "./gradlew check codeCoverageReport"

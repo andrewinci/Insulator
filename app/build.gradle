@@ -12,10 +12,7 @@ javafx {
 
 apply plugin: 'kotlin-kapt'
 
-def test_container_version = "1.14.3"
 def dagger_version = "2.23.2"
-
-testSets { integrationTest }
 
 dependencies {
     implementation project(":lib:helper")
@@ -27,10 +24,6 @@ dependencies {
     // Dagger
     implementation(group: 'com.google.dagger', name: 'dagger', version: "$dagger_version")
     kapt(group: 'com.google.dagger', name: 'dagger-compiler', version: "$dagger_version")
-
-    // Test Containers
-    integrationTestImplementation(group: 'junit', name: 'junit', version: '4.13.1')
-    integrationTestImplementation(group: 'org.testcontainers', name: 'kafka', version: "$test_container_version")
 }
 
 jar { manifest { attributes('Main-Class': 'insulator.AppKt') } }
