@@ -2,11 +2,11 @@ package insulator.kafka.consumer
 
 import arrow.core.left
 import arrow.core.right
+import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.delay
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -16,7 +16,10 @@ import org.apache.kafka.clients.consumer.OffsetResetStrategy
 import org.apache.kafka.common.PartitionInfo
 import org.apache.kafka.common.TopicPartition
 import java.io.Closeable
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
+@ExperimentalTime
 class ConsumerTest : StringSpec({
 
     "start happy path" {
@@ -24,11 +27,11 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+            it.sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
-            delay(200)
-            it.sut.stop()
-            messages.size shouldBe 1
+            eventually(3.seconds) {
+                messages.size shouldBe 1
+            }
         }
     }
 
@@ -37,11 +40,11 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { messages.addAll(it.map { record -> record.b }) }
+            it.sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
-            delay(200)
-            it.sut.stop()
-            messages.size shouldBe 1
+            eventually(3.seconds) {
+                messages.size shouldBe 1
+            }
         }
     }
 
@@ -50,11 +53,11 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.LastHour, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+            it.sut.start("testTopic", ConsumeFrom.LastHour, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
-            delay(200)
-            it.sut.stop()
-            messages.size shouldBe 1
+            eventually(3.seconds) {
+                messages.size shouldBe 1
+            }
         }
     }
 
@@ -63,11 +66,11 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.LastWeek, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+            it.sut.start("testTopic", ConsumeFrom.LastWeek, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
-            delay(200)
-            it.sut.stop()
-            messages.size shouldBe 1
+            eventually(3.seconds) {
+                messages.size shouldBe 1
+            }
         }
     }
 
@@ -77,11 +80,11 @@ class ConsumerTest : StringSpec({
             val messages = mutableListOf<String>()
             val sut = Consumer(it.consumerFactory) { Throwable("").left() }
             // act
-            sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { messages.addAll(it.map { record -> record.b }) }
+            sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
-            delay(200)
-            sut.stop()
-            messages.size shouldBe 1
+            eventually(10.seconds) {
+                messages.size shouldBe 1
+            }
         }
     }
 
@@ -90,11 +93,11 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
-            delay(200)
-            it.sut.stop()
-            messages.size shouldBe 0
+            eventually(3.seconds) {
+                messages.size shouldBe 0
+            }
         }
     }
 
@@ -103,7 +106,7 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { messages.addAll(it.map { record -> record.b }) }
+            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
             // assert
             it.sut.isRunning() shouldBe true
             it.sut.stop()

@@ -4,11 +4,8 @@ import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.json.Json
 
 class JsonFormatterTest : StringSpec({
-
-    val json = Json {}
 
     "format json return a right collection" {
         // arrange

@@ -12,22 +12,27 @@
 
 <a href="https://github.com/andrea-vinci/Insulator/releases">
     <img src="https://github.com/andrea-vinci/Insulator/workflows/Release/badge.svg"
-         alt="Release">
+         alt="Release"/>
   </a>
 
 <a href="https://github.com/andrea-vinci/Insulator/actions?query=workflow%3ACI">
     <img src="https://github.com/andrea-vinci/Insulator/workflows/CI/badge.svg"
-         alt="CI">
+         alt="CI"/>
   </a>
 
-<a href="https://codecov.io/gh/andrea-vinci/Insulator">
-    <img src="https://codecov.io/gh/andrea-vinci/Insulator/branch/master/graph/badge.svg"
-         alt="Codecov">
-  </a>
+<a href="https://codeclimate.com/github/andrea-vinci/Insulator/test_coverage">
+    <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/test_coverage" 
+        alt="Coverage"/>
+    </a>
+
+<a href="https://codeclimate.com/github/andrea-vinci/Insulator/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/maintainability" 
+        alt="code quality"/>
+    </a>
 
 <a href="https://snyk.io/test/github/andrea-vinci/Insulator?targetFile=build.gradle">
     <img src="https://snyk.io/test/github/andrea-vinci/Insulator/badge.svg?targetFile=build.gradle"
-         alt="Snyk">
+         alt="Snyk"/>
   </a>
 
 </p>
