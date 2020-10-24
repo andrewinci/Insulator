@@ -3,6 +3,7 @@ plugins {
     id 'insulator.jpackage'
     id 'insulator.javafx'
     id 'insulator.application'
+    id "org.unbroken-dome.test-sets"
 }
 
 javafx {
@@ -13,6 +14,8 @@ javafx {
 apply plugin: 'kotlin-kapt'
 
 def dagger_version = "2.23.2"
+
+testSets { integrationTest }
 
 dependencies {
     implementation project(":lib:helper")
@@ -29,3 +32,10 @@ dependencies {
 jar { manifest { attributes('Main-Class': 'insulator.AppKt') } }
 
 application { mainClassName = 'insulator.AppKt' }
+
+jacocoIntegrationTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}

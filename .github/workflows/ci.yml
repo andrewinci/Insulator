@@ -9,7 +9,6 @@ on:
       - master
 
 jobs:
-
   linting:
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +56,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-
       - name: Run tests
-        run: "./gradlew check codeCoverageReport --no-daemon"
+        run: "./gradlew check --no-daemon"
 
   build-deb:
     needs: linting
@@ -79,7 +78,7 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle-
-    - name: Test & publish code coverage
+    - name: Integration tests & publish code coverage
       uses: paambaati/codeclimate-action@v2.7.4
       env:
         CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
@@ -91,7 +90,7 @@ jobs:
           ${{github.workspace}}/lib/kafka/src/main/kotlin \
           ${{github.workspace}}/lib/update/src/main/kotlin
       with:
-        coverageCommand: "xvfb-run --auto-servernum ./gradlew check codeCoverageReport --no-daemon"
+        coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon"
         coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
 
   build-win:
@@ -113,4 +112,4 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle-
     - name: Run tests
-      run: "./gradlew check codeCoverageReport --no-daemon"
+      run: "./gradlew check --no-daemon"
