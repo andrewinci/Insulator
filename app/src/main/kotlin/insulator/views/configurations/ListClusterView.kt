@@ -17,7 +17,13 @@ import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.stage.Modality
 import javafx.stage.StageStyle
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.action
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.hbox
+import tornadofx.listview
+import tornadofx.vbox
+import tornadofx.whenUndocked
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 

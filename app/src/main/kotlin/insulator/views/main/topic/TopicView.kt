@@ -24,7 +24,24 @@ import javafx.scene.control.Control
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.action
+import tornadofx.addClass
+import tornadofx.bindSelected
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.column
+import tornadofx.combobox
+import tornadofx.contextmenu
+import tornadofx.enableWhen
+import tornadofx.hbox
+import tornadofx.hgrow
+import tornadofx.item
+import tornadofx.minus
+import tornadofx.stringBinding
+import tornadofx.tableview
+import tornadofx.text
+import tornadofx.vbox
+import tornadofx.vgrow
 import javax.inject.Inject
 
 @TopicScope

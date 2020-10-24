@@ -2,7 +2,7 @@ package insulator.kafka.model
 
 import insulator.helper.UUIDSerializer
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import java.util.*
 
 @Serializable
 data class Cluster(

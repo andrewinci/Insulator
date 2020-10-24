@@ -4,7 +4,14 @@ import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.update.model.Release
 import javafx.geometry.Pos
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.FX
+import tornadofx.View
+import tornadofx.action
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.hbox
+import tornadofx.hyperlink
+import tornadofx.vbox
 
 class UpdateInfoView(release: Release) : View() {
 

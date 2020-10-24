@@ -17,7 +17,7 @@ import javafx.beans.value.ObservableStringValue
 import javafx.scene.input.Clipboard
 import javafx.stage.Modality
 import javafx.stage.StageStyle
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.putString
 import javax.inject.Inject
 
 @TopicScope

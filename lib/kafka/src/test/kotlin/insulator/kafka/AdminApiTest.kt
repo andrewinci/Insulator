@@ -19,7 +19,7 @@ import org.apache.kafka.common.Node
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.TopicPartitionInfo
 import org.apache.kafka.common.config.ConfigResource
-import java.util.HashSet
+import java.util.*
 
 class AdminApiTest : StringSpec({
 

@@ -3,7 +3,7 @@ package helper
 import insulator.kafka.model.Cluster
 import org.testfx.api.FxToolkit
 import org.testfx.util.WaitForAsyncUtils
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.FX
 import java.io.Closeable
 
 open class FxContext : Closeable {

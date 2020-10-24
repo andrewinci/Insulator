@@ -13,7 +13,8 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.SortedFilteredList
+import tornadofx.whenUndockedOnce
 import javax.inject.Inject
 
 @ClusterScope

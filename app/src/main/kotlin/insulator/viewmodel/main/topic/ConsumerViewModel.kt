@@ -12,9 +12,8 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import tornadofx.SortedFilteredList
-import java.util.LinkedList
+import java.util.*
 import javax.inject.Inject
-import kotlin.Comparator
 
 @TopicScope
 class ConsumerViewModel @Inject constructor(

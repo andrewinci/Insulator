@@ -20,7 +20,17 @@ import javafx.geometry.Pos
 import javafx.geometry.Side
 import javafx.scene.Parent
 import javafx.scene.image.Image
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.action
+import tornadofx.addClass
+import tornadofx.bind
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.hbox
+import tornadofx.imageview
+import tornadofx.onChange
+import tornadofx.splitpane
+import tornadofx.tabpane
+import tornadofx.vbox
 import javax.inject.Inject
 
 private const val ICON_TOPICS = "icons/topics.png"

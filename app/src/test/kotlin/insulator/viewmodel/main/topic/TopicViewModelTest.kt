@@ -12,7 +12,7 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
 import javafx.scene.input.Clipboard
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.putString
 
 class TopicViewModelTest : StringSpec({
 

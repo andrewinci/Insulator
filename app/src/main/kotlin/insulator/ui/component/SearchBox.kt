@@ -4,7 +4,9 @@ import insulator.ui.common.InsulatorView
 import javafx.beans.property.Property
 import javafx.event.EventTarget
 import javafx.geometry.Pos
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.ChangeListener
+import tornadofx.hbox
+import tornadofx.textfield
 
 fun EventTarget.searchBox(searchText: Property<String>, currentView: InsulatorView) =
     hbox {

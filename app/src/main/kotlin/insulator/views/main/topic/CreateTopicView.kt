@@ -6,7 +6,22 @@ import insulator.ui.component.insulatorAlert
 import insulator.viewmodel.main.topic.CreateTopicViewModel
 import javafx.event.EventTarget
 import javafx.scene.control.Alert
-import tornadofx.* // ktlint-disable no-wildcard-imports
+import tornadofx.ValidationMessage
+import tornadofx.ValidationSeverity
+import tornadofx.View
+import tornadofx.action
+import tornadofx.borderpane
+import tornadofx.button
+import tornadofx.checkbox
+import tornadofx.enableWhen
+import tornadofx.field
+import tornadofx.fieldset
+import tornadofx.filterInput
+import tornadofx.form
+import tornadofx.isInt
+import tornadofx.required
+import tornadofx.textfield
+import tornadofx.validator
 import javax.inject.Inject
 
 class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) : View() {
