@@ -24,7 +24,7 @@ class RootModule {
 
     @Singleton
     @Provides
-    fun providesConfigurationRepo(@Named("configurationPath") path: String) = ConfigurationRepo( path)
+    fun providesConfigurationRepo(@Named("configurationPath") path: String) = ConfigurationRepo(path)
 
     @Singleton
     @Provides

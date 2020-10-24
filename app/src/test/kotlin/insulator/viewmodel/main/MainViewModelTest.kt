@@ -21,8 +21,8 @@ class MainViewModelTest : StringSpec({
             val cluster = it.cluster.copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample endpoint"))
             val mockListSchemaView = mockk<ListSchemaView> { every { root } returns VBox() }
             val mockClusterComponent = mockk<ClusterComponent> {
-                every { getListSchemaView() } returns mockListSchemaView
-                every { getListTopicView() } returns mockk(relaxed = true)
+                every { listSchemaView() } returns mockListSchemaView
+                every { listTopicView() } returns mockk(relaxed = true)
             }
             val sut = MainViewModel(cluster, mockClusterComponent)
             val newView = ListSchemaView::class

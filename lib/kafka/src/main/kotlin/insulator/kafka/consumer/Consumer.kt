@@ -33,7 +33,7 @@ class Consumer(
     suspend fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: (List<Tuple3<String?, String, Long>>) -> Unit) =
         suspendCoroutine<Unit> { continuation ->
             GlobalScope.launch {
-                if (isRunning()) throw Throwable("Consumer already running")
+                if (isRunning()) throw IllegalStateException("Consumer already running")
                 val consumer = consumerFactory.build(valueFormat)
                 initializeConsumer(consumer, topic, from)
                 running = true

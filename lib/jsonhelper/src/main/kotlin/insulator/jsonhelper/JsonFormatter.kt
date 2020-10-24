@@ -9,7 +9,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import java.lang.Exception
 
-class JsonFormatter() {
+class JsonFormatter {
 
     private val json = Json {}
 
