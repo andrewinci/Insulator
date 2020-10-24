@@ -1,0 +1,20 @@
+plugins {
+    id 'insulator.library'
+}
+
+def fuel_version = "2.3.0"
+
+dependencies {
+    api project(":lib:helper")
+
+    // Json
+    implementation(group: 'org.json', name: 'json', version: '20200518')
+
+    // Fuel
+    implementation(group: 'com.github.kittinunf.fuel', name: 'fuel', version: "$fuel_version")
+    implementation(group: 'com.github.kittinunf.fuel', name: 'fuel-json', version: "$fuel_version")
+    implementation(group: 'com.github.kittinunf.fuel', name: 'fuel-coroutines', version: "$fuel_version")
+
+    // Semver4j
+    implementation(group: 'com.vdurmont', name: 'semver4j', version: "3.1.0")
+}

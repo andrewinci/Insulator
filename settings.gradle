@@ -1,1 +1,9 @@
 rootProject.name = 'insulator'
+include(
+        "app",
+        "lib:jsonhelper",
+        "lib:helper",
+        "lib:configuration",
+        "lib:update",
+        "lib:kafka",
+)
