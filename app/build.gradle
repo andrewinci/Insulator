@@ -27,6 +27,10 @@ dependencies {
     // Dagger
     implementation(group: 'com.google.dagger', name: 'dagger', version: "$dagger_version")
     kapt(group: 'com.google.dagger', name: 'dagger-compiler', version: "$dagger_version")
+
+    // Integration tests
+    integrationTestImplementation(group: 'org.testfx', name: 'openjfx-monocle', version: "jdk-12.0.1+2")
+    integrationTestImplementation group: 'org.testcontainers', name: 'kafka', version: "1.14.3"
 }
 
 jar { manifest { attributes('Main-Class': 'insulator.AppKt') } }
