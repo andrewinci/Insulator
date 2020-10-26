@@ -1,0 +1,25 @@
+package insulator.integrationtest.helpers
+
+import insulator.kafka.model.Cluster
+import org.testfx.api.FxToolkit
+import org.testfx.util.WaitForAsyncUtils
+import tornadofx.FX
+import java.io.Closeable
+
+class FxFixture() : Closeable {
+    val cluster = Cluster.empty()
+
+    init {
+        val stage = FxToolkit.registerPrimaryStage()
+        FX.setPrimaryStage(stage = stage)
+    }
+
+    fun waitFXThread() {
+        WaitForAsyncUtils.waitForFxEvents()
+    }
+
+    override fun close() {
+        waitFXThread() // wait any pending task
+        FxToolkit.cleanupStages()
+    }
+}

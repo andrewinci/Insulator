@@ -47,10 +47,3 @@ dependencies {
     // Avro
     implementation 'org.apache.avro:avro:1.9.2'
 }
-
-subprojects {
-    check.dependsOn test
-    if (tasks.hasProperty("jacocoTestReport")) {
-        check.doLast { tasks.jacocoTestReport }
-    }
-}
