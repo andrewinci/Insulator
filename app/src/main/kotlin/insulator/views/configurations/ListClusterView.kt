@@ -18,6 +18,7 @@ import javafx.geometry.Pos
 import javafx.stage.Modality
 import javafx.stage.StageStyle
 import tornadofx.action
+import tornadofx.addClass
 import tornadofx.borderpane
 import tornadofx.button
 import tornadofx.hbox
@@ -37,6 +38,7 @@ class ListClusterView @Inject constructor(
         clusterList()
         hbox(alignment = Pos.CENTER_RIGHT) {
             addNewClusterButton()
+            addClass("button-bar")
         }
     }
 
