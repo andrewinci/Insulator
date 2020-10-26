@@ -1,10 +1,13 @@
 package insulator.integrationtest
 
 import insulator.integrationtest.helpers.FxFixture
+import insulator.integrationtest.helpers.click
+import insulator.integrationtest.helpers.lookup
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.kafka.model.Cluster
 import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.inspectors.forAtLeastOne
 import io.kotest.matchers.shouldBe
 import javafx.scene.control.Button
 import javafx.scene.control.Label
@@ -34,6 +37,14 @@ class HappyPath : FreeSpec({
 
             "There is a button to add new clusters" {
                 lookupFirst<Button>(".button-bar .button").text shouldBe "Add new cluster"
+            }
+
+            "Add a new cluster"{
+                lookupFirst<Button>(".button-bar .button").click()
+                lookup<Label>(".h1").forAtLeastOne { it.text shouldBe "Cluster connection" }
+                lookup<Label>(".h1").forAtLeastOne { it.text shouldBe "Schema registry" }
+                lookup<Button>(".button").forAtLeastOne { it.text shouldBe "Save" }
+                //todo: complete
             }
         }
     }
