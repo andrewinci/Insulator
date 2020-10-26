@@ -61,7 +61,8 @@ class FxFixture() : Closeable {
 
     override fun close() {
         waitFXThread() // wait any pending task
-        FxToolkit.cleanupStages()
+        kotlin.runCatching { FxToolkit.cleanupStages() }
+        kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         deleteTestSandboxFolder()
         kafka.runCatching { stop(); close() }
         schemaRegistry.runCatching { stop(); close() }
