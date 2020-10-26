@@ -29,15 +29,17 @@ class FxFixture() : Closeable {
     suspend fun startAppWithKafkaCuster(clusterName: String, createSchemaRegistry: Boolean = true) {
         kafka.start()
         kafka.waitingFor(Wait.forListeningPort())
-        startAppWithClusters(Cluster(
-            name = clusterName,
-            endpoint = kafka.bootstrapServers,
-            schemaRegistryConfig = if (createSchemaRegistry) {
-                schemaRegistry.start()
-                schemaRegistry.waitingFor(Wait.forListeningPort())
-                SchemaRegistryConfiguration(schemaRegistry.endpoint)
-            } else SchemaRegistryConfiguration()
-        ))
+        startAppWithClusters(
+            Cluster(
+                name = clusterName,
+                endpoint = kafka.bootstrapServers,
+                schemaRegistryConfig = if (createSchemaRegistry) {
+                    schemaRegistry.start()
+                    schemaRegistry.waitingFor(Wait.forListeningPort())
+                    SchemaRegistryConfiguration(schemaRegistry.endpoint)
+                } else SchemaRegistryConfiguration()
+            )
+        )
     }
 
     suspend fun startAppWithClusters(vararg clusters: Cluster) {

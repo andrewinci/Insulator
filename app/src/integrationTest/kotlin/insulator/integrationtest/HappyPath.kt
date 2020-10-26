@@ -39,12 +39,12 @@ class HappyPath : FreeSpec({
                 lookupFirst<Button>(".button-bar .button").text shouldBe "Add new cluster"
             }
 
-            "Add a new cluster"{
+            "Add a new cluster" {
                 lookupFirst<Button>(".button-bar .button").click()
                 lookup<Label>(".h1").forAtLeastOne { it.text shouldBe "Cluster connection" }
                 lookup<Label>(".h1").forAtLeastOne { it.text shouldBe "Schema registry" }
                 lookup<Button>(".button").forAtLeastOne { it.text shouldBe "Save" }
-                //todo: complete
+                // todo: complete
             }
         }
     }
