@@ -1,20 +1,24 @@
 package insulator.integrationtest.helpers
 
 import javafx.scene.Node
+import javafx.stage.Stage
+import javafx.stage.Window
 import org.testfx.api.FxAssert
-import org.testfx.api.FxRobot
-import org.testfx.api.FxRobotInterface
-import tornadofx.CssRule
-import tornadofx.CssRuleSet
+import tornadofx.FX
+import tornadofx.Rendered
 
-fun <T : Node> lookupFirst(cssSelector: String): T =
-    lookup<T>(cssSelector).firstOrNull()
+fun mainWindow(): Node = FX.primaryStage.scene.root
+fun lookupWindowByTitle(title: String): Node = FxAssert.assertContext().nodeFinder
+    .rootNode(
+        Window.getWindows().firstOrNull { (it as? Stage)?.title == title }
+            ?: throw AssertionError("There is no window in the scene-graph matching the title $title")
+    )
+
+fun <T : Node> Node.lookupAny(cssRule: Rendered): MutableSet<T> = lookupAny(cssRule.render())
+fun <T : Node> Node.lookupAny(cssSelector: String): MutableSet<T> =
+    FxAssert.assertContext().nodeFinder.from(this).lookup(cssSelector).queryAll()
+
+fun <T : Node> Node.lookupFirst(cssRule: Rendered): T = lookupFirst(cssRule.render())
+fun <T : Node> Node.lookupFirst(cssSelector: String): T =
+    lookupAny<T>(cssSelector).firstOrNull()
         ?: throw AssertionError("There is no node in the scene-graph matching: $cssSelector")
-
-fun <T : Node> lookupFirst(cssRule: CssRule): T = lookupFirst(cssRule.render())
-fun <T : Node> lookupFirst(cssRule: CssRuleSet): T = lookupFirst(cssRule.render())
-
-fun <T : Node> lookup(cssSelector: String): MutableSet<T> = FxAssert.assertContext().nodeFinder.lookup(cssSelector).queryAll()
-fun <T : Node> lookup(cssRule: CssRule): MutableSet<T> = lookup(cssRule.name)
-
-fun Node.click(): FxRobotInterface = FxRobot().clickOn(this)

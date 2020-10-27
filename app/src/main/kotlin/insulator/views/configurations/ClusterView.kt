@@ -27,8 +27,8 @@ class ClusterView @Inject constructor(private val viewModel: ClusterViewModel) :
     override val root = form {
         fieldset {
             h1("Cluster connection")
-            field("Cluster name") { textfield(viewModel.nameProperty).required() }
-            field("Endpoint (url:port)") { textfield(viewModel.endpointProperty).required() }
+            field("Cluster name") { textfield(viewModel.nameProperty) { id = "field-cluster-name" }.required() }
+            field("Endpoint (url:port)") { textfield(viewModel.endpointProperty) { id = "field-endpoint" }.required() }
             fieldset {
                 disableWhen(viewModel.useSaslProperty)
                 field("Use SSL (Aiven)") { checkbox(property = viewModel.useSSLProperty) }

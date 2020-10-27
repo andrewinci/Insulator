@@ -10,7 +10,6 @@ import kotlinx.coroutines.delay
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testfx.api.FxToolkit
-import org.testfx.util.WaitForAsyncUtils
 import tornadofx.FX
 import java.io.Closeable
 
@@ -29,7 +28,7 @@ class FxFixture() : Closeable {
     suspend fun startAppWithKafkaCuster(clusterName: String, createSchemaRegistry: Boolean = true) {
         kafka.start()
         kafka.waitingFor(Wait.forListeningPort())
-        startAppWithClusters(
+        startApp(
             Cluster(
                 name = clusterName,
                 endpoint = kafka.bootstrapServers,
@@ -42,7 +41,7 @@ class FxFixture() : Closeable {
         )
     }
 
-    suspend fun startAppWithClusters(vararg clusters: Cluster) {
+    suspend fun startApp(vararg clusters: Cluster) {
         storeConfiguration(*clusters)
         FxToolkit.setupApplication(Insulator::class.java)
         // wait a bit, CI may be slow
@@ -54,10 +53,6 @@ class FxFixture() : Closeable {
         ConfigurationRepo("$currentHomeFolder/.insulator.config").let { repo ->
             cluster.forEach { repo.store(it) }
         }
-
-    fun waitFXThread() {
-        WaitForAsyncUtils.waitForFxEvents()
-    }
 
     override fun close() {
         waitFXThread() // wait any pending task
