@@ -5,12 +5,19 @@ import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.lookup
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.kafka.model.Cluster
+import insulator.ui.style.ButtonStyle.Companion.settingsButton
+import insulator.ui.style.TextStyle.Companion.h1
+import insulator.ui.style.TextStyle.Companion.h2
+import insulator.ui.style.TextStyle.Companion.subTitle
 import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.inspectors.forAtLeastOne
 import io.kotest.matchers.shouldBe
 import javafx.scene.control.Button
 import javafx.scene.control.Label
+import javafx.stage.Window
+import tornadofx.CssRule
+import tornadofx.Stylesheet.Companion.button
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
@@ -23,15 +30,16 @@ class HappyPath : FreeSpec({
 
             "Title should be Clusters" {
                 eventually(10.seconds) {
-                    lookupFirst<Label>(".h1").text shouldBe "Clusters"
+                    lookupFirst<Label>(h1).text shouldBe "Clusters"
                 }
             }
 
             "All clusters config should be available with a settings button" {
                 clusters.forEach {
-                    lookupFirst<Label>("#cluster-${it.guid} .h2").text shouldBe it.name
-                    lookupFirst<Label>("#cluster-${it.guid} .sub-title").text shouldBe it.endpoint
-                    lookupFirst<Button>("#cluster-${it.guid} .settings-button")
+                    val clusterId = CssRule.id("cluster-${it.guid}")
+                    lookupFirst<Label>(clusterId.contains(h2)).text shouldBe it.name
+                    lookupFirst<Label>(clusterId.contains(subTitle)).text shouldBe it.endpoint
+                    lookupFirst<Button>(clusterId.contains(settingsButton))
                 }
             }
 
@@ -39,11 +47,12 @@ class HappyPath : FreeSpec({
                 lookupFirst<Button>(".button-bar .button").text shouldBe "Add new cluster"
             }
 
-            "Add a new cluster" {
-                lookupFirst<Button>(".button-bar .button").click()
-                lookup<Label>(".h1").forAtLeastOne { it.text shouldBe "Cluster connection" }
-                lookup<Label>(".h1").forAtLeastOne { it.text shouldBe "Schema registry" }
-                lookup<Button>(".button").forAtLeastOne { it.text shouldBe "Save" }
+            "Open Add a new cluster windows" {
+                lookupFirst<Button>(CssRule.id("button-bar").contains(button)).click()
+                Window.getWindows().first()
+                lookup<Label>(h1).forAtLeastOne { it.text shouldBe "Cluster connection" }
+                lookup<Label>(h1).forAtLeastOne { it.text shouldBe "Schema registry" }
+                lookup<Button>(button).forAtLeastOne { it.text shouldBe "Save" }
                 // todo: complete
             }
         }
