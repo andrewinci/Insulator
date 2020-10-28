@@ -1,14 +1,14 @@
 package insulator.integrationtest.helpers
 
+import javafx.application.Platform
+import javafx.embed.swing.SwingFXUtils
 import javafx.scene.Node
 import javafx.scene.control.Button
+import javafx.stage.Stage
+import javafx.stage.Window
 import org.testfx.api.FxAssert
 import org.testfx.api.FxRobot
 import org.testfx.util.WaitForAsyncUtils
-import java.awt.Rectangle
-import java.awt.Robot
-import java.awt.Toolkit
-import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -34,9 +34,15 @@ fun Node.click() {
 
 fun screenShoot(name: String = "") {
     val path = Paths.get("captures").also { it.toFile().mkdirs() }
-    val image: BufferedImage = Robot().createScreenCapture(Rectangle(Toolkit.getDefaultToolkit().screenSize))
-    val filePath = Path.of(path.toAbsolutePath().toString(), "$name-${UUID.randomUUID()}.png")
-    ImageIO.write(image, "png", File(filePath.toString()))
+    Platform.runLater {
+        Window.getWindows()
+            .map { (it as Stage).scene.snapshot(null) }
+            .map { SwingFXUtils.fromFXImage(it, null) }
+            .forEach {
+                val filePath = Path.of(path.toAbsolutePath().toString(), "$name-${UUID.randomUUID()}.png")
+                ImageIO.write(it, "png", File(filePath.toString()))
+            }
+    }
 }
 
 fun waitFXThread() {
