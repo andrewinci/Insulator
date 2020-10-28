@@ -81,6 +81,8 @@ jobs:
     - name: Integration tests & publish code coverage
       uses: paambaati/codeclimate-action@v2.7.4
       env:
+        DISPLAY: ":99.0"
+        _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
         CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
         JACOCO_SOURCE_PATH: |
           ${{github.workspace}}/app/src/main/kotlin \
