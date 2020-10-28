@@ -2,12 +2,18 @@ package insulator.integrationtest.helpers
 
 import javafx.scene.Node
 import javafx.scene.control.Button
-import javafx.stage.Screen
 import org.testfx.api.FxAssert
 import org.testfx.api.FxRobot
-import org.testfx.api.FxService
 import org.testfx.util.WaitForAsyncUtils
+import java.awt.Rectangle
+import java.awt.Robot
+import java.awt.Toolkit
+import java.awt.image.BufferedImage
+import java.io.File
 import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.UUID
+import javax.imageio.ImageIO
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
@@ -26,13 +32,12 @@ fun Node.click() {
     waitFXThread()
 }
 
-fun screenShoot() = FxRobot()
-    .capture(Screen.getPrimary().bounds)
-    .let {
-        FxService.serviceContext()
-            .captureSupport
-            .saveImage(it.image, Path.of("test.png"))
-    }
+fun screenShoot(name: String = "") {
+    val path = Paths.get("captures").also { it.toFile().mkdirs() }
+    val image: BufferedImage = Robot().createScreenCapture(Rectangle(Toolkit.getDefaultToolkit().screenSize))
+    val filePath = Path.of(path.toAbsolutePath().toString(), "$name-${UUID.randomUUID()}.png")
+    ImageIO.write(image, "png", File(filePath.toString()))
+}
 
 fun waitFXThread() {
     WaitForAsyncUtils.waitForFxEvents()
