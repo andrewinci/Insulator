@@ -52,6 +52,7 @@ class ListClusterViewTests : FreeSpec({
                     }
                 }
             }
+            // screenShoot()
         }
     }
 
