@@ -8,6 +8,7 @@ import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.lookupWindowByTitle
 import insulator.integrationtest.helpers.mainWindow
+import insulator.integrationtest.helpers.screenShoot
 import insulator.kafka.model.Cluster
 import insulator.ui.style.ButtonStyle.Companion.alertButton
 import insulator.ui.style.ButtonStyle.Companion.settingsButton
@@ -52,7 +53,7 @@ class ListClusterViewTests : FreeSpec({
                     }
                 }
             }
-            // screenShoot()
+            screenShoot("list-cluster")
         }
     }
 
@@ -77,6 +78,7 @@ class ListClusterViewTests : FreeSpec({
                     ).forEach { (name, value) ->
                         lookupFirst<TextField>(CssRule.id(name)).textProperty().set(value)
                     }
+                    screenShoot("add-new-cluster")
                     lookupAny<Button>(button).first { it.text == "Save" }.click()
                 }
             }
@@ -97,6 +99,7 @@ class ListClusterViewTests : FreeSpec({
             }
             // Click delete cluster button
             eventually { lookupWindowByTitle(cluster.name).lookupFirst<Button>(alertButton).click() }
+            screenShoot("delete-cluster")
             // Click OK on the dialog
             eventually { clickOkOnDialog() }
             // The cluster is deleted from the list of clusters"
