@@ -3,9 +3,11 @@ package insulator.views.configurations
 import insulator.di.factories.ClusterComponentFactory
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
+import insulator.kafka.local.LocalKafkaException
 import insulator.kafka.model.Cluster
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
+import insulator.ui.component.blueButton
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.settingsButton
@@ -35,8 +37,9 @@ class ListClusterView @Inject constructor(
     override val root = vbox(spacing = 15) {
         h1("Clusters")
         clusterList()
-        hbox(alignment = Pos.CENTER_RIGHT) {
-            addNewClusterButton()
+        borderpane {
+            left = localKafkaButton()
+            right = addNewClusterButton()
             addClass("button-bar")
         }
     }
@@ -48,16 +51,17 @@ class ListClusterView @Inject constructor(
             }
         }
 
+    private fun EventTarget.localKafkaButton() =
+        blueButton("Local kafka cluster") {
+            viewModel.dispatch {
+                startLocalKafka()?.let { openMainView(it) }
+            }
+        }
+
     private fun EventTarget.clusterList() =
         listview(viewModel.clustersProperty) {
             cellFormat { graphic = buildClusterCell(it) }
-            action { cluster ->
-                currentStage?.hide()
-                clusterComponentFactory.build(cluster)
-                    .mainView()
-                    .also { it.whenUndocked { currentStage?.show() } }
-                    .openWindow(modality = Modality.WINDOW_MODAL)
-            }
+            action { openMainView(it) }
         }
 
     private fun EventTarget.buildClusterCell(cluster: Cluster) =
@@ -73,6 +77,14 @@ class ListClusterView @Inject constructor(
             }
             id = "cluster-${cluster.guid}"
         }
+
+    private fun openMainView(cluster: Cluster) {
+        currentStage?.hide()
+        clusterComponentFactory.build(cluster)
+            .mainView()
+            .also { it.whenUndocked { currentStage?.show() } }
+            .openWindow(modality = Modality.WINDOW_MODAL)
+    }
 
     private fun checkVersion() {
         if (wasVersionChecked.compareAndSet(false, true))
@@ -97,9 +109,9 @@ class ListClusterView @Inject constructor(
         super.onDock()
     }
 
-    override fun onError(throwable: Throwable) {
-        // we can't continue without the list of clusters
-        close()
+    override fun onError(throwable: Throwable) = when(throwable){
+        is LocalKafkaException -> Unit
+        else -> close()
     }
 
     companion object {

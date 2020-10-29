@@ -2,6 +2,7 @@ package insulator.viewmodel.configurations
 
 import insulator.configuration.ConfigurationRepo
 import insulator.helper.dispatch
+import insulator.kafka.local.LocalKafka
 import insulator.kafka.model.Cluster
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.collections.FXCollections
@@ -19,5 +20,13 @@ class ListClusterViewModel @Inject constructor(configurationRepo: ConfigurationR
                 .fold({ error.set(it); emptyList() }, { it.clusters })
             clustersProperty.addAll(configurations)
         }
+    }
+
+    private var cache: Cluster? = null
+    suspend fun startLocalKafka(): Cluster? {
+        if (cache == null) {
+            LocalKafka().start().fold({ this.error.set(it) }, { cache = it })
+        }
+        return cache
     }
 }

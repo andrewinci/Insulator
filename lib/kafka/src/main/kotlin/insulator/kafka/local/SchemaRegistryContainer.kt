@@ -1,4 +1,4 @@
-package insulator.integrationtest.helpers
+package insulator.kafka.local
 
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.KafkaContainer
