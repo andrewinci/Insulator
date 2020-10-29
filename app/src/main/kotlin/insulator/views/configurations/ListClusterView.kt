@@ -16,7 +16,6 @@ import insulator.views.update.UpdateInfoView
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.stage.Modality
-import javafx.stage.StageStyle
 import tornadofx.action
 import tornadofx.addClass
 import tornadofx.borderpane
@@ -45,9 +44,7 @@ class ListClusterView @Inject constructor(
     private fun EventTarget.addNewClusterButton() =
         button("Add new cluster") {
             action {
-                clusterComponentFactory.build(Cluster.empty())
-                    .clusterView()
-                    .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+                clusterComponentFactory.build(Cluster.empty()).clusterView().show()
             }
         }
 
@@ -71,9 +68,7 @@ class ListClusterView @Inject constructor(
             }
             right = vbox(alignment = Pos.CENTER_RIGHT) {
                 settingsButton {
-                    clusterComponentFactory.build(cluster)
-                        .clusterView()
-                        .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+                    clusterComponentFactory.build(cluster).clusterView().show()
                 }
             }
             id = "cluster-${cluster.guid}"

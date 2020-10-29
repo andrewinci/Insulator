@@ -2,6 +2,8 @@ package insulator.ui.component
 
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.theme
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.value.ObservableValue
 import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Pos
@@ -37,8 +39,11 @@ fun EventTarget.blueButton(text: String, op: () -> Unit) = button(text) {
 }
 
 fun EventTarget.confirmationButton(value: String, confirmationMessage: String, visible: Boolean = true, onOkAction: () -> Unit) =
+    confirmationButton(value, confirmationMessage, SimpleBooleanProperty(visible), onOkAction)
+
+fun EventTarget.confirmationButton(value: String, confirmationMessage: String, visibleProperty: ObservableValue<Boolean>, onOkAction: () -> Unit) =
     button(value) {
-        isVisible = visible
+        visibleProperty().bind(visibleProperty)
         addClass(ButtonStyle.alertButton)
         action {
             insulatorAlert(Alert.AlertType.WARNING, confirmationMessage, ButtonType.CANCEL, ButtonType.OK) { btnType ->
