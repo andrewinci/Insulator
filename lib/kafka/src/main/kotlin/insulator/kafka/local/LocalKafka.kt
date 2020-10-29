@@ -1,8 +1,7 @@
 package insulator.kafka.local
 
 import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
+import arrow.core.computations.either
 import insulator.helper.runCatchingE
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.SchemaRegistryConfiguration
@@ -12,7 +11,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.wait.strategy.Wait
 
-class LocalKafkaException(message: String?) : Exception(message)
+class LocalKafkaException(throwable: Throwable) : Exception(throwable.message)
 
 class LocalKafka {
 
@@ -25,17 +24,17 @@ class LocalKafka {
         }
     }
 
-    private fun startLocalCluster(): Either<LocalKafkaException, Cluster> {
-        kafka.runCatchingE { start() }
-            .map { kafka.waitingFor(Wait.forListeningPort()) }
-            .mapLeft { return LocalKafkaException(it.message).left() }
-        schemaRegistry.runCatchingE { start() }
-            .map { schemaRegistry.waitingFor(Wait.forListeningPort()) }
-            .mapLeft { return LocalKafkaException(it.message).left() }
-        return Cluster.empty().copy(
+    private suspend fun startLocalCluster() = either<LocalKafkaException, Cluster> {
+        listOf(kafka, schemaRegistry).forEach { container ->
+            !container.runCatchingE { start() }
+                .map { container.waitingFor(Wait.forListeningPort()) }
+                .mapLeft { LocalKafkaException(it) }
+        }
+
+        Cluster.empty().copy(
             name = "Local Cluster",
             endpoint = kafka.bootstrapServers,
             schemaRegistryConfig = SchemaRegistryConfiguration(schemaRegistry.endpoint)
-        ).right()
+        )
     }
 }
