@@ -46,16 +46,14 @@ class ListClusterView @Inject constructor(
         borderpane {
             left = localKafkaButton()
             right = addNewClusterButton()
-            addClass("button-bar")
         }
     }
 
     private fun EventTarget.addNewClusterButton() =
         button("Add new cluster") {
-            action {
-                clusterComponentFactory.build(Cluster.empty()).clusterView().show()
-            }
+            action { clusterComponentFactory.build(Cluster.empty()).clusterView().show() }
             disableWhen(loadingLocalKafka)
+            id = "button-add-cluster"
         }
 
     private fun EventTarget.localKafkaButton() = hbox(alignment = Pos.CENTER_LEFT, spacing = 3) {
@@ -69,6 +67,7 @@ class ListClusterView @Inject constructor(
             }
             disableProperty().bind(loadingLocalKafka)
             addClass(ButtonStyle.blueButton)
+            id = "button-local-cluster"
         }
         progressindicator { maxWidth = 15.0; visibleWhen(loadingLocalKafka) }
     }
