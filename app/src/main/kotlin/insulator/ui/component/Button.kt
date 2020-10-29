@@ -33,11 +33,6 @@ fun EventTarget.settingsButton(op: () -> Unit) = button {
     addClass(ButtonStyle.settingsButton)
 }
 
-fun EventTarget.blueButton(text: String, op: () -> Unit) = button(text) {
-    onMouseClicked = EventHandler { op() }
-    addClass(ButtonStyle.blueButton)
-}
-
 fun EventTarget.confirmationButton(value: String, confirmationMessage: String, visible: Boolean = true, onOkAction: () -> Unit) =
     confirmationButton(value, confirmationMessage, SimpleBooleanProperty(visible), onOkAction)
 

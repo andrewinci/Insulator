@@ -1,7 +1,8 @@
 package insulator.kafka.local
 
 import arrow.core.Either
-import arrow.core.computations.either
+import arrow.core.left
+import arrow.core.right
 import insulator.helper.runCatchingE
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.SchemaRegistryConfiguration
@@ -24,15 +25,17 @@ class LocalKafka {
         }
     }
 
-    private suspend fun startLocalCluster() = either<LocalKafkaException, Cluster> {
-        !kafka.runCatchingE { start() }.mapLeft { LocalKafkaException(it.message) }
-        !schemaRegistry.runCatchingE { start() }.mapLeft { LocalKafkaException(it.message) }
-        kafka.waitingFor(Wait.forListeningPort())
-        schemaRegistry.waitingFor(Wait.forListeningPort())
-        Cluster.empty().copy(
+    private fun startLocalCluster(): Either<LocalKafkaException, Cluster> {
+        kafka.runCatchingE { start() }
+            .map { kafka.waitingFor(Wait.forListeningPort()) }
+            .mapLeft { return LocalKafkaException(it.message).left() }
+        schemaRegistry.runCatchingE { start() }
+            .map { schemaRegistry.waitingFor(Wait.forListeningPort()) }
+            .mapLeft { return LocalKafkaException(it.message).left() }
+        return Cluster.empty().copy(
             name = "Local Cluster",
             endpoint = kafka.bootstrapServers,
             schemaRegistryConfig = SchemaRegistryConfiguration(schemaRegistry.endpoint)
-        )
+        ).right()
     }
 }

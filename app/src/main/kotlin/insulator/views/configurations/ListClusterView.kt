@@ -7,14 +7,15 @@ import insulator.kafka.local.LocalKafkaException
 import insulator.kafka.model.Cluster
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
-import insulator.ui.component.blueButton
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.settingsButton
 import insulator.ui.component.subTitle
+import insulator.ui.style.ButtonStyle
 import insulator.update.VersionChecker
 import insulator.viewmodel.configurations.ListClusterViewModel
 import insulator.views.update.UpdateInfoView
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.stage.Modality
@@ -22,9 +23,12 @@ import tornadofx.action
 import tornadofx.addClass
 import tornadofx.borderpane
 import tornadofx.button
+import tornadofx.disableWhen
 import tornadofx.hbox
 import tornadofx.listview
+import tornadofx.progressindicator
 import tornadofx.vbox
+import tornadofx.visibleWhen
 import tornadofx.whenUndocked
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -33,6 +37,8 @@ class ListClusterView @Inject constructor(
     override val viewModel: ListClusterViewModel,
     private val clusterComponentFactory: ClusterComponentFactory
 ) : InsulatorView("Insulator") {
+
+    private val loadingLocalKafka = SimpleBooleanProperty(false)
 
     override val root = vbox(spacing = 15) {
         h1("Clusters")
@@ -49,19 +55,29 @@ class ListClusterView @Inject constructor(
             action {
                 clusterComponentFactory.build(Cluster.empty()).clusterView().show()
             }
+            disableWhen(loadingLocalKafka)
         }
 
-    private fun EventTarget.localKafkaButton() =
-        blueButton("Local kafka cluster") {
-            viewModel.dispatch {
-                startLocalKafka()?.let { openMainView(it) }
+    private fun EventTarget.localKafkaButton() = hbox(alignment = Pos.CENTER_LEFT, spacing = 3) {
+        button("Local kafka cluster") {
+            action {
+                loadingLocalKafka.set(true)
+                viewModel.dispatch {
+                    startLocalKafka()?.let { openMainView(it) }
+                    loadingLocalKafka.set(false)
+                }
             }
+            disableProperty().bind(loadingLocalKafka)
+            addClass(ButtonStyle.blueButton)
         }
+        progressindicator { maxWidth = 15.0; visibleWhen(loadingLocalKafka) }
+    }
 
     private fun EventTarget.clusterList() =
         listview(viewModel.clustersProperty) {
             cellFormat { graphic = buildClusterCell(it) }
             action { openMainView(it) }
+            disableWhen(loadingLocalKafka)
         }
 
     private fun EventTarget.buildClusterCell(cluster: Cluster) =
@@ -109,7 +125,7 @@ class ListClusterView @Inject constructor(
         super.onDock()
     }
 
-    override fun onError(throwable: Throwable) = when(throwable){
+    override fun onError(throwable: Throwable) = when (throwable) {
         is LocalKafkaException -> Unit
         else -> close()
     }

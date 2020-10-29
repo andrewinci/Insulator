@@ -7,12 +7,12 @@ import insulator.kafka.consumer.DeserializationFormat
 import insulator.kafka.model.Cluster
 import insulator.ui.common.InsulatorTabView
 import insulator.ui.component.appBar
-import insulator.ui.component.blueButton
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.fieldName
 import insulator.ui.component.h1
 import insulator.ui.component.searchBox
 import insulator.ui.component.subTitle
+import insulator.ui.style.ButtonStyle
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import javafx.beans.binding.Bindings
@@ -64,7 +64,7 @@ class TopicView @Inject constructor(
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                blueButton("Produce") { viewModel.showProducerView() }
+                button("Produce") { viewModel.showProducerView(); addClass(ButtonStyle.blueButton) }
                 consumeStopButton()
                 fieldName("from")
                 consumeFromCombobox()
