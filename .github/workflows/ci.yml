@@ -36,7 +36,6 @@ jobs:
             echo "Nothing to change"
             exit 0
           fi
-
   build-mac:
     needs: linting
     runs-on: macos-latest
@@ -61,64 +60,70 @@ jobs:
     needs: linting
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install xvfb for headless tests
-      run: sudo apt-get install xvfb
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 14
-        java-package: jdk
-    - name: Cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: ${{ runner.os }}-gradle-
-    - name: Integration tests & publish code coverage
-      uses: paambaati/codeclimate-action@v2.7.4
-      env:
-        DISPLAY: ":99.0"
-        _JAVA_OPTIONS: "-Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
-        CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
-        JACOCO_SOURCE_PATH: |
-          ${{github.workspace}}/app/src/main/kotlin \
-          ${{github.workspace}}/lib/configuration/src/main/kotlin \
-          ${{github.workspace}}/lib/helper/src/main/kotlin \
-          ${{github.workspace}}/lib/jsonhelper/src/main/kotlin \
-          ${{github.workspace}}/lib/kafka/src/main/kotlin \
-          ${{github.workspace}}/lib/update/src/main/kotlin
-      with:
-        coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon"
-        coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1
-    - name: Upload screenshoots
-      run:  aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/$GITHUB_SHA
-
+      - uses: actions/checkout@v2
+      - name: Install xvfb for headless tests
+        run: sudo apt-get install xvfb
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 14
+          java-package: jdk
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
+      - name: Integration tests & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.4
+        env:
+          DISPLAY: ":99.0"
+          _JAVA_OPTIONS: "-Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
+          CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
+          JACOCO_SOURCE_PATH: |
+            ${{github.workspace}}/app/src/main/kotlin \
+            ${{github.workspace}}/lib/configuration/src/main/kotlin \
+            ${{github.workspace}}/lib/helper/src/main/kotlin \
+            ${{github.workspace}}/lib/jsonhelper/src/main/kotlin \
+            ${{github.workspace}}/lib/kafka/src/main/kotlin \
+            ${{github.workspace}}/lib/update/src/main/kotlin
+        with:
+          coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon"
+          coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+      - name: Upload screenshoots
+        run: aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/$GITHUB_SHA
+      - name: Comment on PR
+        uses: mshick/add-pr-comment@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+        with:
+          message: "[ Ubuntu 📷 ]http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/$GITHUB_SHA"
+          allow-repeats: true
   build-win:
     needs: linting
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 14
-        java-package: jdk
-    - name: Cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: ${{ runner.os }}-gradle-
-    - name: Run tests
-      run: "./gradlew check --no-daemon"
+      - uses: actions/checkout@v2
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 14
+          java-package: jdk
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
+      - name: Run tests
+        run: "./gradlew check --no-daemon"
