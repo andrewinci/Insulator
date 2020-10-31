@@ -105,8 +105,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         with:
-          message: "[ Ubuntu 📷 ]http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/$GITHUB_SHA"
-          allow-repeats: true
+          message: |
+            **Screenshoots 📷**
+            http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.sha }}
+          allow-repeats: false
   build-win:
     needs: linting
     runs-on: windows-latest
