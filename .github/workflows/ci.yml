@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  pull_request:
+  pull_request_target:
     branches:
       - master
 
@@ -40,7 +40,14 @@ jobs:
     needs: linting
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the merged commit from PR and base branch
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v2
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/head
+      - name: Checkout the head commit of the branch
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v2
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
         with:
@@ -60,7 +67,14 @@ jobs:
     needs: linting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the merged commit from PR and base branch
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v2
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/head
+      - name: Checkout the head commit of the branch
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v2
       - name: Install xvfb for headless tests
         run: sudo apt-get install xvfb
       - name: Setup Java JDK
@@ -113,7 +127,14 @@ jobs:
     needs: linting
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the merged commit from PR and base branch
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v2
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/head
+      - name: Checkout the head commit of the branch
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v2
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
         with:
