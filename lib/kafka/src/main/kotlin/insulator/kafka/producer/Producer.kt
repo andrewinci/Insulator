@@ -2,8 +2,8 @@ package insulator.kafka.producer
 
 import arrow.core.Either
 import org.apache.avro.generic.GenericRecord
-import org.apache.kafka.clients.producer.Producer as KafkaProducer
 import java.io.Closeable
+import org.apache.kafka.clients.producer.Producer as KafkaProducer
 
 typealias ProducerBuilder<V> = () -> KafkaProducer<String, V>
 typealias GenericJsonToAvroConverter = suspend ((jsonString: String, schemaString: String) -> Either<Throwable, GenericRecord>)
