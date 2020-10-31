@@ -87,7 +87,7 @@ class TopicView @Inject constructor(
     private fun EventTarget.valueFormatOptions() {
         if (cluster.isSchemaRegistryConfigured()) {
             viewModel.consumerViewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
-            fieldName("value format")
+            fieldName("deserializer")
             combobox<String> {
                 items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
                 valueProperty().bindBidirectional(viewModel.consumerViewModel.deserializeValueProperty)

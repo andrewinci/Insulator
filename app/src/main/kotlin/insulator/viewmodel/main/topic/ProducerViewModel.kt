@@ -27,6 +27,7 @@ class ProducerViewModel @Inject constructor(
     private val stringProducer: StringProducer
 ) : InsulatorViewModel() {
 
+    val serializeValueProperty = SimpleStringProperty()
     val producerTypeProperty = SimpleObjectProperty(
         if (cluster.isSchemaRegistryConfigured()) SerializationFormat.Avro else SerializationFormat.String
     )
