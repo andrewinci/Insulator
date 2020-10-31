@@ -74,6 +74,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: paambaati/codeclimate-action@v2.7.4
         env:
+          GITHUB_SHA: "${{ github.event.pull_request.head.sha }}"
           DISPLAY: ":99.0"
           _JAVA_OPTIONS: "-Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
           CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
