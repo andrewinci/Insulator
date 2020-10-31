@@ -5,6 +5,7 @@ import arrow.core.computations.either
 import arrow.core.flatMap
 import arrow.core.rightIfNotNull
 import insulator.kafka.factories.kafkaConfig
+import insulator.kafka.helper.toSuspendCoroutine
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
 import insulator.kafka.model.TopicConfiguration

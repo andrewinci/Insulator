@@ -13,10 +13,10 @@ import org.testcontainers.containers.wait.strategy.Wait
 
 class LocalKafkaException(throwable: Throwable) : Exception(throwable.message)
 
-class LocalKafka {
-
-    private val kafka = KafkaContainer()
-    private val schemaRegistry = SchemaRegistryContainer().withKafka(kafka)
+class LocalKafka(
+    val kafka: KafkaContainer = KafkaContainer(),
+    val schemaRegistry: SchemaRegistryContainer = SchemaRegistryContainer().withKafka(kafka)
+) {
 
     suspend fun start() = suspendCancellableCoroutine<Either<LocalKafkaException, Cluster>> { continuation ->
         GlobalScope.launch {
