@@ -2,13 +2,16 @@ package insulator.views.main.topic
 
 import insulator.di.TopicScope
 import insulator.helper.dispatch
+import insulator.kafka.consumer.DeserializationFormat
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
 import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
 import javafx.beans.binding.Bindings
+import javafx.collections.FXCollections
 import javafx.event.EventTarget
+import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
@@ -17,7 +20,9 @@ import tornadofx.action
 import tornadofx.attachTo
 import tornadofx.borderpane
 import tornadofx.button
+import tornadofx.combobox
 import tornadofx.enableWhen
+import tornadofx.hbox
 import tornadofx.label
 import tornadofx.onDoubleClick
 import tornadofx.scrollpane
@@ -35,9 +40,10 @@ class ProducerView @Inject constructor(
 
     override val root = vbox(spacing = 10.0) {
         appBar { h1(viewModel.topic.name) }
-
         fieldName("Key")
         textfield(viewModel.keyProperty)
+
+        valueFormatOptions()
 
         fieldName("Value")
         recordValueTextArea()
@@ -57,22 +63,25 @@ class ProducerView @Inject constructor(
         prefHeight = 800.0
     }
 
+    private fun EventTarget.valueFormatOptions() {
+        if (viewModel.cluster.isSchemaRegistryConfigured()) {
+            hbox(alignment = Pos.CENTER_LEFT) {
+                fieldName("Serializer")
+                combobox<String> {
+                    items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                    valueProperty().bindBidirectional(viewModel.serializeValueProperty)
+                }
+            }
+        }
+    }
+
     private fun EventTarget.validationArea() =
         scrollpane {
             label {
-                val warning = {
-                    viewModel.validationErrorProperty.value
-                }
+                val warning = { viewModel.validationErrorProperty.value }
                 textProperty().bind(Bindings.createStringBinding({ if (warning().isNullOrEmpty()) "Valid" else warning() }, viewModel.validationErrorProperty))
                 textFillProperty().bind(
-                    Bindings.createObjectBinding(
-                        {
-                            if (warning().isNullOrEmpty()) {
-                                Color.GREEN
-                            } else Color.RED
-                        },
-                        viewModel.validationErrorProperty
-                    )
+                    Bindings.createObjectBinding({ if (warning().isNullOrEmpty()) Color.GREEN else Color.RED }, viewModel.validationErrorProperty)
                 )
                 isWrapText = true
                 onDoubleClick { autoComplete() }
@@ -90,17 +99,12 @@ class ProducerView @Inject constructor(
     }
 
     private fun autoComplete() {
-        if (!viewModel.nextFieldProperty.value.isNullOrEmpty()) {
-            with(recordValueTextArea) {
-                insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":")
-            }
-        }
+        if (!viewModel.nextFieldProperty.value.isNullOrEmpty())
+            with(recordValueTextArea) { insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":") }
     }
 
     override fun onDock() {
-        titleProperty.bind(
-            Bindings.createStringBinding({ "Insulator - ${viewModel.producerTypeProperty.value} producer" }, viewModel.producerTypeProperty)
-        )
+        title = "Insulator Producer"
         super.onDock()
     }
 }

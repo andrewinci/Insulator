@@ -36,7 +36,7 @@ class AvroProducerTest : StringSpec({
         val schemaRegistry = mockk<SchemaRegistry> {
             coEvery { getSubject(any()) } returns Subject("$topic-value", listOf(Schema("", 1, 2))).right()
         }
-        val sut = AvroProducer(mockk(), schemaRegistry) { _, _ -> mockk<GenericRecord>().right() }
+        val sut = AvroProducer({ mockk() }, schemaRegistry) { _, _ -> mockk<GenericRecord>().right() }
         // act
         repeat(5) { sut.validate(testMessage, topic) }
         repeat(5) { sut.send(topic, testMessage, "key") }
@@ -54,7 +54,7 @@ class AvroProducerTest : StringSpec({
         val producer = mockk<Producer<String, GenericRecord>> {
             coEvery { send(any()) } throws error
         }
-        val sut = AvroProducer(producer, schemaRegistry) { _, _ -> mockk<GenericRecord>().right() }
+        val sut = AvroProducer({ producer }, schemaRegistry) { _, _ -> mockk<GenericRecord>().right() }
         // act
         val res = sut.send(topic, "test message", "key")
         // assert
