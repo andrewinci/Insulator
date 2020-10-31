@@ -17,15 +17,11 @@ fun stringProducer(cluster: Cluster) =
         StringProducer { KafkaProducer(it) }
     }
 
-class StringProducer(stringProducerBuilder: () -> org.apache.kafka.clients.producer.Producer<String, String>) : Producer {
-
-    private val stringProducer: org.apache.kafka.clients.producer.Producer<String, String> by lazy(stringProducerBuilder)
-
+class StringProducer(producerBuilder: ProducerBuilder<String>) : GenericProducer<String>(producerBuilder) {
     override suspend fun validate(value: String, topic: String): Either<Throwable, Unit> = Unit.right()
     override suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit> {
         val record = ProducerRecord(topic, key, value)
-        return stringProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })
+        return kafkaProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })
     }
-
-    override fun close() = stringProducer.close()
+    override fun close() = kafkaProducer.close()
 }

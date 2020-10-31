@@ -22,14 +22,12 @@ fun avroProducer(cluster: Cluster, schemaRegistry: SchemaRegistry, jsonToAvro: G
     }
 
 class AvroProducer(
-    avroProducerBuilder: () -> org.apache.kafka.clients.producer.Producer<String, GenericRecord>,
+    producerBuilder: ProducerBuilder<GenericRecord>,
     private val schemaRegistry: SchemaRegistry,
     private val jsonAvroConverter: GenericJsonToAvroConverter
-) : Producer {
+) : GenericProducer<GenericRecord>(producerBuilder) {
 
     private val schemaCache = HashMap<String, Either<Throwable, String>>()
-    private val avroProducer: org.apache.kafka.clients.producer.Producer<String, GenericRecord>
-    by lazy(avroProducerBuilder)
 
     override suspend fun validate(value: String, topic: String) =
         internalValidate(value, topic).flatMap { Unit.right() }
@@ -37,10 +35,10 @@ class AvroProducer(
     override suspend fun send(topic: String, key: String, value: String) =
         internalValidate(value, topic)
             .map { ProducerRecord(topic, key, it) }
-            .flatMap { avroProducer.runCatchingE { send(it) } }
+            .flatMap { kafkaProducer.runCatchingE { send(it) } }
             .map { Unit }
 
-    override fun close() = avroProducer.close()
+    override fun close() = kafkaProducer.close()
 
     private suspend fun internalValidate(value: String, topic: String) =
         getCachedSchema(topic).flatMap { jsonAvroConverter(value, it) }
