@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  pull_request:
+  pull_request_target:
     branches:
       - master
 
@@ -36,11 +36,22 @@ jobs:
             echo "Nothing to change"
             exit 0
           fi
-  build-mac:
+
+  build-and-test:
     needs: linting
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the merged commit from PR and base branch
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Checkout the head commit of the branch
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v2
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
         with:
@@ -54,29 +65,13 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-
-      - name: Run tests
+
+      - name: Build and run tests
+        if: ${{ matrix.os != 'ubuntu-latest' }}
         run: "./gradlew check --no-daemon"
-  build-deb:
-    needs: linting
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install xvfb for headless tests
-        run: sudo apt-get install xvfb
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 14
-          java-package: jdk
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-
-      - name: Integration tests & publish code coverage
+      # Ubuntu only
+      - name: Run integration tests
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: paambaati/codeclimate-action@v2.7.4
         env:
           DISPLAY: ":99.0"
@@ -93,39 +88,22 @@ jobs:
           coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon"
           coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
       - name: Configure AWS credentials
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
       - name: Upload screenshoots
-        run: aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/$GITHUB_SHA
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/${{ github.event.pull_request.head.sha }}
       - name: Comment on PR
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: mshick/add-pr-comment@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         with:
           message: |
             **Screenshoots 📷**
-            http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.sha }}
+            http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.event.pull_request.head.sha }}
           allow-repeats: false
-  build-win:
-    needs: linting
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 14
-          java-package: jdk
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-
-      - name: Run tests
-        run: "./gradlew check --no-daemon"
