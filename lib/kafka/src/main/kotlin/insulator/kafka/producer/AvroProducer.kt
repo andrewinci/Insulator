@@ -18,16 +18,18 @@ fun avroProducer(cluster: Cluster, schemaRegistry: SchemaRegistry, jsonToAvro: G
     kafkaConfig(cluster).apply {
         put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
     }.let {
-        AvroProducer(KafkaProducer(it), schemaRegistry, jsonToAvro)
+        AvroProducer({ KafkaProducer(it) }, schemaRegistry, jsonToAvro)
     }
 
 class AvroProducer(
-    private val avroProducer: org.apache.kafka.clients.producer.Producer<String, GenericRecord>,
+    avroProducerBuilder: () -> org.apache.kafka.clients.producer.Producer<String, GenericRecord>,
     private val schemaRegistry: SchemaRegistry,
     private val jsonAvroConverter: GenericJsonToAvroConverter
 ) : Producer {
 
     private val schemaCache = HashMap<String, Either<Throwable, String>>()
+    private val avroProducer: org.apache.kafka.clients.producer.Producer<String, GenericRecord>
+    by lazy(avroProducerBuilder)
 
     override suspend fun validate(value: String, topic: String) =
         internalValidate(value, topic).flatMap { Unit.right() }

@@ -13,7 +13,6 @@ import insulator.kafka.producer.SerializationFormat
 import insulator.kafka.producer.StringProducer
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.binding.Bindings
-import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableBooleanValue
 import tornadofx.onChange
@@ -47,6 +46,8 @@ class ProducerViewModel @Inject constructor(
     )
 
     init {
+        if (cluster.isSchemaRegistryConfigured())
+            serializeValueProperty.set(SerializationFormat.Avro.name)
         listOf(valueProperty, serializeValueProperty).forEach {
             it.onChange { value ->
                 value?.let {

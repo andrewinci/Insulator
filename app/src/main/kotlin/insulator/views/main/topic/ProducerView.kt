@@ -66,7 +66,6 @@ class ProducerView @Inject constructor(
     private fun EventTarget.valueFormatOptions() {
         if (viewModel.cluster.isSchemaRegistryConfigured()) {
             hbox(alignment = Pos.CENTER_LEFT) {
-                viewModel.serializeValueProperty.set(DeserializationFormat.Avro.name)
                 fieldName("Serializer")
                 combobox<String> {
                     items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())

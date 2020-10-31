@@ -14,10 +14,13 @@ fun stringProducer(cluster: Cluster) =
     kafkaConfig(cluster).apply {
         put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
     }.let {
-        StringProducer(KafkaProducer(it))
+        StringProducer { KafkaProducer(it) }
     }
 
-class StringProducer(private val stringProducer: org.apache.kafka.clients.producer.Producer<String, String>) : Producer {
+class StringProducer(stringProducerBuilder: () -> org.apache.kafka.clients.producer.Producer<String, String>) : Producer {
+
+    private val stringProducer: org.apache.kafka.clients.producer.Producer<String, String> by lazy(stringProducerBuilder)
+
     override suspend fun validate(value: String, topic: String): Either<Throwable, Unit> = Unit.right()
     override suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit> {
         val record = ProducerRecord(topic, key, value)
