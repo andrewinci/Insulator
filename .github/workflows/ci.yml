@@ -48,7 +48,7 @@ jobs:
         if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v2
         with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/head
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Checkout the head commit of the branch
         if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v2
@@ -96,7 +96,7 @@ jobs:
           aws-region: eu-west-1
       - name: Upload screenshoots
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/$GITHUB_SHA
+        run: aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/${{ github.event.pull_request.head.sha }}
       - name: Comment on PR
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: mshick/add-pr-comment@v1
@@ -105,5 +105,6 @@ jobs:
         with:
           message: |
             **Screensheets 📷**
-            http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.sha }}
+            **Screenshoots 📷**
+            http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.event.pull_request.head.sha }}
           allow-repeats: false
