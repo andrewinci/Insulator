@@ -2,6 +2,7 @@ package insulator.integrationtest.helpers
 
 import insulator.Insulator
 import insulator.configuration.ConfigurationRepo
+import insulator.kafka.local.SchemaRegistryContainer
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.test.helper.deleteTestSandboxFolder

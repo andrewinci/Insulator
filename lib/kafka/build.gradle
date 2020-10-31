@@ -12,4 +12,7 @@ dependencies {
 
     // Coroutines
     implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: '1.4.0')
+
+    // Test Container
+    api(group: 'org.testcontainers', name: 'kafka', version: "1.14.3")
 }

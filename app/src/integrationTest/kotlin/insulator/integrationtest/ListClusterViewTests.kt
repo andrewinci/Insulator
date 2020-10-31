@@ -63,7 +63,7 @@ class ListClusterViewTests : FreeSpec({
             val newClusterName = "New cluster name"
             val newEndpoint = "newEndpoint:8080"
             // Open the new cluster view
-            mainWindow().lookupFirst<Button>(CssRule.c("button-bar").contains(button)).click()
+            mainWindow().lookupFirst<Button>(CssRule.id("button-add-cluster")).click()
             eventually {
                 with(lookupWindowByTitle("New cluster")) {
                     lookupAny<Label>(h1).map { it.text } shouldContainAll listOf("Cluster connection", "Schema registry")

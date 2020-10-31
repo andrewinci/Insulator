@@ -10,7 +10,10 @@ import insulator.jsonhelper.jsontoavro.FieldParser
 import insulator.jsonhelper.jsontoavro.JsonToAvroConverter
 import insulator.jsonhelper.jsontoavro.fieldparser.ComplexTypeParsersFactory
 import insulator.jsonhelper.jsontoavro.fieldparser.SimpleTypeParsersFactory
+import insulator.kafka.local.LocalKafka
+import insulator.kafka.local.SchemaRegistryContainer
 import org.apache.avro.generic.GenericData
+import org.testcontainers.containers.KafkaContainer
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -42,4 +45,9 @@ class RootModule {
     @Singleton
     @Provides
     fun providesJsonFormatter() = JsonFormatter()
+
+    @Singleton
+    @Provides
+    fun providesLocalKafka() = KafkaContainer()
+        .let { LocalKafka(it, SchemaRegistryContainer().withKafka(it)) }
 }

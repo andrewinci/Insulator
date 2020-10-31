@@ -6,10 +6,12 @@ import insulator.ui.common.InsulatorView
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.themeButton
+import insulator.ui.style.ButtonStyle.Companion.alertButton
 import insulator.ui.style.MainViewStyle
 import insulator.ui.style.changeTheme
 import insulator.viewmodel.main.MainViewModel
 import insulator.viewmodel.main.TabViewModel
+import insulator.views.configurations.ClusterView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.collections.FXCollections
@@ -43,6 +45,7 @@ const val CONTENT_WIDTH = 780.0
 class MainView @Inject constructor(
     override val viewModel: MainViewModel,
     private val tabViewModel: TabViewModel,
+    private val clusterView: ClusterView,
     val cluster: Cluster
 ) : InsulatorView("Insulator") {
 
@@ -85,7 +88,8 @@ class MainView @Inject constructor(
         borderpane {
             top = vbox(alignment = Pos.TOP_CENTER) {
                 h1(cluster.name)
-                button("Change cluster") { action { close() } }
+                button("Change cluster") { action { close() }; addClass(alertButton) }
+                button("Info") { action { clusterView.show(false) } }
             }
             center = vbox {
                 menuItem("Topics", ICON_TOPICS) { viewModel.setContentList(ListTopicView::class) }

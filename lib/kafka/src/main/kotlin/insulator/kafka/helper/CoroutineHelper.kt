@@ -1,4 +1,4 @@
-package insulator.kafka
+package insulator.kafka.helper
 
 import arrow.core.Either
 import arrow.core.left
