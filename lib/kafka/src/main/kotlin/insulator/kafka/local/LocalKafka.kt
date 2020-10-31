@@ -2,6 +2,7 @@ package insulator.kafka.local
 
 import arrow.core.Either
 import arrow.core.computations.either
+import arrow.core.flatMap
 import insulator.helper.runCatchingE
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.SchemaRegistryConfiguration
@@ -14,8 +15,8 @@ import org.testcontainers.containers.wait.strategy.Wait
 class LocalKafkaException(throwable: Throwable) : Exception(throwable.message)
 
 class LocalKafka(
-    val kafka: KafkaContainer = KafkaContainer(),
-    val schemaRegistry: SchemaRegistryContainer = SchemaRegistryContainer().withKafka(kafka)
+    val kafka: KafkaContainer,
+    val schemaRegistry: SchemaRegistryContainer,
 ) {
 
     suspend fun start() = suspendCancellableCoroutine<Either<LocalKafkaException, Cluster>> { continuation ->
@@ -27,7 +28,7 @@ class LocalKafka(
     private suspend fun startLocalCluster() = either<LocalKafkaException, Cluster> {
         listOf(kafka, schemaRegistry).forEach { container ->
             !container.runCatchingE { start() }
-                .map { container.waitingFor(Wait.forListeningPort()) }
+                .flatMap { container.runCatchingE { waitingFor(Wait.forListeningPort()) } }
                 .mapLeft { LocalKafkaException(it) }
         }
 

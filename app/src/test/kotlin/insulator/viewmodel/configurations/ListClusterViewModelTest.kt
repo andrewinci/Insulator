@@ -29,7 +29,7 @@ class ListClusterViewModelTest : StringSpec({
                 every { addNewClusterCallback(any()) } just runs
                 coEvery { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
             }
-            val sut = ListClusterViewModel(configurationRepo)
+            val sut = ListClusterViewModel(configurationRepo, mockk())
             // act
             val clusters = sut.clustersProperty
             // assert
@@ -49,7 +49,7 @@ class ListClusterViewModelTest : StringSpec({
                 every { addNewClusterCallback(any()) } answers { callback = firstArg() }
                 coEvery { getConfiguration() } returns ConfigurationRepoException(errorMessage, Throwable()).left()
             }
-            val sut = ListClusterViewModel(configurationRepo)
+            val sut = ListClusterViewModel(configurationRepo, mockk())
             val cluster = sut.clustersProperty
             cluster.size shouldBe 0
             // act

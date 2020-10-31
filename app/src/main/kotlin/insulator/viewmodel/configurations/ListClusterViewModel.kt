@@ -9,7 +9,10 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javax.inject.Inject
 
-class ListClusterViewModel @Inject constructor(configurationRepo: ConfigurationRepo) : InsulatorViewModel() {
+class ListClusterViewModel @Inject constructor(
+    configurationRepo: ConfigurationRepo,
+    private val localKafka: LocalKafka
+) : InsulatorViewModel() {
 
     val clustersProperty: ObservableList<Cluster> = FXCollections.observableArrayList()
 
@@ -25,7 +28,7 @@ class ListClusterViewModel @Inject constructor(configurationRepo: ConfigurationR
     private var cache: Cluster? = null
     suspend fun startLocalKafka(): Cluster? {
         if (cache == null) {
-            LocalKafka().start().fold({ this.error.set(it) }, { cache = it })
+            localKafka.start().fold({ this.error.set(it) }, { cache = it })
         }
         return cache
     }
