@@ -28,7 +28,7 @@ class StringProducerTest : StringSpec({
         val kafkaProducer = mockk<KafkaProducer<String, String>>(relaxed = true) {
             every { send(any()) } returns mockk()
         }
-        val sut = StringProducer(kafkaProducer)
+        val sut = StringProducer { kafkaProducer }
         // act
         val res = sut.send("topic", "key", "value")
         sut.close()
@@ -49,11 +49,11 @@ class StringProducerTest : StringSpec({
     "send return an error if the underlying operation fails" {
         // arrange
         val error = Throwable("error message")
-        val sut = StringProducer(
+        val sut = StringProducer {
             mockk {
                 every { send(any()) } throws error
             }
-        )
+        }
         // act
         val res = sut.send("topic", "key", "value")
         // assert
