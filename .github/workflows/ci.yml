@@ -106,7 +106,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         with:
           message: |
-            **Screenshoots 📷**
+            **Screensheets 📷**
             http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.sha }}
           allow-repeats: false
   build-win:
