@@ -22,6 +22,7 @@ class StringProducerTests : FreeSpec({
                 mainWindow()
                     .lookupFirst<Label>(TextStyle.h1).text shouldBe "Clusters"
             }
+            
         }
     }
 })
