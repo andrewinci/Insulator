@@ -45,7 +45,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.listTopics()
         // assert
-        res shouldBeRight listOf("S")
+        res shouldBeRight listOf("Sample topic")
     }
 
     "listTopics throws" {
