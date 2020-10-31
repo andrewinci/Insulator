@@ -64,7 +64,7 @@ class TopicView @Inject constructor(
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                button("Produce") { viewModel.showProducerView(); addClass(ButtonStyle.blueButton) }
+                button("Produce") { action { viewModel.showProducerView() }; addClass(ButtonStyle.blueButton) }
                 consumeStopButton()
                 fieldName("from")
                 consumeFromCombobox()
