@@ -27,13 +27,10 @@ class ProducerViewModel @Inject constructor(
     private val stringProducer: StringProducer
 ) : InsulatorViewModel() {
 
-    val serializeValueProperty = SimpleStringProperty()
-    val producerTypeProperty = SimpleObjectProperty(
-        if (cluster.isSchemaRegistryConfigured()) SerializationFormat.Avro else SerializationFormat.String
-    )
+    val serializeValueProperty = SimpleStringProperty(SerializationFormat.String.name)
 
     private val producer: Producer
-        get() = when (producerTypeProperty.value!!) {
+        get() = when (SerializationFormat.valueOf(serializeValueProperty.value!!)) {
             SerializationFormat.Avro -> avroProducer
             SerializationFormat.String -> stringProducer
         }
@@ -46,21 +43,23 @@ class ProducerViewModel @Inject constructor(
         { validationErrorProperty.value == null && !keyProperty.value.isNullOrEmpty() && !valueProperty.value.isNullOrEmpty() },
         validationErrorProperty,
         keyProperty,
-        valueProperty
+        valueProperty,
     )
 
     init {
-        valueProperty.onChange { value ->
-            value?.let {
-                producer.dispatch {
-                    validate(value, topic.name).fold(
-                        { error ->
-                            if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
-                            if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
-                                validationErrorProperty.set(error.message)
-                        },
-                        { validationErrorProperty.set(null) }
-                    )
+        listOf(valueProperty, serializeValueProperty).forEach {
+            it.onChange { value ->
+                value?.let {
+                    producer.dispatch {
+                        validate(value, topic.name).fold(
+                            { error ->
+                                if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
+                                if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
+                                    validationErrorProperty.set(error.message)
+                            },
+                            { validationErrorProperty.set(null) }
+                        )
+                    }
                 }
             }
         }

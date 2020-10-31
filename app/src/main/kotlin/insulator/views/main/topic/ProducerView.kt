@@ -42,7 +42,9 @@ class ProducerView @Inject constructor(
         appBar { h1(viewModel.topic.name) }
         fieldName("Key")
         textfield(viewModel.keyProperty)
+
         valueFormatOptions()
+
         fieldName("Value")
         recordValueTextArea()
 
@@ -77,19 +79,10 @@ class ProducerView @Inject constructor(
     private fun EventTarget.validationArea() =
         scrollpane {
             label {
-                val warning = {
-                    viewModel.validationErrorProperty.value
-                }
+                val warning = { viewModel.validationErrorProperty.value }
                 textProperty().bind(Bindings.createStringBinding({ if (warning().isNullOrEmpty()) "Valid" else warning() }, viewModel.validationErrorProperty))
                 textFillProperty().bind(
-                    Bindings.createObjectBinding(
-                        {
-                            if (warning().isNullOrEmpty()) {
-                                Color.GREEN
-                            } else Color.RED
-                        },
-                        viewModel.validationErrorProperty
-                    )
+                    Bindings.createObjectBinding({ if (warning().isNullOrEmpty()) Color.GREEN else Color.RED }, viewModel.validationErrorProperty)
                 )
                 isWrapText = true
                 onDoubleClick { autoComplete() }
@@ -107,17 +100,12 @@ class ProducerView @Inject constructor(
     }
 
     private fun autoComplete() {
-        if (!viewModel.nextFieldProperty.value.isNullOrEmpty()) {
-            with(recordValueTextArea) {
-                insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":")
-            }
-        }
+        if (!viewModel.nextFieldProperty.value.isNullOrEmpty())
+            with(recordValueTextArea) { insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":") }
     }
 
     override fun onDock() {
-        titleProperty.bind(
-            Bindings.createStringBinding({ "Insulator - ${viewModel.producerTypeProperty.value} producer" }, viewModel.producerTypeProperty)
-        )
+        title = "Insulator Producer"
         super.onDock()
     }
 }
