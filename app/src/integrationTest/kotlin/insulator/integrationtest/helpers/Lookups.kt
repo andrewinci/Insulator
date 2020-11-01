@@ -6,13 +6,22 @@ import javafx.stage.Window
 import org.testfx.api.FxAssert
 import tornadofx.FX
 import tornadofx.Rendered
+import kotlin.time.ExperimentalTime
 
+private val nodeFinder = FxAssert.assertContext().nodeFinder
 fun mainWindow(): Node = FX.primaryStage.scene.root
-fun lookupWindowByTitle(title: String): Node = FxAssert.assertContext().nodeFinder
-    .rootNode(
-        Window.getWindows().firstOrNull { (it as? Stage)?.title == title }
-            ?: throw AssertionError("There is no window in the scene-graph matching the title $title")
-    )
+
+@OptIn(ExperimentalTime::class)
+suspend fun waitWindowWithTitle(title: String): Node {
+    val mainView = {
+        nodeFinder.rootNode(
+            Window.getWindows().firstOrNull { (it as? Stage)?.title == title }
+                ?: throw AssertionError("There is no window in the scene-graph matching the title $title")
+        )
+    }
+    eventually { mainView() }
+    return mainView()
+}
 
 fun <T : Node> Node.lookupAny(cssRule: Rendered): MutableSet<T> = lookupAny(cssRule.render())
 fun <T : Node> Node.lookupAny(cssSelector: String): MutableSet<T> =

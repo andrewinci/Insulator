@@ -29,9 +29,9 @@ class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) :
     override val root = form {
         fieldset {
             h1("Create topic")
-            field("Topic name") { textfield(viewModel.nameProperty).required() }
-            field("Number of partitions") { numberOfPartitionTextField() }
-            field("Replication factor") { replicationFactorTextField() }
+            field("Topic name") { textfield(viewModel.nameProperty) { id = "field-create-topic-name" }.required() }
+            field("Number of partitions") { numberOfPartitionTextField("field-create-topic-number-of-partitions") }
+            field("Replication factor") { replicationFactorTextField("field-create-topic-replication-factor") }
             field("Compacted") { checkbox(property = viewModel.isCompactedProperty) }
         }
         borderpane {
@@ -41,6 +41,7 @@ class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) :
 
     private fun EventTarget.createButton() =
         button("Create") {
+            id = "button-create-topic"
             enableWhen(viewModel.valid)
             action {
                 viewModel.commit()
@@ -53,15 +54,17 @@ class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) :
             }
         }
 
-    private fun EventTarget.replicationFactorTextField() =
+    private fun EventTarget.replicationFactorTextField(id: String = "") =
         textfield(viewModel.replicationFactorProperty) {
+            this.id = id
             filterInput { it.controlNewText.isInt() }
             validator { validationMessage(it) }
             required()
         }
 
-    private fun EventTarget.numberOfPartitionTextField() =
+    private fun EventTarget.numberOfPartitionTextField(id: String = "") =
         textfield(viewModel.partitionCountProperty) {
+            this.id = id
             filterInput { it.controlNewText.isInt() }
             validator { validationMessage(it) }
             required()
@@ -72,4 +75,9 @@ class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) :
             null,
             if (it?.toShortOrNull() ?: 0 > 0) ValidationSeverity.Success else ValidationSeverity.Error
         )
+
+    override fun onDock() {
+        this.title = "Create new topic"
+        super.onDock()
+    }
 }

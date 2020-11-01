@@ -54,6 +54,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
     private fun EventTarget.createTopicButton() =
         button("Create topic") {
             action { viewModel.createNewTopic() }
+            id = "button-create-topic"
         }
 
     override fun onError(throwable: Throwable) {
