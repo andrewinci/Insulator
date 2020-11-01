@@ -19,7 +19,7 @@ import org.testfx.api.FxToolkit
 import tornadofx.FX
 import java.io.Closeable
 
-class IntegrationTestFixture() : Closeable {
+class IntegrationTestFixture : Closeable {
     private lateinit var adminApi: AdminApi
     lateinit var stringProducer: Producer
     private val currentHomeFolder = getTestSandboxFolder().toAbsolutePath()

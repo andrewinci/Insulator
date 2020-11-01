@@ -23,12 +23,12 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 class ConsumerTests : FreeSpec({
-    IntegrationTestFixture().use { fixture ->
 
-        fun Node.selectTopic(topicName: String) = lookupFirst<Label>(CssRule.id(topicName)).doubleClick()
-        suspend fun List<Pair<String, String>>.produce(topicName: String) = forEach { (k, v) -> fixture.stringProducer.send(topicName, k, v) }
+    "Test consumers" - {
+        IntegrationTestFixture().use { fixture ->
+            fun Node.selectTopic(topicName: String) = lookupFirst<Label>(CssRule.id(topicName)).doubleClick()
+            suspend fun List<Pair<String, String>>.produce(topicName: String) = forEach { (k, v) -> fixture.stringProducer.send(topicName, k, v) }
 
-        "Test consumers" - {
             val clusterName = "Test cluster"
             fixture.startAppWithKafkaCuster(clusterName, false)
             // create topics
@@ -40,13 +40,13 @@ class ConsumerTests : FreeSpec({
             val mainView = waitWindowWithTitle("Insulator")
             delay(10_000)
 
-            "Test consume from one topic" {
+            "Consume from one topic" {
                 val testTopic1 = "$testTopicName-1"
                 fixture.createTopic(testTopic1)
                 mainView.selectTopic("topic-$testTopic1")
                 // start consuming
                 mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-                val records = (1..100).map { "key$it" to "value$it" }.also { it.produce(testTopic1) }
+                val records = (1..10).map { "key$it" to "value$it" }.also { it.produce(testTopic1) }
                 delay(5_000)
                 screenShoot("consumer")
                 // assert
@@ -54,7 +54,7 @@ class ConsumerTests : FreeSpec({
                 recordTable.items.map { it.keyProperty.value to it.valueProperty.value } shouldContainExactlyInAnyOrder records
             }
 
-            "Test consume from multiple topics" {
+            "Consume from multiple topics" {
                 val recordSets = (2..3).map { topicIndex ->
                     val topic = "$testTopicName-$topicIndex"
                     // start consuming from topic it
