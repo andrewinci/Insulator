@@ -56,4 +56,4 @@ fun waitFXThread() {
 
 @ExperimentalTime
 suspend fun eventually(f: suspend () -> Unit) =
-    io.kotest.assertions.timing.eventually(30.seconds, f)
+    io.kotest.assertions.timing.eventually(60.seconds, f)
