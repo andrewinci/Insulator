@@ -13,7 +13,7 @@ jobs:
       matrix:
         os:
         - name: macos-latest
-          artifact: insulator-macos
+          artifact: insulator-mac
           path: Insulator*.dmg
         - name: ubuntu-latest
           artifact: insulator-debian
@@ -45,7 +45,8 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.os.artifact }}
-        path: ${{ matrix.os.path }}
+        path: "./app/${{ matrix.os.path }}"
+        if-no-files-found: error
 
   create-release:
     runs-on: ubuntu-latest
@@ -77,10 +78,10 @@ jobs:
           - name: insulator-debian
             path: insulator*.deb
     steps:
-      - name: Download mac asset from previous jobs
+      - name: Download asset from previous jobs
         uses: actions/download-artifact@v2
         with:
-          name: insulator-macos
+          name: ${{ matrix.artifact.name }}
       - name: Zip artifact
         run: |
           zip --junk-paths ${{ matrix.artifact.name }} ${{ matrix.artifact.path }}
