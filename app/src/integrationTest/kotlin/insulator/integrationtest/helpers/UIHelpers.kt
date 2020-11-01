@@ -27,6 +27,11 @@ fun clickOkOnDialog() {
     waitFXThread()
 }
 
+fun Node.doubleClick() {
+    FxRobot().doubleClickOn(this)
+    waitFXThread()
+}
+
 fun Node.click() {
     FxRobot().clickOn(this)
     waitFXThread()

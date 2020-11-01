@@ -28,7 +28,7 @@ class StartLocalClusterTests : FreeSpec({
             // Start local cluster
             mainWindow().lookupFirst<Button>(CssRule.id("button-local-cluster")).click()
             screenShoot("starting-local-cluster")
-            delay(30.seconds)
+            delay(10.seconds)
 
             // Wait for the main view to show up
             val mainView = waitWindowWithTitle("Insulator")

@@ -3,14 +3,17 @@ package insulator.integrationtest
 import insulator.helper.runOnFXThread
 import insulator.integrationtest.helpers.FxFixture
 import insulator.integrationtest.helpers.click
+import insulator.integrationtest.helpers.doubleClick
 import insulator.integrationtest.helpers.eventually
 import insulator.integrationtest.helpers.lookupFirst
+import insulator.integrationtest.helpers.mainWindow
 import insulator.integrationtest.helpers.screenShoot
 import insulator.integrationtest.helpers.waitWindowWithTitle
 import insulator.ui.style.MainViewStyle
 import insulator.ui.style.TextStyle.Companion.h1
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
@@ -24,6 +27,8 @@ class CreateNewTopicTests : FreeSpec({
         FxFixture().use { fixture ->
             val clusterName = "Test cluster"
             fixture.startAppWithKafkaCuster(clusterName)
+            // Select test cluster
+            mainWindow().lookupFirst<Node>(CssRule.id("cluster-${fixture.currentKafkaCluster.guid}")).doubleClick()
 
             // Wait for the main view to show up
             val mainView = waitWindowWithTitle("Insulator")
@@ -52,7 +57,7 @@ class CreateNewTopicTests : FreeSpec({
                     // Click create button
                     lookupFirst<Button>(CssRule.id("button-create-topic")).click()
                     eventually {
-                        mainView.lookupFirst<Label>("topic-$newTopicName").text shouldBe newTopicName
+                        mainView.lookupFirst<Label>(CssRule.id("topic-$newTopicName")).text shouldBe newTopicName
                     }
                 }
             }
