@@ -7,9 +7,20 @@ on:
 
 jobs:
 
-  build-deb:
-    runs-on: ubuntu-latest
-
+  package-app:
+    runs-on: ${{ matrix.os.name }}
+    strategy:
+      matrix:
+        os:
+        - name: macos-latest
+          artifact: insulator-macos
+          path: Insulator*.dmg
+        - name: ubuntu-latest
+          artifact: insulator-debian
+          path: insulator*.deb
+        - name: windows-latest
+          artifact: insulator-win
+          path: Insulator*.exe
     steps:
     - uses: actions/checkout@v2
     - name: Setup Java JDK
@@ -17,63 +28,36 @@ jobs:
       with:
         java-version: 14
         java-package: jdk
-    - name: Install xvfb for headless tests
-      run: sudo apt-get install xvfb
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: ${{ runner.os }}-gradle-
     - uses: olegtarasov/get-tag@v2
       id: tagName
-    - name: Gradle package
+    - name: Gradle package ubuntu
+      if: ${{ matrix.os.name == 'ubuntu-latest' }}
       run: "xvfb-run --auto-servernum ./gradlew check packageApp"
       env:
         RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
-    - uses: actions/upload-artifact@v2
-      with:
-        name: insulator-debian
-        path: insulator*.deb
-
-  build-mac:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 14
-        java-package: jdk
-    - uses: olegtarasov/get-tag@v2
-      id: tagName
     - name: Gradle package
+      if: ${{ matrix.os.name != 'ubuntu-latest' }}
       run: "./gradlew check packageApp"
       env:
         RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - uses: actions/upload-artifact@v2
       with:
-        name: insulator-macos
-        path: Insulator*.dmg
+        name: matrix.os.artifact
+        path: matrix.os.path
 
-  build-win:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 14
-        java-package: jdk
-    - uses: olegtarasov/get-tag@v2
-      id: tagName
-    - name: Gradle package
-      run: "./gradlew check packageApp"
-      env:
-        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
-    - uses: actions/upload-artifact@v2
-      with:
-        name: insulator-win
-        path: Insulator*.exe
-
-  build:
-    name: Upload Release Asset
+  create-release:
     runs-on: ubuntu-latest
-    needs: [build-deb, build-mac, build-win]
+    needs: package-app
+    outputs:
+      release-url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Create release
         id: create_release
@@ -86,53 +70,32 @@ jobs:
           draft: true
           prerelease: true
 
+  upload-artifacts:
+    runs-on: ubuntu-latest
+    needs: create-release
+    strategy:
+      matrix:
+        artifact:
+          - name: insulator-mac
+            path: Insulator-*.dmg
+          - name: insulator-win
+            path: Insulator-*.exe
+          - name: insulator-debian
+            path: insulator*.deb
+    steps:
       - name: Download mac asset from previous jobs
         uses: actions/download-artifact@v2
         with:
           name: insulator-macos
       - name: Zip artifact
         run: |
-          zip --junk-paths insulator-mac Insulator-*.dmg
-      - name: Upload mac os release asset
+          zip --junk-paths ${{ matrix.artifact.name }} ${{ matrix.artifact.path }}
+      - name: Upload ${{ matrix.artifact.name }} asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./insulator-mac.zip
-          asset_name: insulator-mac.zip
-          asset_content_type: application/zip
-
-      - name: Download win asset from previous jobs
-        uses: actions/download-artifact@v2
-        with:
-          name: insulator-win
-      - name: Zip artifact
-        run: |
-          zip --junk-paths insulator-win Insulator-*.exe
-      - name: Upload win release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./insulator-win.zip
-          asset_name: insulator-win.zip
-          asset_content_type: application/zip
-
-      - name: Download debian asset from previous jobs
-        uses: actions/download-artifact@v2
-        with:
-          name: insulator-debian
-      - name: Zip artifact
-        run: |
-          zip --junk-paths insulator-debian insulator*.deb
-      - name: Upload debian release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./insulator-debian.zip
-          asset_name: insulator-debian.zip
+          upload_url: ${{ needs.create-release.outputs.release-url }}
+          asset_path: ./${{ matrix.artifact.name }}.zip
+          asset_name: ${{ matrix.artifact.name }}.zip
           asset_content_type: application/zip
