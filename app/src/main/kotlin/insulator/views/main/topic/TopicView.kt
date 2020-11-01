@@ -83,7 +83,8 @@ class TopicView @Inject constructor(
             }
         ) {
             id = "button-consume-stop"
-            action { viewModel.dispatch { consumerViewModel.consume() } } }
+            action { viewModel.dispatch { consumerViewModel.consume() } }
+        }
     }
 
     private fun EventTarget.valueFormatOptions() {
