@@ -3,6 +3,7 @@ package insulator.di.components
 import dagger.BindsInstance
 import dagger.Component
 import insulator.di.TopicScope
+import insulator.di.modules.TopicModule
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
 import insulator.views.main.topic.CreateTopicView
@@ -10,7 +11,7 @@ import insulator.views.main.topic.ProducerView
 import insulator.views.main.topic.TopicView
 
 @TopicScope
-@Component(dependencies = [ClusterComponent::class])
+@Component(dependencies = [ClusterComponent::class], modules = [TopicModule::class])
 interface TopicComponent {
 
     @Component.Factory

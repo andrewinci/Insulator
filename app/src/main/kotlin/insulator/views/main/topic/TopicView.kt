@@ -100,14 +100,13 @@ class TopicView @Inject constructor(
         combobox<String> {
             items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
             valueProperty().bindBidirectional(viewModel.consumerViewModel.consumeFromProperty)
-            enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
-        }
+        }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 
     private fun EventTarget.deleteButton() =
         confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.dispatch { delete() }
             closeTab()
-        }
+        }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 
     private fun EventTarget.recordsTable() =
         tableview<RecordViewModel> {
