@@ -122,6 +122,7 @@ class ListClusterView @Inject constructor(
         }
         checkVersion()
         super.onDock()
+        title = "Clusters"
     }
 
     override fun onError(throwable: Throwable) = when (throwable) {

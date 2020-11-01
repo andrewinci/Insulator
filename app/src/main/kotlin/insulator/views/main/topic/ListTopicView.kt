@@ -34,7 +34,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
         }
         borderpane {
             left = createTopicButton()
-            right = searchBox(viewModel.searchItemProperty, this@ListTopicView)
+            right = searchBox(viewModel.searchItemProperty, this@ListTopicView, "search-box-list-topic")
         }
         topicsListView()
     }
@@ -54,6 +54,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
     private fun EventTarget.createTopicButton() =
         button("Create topic") {
             action { viewModel.createNewTopic() }
+            id = "button-create-topic"
         }
 
     override fun onError(throwable: Throwable) {

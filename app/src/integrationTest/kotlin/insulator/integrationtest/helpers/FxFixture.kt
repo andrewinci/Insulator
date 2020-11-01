@@ -18,6 +18,7 @@ class FxFixture() : Closeable {
     private val currentHomeFolder = getTestSandboxFolder().toAbsolutePath()
     private val kafka = KafkaContainer()
     private val schemaRegistry = SchemaRegistryContainer().withKafka(kafka)
+    lateinit var currentKafkaCluster: Cluster
 
     init {
         val stage = FxToolkit.registerPrimaryStage()
@@ -29,17 +30,16 @@ class FxFixture() : Closeable {
     suspend fun startAppWithKafkaCuster(clusterName: String, createSchemaRegistry: Boolean = true) {
         kafka.start()
         kafka.waitingFor(Wait.forListeningPort())
-        startApp(
-            Cluster(
-                name = clusterName,
-                endpoint = kafka.bootstrapServers,
-                schemaRegistryConfig = if (createSchemaRegistry) {
-                    schemaRegistry.start()
-                    schemaRegistry.waitingFor(Wait.forListeningPort())
-                    SchemaRegistryConfiguration(schemaRegistry.endpoint)
-                } else SchemaRegistryConfiguration()
-            )
+        currentKafkaCluster = Cluster(
+            name = clusterName,
+            endpoint = kafka.bootstrapServers,
+            schemaRegistryConfig = if (createSchemaRegistry) {
+                schemaRegistry.start()
+                schemaRegistry.waitingFor(Wait.forListeningPort())
+                SchemaRegistryConfiguration(schemaRegistry.endpoint)
+            } else SchemaRegistryConfiguration()
         )
+        startApp(currentKafkaCluster)
     }
 
     suspend fun startApp(vararg clusters: Cluster) {

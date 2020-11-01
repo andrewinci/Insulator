@@ -88,8 +88,8 @@ class MainView @Inject constructor(
         borderpane {
             top = vbox(alignment = Pos.TOP_CENTER) {
                 h1(cluster.name)
-                button("Change cluster") { action { close() }; addClass(alertButton) }
-                button("Info") { action { clusterView.show(false) } }
+                button("Change cluster") { action { close() }; addClass(alertButton) ; id = "button-change-cluster" }
+                button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
             }
             center = vbox {
                 menuItem("Topics", ICON_TOPICS) { viewModel.setContentList(ListTopicView::class) }
