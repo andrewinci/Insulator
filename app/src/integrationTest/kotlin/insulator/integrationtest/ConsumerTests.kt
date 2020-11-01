@@ -23,8 +23,11 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 class ConsumerTests : FreeSpec({
-
     IntegrationTestFixture().use { fixture ->
+
+        fun Node.selectTopic(topicName: String) = lookupFirst<Label>(CssRule.id(topicName)).doubleClick()
+        suspend fun List<Pair<String, String>>.produce(topicName: String) = forEach { (k, v) -> fixture.stringProducer.send(topicName, k, v) }
+
         "Test consumers" - {
             val clusterName = "Test cluster"
             fixture.startAppWithKafkaCuster(clusterName, false)
@@ -40,11 +43,10 @@ class ConsumerTests : FreeSpec({
             "Test consume from one topic" {
                 val testTopic1 = "$testTopicName-1"
                 fixture.createTopic(testTopic1)
-                mainView.lookupFirst<Label>(CssRule.id("topic-$testTopic1")).doubleClick()
+                mainView.selectTopic("topic-$testTopic1")
                 // start consuming
                 mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-                val records = (1..100).map { "key$it" to "value$it" }
-                records.forEach { (k, v) -> fixture.stringProducer.send(testTopic1, k, v) }
+                val records = (1..100).map { "key$it" to "value$it" }.also { it.produce(testTopic1) }
                 delay(5_000)
                 screenShoot("consumer")
                 // assert
@@ -53,14 +55,13 @@ class ConsumerTests : FreeSpec({
             }
 
             "Test consume from multiple topics" {
-                val recordSets = (2..3).map {
-                    val topic = "$testTopicName-$it"
+                val recordSets = (2..3).map { topicIndex ->
+                    val topic = "$testTopicName-$topicIndex"
                     // start consuming from topic it
-                    mainView.lookupFirst<Label>(CssRule.id("topic-$topic")).doubleClick()
+                    mainView.selectTopic("topic-$topic")
                     mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
                     // produce to topic it
-                    val records = (1..10).map { n -> "key$n" to "$topic-value-$n" }
-                    records.forEach { (k, v) -> fixture.stringProducer.send(topic, k, v) }
+                    val records = (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
                     delay(5_000)
                     records
                 }
