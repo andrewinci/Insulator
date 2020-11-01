@@ -3,6 +3,7 @@ package insulator.integrationtest
 import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.doubleClick
+import insulator.integrationtest.helpers.eventually
 import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
@@ -31,14 +32,21 @@ class ConsumerTests : FreeSpec({
 
             val clusterName = "Test cluster"
             fixture.startAppWithKafkaCuster(clusterName, false)
+            delay(20_000)
+
             // create topics
             val testTopicName = "test-topic"
             (1..3).forEach { fixture.createTopic("$testTopicName-$it") }
-            getPrimaryWindow()
-                .lookupFirst<Node>(CssRule.id("cluster-${fixture.currentKafkaCluster.guid}"))
-                .doubleClick()
+            eventually {
+                getPrimaryWindow()
+                    .lookupFirst<Node>(CssRule.id("cluster-${fixture.currentKafkaCluster.guid}"))
+                    .doubleClick()
+            }
+            
+            eventually {
+                waitWindowWithTitle("Insulator")
+            }
             val mainView = waitWindowWithTitle("Insulator")
-            delay(10_000)
 
             "Consume from one topic" {
                 val testTopic1 = "$testTopicName-1"
