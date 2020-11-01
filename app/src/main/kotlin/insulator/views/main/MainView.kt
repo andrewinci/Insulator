@@ -89,7 +89,7 @@ class MainView @Inject constructor(
             top = vbox(alignment = Pos.TOP_CENTER) {
                 h1(cluster.name)
                 button("Change cluster") { action { close() }; addClass(alertButton) }
-                button("Info") { action { clusterView.show(false) } }
+                button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
             }
             center = vbox {
                 menuItem("Topics", ICON_TOPICS) { viewModel.setContentList(ListTopicView::class) }

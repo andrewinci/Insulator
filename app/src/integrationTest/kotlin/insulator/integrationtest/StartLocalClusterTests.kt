@@ -15,6 +15,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import kotlinx.coroutines.delay
 import tornadofx.CssRule
+import tornadofx.Stylesheet.Companion.button
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
@@ -24,7 +25,7 @@ class StartLocalClusterTests : FreeSpec({
     "Local cluster tests" - {
         FxFixture().use { fixture ->
             fixture.startApp()
-
+            val localClusterName = "Local Cluster"
             // Start local cluster
             mainWindow().lookupFirst<Button>(CssRule.id("button-local-cluster")).click()
             screenShoot("starting-local-cluster")
@@ -36,12 +37,18 @@ class StartLocalClusterTests : FreeSpec({
 
             "Cluster name is shown in the sidebar" {
                 eventually {
-                    mainView.lookupFirst<Label>(MainViewStyle.sidebar.contains(h1)).text shouldBe "Local Cluster"
+                    mainView.lookupFirst<Label>(MainViewStyle.sidebar.contains(h1)).text shouldBe localClusterName
                 }
             }
 
             "Show cluster details" {
-                // todo
+                mainView.lookupFirst<Button>(CssRule.id("button-cluster-info")).click()
+                val clusterInfoWindow = waitWindowWithTitle(localClusterName)
+                screenShoot("local-cluster-info-window")
+                with(clusterInfoWindow.lookupFirst<Button>(button)){
+                    text shouldBe "Close"
+                    click()
+                }
             }
 
             "Change cluster and reopend, doesn't create a new local cluster" {
