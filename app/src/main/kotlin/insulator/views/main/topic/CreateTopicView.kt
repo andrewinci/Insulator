@@ -4,6 +4,7 @@ import insulator.helper.dispatch
 import insulator.ui.component.h1
 import insulator.ui.component.insulatorAlert
 import insulator.viewmodel.main.topic.CreateTopicViewModel
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.event.EventTarget
 import javafx.scene.control.Alert
 import tornadofx.ValidationMessage
@@ -30,8 +31,8 @@ class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) :
         fieldset {
             h1("Create topic")
             field("Topic name") { textfield(viewModel.nameProperty) { id = "field-create-topic-name" }.required() }
-            field("Number of partitions") { numberOfPartitionTextField("field-create-topic-number-of-partitions") }
-            field("Replication factor") { replicationFactorTextField("field-create-topic-replication-factor") }
+            field("Number of partitions") { numericField(viewModel.partitionCountProperty, "field-create-topic-number-of-partitions") }
+            field("Replication factor") { numericField(viewModel.replicationFactorProperty, "field-create-topic-replication-factor") }
             field("Compacted") { checkbox(property = viewModel.isCompactedProperty) }
         }
         borderpane {
@@ -54,16 +55,8 @@ class CreateTopicView @Inject constructor(val viewModel: CreateTopicViewModel) :
             }
         }
 
-    private fun EventTarget.replicationFactorTextField(id: String = "") =
-        textfield(viewModel.replicationFactorProperty) {
-            this.id = id
-            filterInput { it.controlNewText.isInt() }
-            validator { validationMessage(it) }
-            required()
-        }
-
-    private fun EventTarget.numberOfPartitionTextField(id: String = "") =
-        textfield(viewModel.partitionCountProperty) {
+    private fun EventTarget.numericField(prop: SimpleIntegerProperty, id: String = "") =
+        textfield(prop) {
             this.id = id
             filterInput { it.controlNewText.isInt() }
             validator { validationMessage(it) }
