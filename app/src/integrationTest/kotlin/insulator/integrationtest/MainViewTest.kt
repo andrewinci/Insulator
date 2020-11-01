@@ -1,7 +1,7 @@
 package insulator.integrationtest
 
 import insulator.helper.runOnFXThread
-import insulator.integrationtest.helpers.FxFixture
+import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.doubleClick
 import insulator.integrationtest.helpers.eventually
@@ -40,10 +40,10 @@ class MainViewTest : GenericMainViewTest(
 )
 
 @ExperimentalTime
-abstract class GenericMainViewTest(clusterName: String, initialize: suspend (FxFixture) -> Unit) : FreeSpec({
+abstract class GenericMainViewTest(clusterName: String, initialize: suspend (IntegrationTestFixture) -> Unit) : FreeSpec({
 
     "Main view $clusterName" - {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             val topicName = "test-new-topic"
             initialize(fixture)
             eventually {

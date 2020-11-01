@@ -1,6 +1,6 @@
 package insulator.integrationtest
 
-import insulator.integrationtest.helpers.FxFixture
+import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.clickOkOnDialog
 import insulator.integrationtest.helpers.eventually
@@ -34,7 +34,7 @@ class ListClusterViewTests : FreeSpec({
         getPrimaryWindow().lookupFirst<Node>(CssRule.id("cluster-${cluster.guid}"))
 
     "Happy path start the app and show list clusters view" - {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             val clusters = (1..5).map { Cluster(name = "clusterName$it", endpoint = "endpoint$it") }.toTypedArray()
             fixture.startApp(*clusters)
 
@@ -59,7 +59,7 @@ class ListClusterViewTests : FreeSpec({
     }
 
     "Add a new cluster" {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             fixture.startApp()
             val newClusterName = "New cluster name"
             val newEndpoint = "newEndpoint:8080"
@@ -90,7 +90,7 @@ class ListClusterViewTests : FreeSpec({
     }
 
     "Delete a cluster" {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             val cluster = Cluster(name = "clusterName", endpoint = "endpoint")
             fixture.startApp(cluster)
             // Open settings windows

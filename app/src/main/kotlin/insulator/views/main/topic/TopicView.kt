@@ -81,7 +81,9 @@ class TopicView @Inject constructor(
             with(viewModel.consumerViewModel.isConsumingProperty) {
                 Bindings.createStringBinding({ if (!this.value) CONSUME else STOP }, this)
             }
-        ) { action { viewModel.dispatch { consumerViewModel.consume() } } }
+        ) {
+            id = "button-consume-stop"
+            action { viewModel.dispatch { consumerViewModel.consume() } } }
     }
 
     private fun EventTarget.valueFormatOptions() {
