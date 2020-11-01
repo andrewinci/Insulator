@@ -38,7 +38,7 @@ jobs:
         restore-keys: ${{ runner.os }}-gradle-
     - uses: olegtarasov/get-tag@v2
       id: tagName
-    - name: Gradle package ubuntu
+    - name: Gradle package
       if: ${{ matrix.os.name == 'ubuntu-latest' }}
       run: "xvfb-run --auto-servernum ./gradlew check packageApp"
       env:
