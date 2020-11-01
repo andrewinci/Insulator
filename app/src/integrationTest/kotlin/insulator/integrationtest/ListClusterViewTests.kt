@@ -4,9 +4,9 @@ import insulator.integrationtest.helpers.FxFixture
 import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.clickOkOnDialog
 import insulator.integrationtest.helpers.eventually
+import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
-import insulator.integrationtest.helpers.mainWindow
 import insulator.integrationtest.helpers.screenShoot
 import insulator.integrationtest.helpers.waitWindowWithTitle
 import insulator.kafka.model.Cluster
@@ -30,7 +30,8 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 class ListClusterViewTests : FreeSpec({
 
-    fun lookupClusterNode(cluster: Cluster) = mainWindow().lookupFirst<Node>(CssRule.id("cluster-${cluster.guid}"))
+    suspend fun lookupClusterNode(cluster: Cluster) =
+        getPrimaryWindow().lookupFirst<Node>(CssRule.id("cluster-${cluster.guid}"))
 
     "Happy path start the app and show list clusters view" - {
         FxFixture().use { fixture ->
@@ -39,7 +40,7 @@ class ListClusterViewTests : FreeSpec({
 
             "Title should be Clusters" {
                 eventually {
-                    mainWindow()
+                    getPrimaryWindow()
                         .lookupFirst<Label>(h1).text shouldBe "Clusters"
                 }
             }
@@ -63,7 +64,7 @@ class ListClusterViewTests : FreeSpec({
             val newClusterName = "New cluster name"
             val newEndpoint = "newEndpoint:8080"
             // Open the new cluster view
-            mainWindow().lookupFirst<Button>(CssRule.id("button-add-cluster")).click()
+            getPrimaryWindow().lookupFirst<Button>(CssRule.id("button-add-cluster")).click()
 
             val newClusterView = waitWindowWithTitle("New cluster")
 
@@ -83,7 +84,7 @@ class ListClusterViewTests : FreeSpec({
 
             // The new cluster is available in the list of clusters
             eventually {
-                mainWindow().lookupAny<Label>(label).map { it.text } shouldContainAll listOf(newClusterName, newEndpoint)
+                getPrimaryWindow().lookupAny<Label>(label).map { it.text } shouldContainAll listOf(newClusterName, newEndpoint)
             }
         }
     }
@@ -103,7 +104,7 @@ class ListClusterViewTests : FreeSpec({
             eventually { clickOkOnDialog() }
             // The cluster is deleted from the list of clusters"
             eventually {
-                mainWindow().lookupAny<Label>(label).filter { it.text == cluster.name } shouldBe emptyList()
+                getPrimaryWindow().lookupAny<Label>(label).filter { it.text == cluster.name } shouldBe emptyList()
             }
         }
     }

@@ -4,12 +4,12 @@ import javafx.scene.Node
 import javafx.stage.Stage
 import javafx.stage.Window
 import org.testfx.api.FxAssert
-import tornadofx.FX
 import tornadofx.Rendered
 import kotlin.time.ExperimentalTime
 
 private val nodeFinder = FxAssert.assertContext().nodeFinder
-fun mainWindow(): Node = FX.primaryStage.scene.root
+
+fun getPrimaryWindow(): Node = nodeFinder.rootNode(Window.getWindows().first())
 
 @OptIn(ExperimentalTime::class)
 suspend fun waitWindowWithTitle(title: String): Node {
