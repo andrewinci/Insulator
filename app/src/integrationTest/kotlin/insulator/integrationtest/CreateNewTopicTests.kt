@@ -59,6 +59,7 @@ class CreateNewTopicTests : FreeSpec({
                     eventually {
                         mainView.lookupFirst<Label>(CssRule.id("topic-$newTopicName")).text shouldBe newTopicName
                     }
+                    screenShoot("list-of-topics-with-new-created-topic")
                 }
             }
         }
