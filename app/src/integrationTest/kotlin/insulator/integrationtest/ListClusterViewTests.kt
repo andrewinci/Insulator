@@ -30,7 +30,7 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 class ListClusterViewTests : FreeSpec({
 
-    suspend fun lookupClusterNode(cluster: Cluster) =
+    fun lookupClusterNode(cluster: Cluster) =
         getPrimaryWindow().lookupFirst<Node>(CssRule.id("cluster-${cluster.guid}"))
 
     "Happy path start the app and show list clusters view" - {

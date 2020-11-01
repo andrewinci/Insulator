@@ -27,21 +27,28 @@ import tornadofx.Stylesheet.Companion.textField
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
-class MainViewTest : GenericMainViewTest("Test cluster", {
-    it.startAppWithKafkaCuster("Test cluster")
-    // Select test cluster
-    getPrimaryWindow()
-        .lookupFirst<Node>(CssRule.id("cluster-${it.currentKafkaCluster.guid}"))
-        .doubleClick()
-})
+class MainViewTest : GenericMainViewTest(
+    "Test cluster",
+    {
+        it.startAppWithKafkaCuster("Test cluster")
+        eventually {
+            getPrimaryWindow()
+                .lookupFirst<Node>(CssRule.id("cluster-${it.currentKafkaCluster.guid}"))
+                .doubleClick()
+        }
+    }
+)
 
 @ExperimentalTime
 abstract class GenericMainViewTest(clusterName: String, initialize: suspend (FxFixture) -> Unit) : FreeSpec({
 
-    "Test main view $clusterName" - {
+    "Main view $clusterName" - {
         FxFixture().use { fixture ->
             val topicName = "test-new-topic"
             initialize(fixture)
+            eventually {
+                waitWindowWithTitle("Insulator")
+            }
             val mainView = waitWindowWithTitle("Insulator")
             screenShoot("main-view")
 

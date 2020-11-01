@@ -10,12 +10,13 @@ import tornadofx.CssRule
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
-@OptIn(ExperimentalTime::class)
 @ExperimentalTime
-class LocalClusterTest : GenericMainViewTest("Local Cluster", {
-    it.startApp()
-// Start local cluster
-    getPrimaryWindow().lookupFirst<Button>(CssRule.id("button-local-cluster")).click()
-    screenShoot("starting-local-cluster")
-    delay(10.seconds)
-})
+class LocalClusterTest : GenericMainViewTest(
+    "Local Cluster",
+    {
+        it.startApp()
+        getPrimaryWindow().lookupFirst<Button>(CssRule.id("button-local-cluster")).click()
+        screenShoot("starting-local-cluster")
+        delay(30.seconds)
+    }
+)

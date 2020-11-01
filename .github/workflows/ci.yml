@@ -67,7 +67,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
       - name: Build and run tests
         if: ${{ !matrix.os.run-integration }}
-        run: "./gradlew check --no-daemon"
+        run: "./gradlew check --no-daemon --stacktrace"
       - name: Run integration tests
         if: ${{ matrix.os.run-integration }}
         uses: paambaati/codeclimate-action@v2.7.4
@@ -84,7 +84,7 @@ jobs:
             ${{github.workspace}}/lib/kafka/src/main/kotlin \
             ${{github.workspace}}/lib/update/src/main/kotlin
         with:
-          coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon"
+          coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon --stacktrace"
           coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
       - name: Configure AWS credentials
         if: ${{ matrix.os.run-integration }}
