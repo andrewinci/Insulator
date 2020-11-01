@@ -48,38 +48,52 @@ class ConsumerTests : FreeSpec({
             }
             val mainView = waitWindowWithTitle("Insulator")
 
-//            "Consume from one topic" {
-//                val testTopic1 = "$testTopicName-1"
-//                fixture.createTopic(testTopic1)
-//                mainView.selectTopic("topic-$testTopic1")
-//                // start consuming
-//                mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-//                val records = (1..10).map { "key$it" to "value$it" }.also { it.produce(testTopic1) }
-//                delay(5_000)
-//                screenShoot("consumer")
-//                // assert
-//                val recordTable = mainView.lookupFirst<TableView<RecordViewModel>>(tableView)
-//                recordTable.items.map { it.keyProperty.value to it.valueProperty.value } shouldContainExactlyInAnyOrder records
-//            }
-//
-//            "Consume from multiple topics" {
-//                val recordSets = (2..3).map { topicIndex ->
-//                    val topic = "$testTopicName-$topicIndex"
-//                    // start consuming from topic it
-//                    mainView.selectTopic("topic-$topic")
-//                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-//                    // produce to topic it
-//                    val records = (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
-//                    delay(5_000)
-//                    records
-//                }
-//                screenShoot("multiple-consumers")
-//                with(mainView.lookupAny<TableView<RecordViewModel>>(tableView)) {
-//                    (0..1).forEach { n ->
-//                        forAtLeastOne { it.items.map { r -> r.keyProperty.value to r.valueProperty.value } shouldContainExactlyInAnyOrder recordSets[n] }
-//                    }
-//                }
-//            }
+            "Consume from one topic" {
+                val testTopic1 = "$testTopicName-1"
+                mainView.selectTopic("topic-$testTopic1")
+                // start consuming
+                eventually {
+                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
+                }
+                delay(2_000)
+                val records = (1..10).map { "key$it" to "value$it" }.also { it.produce(testTopic1) }
+                delay(2_000)
+                screenShoot("consumer")
+                // assert
+                val recordTable = mainView.lookupFirst<TableView<RecordViewModel>>(tableView)
+                recordTable.items.map { it.keyProperty.value to it.valueProperty.value } shouldContainExactlyInAnyOrder records
+
+                // stop consuming
+                eventually {
+                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
+                }
+            }
+
+            "Consume from multiple topics" {
+                val recordSets = (2..3).map { topicIndex ->
+                    val topic = "$testTopicName-$topicIndex"
+                    // start consuming from topic it
+                    eventually {
+                        mainView.selectTopic("topic-$topic")
+                        mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
+                    }
+                    delay(2_000)
+                    // produce to topic it
+                    val records = (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
+                    delay(2_000)
+                    records
+                }
+                screenShoot("multiple-consumers")
+                with(mainView.lookupAny<TableView<RecordViewModel>>(tableView)) {
+                    (0..1).forEach { n ->
+                        forAtLeastOne { it.items.map { r -> r.keyProperty.value to r.valueProperty.value } shouldContainExactlyInAnyOrder recordSets[n] }
+                    }
+                }
+                // start consuming from topic it
+                eventually {
+                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
+                }
+            }
         }
     }
 })
