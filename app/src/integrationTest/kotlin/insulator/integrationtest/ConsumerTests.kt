@@ -3,7 +3,6 @@ package insulator.integrationtest
 import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.doubleClick
-import insulator.integrationtest.helpers.eventually
 import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
@@ -27,7 +26,7 @@ class ConsumerTests : FreeSpec({
 
     "Test consumers" - {
         IntegrationTestFixture().use { fixture ->
-            fun Node.selectTopic(topicName: String) = lookupFirst<Label>(CssRule.id(topicName)).doubleClick()
+            suspend fun Node.selectTopic(topicName: String) = lookupFirst<Label>(CssRule.id(topicName)).doubleClick()
             suspend fun List<Pair<String, String>>.produce(topicName: String) = forEach { (k, v) -> fixture.stringProducer.send(topicName, k, v) }
 
             val clusterName = "Test cluster"
@@ -37,25 +36,17 @@ class ConsumerTests : FreeSpec({
             // create topics
             val testTopicName = "test-topic"
             (1..3).forEach { fixture.createTopic("$testTopicName-$it") }
-            eventually {
-                getPrimaryWindow()
-                    .lookupFirst<Node>(CssRule.id("cluster-${fixture.currentKafkaCluster.guid}"))
-                    .doubleClick()
-            }
+            getPrimaryWindow()
+                .lookupFirst<Node>(CssRule.id("cluster-${fixture.currentKafkaCluster.guid}"))
+                .doubleClick()
 
-            eventually {
-                waitWindowWithTitle("Insulator")
-            }
             val mainView = waitWindowWithTitle("Insulator")
 
             "Consume from one topic" {
                 val testTopic1 = "$testTopicName-1"
                 mainView.selectTopic("topic-$testTopic1")
                 // start consuming
-                eventually {
-                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-                }
-                delay(2_000)
+                mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
                 val records = (1..10).map { "key$it" to "value$it" }.also { it.produce(testTopic1) }
                 delay(2_000)
                 screenShoot("consumer")
@@ -64,24 +55,18 @@ class ConsumerTests : FreeSpec({
                 recordTable.items.map { it.keyProperty.value to it.valueProperty.value } shouldContainExactlyInAnyOrder records
 
                 // stop consuming
-                eventually {
-                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-                }
+                mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
             }
 
             "Consume from multiple topics" {
                 val recordSets = (2..3).map { topicIndex ->
                     val topic = "$testTopicName-$topicIndex"
                     // start consuming from topic it
-                    eventually {
-                        mainView.selectTopic("topic-$topic")
-                        mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-                    }
-                    delay(2_000)
+                    mainView.selectTopic("topic-$topic")
+                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
+
                     // produce to topic it
-                    val records = (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
-                    delay(2_000)
-                    records
+                    (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
                 }
                 screenShoot("multiple-consumers")
                 with(mainView.lookupAny<TableView<RecordViewModel>>(tableView)) {
@@ -89,10 +74,9 @@ class ConsumerTests : FreeSpec({
                         forAtLeastOne { it.items.map { r -> r.keyProperty.value to r.valueProperty.value } shouldContainExactlyInAnyOrder recordSets[n] }
                     }
                 }
+
                 // start consuming from topic it
-                eventually {
-                    mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
-                }
+                mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
             }
         }
     }

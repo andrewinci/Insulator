@@ -46,16 +46,11 @@ abstract class GenericMainViewTest(clusterName: String, initialize: suspend (Int
         IntegrationTestFixture().use { fixture ->
             val topicName = "test-new-topic"
             initialize(fixture)
-            eventually {
-                waitWindowWithTitle("Insulator")
-            }
             val mainView = waitWindowWithTitle("Insulator")
             screenShoot("main-view")
 
             "Cluster name is shown in the sidebar" {
-                eventually {
-                    mainView.lookupFirst<Label>(MainViewStyle.sidebar.contains(TextStyle.h1)).text shouldBe clusterName
-                }
+                mainView.lookupFirst<Label>(MainViewStyle.sidebar.contains(TextStyle.h1)).text shouldBe clusterName
             }
 
             "Show cluster details" {
@@ -84,9 +79,7 @@ abstract class GenericMainViewTest(clusterName: String, initialize: suspend (Int
                     screenShoot("create-new-topic")
                     // Click create button
                     lookupFirst<Button>(CssRule.id("button-create-topic")).click()
-                    eventually {
-                        mainView.lookupFirst<Label>(CssRule.id("topic-$topicName")).text shouldBe topicName
-                    }
+                    mainView.lookupFirst<Label>(CssRule.id("topic-$topicName")).text shouldBe topicName
                     screenShoot("list-of-topics-with-new-created-topic")
                 }
             }
@@ -94,21 +87,17 @@ abstract class GenericMainViewTest(clusterName: String, initialize: suspend (Int
             "Search topic test" - {
                 val searchBox = mainView.lookupFirst<TextField>(CssRule.id("search-box-list-topic").contains(textField))
                 "Search for a topic that doesn't exists" {
-                    eventually {
-                        // search for a topic that doesn't exists
-                        searchBox.textProperty().runOnFXThread { set("asdffdsaa") }
-                        mainView.lookupFirst<ListView<String>>(listView).items.size shouldBe 0
-                    }
+                    // search for a topic that doesn't exists
+                    searchBox.textProperty().runOnFXThread { set("asdffdsaa") }
+                    mainView.lookupFirst<ListView<String>>(listView).items.size shouldBe 0
                 }
 
                 "Search for $topicName shows only one result" {
-                    eventually {
-                        // search for a topic that doesn't exists
-                        searchBox.textProperty().runOnFXThread { set(topicName) }
-                        with(mainView.lookupFirst<ListView<String>>(listView)) {
-                            items.size shouldBe 1
-                            items.first() shouldBe topicName
-                        }
+                    // search for a topic that doesn't exists
+                    searchBox.textProperty().runOnFXThread { set(topicName) }
+                    with(mainView.lookupFirst<ListView<String>>(listView)) {
+                        items.size shouldBe 1
+                        items.first() shouldBe topicName
                     }
                 }
             }

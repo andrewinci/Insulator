@@ -30,7 +30,7 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 class ListClusterViewTests : FreeSpec({
 
-    fun lookupClusterNode(cluster: Cluster) =
+    suspend fun lookupClusterNode(cluster: Cluster) =
         getPrimaryWindow().lookupFirst<Node>(CssRule.id("cluster-${cluster.guid}"))
 
     "Happy path start the app and show list clusters view" - {
@@ -39,10 +39,7 @@ class ListClusterViewTests : FreeSpec({
             fixture.startApp(*clusters)
 
             "Title should be Clusters" {
-                eventually {
-                    getPrimaryWindow()
-                        .lookupFirst<Label>(h1).text shouldBe "Clusters"
-                }
+                getPrimaryWindow().lookupFirst<Label>(h1).text shouldBe "Clusters"
             }
 
             "All clusters config should be available with a settings button" {
@@ -94,14 +91,13 @@ class ListClusterViewTests : FreeSpec({
             val cluster = Cluster(name = "clusterName", endpoint = "endpoint")
             fixture.startApp(cluster)
             // Open settings windows
-            eventually {
-                lookupClusterNode(cluster).lookupFirst<Button>(settingsButton).click()
-            }
+            lookupClusterNode(cluster).lookupFirst<Button>(settingsButton).click()
+
             // Click delete cluster button
             waitWindowWithTitle(cluster.name).lookupFirst<Button>(alertButton).click()
             screenShoot("delete-cluster")
             // Click OK on the dialog
-            eventually { clickOkOnDialog() }
+            clickOkOnDialog()
             // The cluster is deleted from the list of clusters"
             eventually {
                 getPrimaryWindow().lookupAny<Label>(label).filter { it.text == cluster.name } shouldBe emptyList()
