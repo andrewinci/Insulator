@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  integration-tests-linux:
+    machine: # executor type
+        image: ubuntu-2004:202010-01
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: gradle dependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run: xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon
+  integration-tests-macos:
+    macos: # executor type
+      xcode: 11.3.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: gradle dependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run: ./gradlew check :app:integrationTest codeCoverageReport --no-daemon
+
+workflow:
+  integration-tests-linux
+  integration-tests-macos
