@@ -33,5 +33,5 @@ jobs:
 
 workflows:
   integration-tests:
-    integration-tests-linux
-    integration-tests-macos
+    - integration-tests-linux
+    - integration-tests-macos
