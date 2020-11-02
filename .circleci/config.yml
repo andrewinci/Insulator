@@ -32,5 +32,6 @@ jobs:
       - run: ./gradlew check :app:integrationTest codeCoverageReport --no-daemon
 
 workflow:
-  integration-tests-linux
-  integration-tests-macos
+  integrtion-tests:
+    integration-tests-linux
+    integration-tests-macos
