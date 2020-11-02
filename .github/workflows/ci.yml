@@ -42,6 +42,7 @@ jobs:
     runs-on: ${{ matrix.os.name }}
     strategy:
       matrix:
+        #todo: remove run-integration
         os:
           - name: macos-latest
             run-integration: false
@@ -66,10 +67,48 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-
       - name: Build and run tests
-        if: ${{ !matrix.os.run-integration }}
         run: "./gradlew check --no-daemon --stacktrace"
+
+  integration-test:
+    needs: linting
+    runs-on: ubuntu-latest
+    services:
+      zookeeper:
+        image: 'docker.io/bitnami/zookeeper:3-debian-10'
+        ports:
+          - '2181:2181'
+        env:
+          - ALLOW_ANONYMOUS_LOGIN=yes
+        volumes:
+          - 'kafka_data:/bitnami'
+      kafka:
+        image: 'docker.io/bitnami/kafka:2-debian-10'
+        ports:
+          - '9092:9092'
+        volumes:
+          - 'kafka_data:/bitnami'
+        env:
+          - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+          - ALLOW_PLAINTEXT_LISTENER=yes
+        depends_on:
+          - zookeeper
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 14
+          java-package: jdk
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
       - name: Run integration tests
-        if: ${{ matrix.os.run-integration }}
         uses: paambaati/codeclimate-action@v2.7.4
         env:
           GITHUB_SHA: "${{ github.event.pull_request.head.sha }}"
@@ -87,14 +126,12 @@ jobs:
           coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon --stacktrace"
           coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
       - name: Configure AWS credentials
-        if: ${{ matrix.os.run-integration }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
       - name: Upload screenshoots
-        if: ${{ matrix.os.run-integration }}
         run: |
           aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/${{ github.event.pull_request.head.sha }}/${{ matrix.os.name }}
       - name: Comment on PR
