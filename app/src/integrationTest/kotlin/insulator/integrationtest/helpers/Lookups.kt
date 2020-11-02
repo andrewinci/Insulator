@@ -11,7 +11,7 @@ private val nodeFinder = FxAssert.assertContext().nodeFinder
 
 fun getPrimaryWindow(): Node = nodeFinder.rootNode(Window.getWindows().first())
 
-@OptIn(ExperimentalTime::class)
+@ExperimentalTime
 suspend fun waitWindowWithTitle(title: String): Node = eventually {
     nodeFinder.rootNode(
         Window.getWindows().firstOrNull { (it as? Stage)?.title == title }

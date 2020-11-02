@@ -9,6 +9,7 @@ import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.screenShoot
+import insulator.integrationtest.helpers.selectCluster
 import insulator.integrationtest.helpers.waitWindowWithTitle
 import insulator.ui.style.MainViewStyle
 import insulator.ui.style.TextStyle
@@ -31,11 +32,7 @@ class MainViewTest : GenericMainViewTest(
     "Test cluster",
     {
         it.startAppWithKafkaCuster("Test cluster")
-        eventually {
-            getPrimaryWindow()
-                .lookupFirst<Node>(CssRule.id("cluster-${it.currentKafkaCluster.guid}"))
-                .doubleClick()
-        }
+        selectCluster(it.currentKafkaCluster)
     }
 )
 
@@ -89,15 +86,19 @@ abstract class GenericMainViewTest(clusterName: String, initialize: suspend (Int
                 "Search for a topic that doesn't exists" {
                     // search for a topic that doesn't exists
                     searchBox.textProperty().runOnFXThread { set("asdffdsaa") }
-                    mainView.lookupFirst<ListView<String>>(listView).items.size shouldBe 0
+                    eventually {
+                        mainView.lookupFirst<ListView<String>>(listView).items.size shouldBe 0
+                    }
                 }
 
                 "Search for $topicName shows only one result" {
                     // search for a topic that doesn't exists
                     searchBox.textProperty().runOnFXThread { set(topicName) }
-                    with(mainView.lookupFirst<ListView<String>>(listView)) {
-                        items.size shouldBe 1
-                        items.first() shouldBe topicName
+                    eventually {
+                        with(mainView.lookupFirst<ListView<String>>(listView)) {
+                            items.size shouldBe 1
+                            items.first() shouldBe topicName
+                        }
                     }
                 }
             }

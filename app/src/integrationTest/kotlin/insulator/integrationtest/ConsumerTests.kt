@@ -7,6 +7,7 @@ import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.screenShoot
+import insulator.integrationtest.helpers.selectCluster
 import insulator.integrationtest.helpers.waitWindowWithTitle
 import insulator.viewmodel.main.topic.RecordViewModel
 import io.kotest.core.spec.style.FreeSpec
@@ -36,10 +37,9 @@ class ConsumerTests : FreeSpec({
             // create topics
             val testTopicName = "test-topic"
             (1..3).forEach { fixture.createTopic("$testTopicName-$it") }
-            getPrimaryWindow()
-                .lookupFirst<Node>(CssRule.id("cluster-${fixture.currentKafkaCluster.guid}"))
-                .doubleClick()
 
+            // open main view
+            selectCluster(fixture.currentKafkaCluster)
             val mainView = waitWindowWithTitle("Insulator")
 
             "Consume from one topic" {
@@ -67,15 +67,17 @@ class ConsumerTests : FreeSpec({
 
                     // produce to topic it
                     (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
+                    delay(2_000)
                 }
                 screenShoot("multiple-consumers")
+                // assert
                 with(mainView.lookupAny<TableView<RecordViewModel>>(tableView)) {
                     (0..1).forEach { n ->
-                        forAtLeastOne { it.items.map { r -> r.keyProperty.value to r.valueProperty.value } shouldContainExactlyInAnyOrder recordSets[n] }
+                        forAtLeastOne { it.items.map { r -> r.keyProperty.value to r.valueProperty.value }.shouldContainExactlyInAnyOrder(recordSets[n]) }
                     }
                 }
 
-                // start consuming from topic it
+                // stop consuming
                 mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
             }
         }
