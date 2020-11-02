@@ -3,9 +3,7 @@ package insulator.integrationtest
 import insulator.helper.runOnFXThread
 import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
-import insulator.integrationtest.helpers.doubleClick
 import insulator.integrationtest.helpers.eventually
-import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.screenShoot
@@ -16,7 +14,6 @@ import insulator.ui.style.TextStyle
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ListView

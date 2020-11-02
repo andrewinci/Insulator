@@ -3,7 +3,6 @@ package insulator.integrationtest
 import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.doubleClick
-import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.screenShoot
