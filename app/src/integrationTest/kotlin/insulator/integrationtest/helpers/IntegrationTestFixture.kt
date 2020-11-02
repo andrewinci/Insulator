@@ -49,6 +49,7 @@ class IntegrationTestFixture : Closeable {
         startApp(currentKafkaCluster)
         adminApi = adminApi(currentKafkaCluster)
         stringProducer = stringProducer(currentKafkaCluster)
+        delay(15_000)
     }
 
     suspend fun startApp(vararg clusters: Cluster) {
@@ -73,5 +74,5 @@ class IntegrationTestFixture : Closeable {
         schemaRegistry.runCatching { stop(); close() }
     }
 
-    suspend fun createTopic(s: String) = adminApi.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1)).also { delay(1_000) }
+    suspend fun createTopic(s: String) = adminApi.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1))
 }

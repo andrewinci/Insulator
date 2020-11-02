@@ -32,13 +32,13 @@ suspend fun clickOkOnDialog() = eventually {
 suspend fun Node.doubleClick() {
     FxRobot().doubleClickOn(this)
     waitFXThread()
-    delay(2_000)
+    delay(1_000)
 }
 
 suspend fun Node.click() {
     FxRobot().clickOn(this)
     waitFXThread()
-    delay(2_000)
+    delay(1_000)
 }
 
 fun screenShoot(name: String = "") {

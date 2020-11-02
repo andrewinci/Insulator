@@ -31,7 +31,6 @@ class ConsumerTests : FreeSpec({
 
             val clusterName = "Test cluster"
             fixture.startAppWithKafkaCuster(clusterName, false)
-            delay(20_000)
 
             // create topics
             val testTopicName = "test-topic"
@@ -66,13 +65,13 @@ class ConsumerTests : FreeSpec({
 
                     // produce to topic it
                     (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
-                    delay(2_000)
                 }
+                delay(4_000)
                 screenShoot("multiple-consumers")
                 // assert
                 with(mainView.lookupAny<TableView<RecordViewModel>>(tableView)) {
                     (0..1).forEach { n ->
-                        forAtLeastOne { it.items.map { r -> r.keyProperty.value to r.valueProperty.value }.shouldContainExactlyInAnyOrder(recordSets[n]) }
+                        forAtLeastOne { it.items.map { r -> r.keyProperty.value to r.valueProperty.value } shouldContainExactlyInAnyOrder recordSets[n] }
                     }
                 }
 
