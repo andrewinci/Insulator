@@ -31,7 +31,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
       - run: ./gradlew check :app:integrationTest codeCoverageReport --no-daemon
 
-workflow:
-  integrtion-tests:
+workflows:
+  integration-tests:
     integration-tests-linux
     integration-tests-macos
