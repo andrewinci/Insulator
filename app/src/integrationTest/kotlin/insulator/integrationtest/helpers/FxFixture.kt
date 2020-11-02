@@ -2,22 +2,17 @@ package insulator.integrationtest.helpers
 
 import insulator.Insulator
 import insulator.configuration.ConfigurationRepo
-import insulator.kafka.local.SchemaRegistryContainer
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.test.helper.deleteTestSandboxFolder
 import insulator.test.helper.getTestSandboxFolder
 import kotlinx.coroutines.delay
-import org.testcontainers.containers.KafkaContainer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testfx.api.FxToolkit
 import tornadofx.FX
 import java.io.Closeable
 
 class FxFixture() : Closeable {
     private val currentHomeFolder = getTestSandboxFolder().toAbsolutePath()
-    private val kafka = KafkaContainer()
-    private val schemaRegistry = SchemaRegistryContainer().withKafka(kafka)
     lateinit var currentKafkaCluster: Cluster
 
     init {
@@ -28,16 +23,10 @@ class FxFixture() : Closeable {
     }
 
     suspend fun startAppWithKafkaCuster(clusterName: String, createSchemaRegistry: Boolean = true) {
-        kafka.start()
-        kafka.waitingFor(Wait.forListeningPort())
         currentKafkaCluster = Cluster(
             name = clusterName,
-            endpoint = kafka.bootstrapServers,
-            schemaRegistryConfig = if (createSchemaRegistry) {
-                schemaRegistry.start()
-                schemaRegistry.waitingFor(Wait.forListeningPort())
-                SchemaRegistryConfiguration(schemaRegistry.endpoint)
-            } else SchemaRegistryConfiguration()
+            endpoint = "PLAINTEXT://127.0.0.1:9092",
+            schemaRegistryConfig = SchemaRegistryConfiguration() //todo: add
         )
         startApp(currentKafkaCluster)
     }
@@ -60,7 +49,5 @@ class FxFixture() : Closeable {
         kotlin.runCatching { FxToolkit.cleanupStages() }
         kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         deleteTestSandboxFolder()
-        kafka.runCatching { stop(); close() }
-        schemaRegistry.runCatching { stop(); close() }
     }
 }
