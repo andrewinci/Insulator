@@ -17,7 +17,6 @@ import insulator.ui.style.ButtonStyle
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import javafx.beans.binding.Bindings
-import javafx.collections.FXCollections
 import javafx.event.EventTarget
 import javafx.geometry.Insets
 import javafx.geometry.Pos

@@ -10,7 +10,6 @@ import insulator.ui.component.fieldName
 import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
 import javafx.beans.binding.Bindings
-import javafx.collections.FXCollections
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
