@@ -24,7 +24,7 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 class ConsumerTests : FreeSpec({
 
-    "!Test consumers" - {
+    "Test consumers" - {
         IntegrationTestFixture().use { fixture ->
             suspend fun Node.selectTopic(topicName: String) = lookupFirst<Label>(CssRule.id(topicName)).doubleClick()
             suspend fun List<Pair<String, String>>.produce(topicName: String) = forEach { (k, v) -> fixture.stringProducer.send(topicName, k, v) }

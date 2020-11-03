@@ -21,7 +21,9 @@ suspend fun waitWindowWithTitle(title: String): Node = eventually {
 
 fun <T : Node> Node.lookupAny(cssRule: Rendered): MutableSet<T> = lookupAny(cssRule.render())
 fun <T : Node> Node.lookupAny(cssSelector: String): MutableSet<T> =
-    FxAssert.assertContext().nodeFinder.from(this).lookup(cssSelector).queryAll()
+    FxAssert.assertContext().nodeFinder.runCatching {
+        from(this@lookupAny).lookup(cssSelector).queryAll<T>()
+    }.fold({ it }, { throw AssertionError("There is no node in the scene-graph matching: $cssSelector") })
 
 @ExperimentalTime
 suspend fun <T : Node> Node.lookupFirst(cssRule: Rendered): T = lookupFirst(cssRule.render())

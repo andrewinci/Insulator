@@ -74,7 +74,7 @@ jobs:
         env:
           GITHUB_SHA: "${{ github.event.pull_request.head.sha }}"
           DISPLAY: ":99.0"
-          _JAVA_OPTIONS: "-Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
+          _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.verbose=true"
           CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
           JACOCO_SOURCE_PATH: |
             ${{github.workspace}}/app/src/main/kotlin \
