@@ -52,7 +52,7 @@
 
 ## Key Features
 
-* Authenticate to clusters with: SSL and SASL authentication
+* Authenticate to clusters with: SSL and SASL (SCRAM or PLAIN) authentication
 * Topics
     - List available topics
     - Messages count and basic topic info
@@ -71,7 +71,6 @@
 * Cross platform
     - Windows, macOS and Linux ready.
 * Dark/Light theme
-    - **Currently in beta**
 
 ## Development
 **🚧Work in progress 🚧**
