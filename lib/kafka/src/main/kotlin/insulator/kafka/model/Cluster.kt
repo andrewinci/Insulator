@@ -19,6 +19,7 @@ data class Cluster(
 
     val schemaRegistryConfig: SchemaRegistryConfiguration = SchemaRegistryConfiguration()
 ) {
+
     companion object {
         fun empty() = Cluster(name = "", endpoint = "")
     }
@@ -31,18 +32,19 @@ data class SslConfiguration(
     val sslTruststoreLocation: String? = null,
     val sslTruststorePassword: String? = null,
     val sslKeystoreLocation: String? = null,
-    val sslKeyStorePassword: String? = null
+    val sslKeyStorePassword: String? = null,
 )
 
 @Serializable
 data class SaslConfiguration(
     val saslUsername: String? = null,
-    val saslPassword: String? = null
+    val saslPassword: String? = null,
+    val useScram: Boolean = false,
 )
 
 @Serializable
 data class SchemaRegistryConfiguration(
     val endpoint: String? = null,
     val username: String? = null,
-    val password: String? = null
+    val password: String? = null,
 )

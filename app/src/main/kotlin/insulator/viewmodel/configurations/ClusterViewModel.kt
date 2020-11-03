@@ -5,12 +5,14 @@ import insulator.kafka.model.Cluster
 import insulator.kafka.model.SaslConfiguration
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.kafka.model.SslConfiguration
+import javafx.beans.property.Property
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel
 import javax.inject.Inject
 
 class ClusterViewModel @Inject constructor(cluster: ClusterModel, private val configurationRepo: ConfigurationRepo) : ItemViewModel<ClusterModel>(cluster) {
+
 
     val nameProperty = bind { item.nameProperty }
     val endpointProperty = bind { item.endpointProperty }
@@ -24,6 +26,7 @@ class ClusterViewModel @Inject constructor(cluster: ClusterModel, private val co
     val useSaslProperty = bind { item.useSaslProperty }
     val saslUsernameProperty = bind { item.saslUsernameProperty }
     val saslPasswordProperty = bind { item.saslPasswordProperty }
+    val useScramProperty = bind { item.useScramProperty }
 
     val schemaRegistryEndpointProperty = bind { item.schemaRegistryEndpointProperty }
     val schemaRegistryUsernameProperty = bind { item.schemaRegistryUsernameProperty }
@@ -47,6 +50,7 @@ class ClusterModel @Inject constructor(cluster: Cluster) {
     val useSaslProperty = SimpleBooleanProperty(cluster.useSasl)
     val saslUsernameProperty = SimpleStringProperty(cluster.saslConfiguration.saslUsername)
     val saslPasswordProperty = SimpleStringProperty(cluster.saslConfiguration.saslPassword)
+    val useScramProperty = SimpleBooleanProperty(cluster.saslConfiguration.useScram)
 
     val schemaRegistryEndpointProperty = SimpleStringProperty(cluster.schemaRegistryConfig.endpoint)
     val schemaRegistryUsernameProperty = SimpleStringProperty(cluster.schemaRegistryConfig.username)
@@ -62,17 +66,18 @@ class ClusterModel @Inject constructor(cluster: Cluster) {
                 sslTruststoreLocation = this.sslTruststoreLocationProperty.value,
                 sslTruststorePassword = this.sslTruststorePasswordProperty.value,
                 sslKeystoreLocation = this.sslKeystoreLocationProperty.value,
-                sslKeyStorePassword = this.sslKeyStorePasswordProperty.value
+                sslKeyStorePassword = this.sslKeyStorePasswordProperty.value,
             ),
             useSasl = this.useSaslProperty.value,
             saslConfiguration = SaslConfiguration(
                 saslUsername = this.saslUsernameProperty.value,
-                saslPassword = this.saslPasswordProperty.value
+                saslPassword = this.saslPasswordProperty.value,
+                useScram = this.useScramProperty.value,
             ),
             schemaRegistryConfig = SchemaRegistryConfiguration(
                 endpoint = this.schemaRegistryEndpointProperty.value,
                 username = this.schemaRegistryUsernameProperty.value,
-                password = this.schemaRegistryPasswordProperty.value
+                password = this.schemaRegistryPasswordProperty.value,
             )
         )
 }
