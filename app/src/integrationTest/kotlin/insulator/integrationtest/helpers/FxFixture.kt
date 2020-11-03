@@ -26,7 +26,7 @@ class FxFixture() : Closeable {
         currentKafkaCluster = Cluster(
             name = clusterName,
             endpoint = "PLAINTEXT://127.0.0.1:9092",
-            schemaRegistryConfig = SchemaRegistryConfiguration() //todo: add
+            schemaRegistryConfig = SchemaRegistryConfiguration() // todo: add
         )
         startApp(currentKafkaCluster)
     }
