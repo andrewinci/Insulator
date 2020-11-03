@@ -58,7 +58,8 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
             }
         ).all().thenApply { Unit }.toSuspendCoroutine()
 
-    suspend fun deleteTopic(topicName: String) = admin.deleteTopics(listOf(topicName)).all().toSuspendCoroutine()
+    suspend fun deleteTopic(topicName: String) =
+        admin.deleteTopics(listOf(topicName)).all().toSuspendCoroutine()
 
     private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
 
