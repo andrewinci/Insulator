@@ -71,7 +71,7 @@ jobs:
 
   integration-test:
     needs: linting
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     services:
       zookeeper:
         image: 'docker.io/bitnami/zookeeper:3-debian-10'
@@ -118,7 +118,7 @@ jobs:
             ${{github.workspace}}/lib/kafka/src/main/kotlin \
             ${{github.workspace}}/lib/update/src/main/kotlin
         with:
-          coverageCommand: "xvfb-run --auto-servernum ./gradlew check :app:integrationTest codeCoverageReport --no-daemon --stacktrace"
+          coverageCommand: "xvfb-run --auto-servernum ./gradlew :app:integrationTest codeCoverageReport --no-daemon --stacktrace"
           coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
