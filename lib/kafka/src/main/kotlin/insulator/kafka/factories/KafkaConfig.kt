@@ -27,10 +27,12 @@ fun kafkaConfig(cluster: Cluster) = Properties().apply {
         put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, SslConfigs.DEFAULT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM)
         put(
             SaslConfigs.SASL_JAAS_CONFIG,
-            (if (cluster.saslConfiguration.useScram)
-                "org.apache.kafka.common.security.scram.ScramLoginModule "
-            else "org.apache.kafka.common.security.plain.PlainLoginModule ")
-                + "required username=\"${cluster.saslConfiguration.saslUsername}\" password=\"${cluster.saslConfiguration.saslPassword}\";"
+            (
+                if (cluster.saslConfiguration.useScram)
+                    "org.apache.kafka.common.security.scram.ScramLoginModule "
+                else "org.apache.kafka.common.security.plain.PlainLoginModule "
+                ) +
+                "required username=\"${cluster.saslConfiguration.saslUsername}\" password=\"${cluster.saslConfiguration.saslPassword}\";"
         )
     }
     if (cluster.isSchemaRegistryConfigured()) {
