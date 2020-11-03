@@ -5,14 +5,12 @@ import insulator.kafka.model.Cluster
 import insulator.kafka.model.SaslConfiguration
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.kafka.model.SslConfiguration
-import javafx.beans.property.Property
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.ItemViewModel
 import javax.inject.Inject
 
 class ClusterViewModel @Inject constructor(cluster: ClusterModel, private val configurationRepo: ConfigurationRepo) : ItemViewModel<ClusterModel>(cluster) {
-
 
     val nameProperty = bind { item.nameProperty }
     val endpointProperty = bind { item.endpointProperty }

@@ -29,9 +29,9 @@ fun kafkaConfig(cluster: Cluster) = Properties().apply {
             SaslConfigs.SASL_JAAS_CONFIG,
             if (cluster.saslConfiguration.useScram)
                 "org.apache.kafka.common.security.scram.ScramLoginModule " +
-                "required username=\"${cluster.saslConfiguration.saslUsername}\" password=\"${cluster.saslConfiguration.saslPassword}\";"
+                    "required username=\"${cluster.saslConfiguration.saslUsername}\" password=\"${cluster.saslConfiguration.saslPassword}\";"
             else "org.apache.kafka.common.security.plain.PlainLoginModule " +
-                 "required username=\"${cluster.saslConfiguration.saslUsername}\" password=\"${cluster.saslConfiguration.saslPassword}\";"
+                "required username=\"${cluster.saslConfiguration.saslUsername}\" password=\"${cluster.saslConfiguration.saslPassword}\";"
         )
     }
     if (cluster.isSchemaRegistryConfigured()) {
