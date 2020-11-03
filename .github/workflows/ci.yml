@@ -67,11 +67,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-
       - name: Build and run tests
-        run: "./gradlew check --no-daemon --stacktrace"
+        run: "./gradlew check --no-daemon"
 
   integration-test:
     needs: linting
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     services:
       zookeeper:
         image: 'docker.io/bitnami/zookeeper:3-debian-10'
@@ -118,7 +118,7 @@ jobs:
             ${{github.workspace}}/lib/kafka/src/main/kotlin \
             ${{github.workspace}}/lib/update/src/main/kotlin
         with:
-          coverageCommand: "xvfb-run --auto-servernum ./gradlew :app:integrationTest codeCoverageReport --no-daemon --stacktrace"
+          coverageCommand: "xvfb-run --auto-servernum ./gradlew :app:integrationTest codeCoverageReport --no-daemon"
           coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
