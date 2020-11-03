@@ -50,6 +50,7 @@ class ClusterView @Inject constructor(private val viewModel: ClusterViewModel) :
                 field("Use SASL") { checkbox(property = viewModel.useSaslProperty) }
                 field("Username") { customTextField(viewModel.saslUsernameProperty).requiredWhen(viewModel.useSaslProperty) }
                 field("Password") { customTextField(viewModel.saslPasswordProperty).requiredWhen(viewModel.useSaslProperty) }
+                field("SCRAM") { checkbox(property = viewModel.useScramProperty) }
             }
             fieldset {
                 h1("Schema registry")
