@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.TopicScope
 import insulator.helper.dispatch
+import insulator.helper.toObservable
 import insulator.kafka.consumer.ConsumeFrom
 import insulator.kafka.consumer.DeserializationFormat
 import insulator.kafka.model.Cluster
@@ -67,7 +68,7 @@ class TopicView @Inject constructor(
                 button("Produce") { action { viewModel.showProducerView() }; addClass(ButtonStyle.blueButton) }
                 consumeStopButton()
                 fieldName("from")
-                consumeFromCombobox()
+                consumeFromComboBox()
                 valueFormatOptions()
                 button("Clear") { action { viewModel.consumerViewModel.clearRecords() } }
             }
@@ -92,16 +93,16 @@ class TopicView @Inject constructor(
             viewModel.consumerViewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
             fieldName("deserializer")
             combobox<String> {
-                items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                items = DeserializationFormat.values().toObservable()
                 valueProperty().bindBidirectional(viewModel.consumerViewModel.deserializeValueProperty)
                 enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
             }
         }
     }
 
-    private fun EventTarget.consumeFromCombobox() =
+    private fun EventTarget.consumeFromComboBox() =
         combobox<String> {
-            items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
+            items = ConsumeFrom.values().toObservable()
             valueProperty().bindBidirectional(viewModel.consumerViewModel.consumeFromProperty)
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 

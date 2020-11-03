@@ -33,6 +33,7 @@ dependencies {
     integrationTestImplementation(group: 'org.testcontainers', name: 'kafka', version: "1.14.3")
 
 }
+
 compileIntegrationTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 integrationTest.outputs.upToDateWhen { false }
 

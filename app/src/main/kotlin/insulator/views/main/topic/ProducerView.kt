@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.TopicScope
 import insulator.helper.dispatch
+import insulator.helper.toObservable
 import insulator.kafka.consumer.DeserializationFormat
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
@@ -68,7 +69,7 @@ class ProducerView @Inject constructor(
             hbox(alignment = Pos.CENTER_LEFT) {
                 fieldName("Serializer")
                 combobox<String> {
-                    items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                    items = DeserializationFormat.values().toObservable()
                     valueProperty().bindBidirectional(viewModel.serializeValueProperty)
                 }
             }
