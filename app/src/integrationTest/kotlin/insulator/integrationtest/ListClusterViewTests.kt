@@ -1,6 +1,6 @@
 package insulator.integrationtest
 
-import insulator.integrationtest.helpers.FxFixture
+import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
 import insulator.integrationtest.helpers.clickOkOnDialog
 import insulator.integrationtest.helpers.eventually
@@ -30,19 +30,16 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 class ListClusterViewTests : FreeSpec({
 
-    fun lookupClusterNode(cluster: Cluster) =
+    suspend fun lookupClusterNode(cluster: Cluster) =
         getPrimaryWindow().lookupFirst<Node>(CssRule.id("cluster-${cluster.guid}"))
 
     "Happy path start the app and show list clusters view" - {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             val clusters = (1..5).map { Cluster(name = "clusterName$it", endpoint = "endpoint$it") }.toTypedArray()
             fixture.startApp(*clusters)
 
             "Title should be Clusters" {
-                eventually {
-                    getPrimaryWindow()
-                        .lookupFirst<Label>(h1).text shouldBe "Clusters"
-                }
+                getPrimaryWindow().lookupFirst<Label>(h1).text shouldBe "Clusters"
             }
 
             "All clusters config should be available with a settings button" {
@@ -59,7 +56,7 @@ class ListClusterViewTests : FreeSpec({
     }
 
     "Add a new cluster" {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             fixture.startApp()
             val newClusterName = "New cluster name"
             val newEndpoint = "newEndpoint:8080"
@@ -90,18 +87,17 @@ class ListClusterViewTests : FreeSpec({
     }
 
     "Delete a cluster" {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             val cluster = Cluster(name = "clusterName", endpoint = "endpoint")
             fixture.startApp(cluster)
             // Open settings windows
-            eventually {
-                lookupClusterNode(cluster).lookupFirst<Button>(settingsButton).click()
-            }
+            lookupClusterNode(cluster).lookupFirst<Button>(settingsButton).click()
+
             // Click delete cluster button
             waitWindowWithTitle(cluster.name).lookupFirst<Button>(alertButton).click()
             screenShoot("delete-cluster")
             // Click OK on the dialog
-            eventually { clickOkOnDialog() }
+            clickOkOnDialog()
             // The cluster is deleted from the list of clusters"
             eventually {
                 getPrimaryWindow().lookupAny<Label>(label).filter { it.text == cluster.name } shouldBe emptyList()

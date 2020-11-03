@@ -6,6 +6,7 @@ import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.stage.Stage
 import javafx.stage.Window
+import kotlinx.coroutines.delay
 import org.testfx.api.FxAssert
 import org.testfx.api.FxRobot
 import org.testfx.util.WaitForAsyncUtils
@@ -17,7 +18,8 @@ import javax.imageio.ImageIO
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
-fun clickOkOnDialog() {
+@ExperimentalTime
+suspend fun clickOkOnDialog() = eventually {
     FxAssert.assertContext().nodeFinder
         .lookup(".dialog-pane.alert")
         .lookup(".button")
@@ -27,14 +29,16 @@ fun clickOkOnDialog() {
     waitFXThread()
 }
 
-fun Node.doubleClick() {
+suspend fun Node.doubleClick() {
     FxRobot().doubleClickOn(this)
     waitFXThread()
+    delay(1_000)
 }
 
-fun Node.click() {
+suspend fun Node.click() {
     FxRobot().clickOn(this)
     waitFXThread()
+    delay(1_000)
 }
 
 fun screenShoot(name: String = "") {
@@ -55,5 +59,5 @@ fun waitFXThread() {
 }
 
 @ExperimentalTime
-suspend fun eventually(f: suspend () -> Unit) =
+suspend fun <T> eventually(f: suspend () -> T): T =
     io.kotest.assertions.timing.eventually(60.seconds, f)

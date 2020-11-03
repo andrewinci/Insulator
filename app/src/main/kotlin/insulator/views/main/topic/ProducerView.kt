@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.TopicScope
 import insulator.helper.dispatch
+import insulator.helper.toObservable
 import insulator.kafka.consumer.DeserializationFormat
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
@@ -9,7 +10,6 @@ import insulator.ui.component.fieldName
 import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
 import javafx.beans.binding.Bindings
-import javafx.collections.FXCollections
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.ScrollPane
@@ -68,7 +68,7 @@ class ProducerView @Inject constructor(
             hbox(alignment = Pos.CENTER_LEFT) {
                 fieldName("Serializer")
                 combobox<String> {
-                    items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                    items = DeserializationFormat.values().toObservable()
                     valueProperty().bindBidirectional(viewModel.serializeValueProperty)
                 }
             }

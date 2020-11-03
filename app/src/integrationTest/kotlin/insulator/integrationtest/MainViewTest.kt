@@ -1,21 +1,19 @@
 package insulator.integrationtest
 
 import insulator.helper.runOnFXThread
-import insulator.integrationtest.helpers.FxFixture
+import insulator.integrationtest.helpers.IntegrationTestFixture
 import insulator.integrationtest.helpers.click
-import insulator.integrationtest.helpers.doubleClick
 import insulator.integrationtest.helpers.eventually
-import insulator.integrationtest.helpers.getPrimaryWindow
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.screenShoot
+import insulator.integrationtest.helpers.selectCluster
 import insulator.integrationtest.helpers.waitWindowWithTitle
 import insulator.ui.style.MainViewStyle
 import insulator.ui.style.TextStyle
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
@@ -31,31 +29,22 @@ class MainViewTest : GenericMainViewTest(
     "Test cluster",
     {
         it.startAppWithKafkaCuster("Test cluster")
-        eventually {
-            getPrimaryWindow()
-                .lookupFirst<Node>(CssRule.id("cluster-${it.currentKafkaCluster.guid}"))
-                .doubleClick()
-        }
+        selectCluster(it.currentKafkaCluster)
     }
 )
 
 @ExperimentalTime
-abstract class GenericMainViewTest(clusterName: String, initialize: suspend (FxFixture) -> Unit) : FreeSpec({
+abstract class GenericMainViewTest(clusterName: String, initialize: suspend (IntegrationTestFixture) -> Unit) : FreeSpec({
 
     "Main view $clusterName" - {
-        FxFixture().use { fixture ->
+        IntegrationTestFixture().use { fixture ->
             val topicName = "test-new-topic"
             initialize(fixture)
-            eventually {
-                waitWindowWithTitle("Insulator")
-            }
             val mainView = waitWindowWithTitle("Insulator")
             screenShoot("main-view")
 
             "Cluster name is shown in the sidebar" {
-                eventually {
-                    mainView.lookupFirst<Label>(MainViewStyle.sidebar.contains(TextStyle.h1)).text shouldBe clusterName
-                }
+                mainView.lookupFirst<Label>(MainViewStyle.sidebar.contains(TextStyle.h1)).text shouldBe clusterName
             }
 
             "Show cluster details" {
@@ -84,9 +73,7 @@ abstract class GenericMainViewTest(clusterName: String, initialize: suspend (FxF
                     screenShoot("create-new-topic")
                     // Click create button
                     lookupFirst<Button>(CssRule.id("button-create-topic")).click()
-                    eventually {
-                        mainView.lookupFirst<Label>(CssRule.id("topic-$topicName")).text shouldBe topicName
-                    }
+                    mainView.lookupFirst<Label>(CssRule.id("topic-$topicName")).text shouldBe topicName
                     screenShoot("list-of-topics-with-new-created-topic")
                 }
             }
@@ -94,17 +81,17 @@ abstract class GenericMainViewTest(clusterName: String, initialize: suspend (FxF
             "Search topic test" - {
                 val searchBox = mainView.lookupFirst<TextField>(CssRule.id("search-box-list-topic").contains(textField))
                 "Search for a topic that doesn't exists" {
+                    // search for a topic that doesn't exists
+                    searchBox.textProperty().runOnFXThread { set("asdffdsaa") }
                     eventually {
-                        // search for a topic that doesn't exists
-                        searchBox.textProperty().runOnFXThread { set("asdffdsaa") }
                         mainView.lookupFirst<ListView<String>>(listView).items.size shouldBe 0
                     }
                 }
 
                 "Search for $topicName shows only one result" {
+                    // search for a topic that doesn't exists
+                    searchBox.textProperty().runOnFXThread { set(topicName) }
                     eventually {
-                        // search for a topic that doesn't exists
-                        searchBox.textProperty().runOnFXThread { set(topicName) }
                         with(mainView.lookupFirst<ListView<String>>(listView)) {
                             items.size shouldBe 1
                             items.first() shouldBe topicName

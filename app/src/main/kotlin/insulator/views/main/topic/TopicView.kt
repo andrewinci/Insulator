@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.TopicScope
 import insulator.helper.dispatch
+import insulator.helper.toObservable
 import insulator.kafka.consumer.ConsumeFrom
 import insulator.kafka.consumer.DeserializationFormat
 import insulator.kafka.model.Cluster
@@ -16,7 +17,6 @@ import insulator.ui.style.ButtonStyle
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
 import javafx.beans.binding.Bindings
-import javafx.collections.FXCollections
 import javafx.event.EventTarget
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -67,7 +67,7 @@ class TopicView @Inject constructor(
                 button("Produce") { action { viewModel.showProducerView() }; addClass(ButtonStyle.blueButton) }
                 consumeStopButton()
                 fieldName("from")
-                consumeFromCombobox()
+                consumeFromComboBox()
                 valueFormatOptions()
                 button("Clear") { action { viewModel.consumerViewModel.clearRecords() } }
             }
@@ -81,7 +81,10 @@ class TopicView @Inject constructor(
             with(viewModel.consumerViewModel.isConsumingProperty) {
                 Bindings.createStringBinding({ if (!this.value) CONSUME else STOP }, this)
             }
-        ) { action { viewModel.dispatch { consumerViewModel.consume() } } }
+        ) {
+            id = "button-consume-stop"
+            action { viewModel.dispatch { consumerViewModel.consume() } }
+        }
     }
 
     private fun EventTarget.valueFormatOptions() {
@@ -89,25 +92,24 @@ class TopicView @Inject constructor(
             viewModel.consumerViewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
             fieldName("deserializer")
             combobox<String> {
-                items = FXCollections.observableArrayList(DeserializationFormat.values().map { it.name }.toList())
+                items = DeserializationFormat.values().toObservable()
                 valueProperty().bindBidirectional(viewModel.consumerViewModel.deserializeValueProperty)
                 enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
             }
         }
     }
 
-    private fun EventTarget.consumeFromCombobox() =
+    private fun EventTarget.consumeFromComboBox() =
         combobox<String> {
-            items = FXCollections.observableArrayList(ConsumeFrom.values().map { it.name }.toList())
+            items = ConsumeFrom.values().toObservable()
             valueProperty().bindBidirectional(viewModel.consumerViewModel.consumeFromProperty)
-            enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
-        }
+        }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 
     private fun EventTarget.deleteButton() =
         confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.dispatch { delete() }
             closeTab()
-        }
+        }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 
     private fun EventTarget.recordsTable() =
         tableview<RecordViewModel> {

@@ -17,6 +17,6 @@ class LocalClusterTest : GenericMainViewTest(
         it.startApp()
         getPrimaryWindow().lookupFirst<Button>(CssRule.id("button-local-cluster")).click()
         screenShoot("starting-local-cluster")
-        delay(60.seconds)
+        delay(40.seconds)
     }
 )
