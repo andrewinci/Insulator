@@ -100,7 +100,7 @@ class KafkaConfigKtTest : StringSpec({
             get("security.protocol") shouldBe "SASL_SSL"
             get("sasl.mechanism") shouldBe "PLAIN"
             get("ssl.endpoint.identification.algorithm") shouldBe "https"
-            get("sasl.jaas.config") shouldBe "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"saslUsername\"   password=\"saslPassword\";"
+            get("sasl.jaas.config") shouldBe "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"saslUsername\" password=\"saslPassword\";"
         }
     }
 })
