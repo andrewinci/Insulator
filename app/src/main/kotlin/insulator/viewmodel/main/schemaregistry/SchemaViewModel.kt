@@ -21,7 +21,7 @@ class SchemaViewModel @Inject constructor(
     val cluster: Cluster,
     val subject: Subject,
     private val formatter: JsonFormatter,
-    private val schemaRegistry: SchemaRegistry,
+    private val schemaRegistry: SchemaRegistry?,
 ) : InsulatorViewModel() {
 
     val nameProperty = SimpleStringProperty(subject.name)
@@ -43,7 +43,7 @@ class SchemaViewModel @Inject constructor(
         selectedVersionProperty.value = subject.schemas.last()
     }
 
-    fun delete() = schemaRegistry.deleteSubject(nameProperty.value)
+    fun delete() = schemaRegistry?.deleteSubject(nameProperty.value)
 
     fun copySchemaToClipboard() {
         Clipboard.getSystemClipboard().putString(schemaProperty.joinToString(separator = "") { it.text })

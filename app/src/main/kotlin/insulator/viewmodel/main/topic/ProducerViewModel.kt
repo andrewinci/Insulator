@@ -22,7 +22,7 @@ import javax.inject.Inject
 class ProducerViewModel @Inject constructor(
     val topic: Topic,
     val cluster: Cluster,
-    private val avroProducer: AvroProducer,
+    private val avroProducer: AvroProducer?,
     private val stringProducer: StringProducer
 ) : InsulatorViewModel() {
 
@@ -30,7 +30,7 @@ class ProducerViewModel @Inject constructor(
 
     private val producer: Producer
         get() = when (SerializationFormat.valueOf(serializeValueProperty.value!!)) {
-            SerializationFormat.Avro -> avroProducer
+            SerializationFormat.Avro -> avroProducer ?: throw Exception("Null AvroProducer")
             SerializationFormat.String -> stringProducer
         }
 

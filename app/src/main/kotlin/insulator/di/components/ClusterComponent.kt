@@ -37,11 +37,11 @@ interface ClusterComponent {
     fun adminApi(): AdminApi
 
     // Producers
-    fun avroProducer(): AvroProducer
+    fun avroProducer(): AvroProducer?
     fun stringProducer(): StringProducer
 
     // Schema Registry
-    fun schemaRegistry(): SchemaRegistry
+    fun schemaRegistry(): SchemaRegistry?
 
     // Helpers
     fun jsonFormatter(): JsonFormatter
