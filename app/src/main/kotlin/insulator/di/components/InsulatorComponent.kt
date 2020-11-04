@@ -6,7 +6,7 @@ import insulator.di.modules.RootModule
 import insulator.jsonhelper.JsonFormatter
 import insulator.jsonhelper.avrotojson.AvroToJsonConverter
 import insulator.jsonhelper.jsontoavro.JsonToAvroConverter
-import insulator.ui.style.ThemeHelper
+import insulator.ui.ThemeHelper
 import insulator.views.configurations.ListClusterView
 import javax.inject.Singleton
 

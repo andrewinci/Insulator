@@ -56,7 +56,7 @@ data class Theme(
     val viewPadding: Dimension<Dimension.LinearUnits> = 1.em,
 )
 
-private val darkTheme = Theme(
+internal val darkTheme = Theme(
     black = Color.WHITE,
     backgroundColor = c("#292b2e"),
     mainColor = c("#FF9100"),
@@ -68,34 +68,7 @@ private val darkTheme = Theme(
     blueColor = c("#20a3f5"),
     viewPadding = 1.em,
 )
-private val lightTheme = Theme()
+internal val lightTheme = Theme()
 
 var theme: Theme = lightTheme
-    private set
-
-@Singleton
-class ThemeHelper @Inject constructor(val configurationRepo: ConfigurationRepo) {
-
-    suspend fun changeTheme() {
-        configurationRepo.getConfiguration().map {
-            configurationRepo.store(
-                if (it.theme == InsulatorTheme.Dark) InsulatorTheme.Light else InsulatorTheme.Dark
-            )
-        }
-        updateUITheme()
-    }
-
-    private fun reloadTheme() =
-        Window.getWindows().map { it as? Stage }
-            .forEach { it?.scene?.reloadStylesheets() }
-
-    suspend fun updateUITheme() {
-        configurationRepo.getConfiguration().map {
-            theme = when (it.theme) {
-                InsulatorTheme.Dark -> darkTheme
-                InsulatorTheme.Light -> lightTheme
-            }
-            reloadTheme()
-        }
-    }
-}
+    internal set
