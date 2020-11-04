@@ -6,28 +6,39 @@ import tornadofx.Dimension
 import tornadofx.Stylesheet
 import tornadofx.box
 import tornadofx.c
+import tornadofx.cssclass
 import tornadofx.em
 import tornadofx.multi
 import tornadofx.px
 
 class Root : Stylesheet() {
+    companion object {
+        val insulatorView by cssclass("insulator-view")
+    }
+
     init {
         root {
             font = Font.font("Helvetica", 10.0)
             backgroundColor = multi(theme.backgroundColor)
+        }
+
+        insulatorView {
             padding = box(theme.viewPadding)
-            contextMenu {
-                padding = box(0.px)
-                minWidth = 100.0.px
-                textFill = theme.black
-                menuItem {
-                    padding = box(10.0.px)
-                    and(focused) {
-                        backgroundColor = multi(theme.mainColor)
-                        label {
-                            textFill = theme.backgroundColor
-                            textFill = theme.backgroundColor
-                        }
+        }
+
+        contextMenu {
+            padding = box(0.px)
+            minWidth = 100.0.px
+            backgroundColor = multi(theme.backgroundColor.brighter())
+            menuItem {
+                padding = box(10.0.px)
+                label {
+                    textFill = theme.black
+                }
+                and(focused) {
+                    backgroundColor = multi(theme.mainColor)
+                    label {
+                        textFill = theme.backgroundColor
                     }
                 }
             }
