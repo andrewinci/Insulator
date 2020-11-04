@@ -7,6 +7,8 @@ import insulator.integrationtest.helpers.doubleClick
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.screenShoot
 import insulator.integrationtest.helpers.selectCluster
+import insulator.integrationtest.helpers.selectTopic
+import insulator.integrationtest.helpers.startStopConsumer
 import insulator.integrationtest.helpers.waitWindowWithTitle
 import insulator.viewmodel.main.topic.RecordViewModel
 import io.kotest.core.spec.style.FreeSpec
@@ -27,8 +29,6 @@ class ProducerTest : FreeSpec({
 
     "Test producer" - {
         IntegrationTestFixture().use { fixture ->
-            suspend fun Node.selectTopic(topicName: String) = lookupFirst<Label>(CssRule.id(topicName)).doubleClick()
-            suspend fun List<Pair<String, String>>.produce(topicName: String) = forEach { (k, v) -> fixture.stringProducer.send(topicName, k, v) }
 
             val clusterName = "Test cluster"
             fixture.startAppWithKafkaCuster(clusterName, false)
@@ -49,7 +49,7 @@ class ProducerTest : FreeSpec({
                 mainView.selectTopic("topic-$testTopicName")
 
                 // start consumer
-                mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
+                mainView.startStopConsumer()
 
                 // open producer view
                 mainView.lookupFirst<Button>(CssRule.id("button-produce")).click()
@@ -67,7 +67,7 @@ class ProducerTest : FreeSpec({
                 val recordTable = mainView.lookupFirst<TableView<RecordViewModel>>(Stylesheet.tableView)
                 recordTable.items.map { it.keyProperty.value to it.valueProperty.value } shouldContainExactlyInAnyOrder listOf(testKey to testValue)
 
-                mainView.lookupFirst<Button>(CssRule.id("button-consume-stop")).click()
+                mainView.startStopConsumer()
                 screenShoot("consume-produced-record")
             }
         }
