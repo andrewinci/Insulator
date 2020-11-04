@@ -1,8 +1,6 @@
 package insulator.integrationtest
 
 import insulator.integrationtest.helpers.IntegrationTestFixture
-import insulator.integrationtest.helpers.click
-import insulator.integrationtest.helpers.doubleClick
 import insulator.integrationtest.helpers.lookupAny
 import insulator.integrationtest.helpers.lookupFirst
 import insulator.integrationtest.helpers.screenShoot
@@ -14,12 +12,7 @@ import insulator.viewmodel.main.topic.RecordViewModel
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.inspectors.forAtLeastOne
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import javafx.scene.Node
-import javafx.scene.control.Button
-import javafx.scene.control.Label
 import javafx.scene.control.TableView
-import kotlinx.coroutines.delay
-import tornadofx.CssRule
 import tornadofx.Stylesheet.Companion.tableView
 import kotlin.time.ExperimentalTime
 

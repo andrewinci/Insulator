@@ -12,7 +12,6 @@ import insulator.kafka.producer.Producer
 import insulator.kafka.producer.stringProducer
 import insulator.test.helper.deleteTestSandboxFolder
 import insulator.test.helper.getTestSandboxFolder
-import kotlinx.coroutines.delay
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testfx.api.FxToolkit

@@ -41,7 +41,7 @@ class ProducerView @Inject constructor(
     override val root = vbox(spacing = 10.0) {
         appBar { h1(viewModel.topic.name) }
         fieldName("Key")
-        textfield(viewModel.keyProperty){id = "field-producer-key"}
+        textfield(viewModel.keyProperty) { id = "field-producer-key" }
 
         valueFormatOptions()
 
