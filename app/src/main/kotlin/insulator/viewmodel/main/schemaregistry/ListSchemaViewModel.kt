@@ -20,7 +20,7 @@ import javax.inject.Inject
 @ClusterScope
 class ListSchemaViewModel @Inject constructor(
     val cluster: Cluster,
-    val schemaRegistry: SchemaRegistry,
+    val schemaRegistry: SchemaRegistry?,
     private val subjectComponentFactory: SubjectComponentFactory,
     private val tabViewModel: TabViewModel
 ) : InsulatorViewModel() {
@@ -47,27 +47,27 @@ class ListSchemaViewModel @Inject constructor(
     }
 
     fun refresh() = schemaRegistry
-        .getAllSubjects()
-        .map { it.sorted() }
-        .map {
+        ?.getAllSubjects()
+        ?.map { it.sorted() }
+        ?.map {
             it.runOnFXThread {
                 schemasProperty.clear()
                 schemasProperty.addAll(it)
             }
-        }.handleError {
+        }?.handleError {
             error.set(LoadSchemaListError(it.message ?: "Unable to load the schema list"))
         }
 
     suspend fun showSchema() {
         if (selectedSchemaProperty.value.isNullOrEmpty()) return
-        schemaRegistry.getSubject(selectedSchemaProperty.value!!)
-            .map {
+        schemaRegistry?.getSubject(selectedSchemaProperty.value!!)
+            ?.map {
                 subjectComponentFactory.build(it)
                     .getSchemaView()
                     .also { schemaViewTab -> schemaViewTab.whenUndockedOnce { refresh() } }
                     .let { schemaViewTab -> tabViewModel.setMainContent(it.name, schemaViewTab) }
             }
-            .mapLeft { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) }
+            ?.mapLeft { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) }
     }
 }
 

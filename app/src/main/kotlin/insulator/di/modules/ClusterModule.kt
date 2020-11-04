@@ -27,8 +27,8 @@ class ClusterModule {
 
     @Provides
     @ClusterScope
-    fun providesAvroProducer(cluster: Cluster, schemaRegistry: SchemaRegistry, jsonAvroConverter: JsonToAvroConverter) =
-        avroProducer(cluster, schemaRegistry, jsonAvroConverter::parse)
+    fun providesAvroProducer(cluster: Cluster, schemaRegistry: SchemaRegistry?, jsonAvroConverter: JsonToAvroConverter) =
+        if (schemaRegistry != null) avroProducer(cluster, schemaRegistry, jsonAvroConverter::parse) else null
 
     @Provides
     @ClusterScope
@@ -36,5 +36,6 @@ class ClusterModule {
 
     @Provides
     @ClusterScope
-    fun providesSchemaRegistry(cluster: Cluster) = schemaRegistry(cluster)
+    fun providesSchemaRegistry(cluster: Cluster) =
+        if (cluster.isSchemaRegistryConfigured()) schemaRegistry(cluster) else null
 }

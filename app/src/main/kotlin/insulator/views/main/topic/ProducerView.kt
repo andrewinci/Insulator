@@ -41,7 +41,7 @@ class ProducerView @Inject constructor(
     override val root = vbox(spacing = 10.0) {
         appBar { h1(viewModel.topic.name) }
         fieldName("Key")
-        textfield(viewModel.keyProperty)
+        textfield(viewModel.keyProperty) { id = "field-producer-key" }
 
         valueFormatOptions()
 
@@ -53,6 +53,7 @@ class ProducerView @Inject constructor(
 
         borderpane {
             right = button("Send") {
+                id = "button-producer-send"
                 enableWhen(viewModel.canSendProperty)
                 action { viewModel.dispatch { send() }; close() }
             }
@@ -93,6 +94,7 @@ class ProducerView @Inject constructor(
 
     private fun EventTarget.recordValueTextArea() {
         recordValueTextArea.apply {
+            id = "field-producer-value"
             textProperty().bindBidirectional(viewModel.valueProperty)
             vgrow = Priority.ALWAYS
         }.attachTo(this)

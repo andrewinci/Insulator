@@ -64,7 +64,7 @@ class TopicView @Inject constructor(
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
             left = hbox(alignment = Pos.CENTER, spacing = 5.0) {
-                button("Produce") { action { viewModel.showProducerView() }; addClass(ButtonStyle.blueButton) }
+                produceButton()
                 consumeStopButton()
                 fieldName("from")
                 consumeFromComboBox()
@@ -74,6 +74,14 @@ class TopicView @Inject constructor(
             right = searchBox(viewModel.consumerViewModel.searchItem, this@TopicView)
         }
         recordsTable()
+    }
+
+    private fun EventTarget.produceButton() {
+        button("Produce") {
+            id = "button-produce"
+            action { viewModel.showProducerView() }
+            addClass(ButtonStyle.blueButton)
+        }
     }
 
     private fun EventTarget.consumeStopButton() {
