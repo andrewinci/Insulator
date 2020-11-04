@@ -11,6 +11,9 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
+import javafx.beans.property.SimpleObjectProperty
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import javafx.scene.input.Clipboard
 import tornadofx.putString
 
@@ -44,6 +47,11 @@ private class TopicViewModelTestContext : FxContext() {
         coEvery { describeTopic(any()) } returns Topic("Topic name").right()
         coEvery { deleteTopic(any()) } returns null.right()
     }
+    val consumerViewModel = mockk<ConsumerViewModel>(relaxed = true) {
+        every { filteredRecords } returns SimpleObjectProperty<ObservableList<RecordViewModel>>(
+            FXCollections.observableArrayList()
+        )
+    }
 
-    val sut = TopicViewModel(mockkTopic, mockAdminApi, mockk(relaxed = true), mockk(relaxed = true))
+    val sut = TopicViewModel(mockkTopic, mockAdminApi, mockk(relaxed = true), consumerViewModel)
 }
