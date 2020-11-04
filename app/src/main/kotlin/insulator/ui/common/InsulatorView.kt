@@ -1,8 +1,10 @@
 package insulator.ui.common
 
+import insulator.ui.style.Root
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.scene.control.Alert
 import tornadofx.View
+import tornadofx.addClass
 import tornadofx.alert
 import tornadofx.onChange
 
@@ -13,6 +15,7 @@ abstract class InsulatorView(title: String? = null) : View(title) {
     open fun onError(throwable: Throwable) {}
 
     override fun onDock() {
+        root.addClass(Root.insulatorView)
         val handleError: (Throwable?) -> Unit = {
             if (it != null) {
                 alert(Alert.AlertType.WARNING, it.message ?: it.toString())
