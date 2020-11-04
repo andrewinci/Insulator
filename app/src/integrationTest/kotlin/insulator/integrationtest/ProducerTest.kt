@@ -16,6 +16,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import javafx.scene.control.TextInputControl
 import tornadofx.CssRule
 import tornadofx.Stylesheet
 import kotlin.time.ExperimentalTime
@@ -52,8 +53,12 @@ class ProducerTest : FreeSpec({
                 val producerView = waitWindowWithTitle("Insulator Producer")
 
                 // set key and value
-                producerView.lookupFirst<TextField>(CssRule.id("field-producer-key")).runOnFXThread { textProperty().set(testKey) }
-                producerView.lookupFirst<TextArea>(CssRule.id("field-producer-value")).runOnFXThread { textProperty().set(testValue) }
+                mapOf("field-producer-key" to testKey, "field-producer-value" to testValue)
+                    .map { (id, value) ->
+                        producerView
+                            .lookupFirst<TextInputControl>(CssRule.id(id))
+                            .runOnFXThread { textProperty().set(value) }
+                    }
 
                 screenShoot("producer-view")
 
