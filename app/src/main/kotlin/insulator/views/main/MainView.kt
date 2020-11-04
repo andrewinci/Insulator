@@ -115,12 +115,7 @@ class MainView @Inject constructor(
 
     private fun setSize() {
         val newMinWidth = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + if (nodes.size == 2) 0.0 else CONTENT_WIDTH
-        super.currentStage?.let {
-            if (it.minWidth != newMinWidth) {
-                it.minWidth = newMinWidth
-                center()
-            }
-        }
+        super.currentStage?.let { it.minWidth = newMinWidth }
     }
 
     override fun onDock() {

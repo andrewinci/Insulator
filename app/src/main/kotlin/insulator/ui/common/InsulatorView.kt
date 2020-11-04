@@ -2,7 +2,6 @@ package insulator.ui.common
 
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.scene.control.Alert
-import javafx.stage.Screen
 import tornadofx.View
 import tornadofx.alert
 import tornadofx.onChange
@@ -23,15 +22,6 @@ abstract class InsulatorView(title: String? = null) : View(title) {
         if (viewModel.error.value != null) handleError(viewModel.error.value)
         viewModel.error.onChange { handleError(it) }
         super.onDock()
-        center()
-    }
-
-    fun center() {
-        val screenSize = Screen.getPrimary().bounds
-        if (super.currentStage == null) return
-        with(super.currentStage!!) {
-            x = (screenSize.width - width) / 2
-        }
     }
 }
 
