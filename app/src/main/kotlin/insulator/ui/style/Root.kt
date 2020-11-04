@@ -2,8 +2,6 @@ package insulator.ui.style
 
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
-import javafx.stage.Stage
-import javafx.stage.Window
 import tornadofx.Dimension
 import tornadofx.Stylesheet
 import tornadofx.box
@@ -11,7 +9,6 @@ import tornadofx.c
 import tornadofx.em
 import tornadofx.multi
 import tornadofx.px
-import tornadofx.reloadStylesheets
 
 class Root : Stylesheet() {
     init {
@@ -52,7 +49,7 @@ data class Theme(
     val viewPadding: Dimension<Dimension.LinearUnits> = 1.em,
 )
 
-private val darkTheme = Theme(
+internal val darkTheme = Theme(
     black = Color.WHITE,
     backgroundColor = c("#292b2e"),
     mainColor = c("#FF9100"),
@@ -64,14 +61,7 @@ private val darkTheme = Theme(
     blueColor = c("#20a3f5"),
     viewPadding = 1.em,
 )
-private val lightTheme = Theme()
+internal val lightTheme = Theme()
 
 var theme: Theme = lightTheme
-    private set
-
-fun changeTheme() {
-    theme = if (theme == darkTheme) lightTheme
-    else darkTheme
-    Window.getWindows().map { it as? Stage }
-        .forEach { it?.scene?.reloadStylesheets() }
-}
+    internal set

@@ -1,6 +1,7 @@
 package insulator
 
 import insulator.di.components.DaggerInsulatorComponent
+import insulator.helper.dispatch
 import insulator.ui.style.AppBarStyle
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.CheckBoxStyle
@@ -39,10 +40,13 @@ class Insulator : App(
     override fun start(stage: Stage) {
         super.start(stage)
         val view = daggerInsulator.getListClusterView()
-        stage.scene = createPrimaryScene(view)
-        FX.applyStylesheetsTo(stage.scene)
-        stage.show()
-        view.onDock()
+        daggerInsulator.getThemeHelper().dispatch {
+            stage.scene = createPrimaryScene(view)
+            updateUITheme()
+            FX.applyStylesheetsTo(stage.scene)
+            stage.show()
+            view.onDock()
+        }
     }
 }
 

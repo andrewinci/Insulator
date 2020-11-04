@@ -1,6 +1,7 @@
 package insulator.configuration
 
 import insulator.configuration.model.Configuration
+import insulator.configuration.model.InsulatorTheme
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.SaslConfiguration
 import insulator.kafka.model.SchemaRegistryConfiguration
@@ -97,7 +98,7 @@ class ConfigurationRepoTest : FreeSpec({
             val res = sut.delete(Cluster(testCluster, "", ""))
             // assert
             res shouldBeRight Unit
-            File(testConfig).readText().replace("\n", "").replace(" ", "") shouldBe "{\"clusters\":[]}"
+            File(testConfig).readText().replace("\n", "").replace(" ", "") shouldBe "{\"clusters\":[],\"theme\":\"Light\"}"
         }
 
         "delete a cluster never added" {
@@ -144,5 +145,17 @@ class ConfigurationRepoTest : FreeSpec({
             res shouldBeRight Unit
             ConfigurationRepo(testConfig).getConfiguration() shouldBeRight {}
         }
+    }
+
+    "store theme" {
+        // arrange
+        val testConfig = mockConfigPath()
+        val sut = ConfigurationRepo(testConfig)
+        val testCluster = UUID.randomUUID()
+        // act
+        val res = sut.store(InsulatorTheme.Dark)
+        // assert
+        res shouldBeRight Unit
+        File(testConfig).readText().replace("\n", "").replace(" ", "") shouldBe "{\"clusters\":[],\"theme\":\"Dark\"}"
     }
 })

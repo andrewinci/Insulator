@@ -18,7 +18,7 @@ import java.util.UUID
 class ClusterViewModelTest : StringSpec({
 
     fun mockConfigurationRepo() = mockk<ConfigurationRepo>() {
-        coEvery { store(any()) } returns Unit.right()
+        coEvery { store(any<Cluster>()) } returns Unit.right()
         coEvery { delete(any()) } returns Unit.right()
     }
 
