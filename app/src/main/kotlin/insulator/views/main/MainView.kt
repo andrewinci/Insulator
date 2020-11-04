@@ -3,13 +3,13 @@ package insulator.views.main
 import insulator.di.ClusterScope
 import insulator.helper.dispatch
 import insulator.kafka.model.Cluster
+import insulator.ui.ThemeHelper
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.h1
 import insulator.ui.component.h2
 import insulator.ui.component.themeButton
 import insulator.ui.style.ButtonStyle.Companion.alertButton
 import insulator.ui.style.MainViewStyle
-import insulator.ui.ThemeHelper
 import insulator.viewmodel.main.MainViewModel
 import insulator.viewmodel.main.TabViewModel
 import insulator.views.configurations.ClusterView

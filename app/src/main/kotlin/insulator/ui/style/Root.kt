@@ -1,11 +1,7 @@
 package insulator.ui.style
 
-import insulator.configuration.ConfigurationRepo
-import insulator.configuration.model.InsulatorTheme
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
-import javafx.stage.Stage
-import javafx.stage.Window
 import tornadofx.Dimension
 import tornadofx.Stylesheet
 import tornadofx.box
@@ -13,9 +9,6 @@ import tornadofx.c
 import tornadofx.em
 import tornadofx.multi
 import tornadofx.px
-import tornadofx.reloadStylesheets
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class Root : Stylesheet() {
     init {

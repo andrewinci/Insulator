@@ -147,7 +147,7 @@ class ConfigurationRepoTest : FreeSpec({
         }
     }
 
-    "store theme"{
+    "store theme" {
         // arrange
         val testConfig = mockConfigPath()
         val sut = ConfigurationRepo(testConfig)
