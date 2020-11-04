@@ -49,7 +49,6 @@ class IntegrationTestFixture : Closeable {
         startApp(currentKafkaCluster)
         adminApi = adminApi(currentKafkaCluster)
         stringProducer = stringProducer(currentKafkaCluster)
-        delay(15_000)
     }
 
     suspend fun startApp(vararg clusters: Cluster) {
@@ -57,7 +56,6 @@ class IntegrationTestFixture : Closeable {
         FxToolkit.setupApplication(Insulator::class.java)
         // wait a bit, CI may be slow
         waitFXThread()
-        delay(5_000)
     }
 
     private suspend fun storeConfiguration(vararg cluster: Cluster) =
