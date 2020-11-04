@@ -23,15 +23,6 @@ abstract class InsulatorView(title: String? = null) : View(title) {
         if (viewModel.error.value != null) handleError(viewModel.error.value)
         viewModel.error.onChange { handleError(it) }
         super.onDock()
-        center()
-    }
-
-    fun center() {
-        val screenSize = Screen.getPrimary().bounds
-        if (super.currentStage == null) return
-        with(super.currentStage!!) {
-            x = (screenSize.width - width) / 2
-        }
     }
 }
 
