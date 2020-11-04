@@ -2,7 +2,6 @@ package insulator.ui.common
 
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.scene.control.Alert
-import javafx.stage.Screen
 import tornadofx.View
 import tornadofx.alert
 import tornadofx.onChange
