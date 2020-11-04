@@ -31,7 +31,6 @@ class ConfigurationRepo(private val configPath: String) {
             .also { config -> callbacks.forEach { it(config) } }
     }
 
-
     suspend fun store(theme: InsulatorTheme): Either<ConfigurationRepoException, Unit> = either {
         val configuration = !getConfiguration()
             .map { Configuration(theme = theme, clusters = it.clusters) }
