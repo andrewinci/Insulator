@@ -33,18 +33,16 @@ class TopicViewModel @Inject constructor(
     private val messageCountProperty = SimpleLongProperty()
     private val isCompactedProperty = SimpleBooleanProperty()
 
-    private val messageConsumedCountProperty = SimpleIntegerProperty()
-
     val nameProperty = SimpleStringProperty(topic.name)
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
         {
-            "Message count: ${messageConsumedCountProperty.value}/${messageCountProperty.value} - " +
+            "Message count: ${consumerViewModel.filteredRecords.value.size}/${messageCountProperty.value} - " +
                 "Is internal: ${isInternalProperty.value} - " +
                 "Partitions count: ${partitionCountProperty.value} - " +
                 "Compacted: ${isCompactedProperty.value}"
         },
-        messageConsumedCountProperty,
+        consumerViewModel.filteredRecords.value,
         isCompactedProperty,
         partitionCountProperty,
         isInternalProperty,
