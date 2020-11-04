@@ -13,6 +13,7 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.inspectors.forAtLeastOne
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import javafx.scene.control.TableView
+import kotlinx.coroutines.delay
 import tornadofx.Stylesheet.Companion.tableView
 import kotlin.time.ExperimentalTime
 
@@ -40,6 +41,7 @@ class ConsumerTests : FreeSpec({
                 // start consuming
                 mainView.startStopConsumer()
                 val records = (1..10).map { "key$it" to "value$it" }.also { it.produce(testTopic1) }
+                delay(5_000)
                 screenShoot("consumer")
                 // assert
                 val recordTable = mainView.lookupFirst<TableView<RecordViewModel>>(tableView)
@@ -59,6 +61,7 @@ class ConsumerTests : FreeSpec({
                     // produce to topic it
                     (1..10).map { n -> "key$n" to "$topic-value-$n" }.also { it.produce(topic) }
                 }
+                delay(5_000)
                 screenShoot("multiple-consumers")
                 // assert
                 with(mainView.lookupAny<TableView<RecordViewModel>>(tableView)) {
