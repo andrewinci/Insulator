@@ -88,7 +88,7 @@ class MainView @Inject constructor(
         borderpane {
             top = vbox(alignment = Pos.TOP_CENTER) {
                 h1(cluster.name)
-                button("Change cluster") { action { close() }; addClass(alertButton) ; id = "button-change-cluster" }
+                button("Change cluster") { action { close() }; addClass(alertButton); id = "button-change-cluster" }
                 button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
             }
             center = vbox {
@@ -113,12 +113,7 @@ class MainView @Inject constructor(
 
     private fun setSize() {
         val newMinWidth = SIDEBAR_WIDTH + CONTENT_LIST_WIDTH + if (nodes.size == 2) 0.0 else CONTENT_WIDTH
-        super.currentStage?.let {
-            if (it.minWidth != newMinWidth) {
-                it.minWidth = newMinWidth
-                center()
-            }
-        }
+        super.currentStage?.let { it.minWidth = newMinWidth }
     }
 
     override fun onDock() {
