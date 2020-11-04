@@ -97,7 +97,7 @@ class ConfigurationRepoTest : FreeSpec({
             val res = sut.delete(Cluster(testCluster, "", ""))
             // assert
             res shouldBeRight Unit
-            File(testConfig).readText().replace("\n", "").replace(" ", "") shouldBe "{\"clusters\":[]}"
+            File(testConfig).readText().replace("\n", "").replace(" ", "") shouldBe "{\"clusters\":[],\"theme\":\"Light\"}"
         }
 
         "delete a cluster never added" {
