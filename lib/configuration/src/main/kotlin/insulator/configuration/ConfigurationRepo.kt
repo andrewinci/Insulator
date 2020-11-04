@@ -3,6 +3,7 @@ package insulator.configuration
 import arrow.core.Either
 import arrow.core.computations.either
 import insulator.configuration.model.Configuration
+import insulator.configuration.model.InsulatorTheme
 import insulator.helper.runCatchingE
 import insulator.kafka.model.Cluster
 import kotlinx.serialization.json.Json
@@ -28,6 +29,13 @@ class ConfigurationRepo(private val configPath: String) {
             .let { Configuration(it) }
             .also { !store(it) }
             .also { config -> callbacks.forEach { it(config) } }
+    }
+
+
+    suspend fun store(theme: InsulatorTheme): Either<ConfigurationRepoException, Unit> = either {
+        val configuration = !getConfiguration()
+            .map { Configuration(theme = theme, clusters = it.clusters) }
+        !store(configuration)
     }
 
     suspend fun store(cluster: Cluster): Either<ConfigurationRepoException, Unit> = either {

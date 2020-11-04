@@ -1,6 +1,7 @@
 package insulator.views.main
 
 import insulator.di.ClusterScope
+import insulator.helper.dispatch
 import insulator.kafka.model.Cluster
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.h1
@@ -8,7 +9,7 @@ import insulator.ui.component.h2
 import insulator.ui.component.themeButton
 import insulator.ui.style.ButtonStyle.Companion.alertButton
 import insulator.ui.style.MainViewStyle
-import insulator.ui.style.changeTheme
+import insulator.ui.style.ThemeHelper
 import insulator.viewmodel.main.MainViewModel
 import insulator.viewmodel.main.TabViewModel
 import insulator.views.configurations.ClusterView
@@ -46,7 +47,8 @@ class MainView @Inject constructor(
     override val viewModel: MainViewModel,
     private val tabViewModel: TabViewModel,
     private val clusterView: ClusterView,
-    val cluster: Cluster
+    val cluster: Cluster,
+    private val themeHelper: ThemeHelper
 ) : InsulatorView("Insulator") {
 
     private val contentList = borderpane {
@@ -88,7 +90,7 @@ class MainView @Inject constructor(
         borderpane {
             top = vbox(alignment = Pos.TOP_CENTER) {
                 h1(cluster.name)
-                button("Change cluster") { action { close() }; addClass(alertButton) ; id = "button-change-cluster" }
+                button("Change cluster") { action { close() }; addClass(alertButton); id = "button-change-cluster" }
                 button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
             }
             center = vbox {
@@ -96,7 +98,7 @@ class MainView @Inject constructor(
                 menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setContentList(ListSchemaView::class) }
             }
             bottom = hbox(alignment = Pos.CENTER) {
-                themeButton { changeTheme() }
+                themeButton { themeHelper.dispatch { changeTheme() } }
             }
             addClass(MainViewStyle.sidebar)
             minWidth = SIDEBAR_WIDTH

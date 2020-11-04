@@ -1,5 +1,7 @@
 package insulator.ui.style
 
+import insulator.configuration.ConfigurationRepo
+import insulator.configuration.model.InsulatorTheme
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.stage.Stage
@@ -12,6 +14,8 @@ import tornadofx.em
 import tornadofx.multi
 import tornadofx.px
 import tornadofx.reloadStylesheets
+import javax.inject.Inject
+import javax.inject.Singleton
 
 class Root : Stylesheet() {
     init {
@@ -69,9 +73,29 @@ private val lightTheme = Theme()
 var theme: Theme = lightTheme
     private set
 
-fun changeTheme() {
-    theme = if (theme == darkTheme) lightTheme
-    else darkTheme
-    Window.getWindows().map { it as? Stage }
-        .forEach { it?.scene?.reloadStylesheets() }
+@Singleton
+class ThemeHelper @Inject constructor(val configurationRepo: ConfigurationRepo) {
+
+    suspend fun changeTheme() {
+        configurationRepo.getConfiguration().map {
+            configurationRepo.store(
+                if (it.theme == InsulatorTheme.Dark) InsulatorTheme.Light else InsulatorTheme.Dark
+            )
+        }
+        updateUITheme()
+    }
+
+    private fun reloadTheme() =
+        Window.getWindows().map { it as? Stage }
+            .forEach { it?.scene?.reloadStylesheets() }
+
+    suspend fun updateUITheme() {
+        configurationRepo.getConfiguration().map {
+            theme = when (it.theme) {
+                InsulatorTheme.Dark -> darkTheme
+                InsulatorTheme.Light -> lightTheme
+            }
+            reloadTheme()
+        }
+    }
 }
