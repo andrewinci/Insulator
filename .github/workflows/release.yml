@@ -2,11 +2,13 @@ name: Release
 
 on:
   push:
-    tags:
-      - '*.*.*'
+    branches:
+      - master
+
+env:
+  RELEASE_VERSION: 0.1.${{ github.run_number }}
 
 jobs:
-
   package-app:
     runs-on: ${{ matrix.os.name }}
     strategy:
@@ -36,12 +38,8 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle-
-    - uses: olegtarasov/get-tag@v2
-      id: tagName
     - name: Gradle package
       run: "./gradlew packageApp"
-      env:
-        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.os.artifact }}
@@ -60,9 +58,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: Release Candidate ${{ env.RELEASE_VERSION }}
+          draft: false
           prerelease: true
 
   upload-artifacts:
@@ -94,3 +92,16 @@ jobs:
           asset_path: ./${{ matrix.artifact.name }}.zip
           asset_name: ${{ matrix.artifact.name }}.zip
           asset_content_type: application/zip
+      - name: Update Homebrew formula
+        uses: dawidd6/action-homebrew-bump-formula@v3
+        if: ${{ matrix.artifact.name == 'insulator-mac' }}
+        with:
+          # GitHub token, required, not the default one
+          token: ${{secrets.GITHUBTOKEN}}
+          # Optional, defaults to homebrew/core
+          tap: andrea-vinci/homebrew-insulator
+          # Formula name, required
+          formula: insulator-dev
+          # Optional, will be determined automatically
+          tag: ${{ env.RELEASE_VERSION }}
+          force: true
