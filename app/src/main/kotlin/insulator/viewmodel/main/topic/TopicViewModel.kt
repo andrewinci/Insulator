@@ -16,8 +16,12 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.scene.input.Clipboard
 import javafx.stage.Modality
+import javafx.stage.Stage
 import javafx.stage.StageStyle
+import javafx.stage.Window
 import tornadofx.putString
+import tornadofx.whenUndocked
+import java.lang.Long.max
 import javax.inject.Inject
 
 @TopicScope
@@ -33,18 +37,18 @@ class TopicViewModel @Inject constructor(
     private val messageCountProperty = SimpleLongProperty()
     private val isCompactedProperty = SimpleBooleanProperty()
 
-    private val messageConsumedCountProperty = SimpleIntegerProperty()
-
     val nameProperty = SimpleStringProperty(topic.name)
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
         {
-            "Message count: ${messageConsumedCountProperty.value}/${messageCountProperty.value} - " +
+            val totalMessages = max(messageCountProperty.value, consumerViewModel.records.size.toLong())
+            val filteredMessages = consumerViewModel.filteredRecords.value.size
+            "Message count: $filteredMessages/$totalMessages - " +
                 "Is internal: ${isInternalProperty.value} - " +
                 "Partitions count: ${partitionCountProperty.value} - " +
                 "Compacted: ${isCompactedProperty.value}"
         },
-        messageConsumedCountProperty,
+        consumerViewModel.filteredRecords.value,
         isCompactedProperty,
         partitionCountProperty,
         isInternalProperty,
@@ -77,7 +81,10 @@ class TopicViewModel @Inject constructor(
         isCompactedProperty.set(isCompacted)
     }
 
-    fun showProducerView() = topicComponent
-        .getProducerView()
-        .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+    fun showProducerView() {
+        val producerView = topicComponent.getProducerView()
+        Window.getWindows().map { it as Stage }.firstOrNull { it.title == producerView.title }?.toFront()
+            ?: producerView.also { it.whenUndocked { dispatch { refresh() } } }
+                .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+    }
 }
