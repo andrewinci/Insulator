@@ -101,4 +101,4 @@ jobs:
           commit-message: "{{formulaName}} {{version}}"
           download-url: https://github.com/andrea-vinci/Insulator/releases/download/${{ env.RELEASE_VERSION }}/insulator-mac.zip
         env:
-          COMMITTER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMITTER_TOKEN: ${{ secrets.GITHUBTOKEN }}
