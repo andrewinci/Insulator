@@ -50,6 +50,16 @@
         <img src="assets/insulator_dark_mode.gif">
 </p>
 
+## Installation
+
+Download the binary from the latest release for your OS.
+
+### Mac
+```
+brew tap andrea-vinci/insulator
+brew cask install insulator
+```
+
 ## Key Features
 
 * Authenticate to clusters with: SSL and SASL (SCRAM or PLAIN) authentication
