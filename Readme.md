@@ -58,6 +58,7 @@ Download the binary from the latest release for your OS.
 ```
 brew tap andrea-vinci/insulator
 brew cask install insulator
+[Development version] brew cask install insulator-dev
 ```
 
 ## Key Features
