@@ -92,16 +92,12 @@ jobs:
           asset_path: ./${{ matrix.artifact.name }}.zip
           asset_name: ${{ matrix.artifact.name }}.zip
           asset_content_type: application/zip
-      - name: Update Homebrew formula
-        uses: dawidd6/action-homebrew-bump-formula@v3
+      - name: Bump Homebrew formula
         if: ${{ matrix.artifact.name == 'insulator-mac' }}
-        with:
-          # GitHub token, required, not the default one
-          token: ${{secrets.GITHUBTOKEN}}
-          # Optional, defaults to homebrew/core
-          tap: andrea-vinci/homebrew-insulator
-          # Formula name, required
-          formula: insulator-dev
-          # Optional, will be determined automatically
-          tag: ${{ env.RELEASE_VERSION }}
-          force: true
+        run: |
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email andrea-vinci@users.noreply.github.com
+          brew tap andrea-vinci/insulator
+          brew bump-cask-pr --write --commit --no-audit --no-browse --no-fork --version $RELEASE_VERSION --force insulator-dev
+          cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrea-vinci/homebrew-insulator
+          git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-insulator.git
