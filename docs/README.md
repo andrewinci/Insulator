@@ -1,8 +1,8 @@
 # Landing page
 
-## Develop
+Template from https://github.com/CloudCannon/hydra-jekyll-template
 
-Hydra was built with [Jekyll](http://jekyllrb.com/) version 3.3.1, but should support newer versions as well.
+## Develop
 
 Install the dependencies with [Bundler](http://bundler.io/):
 
