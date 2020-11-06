@@ -1,0 +1,62 @@
+# ----
+# Site
+
+title: Insulator
+url: "https://proud-alligator.cloudvent.net"
+baseurl: 
+google_analytics_key:
+google_maps_javascript_api_key:
+disqus_shortname:
+
+# Values for the jekyll-seo-tag gem (https://github.com/jekyll/jekyll-seo-tag)
+logo: /siteicon.png
+description: The companion for kafka developers
+author:
+  name: Andrea Vinci
+  email: andrewinci@gmail.com
+  twitter: # twitter username without the @ symbol
+social:
+  name: Insulator
+  links:
+    - https://github.com/andrea-vinci/Insulator
+
+# -----
+# Build
+
+timezone: Etc/UTC
+
+collections:
+  staff_members:
+    _hide_content: true
+
+paginate: 10
+paginate_path: "/blog/:num/"
+permalink: pretty
+
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: "page"
+  -
+    scope:
+      path: "index.html"
+    values:
+      layout: "default"
+
+jekyll-archives:
+  enabled:
+    - categories
+
+plugins:
+  - jekyll-archives
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-feed
+  - jekyll-paginate
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
