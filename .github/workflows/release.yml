@@ -2,11 +2,8 @@ name: Release
 
 on:
   push:
-    branches:
-      - master
-
-env:
-  RELEASE_VERSION: 0.1.${{ github.run_number }}
+    tags:
+      - '*.*.*'
 
 jobs:
   package-app:
@@ -38,8 +35,12 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle-
+    - uses: olegtarasov/get-tag@v2
+      id: tagName
     - name: Gradle package
       run: "./gradlew packageApp"
+      env:
+        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.os.artifact }}
@@ -52,14 +53,16 @@ jobs:
     outputs:
       release-url: ${{ steps.create_release.outputs.upload_url }}
     steps:
+      - uses: olegtarasov/get-tag@v2
+        id: tagName
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          release_name: Release Candidate ${{ env.RELEASE_VERSION }}
+          tag_name: ${{ steps.tagName.outputs.tag }}
+          release_name: Release Candidate ${{ steps.tagName.outputs.tag }}
           draft: false
           prerelease: true
 
@@ -76,6 +79,8 @@ jobs:
           - name: insulator-debian
             path: insulator*.deb
     steps:
+      - uses: olegtarasov/get-tag@v2
+        id: tagName
       - name: Download asset from previous jobs
         uses: actions/download-artifact@v2
         with:
@@ -101,3 +106,5 @@ jobs:
           brew bump-cask-pr --write --commit --no-audit --no-browse --no-fork --version $RELEASE_VERSION --force insulator-dev
           cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrea-vinci/homebrew-insulator
           git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-insulator.git
+        env:
+          RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
