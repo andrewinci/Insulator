@@ -4,6 +4,7 @@ plugins {
     id 'insulator.javafx'
     id 'insulator.application'
     id "org.unbroken-dome.test-sets"
+    id 'distribution'
 }
 
 javafx {
