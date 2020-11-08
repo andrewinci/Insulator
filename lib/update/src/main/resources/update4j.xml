@@ -1,0 +1,278 @@
+<configuration timestamp="2020-08-19T22:44:38.558821400Z">
+    <base uri="https://insulator-screenshots.s3-eu-west-1.amazonaws.com/test/" path="/tmp/insulator-download"/>
+    <properties>
+        <property key="default.launcher.main.class" value="insulator.AppKt"/>
+        <property key="default.launcher.main.classpath" value="app.jar"/>
+          <property key="maven.central" value="https://repo1.maven.org/maven2"/>
+<!--        https://plugins.gradle.org/m2/-->
+<!--        https://dl.bintray.com/arrow-kt/arrow-kt/-->
+<!--        https://packages.confluent.io/maven/-->
+<!--        https://kotlin.bintray.com/kotlinx/-->
+<!--        https://repository.mulesoft.org/nexus/content/repositories/public/-->
+        <!--  <property key="maven.central.javafx" value="${maven.central}/org/openjfx/"/>-->
+    </properties>
+    <files>
+        <file uri="app.jar" size="1048209" classpath="true" checksum="4f613da1" />
+        <file uri="https://repo1.maven.org/maven2/javax/activation/activation/1.1.1/activation-1.1.1.jar" size="69409" classpath="true" checksum="f69fad36"/>
+        <file uri="animal-sniffer-annotations-1.18.jar" size="3452" classpath="true" checksum="a7d0c312"/>
+        <file uri="annotations-19.0.0.jar" size="24777" classpath="true" checksum="607085a3"/>
+        <file uri="aopalliance-repackaged-2.6.1.jar" size="27006" classpath="true" checksum="0d505323"/>
+        <file uri="apiguardian-api-1.1.0.jar" size="2387" classpath="true" checksum="67878f6e"/>
+        <file uri="arrow-annotations-0.11.0.jar" size="11500" classpath="true" checksum="b507cb2a"/>
+        <file uri="arrow-core-data-0.11.0.jar" size="1490509" classpath="true" checksum="12475d46"/>
+        <file uri="asm-7.2.jar" size="114873" classpath="true" checksum="feec23f5"/>
+        <file uri="asm-analysis-7.2.jar" size="33444" classpath="true" checksum="a79c369a"/>
+        <file uri="asm-commons-7.2.jar" size="70051" classpath="true" checksum="5d8f4b8c"/>
+        <file uri="asm-tree-7.2.jar" size="50283" classpath="true" checksum="1cc0d7f5"/>
+        <file uri="audience-annotations-0.5.0.jar" size="20437" classpath="true" checksum="9c5aefb9"/>
+        <file uri="avro-1.9.2.jar" size="587956" classpath="true" checksum="187bbce7"/>
+        <file uri="byte-buddy-1.9.10.jar" size="3272730" classpath="true" checksum="3c80767b"/>
+        <file uri="byte-buddy-agent-1.9.10.jar" size="43420" classpath="true" checksum="bd2604e7"/>
+        <file uri="checker-compat-qual-2.5.5.jar" size="5852" classpath="true" checksum="829fad75"/>
+        <file uri="classgraph-4.8.90.jar" size="508342" classpath="true" checksum="6a84861f"/>
+        <file uri="classmate-1.3.4.jar" size="65100" classpath="true" checksum="f350e36b"/>
+        <file uri="colormath-1.2.0.jar" size="34152" classpath="true" checksum="c13c41c7"/>
+        <file uri="common-utils-6.0.0.jar" size="17263" classpath="true" checksum="77242e09"/>
+        <file uri="commons-cli-1.4.jar" size="53820" classpath="true" checksum="37ec25bb"/>
+        <file uri="commons-collections-3.2.2.jar" size="588337" classpath="true" checksum="4fa9d731"/>
+        <file uri="commons-compress-1.20.jar" size="632424" classpath="true" checksum="fb4ac4ca"/>
+        <file uri="commons-digester-1.8.1.jar" size="146108" classpath="true" checksum="50ccf4c8"/>
+        <file uri="commons-io-2.6.jar" size="214788" classpath="true" checksum="d0d2fcb2"/>
+        <file uri="commons-lang3-3.2.1.jar" size="385091" classpath="true" checksum="3efed05d"/>
+        <file uri="commons-logging-1.2.jar" size="61829" classpath="true" checksum="e448532d"/>
+        <file uri="commons-validator-1.6.jar" size="186077" classpath="true" checksum="ba8dd2ac"/>
+        <file uri="configuration.jar" size="29306" classpath="true" checksum="448b53a1"/>
+        <file uri="confluent-log4j-1.2.17-cp2.jar" size="491849" classpath="true" checksum="d27ad1f9"/>
+        <file uri="dagger-2.29.1.jar" size="34413" classpath="true" checksum="4e04983d"/>
+        <file uri="duct-tape-1.0.8.jar" size="25402" classpath="true" checksum="b43aea85"/>
+        <file uri="error_prone_annotations-2.3.4.jar" size="13879" classpath="true" checksum="79bf151e"/>
+        <file uri="failureaccess-1.0.1.jar" size="4617" classpath="true" checksum="9b3a359d"/>
+        <file uri="fuel-2.3.0.jar" size="358721" classpath="true" checksum="63022790"/>
+        <file uri="fuel-coroutines-2.3.0.jar" size="13327" classpath="true" checksum="d90bbf98"/>
+        <file uri="fuel-json-2.3.0.jar" size="4684" classpath="true" checksum="8b0d6ca0"/>
+        <file uri="gson-2.8.6.jar" size="240255" classpath="true" checksum="2d02368a"/>
+        <file uri="guava-28.1-android.jar" size="2604792" classpath="true" checksum="c0ff0bdb"/>
+        <file uri="hamcrest-core-1.3.jar" size="45024" classpath="true" checksum="5f3409e8"/>
+        <file uri="handy-uri-templates-2.1.8.jar" size="46326" classpath="true" checksum="80c39629"/>
+        <file uri="helper.jar" size="9211" classpath="true" checksum="5d1a4a03"/>
+        <file uri="hibernate-validator-6.1.6.Final.jar" size="1295648" classpath="true" checksum="ef2d2ec2"/>
+        <file uri="hk2-api-2.6.1.jar" size="200223" classpath="true" checksum="581c7e22"/>
+        <file uri="hk2-locator-2.6.1.jar" size="203358" classpath="true" checksum="2b93802d"/>
+        <file uri="hk2-utils-2.6.1.jar" size="131590" classpath="true" checksum="e49e275d"/>
+        <file uri="j2objc-annotations-1.3.jar" size="8781" classpath="true" checksum="640298fe"/>
+
+        <file uri="jackson-annotations-2.11.3.jar" size="68215" classpath="true" checksum="ab761760"/>
+        <file uri="jackson-core-2.11.3.jar" size="351495" classpath="true" checksum="9ddf581b"/>
+        <file uri="jackson-databind-2.11.3.jar" size="1421699" classpath="true" checksum="a15b8d41"/>
+        <file uri="jackson-dataformat-csv-2.10.5.jar" size="100175" classpath="true" checksum="1c98960d"/>
+        <file uri="jackson-dataformat-yaml-2.11.1.jar" size="46983" classpath="true" checksum="baa2a3e2"/>
+        <file uri="jackson-datatype-guava-2.10.5.jar" size="84964" classpath="true" checksum="810ad211"/>
+        <file uri="jackson-datatype-jdk8-2.10.5.jar" size="34400" classpath="true" checksum="b62bd93c"/>
+        <file uri="jackson-datatype-joda-2.10.5.jar" size="72083" classpath="true" checksum="380b6b82"/>
+        <file uri="jackson-datatype-jsr310-2.10.5.jar" size="105901" classpath="true" checksum="2f5bb0fb"/>
+        <file uri="jackson-jaxrs-base-2.10.5.jar" size="33205" classpath="true" checksum="63fb1c52"/>
+        <file uri="jackson-jaxrs-json-provider-2.10.5.jar" size="15562" classpath="true" checksum="8315235e"/>
+        <file uri="jackson-module-jaxb-annotations-2.10.5.jar" size="34998" classpath="true" checksum="1395f5d8"/>
+        <file uri="jackson-module-parameter-names-2.10.5.jar" size="9332" classpath="true" checksum="a8605adf"/>
+        <file uri="jackson-module-paranamer-2.10.5.jar" size="43743" classpath="true" checksum="f1dea460"/>
+        <file uri="jackson-module-scala_2.13-2.10.5.jar" size="338600" classpath="true" checksum="b6834278"/>
+
+        <file uri="jakarta.activation-api-1.2.1.jar" size="44399" classpath="true" checksum="7b615df3"/>
+        <file uri="jakarta.annotation-api-1.3.5.jar" size="25058" classpath="true" checksum="9f2831de"/>
+        <file uri="jakarta.el-3.0.2.jar" size="237055" classpath="true" checksum="30c2e6a7"/>
+        <file uri="jakarta.el-api-3.0.3.jar" size="79816" classpath="true" checksum="3e5ddeb3"/>
+        <file uri="jakarta.inject-2.6.1.jar" size="18140" classpath="true" checksum="30b7aa1f"/>
+        <file uri="jakarta.validation-api-2.0.2.jar" size="91930" classpath="true" checksum="2ce47fee"/>
+        <file uri="jakarta.ws.rs-api-2.1.6.jar" size="140376" classpath="true" checksum="efbd84fd"/>
+        <file uri="jakarta.xml.bind-api-2.3.2.jar" size="115498" classpath="true" checksum="d52da0a8"/>
+
+        <file uri="java-diff-utils-4.5.jar" size="54176" classpath="true" checksum="c4c30b9d"/>
+
+        <file uri="javafx-base-15.0.1-linux.jar" size="745527" classpath="true" checksum="d6bedd4d"/>
+        <file uri="javafx-base-15.0.1-mac.jar" size="745527" classpath="true" checksum="cb1b6659"/>
+        <file uri="javafx-base-15.0.1.jar" size="302" classpath="true" checksum="376c4750"/>
+        <file uri="javafx-controls-15.0.1-linux.jar" size="2531099" classpath="true" checksum="8e5467f3"/>
+        <file uri="javafx-controls-15.0.1-mac.jar" size="2531050" classpath="true" checksum="98ed0adf"/>
+        <file uri="javafx-controls-15.0.1.jar" size="306" classpath="true" checksum="1e754ad8"/>
+        <file uri="javafx-fxml-15.0.1-mac.jar" size="128790" classpath="true" checksum="b15b8785"/>
+        <file uri="javafx-graphics-15.0.1-linux.jar" size="5063475" classpath="true" checksum="46774dc6"/>
+        <file uri="javafx-graphics-15.0.1-mac.jar" size="4962652" classpath="true" checksum="6511c8ad"/>
+        <file uri="javafx-graphics-15.0.1.jar" size="306" classpath="true" checksum="b4a44a22"/>
+        <file uri="javafx-swing-15.0.1-mac.jar" size="88725" classpath="true" checksum="f761e2bf"/>
+
+        <file uri="javassist-3.25.0-GA.jar" size="780265" classpath="true" checksum="ebae5dee"/>
+
+        <file uri="javax-websocket-client-impl-9.4.24.v20191120.jar" size="170405" classpath="true" checksum="14c77b1e"/>
+        <file uri="javax-websocket-server-impl-9.4.24.v20191120.jar" size="46254" classpath="true" checksum="eb0c1975"/>
+        <file uri="javax.annotation-api-1.3.jar" size="26430" classpath="true" checksum="d87f227e"/>
+        <file uri="javax.inject-1.jar" size="2497" classpath="true" checksum="0abe973b"/>
+        <file uri="javax.json-1.1.2.jar" size="101089" classpath="true" checksum="45388686"/>
+        <file uri="javax.json-api-1.1.2.jar" size="31140" classpath="true" checksum="f005c873"/>
+        <file uri="javax.servlet-api-3.1.0.jar" size="95806" classpath="true" checksum="e8f060ab"/>
+        <file uri="javax.websocket-api-1.0.jar" size="36611" classpath="true" checksum="a8d953ca"/>
+        <file uri="javax.websocket-client-api-1.0.jar" size="27011" classpath="true" checksum="790c11f8"/>
+
+        <file uri="jaxb-api-2.3.0.jar" size="125632" classpath="true" checksum="484d77c4"/>
+        <file uri="jboss-logging-3.3.2.Final.jar" size="66469" classpath="true" checksum="454efcb1"/>
+        <file uri="jersey-bean-validation-2.30.jar" size="53096" classpath="true" checksum="68bdcc68"/>
+        <file uri="jersey-client-2.32.jar" size="251071" classpath="true" checksum="cd8a6383"/>
+        <file uri="jersey-common-2.32.jar" size="1170756" classpath="true" checksum="5f65967d"/>
+        <file uri="jersey-container-servlet-2.30.jar" size="32091" classpath="true" checksum="82cf8e74"/>
+        <file uri="jersey-container-servlet-core-2.30.jar" size="73349" classpath="true" checksum="c99039ea"/>
+        <file uri="jersey-hk2-2.30.jar" size="76733" classpath="true" checksum="77c8c692"/>
+        <file uri="jersey-media-jaxb-2.32.jar" size="94757" classpath="true" checksum="86bb7de5"/>
+        <file uri="jersey-server-2.32.jar" size="940933" classpath="true" checksum="16614ba3"/>
+
+        <file uri="jetty-annotations-9.4.24.v20191120.jar" size="86567" classpath="true" checksum="cf867dd7"/>
+        <file uri="jetty-client-9.4.24.v20191120.jar" size="304617" classpath="true" checksum="c64a72af"/>
+        <file uri="jetty-continuation-9.4.24.v20191120.jar" size="25457" classpath="true" checksum="8d2b494b"/>
+        <file uri="jetty-http-9.4.24.v20191120.jar" size="210803" classpath="true" checksum="910c1a81"/>
+        <file uri="jetty-io-9.4.24.v20191120.jar" size="159229" classpath="true" checksum="c797b427"/>
+        <file uri="jetty-jaas-9.4.24.v20191120.jar" size="47016" classpath="true" checksum="dfea84ee"/>
+        <file uri="jetty-jmx-9.4.24.v20191120.jar" size="42341" classpath="true" checksum="47f99cd3"/>
+        <file uri="jetty-jndi-9.4.24.v20191120.jar" size="46827" classpath="true" checksum="863f2336"/>
+        <file uri="jetty-plus-9.4.24.v20191120.jar" size="65793" classpath="true" checksum="b82c6a78"/>
+        <file uri="jetty-security-9.4.24.v20191120.jar" size="117783" classpath="true" checksum="0b146b93"/>
+        <file uri="jetty-server-9.4.24.v20191120.jar" size="672677" classpath="true" checksum="b346f807"/>
+        <file uri="jetty-servlet-9.4.24.v20191120.jar" size="131565" classpath="true" checksum="0796e008"/>
+        <file uri="jetty-servlets-9.4.24.v20191120.jar" size="101085" classpath="true" checksum="ae879121"/>
+        <file uri="jetty-util-9.4.24.v20191120.jar" size="549438" classpath="true" checksum="3ef2986c"/>
+        <file uri="jetty-webapp-9.4.24.v20191120.jar" size="138220" classpath="true" checksum="a91897e7"/>
+        <file uri="jetty-xml-9.4.24.v20191120.jar" size="62979" classpath="true" checksum="97b33591"/>
+
+        <file uri="jna-5.5.0.jar" size="1506993" classpath="true" checksum="a16f1c0c"/>
+        <file uri="jna-platform-5.5.0.jar" size="2681931" classpath="true" checksum="b8268a38"/>
+
+        <file uri="joda-time-2.10.2.jar" size="642711" classpath="true" checksum="f8ea239b"/>
+        <file uri="jopt-simple-5.0.4.jar" size="78146" classpath="true" checksum="9fe3575b"/>
+        <file uri="json-20200518.jar" size="65966" classpath="true" checksum="25fc861e"/>
+        <file uri="jsonhelper.jar" size="86549" classpath="true" checksum="56c8f9b7"/>
+        <file uri="jsr305-3.0.2.jar" size="19936" classpath="true" checksum="07f480c8"/>
+
+        <file uri="junit-4.12.jar" size="314932" classpath="true" checksum="a44d4ea4"/>
+        <file uri="junit-jupiter-api-5.6.2.jar" size="154036" classpath="true" checksum="07c0ee1f"/>
+        <file uri="junit-platform-commons-1.6.2.jar" size="96675" classpath="true" checksum="5154fb99"/>
+        <file uri="junit-platform-engine-1.6.2.jar" size="174108" classpath="true" checksum="e5dbc8ed"/>
+        <file uri="junit-platform-launcher-1.6.2.jar" size="121929" classpath="true" checksum="cba8b6ce"/>
+        <file uri="junit-platform-suite-api-1.6.2.jar" size="14264" classpath="true" checksum="fceb0db2"/>
+        <file uri="junixsocket-common-2.0.4.jar" size="18216" classpath="true" checksum="bc6cfcec"/>
+        <file uri="junixsocket-native-common-2.0.4.jar" size="27805" classpath="true" checksum="30bb4a13"/>
+
+        <file uri="kafka-1.14.3.jar" size="4715" classpath="true" checksum="567f6707"/>
+        <file uri="kafka-avro-serializer-6.0.0.jar" size="25599" classpath="true" checksum="cc2eb93a"/>
+        <file uri="kafka-clients-6.0.0-ce.jar" size="3890878" classpath="true" checksum="90d27d8c"/>
+        <file uri="kafka-json-schema-provider-6.0.0.jar" size="62413" classpath="true" checksum="ff54f4a7"/>
+        <file uri="kafka-protobuf-provider-6.0.0.jar" size="68071" classpath="true" checksum="e201794d"/>
+        <file uri="kafka-schema-registry-6.0.0.jar" size="214138" classpath="true" checksum="2aa0b630"/>
+        <file uri="kafka-schema-registry-client-6.0.0.jar" size="109859" classpath="true" checksum="9459dd9c"/>
+        <file uri="kafka-schema-serializer-6.0.0.jar" size="28478" classpath="true" checksum="d8b252ac"/>
+        <file uri="kafka.jar" size="120005" classpath="true" checksum="9562005f"/>
+        <file uri="kafka_2.13-6.0.0-ccs.jar" size="4572219" classpath="true" checksum="0fcafd14"/>
+
+        <file uri="kindedj-1.1.0.jar" size="1442" classpath="true" checksum="0645f9f7"/>
+
+        <file uri="kotest-assertions-api-jvm-4.3.1.jar" size="19042" classpath="true" checksum="bcfdc153"/>
+        <file uri="kotest-assertions-core-jvm-4.3.1.jar" size="986683" classpath="true" checksum="c31fa1a4"/>
+        <file uri="kotest-assertions-shared-jvm-4.3.1.jar" size="410244" classpath="true" checksum="0adebb72"/>
+        <file uri="kotest-common-jvm-4.3.1.jar" size="53351" classpath="true" checksum="4677840b"/>
+        <file uri="kotest-extensions-jvm-4.3.1.jar" size="78460" classpath="true" checksum="5ce89c42"/>
+        <file uri="kotest-framework-api-jvm-4.3.1.jar" size="641050" classpath="true" checksum="3357717c"/>
+        <file uri="kotest-framework-discovery-jvm-4.3.1.jar" size="36485" classpath="true" checksum="078cf5b2"/>
+        <file uri="kotest-framework-engine-jvm-4.3.1.jar" size="348583" classpath="true" checksum="d832c893"/>
+        <file uri="kotest-runner-junit5-jvm-4.3.1.jar" size="39096" classpath="true" checksum="07960bd9"/>
+
+        <file uri="kotlin-reflect-1.4.10.jar" size="2893802" classpath="true" checksum="ac3e3ea8"/>
+        <file uri="kotlin-script-runtime-1.4.10.jar" size="42089" classpath="true" checksum="0c7e6c7f"/>
+        <file uri="kotlin-scripting-common-1.4.10.jar" size="216146" classpath="true" checksum="ea40e32c"/>
+        <file uri="kotlin-scripting-compiler-embeddable-1.3.50.jar" size="273253" classpath="true" checksum="5c7fb51d"/>
+        <file uri="kotlin-scripting-compiler-impl-embeddable-1.3.50.jar" size="292911" classpath="true" checksum="6938456d"/>
+        <file uri="kotlin-scripting-jvm-1.4.10.jar" size="194842" classpath="true" checksum="7ae7c524"/>
+        <file uri="kotlin-stdlib-1.4.10.jar" size="1487085" classpath="true" checksum="c80fbd2f"/>
+        <file uri="kotlin-stdlib-common-1.4.10.jar" size="191211" classpath="true" checksum="6d9aad29"/>
+        <file uri="kotlin-stdlib-jdk7-1.4.10.jar" size="3985" classpath="true" checksum="c1a4ffae"/>
+        <file uri="kotlin-stdlib-jdk8-1.4.10.jar" size="16230" classpath="true" checksum="4714036e"/>
+
+        <file uri="kotlinx-coroutines-core-jvm-1.4.1.jar" size="1672388" classpath="true" checksum="186dc15f"/>
+        <file uri="kotlinx-coroutines-javafx-1.4.0-M1.jar" size="23260" classpath="true" checksum="cd7af564"/>
+        <file uri="kotlinx-coroutines-jdk8-1.3.9.jar" size="19283" classpath="true" checksum="db36bbcf"/>
+        <file uri="kotlinx-serialization-runtime-jvm-1.0-M1-1.4.0-rc-218.jar" size="531216" classpath="true" checksum="222f5a14"/>
+
+        <file uri="listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar" size="2199" classpath="true" checksum="4c0c1982"/>
+        <file uri="lz4-java-1.7.1.jar" size="649950" classpath="true" checksum="53a6d741"/>
+        <file uri="mbknor-jackson-jsonschema_2.13-1.0.39.jar" size="116767" classpath="true" checksum="13566619"/>
+        <file uri="metrics-core-2.2.0.jar" size="82123" classpath="true" checksum="ff595b2f"/>
+
+        <file uri="mockk-1.9.3.jar" size="494133" classpath="true" checksum="7e16ba97"/>
+        <file uri="mockk-agent-api-1.9.3.jar" size="11342" classpath="true" checksum="81382bfa"/>
+        <file uri="mockk-agent-common-1.9.3.jar" size="39087" classpath="true" checksum="295c9659"/>
+        <file uri="mockk-agent-jvm-1.9.3.jar" size="80919" classpath="true" checksum="c3a58018"/>
+        <file uri="mockk-common-1.9.3.jar" size="44052" classpath="true" checksum="1b6b2aa7"/>
+        <file uri="mockk-dsl-1.9.3.jar" size="39472" classpath="true" checksum="efec77f2"/>
+        <file uri="mockk-dsl-jvm-1.9.3.jar" size="407466" classpath="true" checksum="5a6ed689"/>
+
+        <file uri="mordant-1.2.1.jar" size="25454" classpath="true" checksum="e53efe3c"/>
+
+        <file uri="native-lib-loader-2.0.2.jar" size="17052" classpath="true" checksum="3934a961"/>
+        <file uri="netty-buffer-4.1.48.Final.jar" size="278514" classpath="true" checksum="cdba880d"/>
+        <file uri="netty-codec-4.1.48.Final.jar" size="320017" classpath="true" checksum="c085d9de"/>
+        <file uri="netty-common-4.1.48.Final.jar" size="622330" classpath="true" checksum="c18d6c3a"/>
+        <file uri="netty-handler-4.1.48.Final.jar" size="453889" classpath="true" checksum="3012eb15"/>
+        <file uri="netty-resolver-4.1.48.Final.jar" size="33158" classpath="true" checksum="628a81de"/>
+        <file uri="netty-transport-4.1.48.Final.jar" size="473560" classpath="true" checksum="7e0a152b"/>
+        <file uri="netty-transport-native-epoll-4.1.48.Final.jar" size="123591" classpath="true" checksum="dc5d5000"/>
+        <file uri="netty-transport-native-unix-common-4.1.48.Final.jar" size="32969" classpath="true" checksum="2aed5872"/>
+
+        <file uri="objenesis-3.0.1.jar" size="60966" classpath="true" checksum="2a04c6d9"/>
+        <file uri="okio-jvm-2.5.0.jar" size="243332" classpath="true" checksum="e2c12ad2"/>
+        <file uri="opentest4j-1.2.0.jar" size="7653" classpath="true" checksum="c9ee5ca5"/>
+        <file uri="org.everit.json.schema-1.12.1.jar" size="240930" classpath="true" checksum="67e7ca34"/>
+        <file uri="osgi-resource-locator-1.0.3.jar" size="19479" classpath="true" checksum="ba943e3a"/>
+        <file uri="paranamer-2.8.jar" size="34654" classpath="true" checksum="8e02b8d0"/>
+        <file uri="protobuf-java-3.11.4.jar" size="1660960" classpath="true" checksum="a536c67d"/>
+        <file uri="protobuf-java-util-3.11.4.jar" size="73874" classpath="true" checksum="933b592c"/>
+        <file uri="re2j-1.3.jar" size="120871" classpath="true" checksum="a24c0352"/>
+        <file uri="rest-utils-6.0.0.jar" size="70841" classpath="true" checksum="ccbeaaf2"/>
+        <file uri="result-3.1.0.jar" size="15434" classpath="true" checksum="bcde4346"/>
+        <file uri="scala-collection-compat_2.13-2.1.6.jar" size="4250" classpath="true" checksum="706aa75e"/>
+        <file uri="scala-java8-compat_2.13-0.9.1.jar" size="637626" classpath="true" checksum="f86dfd30"/>
+        <file uri="scala-library-2.13.3.jar" size="5895511" classpath="true" checksum="da78ff51"/>
+        <file uri="scala-logging_2.13-3.9.2.jar" size="57449" classpath="true" checksum="5eea99b8"/>
+        <file uri="scala-reflect-2.13.2.jar" size="3625052" classpath="true" checksum="f6e265cd"/>
+        <file uri="semver4j-3.1.0.jar" size="27357" classpath="true" checksum="7fffdaed"/>
+        <file uri="slf4j-api-1.7.30.jar" size="41472" classpath="true" checksum="b640ef02"/>
+        <file uri="slf4j-log4j12-1.7.30.jar" size="12211" classpath="true" checksum="9e5ce983"/>
+        <file uri="snakeyaml-1.26.jar" size="309001" classpath="true" checksum="b9bab598"/>
+        <file uri="snappy-java-1.1.7.3.jar" size="2021167" classpath="true" checksum="175aa5db"/>
+        <file uri="swagger-annotations-1.6.2.jar" size="21782" classpath="true" checksum="22e3692a"/>
+        <file uri="swagger-core-1.6.2.jar" size="117211" classpath="true" checksum="4fc842c6"/>
+        <file uri="swagger-models-1.6.2.jar" size="155203" classpath="true" checksum="7796053d"/>
+        <file uri="tcp-unix-socket-proxy-1.0.2.jar" size="7246" classpath="true" checksum="1fac4487"/>
+        <file uri="testcontainers-1.14.3.jar" size="12439470" classpath="true" checksum="e3de766f"/>
+        <file uri="tornadofx-1.7.20.jar" size="3794196" classpath="true" checksum="b74a446a"/>
+        <file uri="update.jar" size="21412" classpath="true" checksum="22b1bd50"/>
+        <file uri="validation-api-2.0.1.Final.jar" size="93107" classpath="true" checksum="76406018"/>
+        <file uri="visible-assertions-2.1.2.jar" size="11623" classpath="true" checksum="9244062a"/>
+
+        <file uri="websocket-api-9.4.24.v20191120.jar" size="52116" classpath="true" checksum="de8087f7"/>
+        <file uri="websocket-client-9.4.24.v20191120.jar" size="44726" classpath="true" checksum="62a4f008"/>
+        <file uri="websocket-common-9.4.24.v20191120.jar" size="207697" classpath="true" checksum="e7c48860"/>
+        <file uri="websocket-server-9.4.24.v20191120.jar" size="44837" classpath="true" checksum="eb270e0e"/>
+        <file uri="websocket-servlet-9.4.24.v20191120.jar" size="30283" classpath="true" checksum="9941ad3a"/>
+
+        <file uri="wire-runtime-jvm-3.2.2.jar" size="116323" classpath="true" checksum="bc954e2f"/>
+        <file uri="wire-schema-jvm-3.2.2.jar" size="287705" classpath="true" checksum="ff845815"/>
+
+        <file uri="zkclient-0.11.jar" size="74626" classpath="true" checksum="f3f91539"/>
+
+        <file uri="zookeeper-3.5.8.jar" size="991098" classpath="true" checksum="c92864a0"/>
+        <file uri="zookeeper-jute-3.5.8.jar" size="250547" classpath="true" checksum="c544894d"/>
+
+        <file uri="zstd-jni-1.4.4-7.jar" size="4215261" classpath="true" checksum="59fb4965"/>
+
+    </files>
+</configuration>
+
+<!--  function adler32 { java -jar ~/Downloads/jacksum-1.7.0/jacksum.jar -a "adler32" $1 | cut -c-8 } -->
+<!--  for i in *; do-->
+<!--  echo "<file uri=\"$i\" size=\"$(wc -c < $i)\" checksum=\"f69fad36\"/>"-->
+<!--  done-->
