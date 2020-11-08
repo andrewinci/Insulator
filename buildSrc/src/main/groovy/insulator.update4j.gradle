@@ -1,0 +1,68 @@
+plugins {
+    id 'insulator.common'
+}
+
+task getDependecySources(type: DefaultTask) {
+    group = "remoteUpdate"
+    doLast {
+        def outFile = file("${buildDir}/dependencies.txt")
+        def dependencyMap = [:]
+        // load cache
+        try {
+            if (outFile.exists())
+                outFile.text.split('\n').each {
+                    def dep = it.split('\t')
+                    dependencyMap[dep[0]] = dep[1]
+                }
+        } catch (Exception e) {
+            outFile.delete()
+        }
+        Set dependencySet = []
+        configurations.compileClasspath.resolvedConfiguration.firstLevelModuleDependencies.each { dep ->
+            def addToJson
+            addToJson = { resolvedDep ->
+                dependencySet.add([
+                        groupId   : resolvedDep.module.id.group,
+                        artifactId: resolvedDep.module.id.name,
+                        version   : resolvedDep.module.id.version,
+                ])
+
+                if (resolvedDep.children.size() != 0) {
+                    resolvedDep.children.each { childResolvedDep ->
+                        if (resolvedDep in childResolvedDep.getParents() && childResolvedDep.getConfiguration() == 'compile') {
+                            addToJson(childResolvedDep)
+                        }
+                    }
+                }
+            }
+            addToJson(dep)
+        }
+        for (d in dependencySet) {
+            def artifactName = "${d.artifactId}-${d.version}.jar"
+            if (dependencyMap[artifactName] != null) {
+                println("Using cached $artifactName")
+                continue
+            } else {
+                println("Dependency $artifactName not cached, searching online")
+            }
+            for (repo in project.repositories) {
+                try {
+                    def url = "${repo.url}${d.groupId.replace('.', '/')}/${d.artifactId.replace('.', '/')}/${d.version}/${artifactName}"
+                    url.toURL().text
+                    // url found, save it and break loop
+                    dependencyMap[artifactName] = url
+                    logger.debug("Artifact ${d.artifactName} available from ${repo.name} at ${url}")
+                    break
+                } catch (Exception ex) {
+                    logger.debug("Unable to downaload ${d.artifactName} from repo ${repo.name} (${repo.url}): ${ex.localizedMessage}")
+                }
+                // url not found, store to avoid wasting time next time
+                dependencyMap[artifactName] = "NOT-FOUND"
+            }
+        }
+        outFile.delete()
+        dependencyMap.each {
+            outFile << "${it.key}\t${it.value}\n"
+        }
+    }
+}
