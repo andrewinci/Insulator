@@ -1,6 +1,5 @@
 package insulator.viewmodel.main.topic
 
-import arrow.core.extensions.either.applicativeError.handleError
 import insulator.di.TopicScope
 import insulator.helper.dispatch
 import insulator.jsonhelper.jsontoavro.JsonFieldParsingException
@@ -77,6 +76,6 @@ class ProducerViewModel @Inject constructor(
             return
         }
         producer.send(topic.name, keyProperty.value, valueProperty.value)
-            .handleError { error.set(it) }
+            .mapLeft { error.set(it) }
     }
 }

@@ -1,6 +1,5 @@
 package insulator.viewmodel.main.schemaregistry
 
-import arrow.core.extensions.either.applicativeError.handleError
 import insulator.di.ClusterScope
 import insulator.di.factories.SubjectComponentFactory
 import insulator.helper.runOnFXThread
@@ -54,7 +53,7 @@ class ListSchemaViewModel @Inject constructor(
                 schemasProperty.clear()
                 schemasProperty.addAll(it)
             }
-        }?.handleError {
+        }?.mapLeft {
             error.set(LoadSchemaListError(it.message ?: "Unable to load the schema list"))
         }
 
