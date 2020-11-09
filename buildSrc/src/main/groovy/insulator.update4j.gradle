@@ -57,7 +57,7 @@ task getDependecySources(type: DefaultTask) {
                 dependencySet.add([
                         groupId   : resolvedDep.module.id.group,
                         artifactId: resolvedDep.module.id.name,
-                        version   : resolvedDep.module.id.version,
+                        version   : resolvedDep.module.id.version
                 ])
 
                 if (resolvedDep.children.size() != 0) {
@@ -78,9 +78,10 @@ task getDependecySources(type: DefaultTask) {
             } else {
                 println("Dependency $artifactName not cached, searching online")
             }
+            def urlPart = "${d.groupId.replace('.', '/')}/${d.artifactId}/${d.version}/${artifactName}"
             for (repo in project.repositories) {
                 try {
-                    def url = "${repo.url}${d.groupId.replace('.', '/')}/${d.artifactId.replace('.', '/')}/${d.version}/${artifactName}"
+                    def url = "${repo.url}${urlPart}"
                     url.toURL().text
                     // url found, save it and break loop
                     dependencyMap[artifactName] = url
@@ -90,7 +91,7 @@ task getDependecySources(type: DefaultTask) {
                     logger.debug("Unable to downaload ${d.artifactName} from repo ${repo.name} (${repo.url}): ${ex.localizedMessage}")
                 }
                 // url not found, store to avoid wasting time next time
-                dependencyMap[artifactName] = "NOT-FOUND"
+                dependencyMap[artifactName] = "NOT-FOUND($urlPart)"
             }
         }
         outFile.delete()
