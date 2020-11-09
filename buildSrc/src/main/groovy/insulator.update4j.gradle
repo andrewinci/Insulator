@@ -2,21 +2,54 @@ plugins {
     id 'insulator.common'
 }
 
+static def loadCache(File outFile) {
+    // load cache
+    def dependencyMap = [:]
+    try {
+        if (outFile.exists())
+            outFile.text.split('\n').each {
+                def dep = it.split('\t')
+                dependencyMap[dep[0]] = dep[1]
+            }
+    } catch (Exception e) {
+        outFile.delete()
+    }
+    return dependencyMap
+}
+
+task buildConfigFile() {
+    group = "remoteUpdate"
+    if (!project.tasks.names.contains("dist")) {
+        return
+    }
+    def distFolder = "app"
+    dependsOn("dist", "mergeDependecySources")
+    def cache = loadCache(file("${buildDir}/mergeDependencies.txt"))
+    doLast {
+        println("--- Building configuration file ---")
+        fileTree("${buildDir}/distributions/${distFolder}/lib").matching {
+            include "*.jar"
+        }.each {
+            println("${it.name} -> ${cache[it.name]}")
+        }
+    }
+}
+
+task mergeDependecySources(type: Exec) {
+    group = "remoteUpdate"
+    dependsOn("getDependecySources")
+    commandLine 'sh', '-c', "rm -f ${buildDir}/mergeDependencies.txt && \
+        cd $rootDir && \
+         cat \$(find . | grep dependencies.txt ) >> ${buildDir}/mergeDependencies.txt"
+}
+
 task getDependecySources(type: DefaultTask) {
     group = "remoteUpdate"
+    dependsOn("assemble")
     doLast {
         def outFile = file("${buildDir}/dependencies.txt")
-        def dependencyMap = [:]
-        // load cache
-        try {
-            if (outFile.exists())
-                outFile.text.split('\n').each {
-                    def dep = it.split('\t')
-                    dependencyMap[dep[0]] = dep[1]
-                }
-        } catch (Exception e) {
-            outFile.delete()
-        }
+        def dependencyMap = loadCache(outFile)
+
         Set dependencySet = []
         configurations.compileClasspath.resolvedConfiguration.firstLevelModuleDependencies.each { dep ->
             def addToJson
