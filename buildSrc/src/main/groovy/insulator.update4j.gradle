@@ -1,5 +1,33 @@
+import java.util.zip.Adler32
+
 plugins {
     id 'insulator.common'
+}
+
+//./gradlew getDependencySources
+//./gradlew buildConfigFile
+
+task mergeLocalLibs(type: Jar) {
+    group = 'distribution'
+    if (!project.tasks.names.contains("dist")) {
+        return
+    }
+    dependsOn 'dist'
+
+    def distPath = "${buildDir}/distributions/app/lib/"
+    destinationDirectory = file(distPath)
+    archiveFileName = "insulator.jar"
+    def localLibs = ["app.jar", "configuration.jar", "helper.jar",
+                     "jsonhelper.jar", "kafka.jar", "update.jar"].collect { "${distPath}$it" }
+    from {
+        localLibs.collect { zipTree(it) }
+    }
+    with jar
+
+    // delete unused files
+    doLast {
+        localLibs.forEach { file(it).delete() }
+    }
 }
 
 static def loadCache(File outFile) {
@@ -19,33 +47,46 @@ static def loadCache(File outFile) {
 
 task buildConfigFile() {
     group = "remoteUpdate"
+    dependsOn("mergeLocalLibs", "mergeLocalLibs", "mergeDependencySources")
+    mustRunAfter("mergeLocalLibs", ":app:mergeLocalLibs", ":app:mergeDependencySources")
     if (!project.tasks.names.contains("dist")) {
         return
     }
+    def files = []
     def distFolder = "app"
-    dependsOn("dist", "mergeDependecySources")
+    dependsOn("dist", "mergeDependencySources")
     def cache = loadCache(file("${buildDir}/mergeDependencies.txt"))
     doLast {
         println("--- Building configuration file ---")
         fileTree("${buildDir}/distributions/${distFolder}/lib").matching {
             include "*.jar"
         }.each {
-            println("${it.name} -> ${cache[it.name]}")
+            if (cache[it.name] == null) {
+                println("WARNING: ${it.name} not found in cache")
+                //todo: this should fail
+            } else {
+                def adler = new Adler32()
+                adler.update(it.readBytes())
+                files.add(
+                        "<file uri=\"${cache[it.name]}\" size=\"${it.size()}\" classpath=\"true\" checksum=\"${Long.toHexString(adler.getValue())}\"/>"
+                )
+            }
         }
+        println(files)
     }
 }
 
-task mergeDependecySources(type: Exec) {
+task mergeDependencySources(type: Exec) {
     group = "remoteUpdate"
-    dependsOn("getDependecySources")
+    dependsOn "getDependencySources"
     commandLine 'sh', '-c', "rm -f ${buildDir}/mergeDependencies.txt && \
         cd $rootDir && \
          cat \$(find . | grep dependencies.txt ) >> ${buildDir}/mergeDependencies.txt"
 }
 
-task getDependecySources(type: DefaultTask) {
+task getDependencySources(type: DefaultTask) {
     group = "remoteUpdate"
-    dependsOn("assemble")
+    dependsOn('assemble')
     doLast {
         def outFile = file("${buildDir}/dependencies.txt")
         def dependencyMap = loadCache(outFile)

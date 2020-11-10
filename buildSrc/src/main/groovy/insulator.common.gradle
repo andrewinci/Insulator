@@ -9,7 +9,7 @@ plugins {
 
 repositories {
     jcenter()
-    maven { url "https://repo1.maven.org/maven2/" }
+    mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
     maven { url "https://packages.confluent.io/maven/" }
