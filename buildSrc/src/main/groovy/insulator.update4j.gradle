@@ -5,7 +5,7 @@ plugins {
 }
 
 //./gradlew getDependencySources
-//./gradlew buildConfigFile
+//./gradlew :app:buildConfigFile
 
 task mergeLocalLibs(type: Jar) {
     group = 'distribution'
@@ -18,7 +18,8 @@ task mergeLocalLibs(type: Jar) {
     destinationDirectory = file(distPath)
     archiveFileName = "insulator.jar"
     def localLibs = ["app.jar", "configuration.jar", "helper.jar",
-                     "jsonhelper.jar", "kafka.jar", "update.jar"].collect { "${distPath}$it" }
+                     "jsonhelper.jar", "kafka.jar", "update.jar"]
+            .collect { "${distPath}$it" }
     from {
         localLibs.collect { zipTree(it) }
     }
