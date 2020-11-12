@@ -1,11 +1,7 @@
-import java.util.zip.Adler32
-
 plugins {
     id 'insulator.common'
 }
 
-//./gradlew getDependencySources
-//./gradlew :app:buildConfigFile
 
 task mergeLocalLibs(type: Jar) {
     group = 'distribution'
@@ -31,64 +27,13 @@ task mergeLocalLibs(type: Jar) {
     }
 }
 
-static def loadCache(File outFile) {
-    // load cache
-    def dependencyMap = [:]
-    try {
-        if (outFile.exists())
-            outFile.text.split('\n').each {
-                def dep = it.split('\t')
-                dependencyMap[dep[0]] = dep[1]
-            }
-    } catch (Exception e) {
-        outFile.delete()
-    }
-    return dependencyMap
-}
-
-task buildConfigFile() {
-    group = "remoteUpdate"
-    dependsOn("mergeLocalLibs", "mergeLocalLibs", "mergeDependencySources")
-    mustRunAfter("mergeLocalLibs", ":app:mergeLocalLibs", ":app:mergeDependencySources")
-    if (!project.tasks.names.contains("dist")) {
-        return
-    }
-    def files = []
-    def distFolder = "app"
-    dependsOn("dist", "mergeDependencySources")
-    def cache = loadCache(file("${buildDir}/mergeDependencies.txt"))
-    doLast {
-        println("--- Building configuration file ---")
-        fileTree("${buildDir}/distributions/${distFolder}/lib").matching {
-            include "*.jar"
-        }.each {
-            if (cache[it.name] == null) {
-                println("WARNING: ${it.name} not found in cache")
-                //todo: this should fail
-            } else {
-                def adler = new Adler32()
-                adler.update(it.readBytes())
-                files.add(
-                        "<file uri=\"${cache[it.name]}\" size=\"${it.size()}\" classpath=\"true\" checksum=\"${Long.toHexString(adler.getValue())}\"/>"
-                )
-            }
-        }
-        println(files)
-    }
-}
-
-task mergeDependencySources(type: Exec) {
-    group = "remoteUpdate"
-    dependsOn "getDependencySources"
-    commandLine 'sh', '-c', "rm -f ${buildDir}/mergeDependencies.txt && \
-        cd $rootDir && \
-         cat \$(find . | grep dependencies.txt ) >> ${buildDir}/mergeDependencies.txt"
-}
-
 task getDependencySources(type: DefaultTask) {
     group = "remoteUpdate"
-    dependsOn('assemble')
     doLast {
+
+        if (!buildDir.exists()) {
+            buildDir.mkdir()
+        }
         def outFile = file("${buildDir}/dependencies.txt")
         def dependencyMap = loadCache(outFile)
 
@@ -141,4 +86,19 @@ task getDependencySources(type: DefaultTask) {
             outFile << "${it.key}\t${it.value}\n"
         }
     }
+}
+
+static def loadCache(File outFile) {
+    // load cache
+    def dependencyMap = [:]
+    try {
+        if (outFile.exists())
+            outFile.text.split('\n').each {
+                def dep = it.split('\t')
+                dependencyMap[dep[0]] = dep[1]
+            }
+    } catch (Exception e) {
+        outFile.delete()
+    }
+    return dependencyMap
 }
