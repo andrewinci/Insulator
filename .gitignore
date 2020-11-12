@@ -10,3 +10,5 @@ out
 Insulator.cfg
 test-sandbox
 captures
+insulator-update.xml
+__pycache__
