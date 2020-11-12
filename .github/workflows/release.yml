@@ -38,13 +38,26 @@ jobs:
     - uses: olegtarasov/get-tag@v2
       id: tagName
     - name: Gradle package
-      run: "./gradlew packageApp"
+      run: |
+        ./gradlew packageApp
+        ./gradlew getDependencySources
+        ./gradlew :app:mergeLocalLibs
+        python3 scripts/build.py
       env:
         RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
-    - uses: actions/upload-artifact@v2
+    - name: Update binary
+      uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.os.artifact }}
         path: "./app/${{ matrix.os.path }}"
+        if-no-files-found: error
+    - name: Update update4j config + jar
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.os.artifact }}-update
+        path: |
+          "./app/build/distributions/app/lib/insulator.jar"
+          "./insulator-update.xml"
         if-no-files-found: error
 
   create-release:
@@ -81,13 +94,18 @@ jobs:
     steps:
       - uses: olegtarasov/get-tag@v2
         id: tagName
-      - name: Download asset from previous jobs
+      - name: Download binary from previous jobs
         uses: actions/download-artifact@v2
         with:
           name: ${{ matrix.artifact.name }}
+      - name: Download update4j config + jar from previous jobs
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.os.artifact }}-update
       - name: Zip artifact
         run: |
           zip --junk-paths ${{ matrix.artifact.name }} ${{ matrix.artifact.path }}
+
       - name: Upload ${{ matrix.artifact.name }} asset
         uses: actions/upload-release-asset@v1
         env:
@@ -97,6 +115,27 @@ jobs:
           asset_path: ./${{ matrix.artifact.name }}.zip
           asset_name: ${{ matrix.artifact.name }}.zip
           asset_content_type: application/zip
+
+      - name: Upload jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.release-url }}
+          asset_path: ./insulator.jar
+          asset_name: insulator.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload update4j config
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.release-url }}
+          asset_path: ./insulator-update.xml
+          asset_name: insulator-update.xml
+          asset_content_type: application/xml
+
       - name: Bump Homebrew formula
         if: ${{ matrix.artifact.name == 'insulator-mac' }}
         run: |
@@ -108,3 +147,8 @@ jobs:
           git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-insulator.git
         env:
           RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
+      - name: Upload update4j config and jar
+        run: |
+          ./gradlew getDependencySources
+          ./gradlew :app:mergeLocalLibs
+          python3 scripts/build.py
