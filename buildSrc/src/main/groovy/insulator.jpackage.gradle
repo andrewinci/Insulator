@@ -1,12 +1,23 @@
 import org.gradle.internal.os.OperatingSystem
 
+task dist(type: Copy) {
+    group = 'distribution'
+    dependsOn 'distZip'
+
+    def zipFile = file("${buildDir}/distributions/app.zip")
+    def outputDir = file("${buildDir}/distributions")
+
+    from zipTree(zipFile)
+    into outputDir
+}
+
 task packageApp(type: Exec) {
     group = 'jpackage'
-    dependsOn 'shadowJar'
+    dependsOn 'dist'
 
     // build command
     def appVersion = "${System.getenv().get("RELEASE_VERSION") ?: "0.0.0"}"
-    def command = ['jpackage', '--input', './build/libs', '--main-jar', 'app-all.jar', '-d', '.',
+    def command = ['jpackage', '--input', './build/distributions/app/lib/', '--main-jar', 'app.jar', '-d', '.',
                    '--name', 'Insulator', '--java-options', "'--enable-preview'", '--app-version', appVersion]
 
     // customization for each OS
