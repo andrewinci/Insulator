@@ -2,4 +2,5 @@ plugins {
     id 'application'
     id 'distribution'
     id 'insulator.update4j'
+    id 'com.github.johnrengelman.shadow'
 }
