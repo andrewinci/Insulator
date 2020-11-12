@@ -31,8 +31,8 @@ dependencies {
     implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8')
 
     // Arrow
-    implementation(group: 'io.arrow-kt', name: 'arrow-fx', version: "$arrow_version")
-    implementation(group: 'io.arrow-kt', name: 'arrow-syntax', version: "$arrow_version")
+    implementation(group: 'io.arrow-kt', name: 'arrow-annotations', version: "$arrow_version")
+    implementation(group: 'io.arrow-kt', name: 'arrow-core-data', version: "$arrow_version")
     kapt(group: 'io.arrow-kt', name: 'arrow-meta', version: "$arrow_version")
 
     // Kotest

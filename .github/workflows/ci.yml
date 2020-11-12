@@ -68,6 +68,12 @@ jobs:
       - name: Build and run tests
         if: ${{ !matrix.os.run-integration }}
         run: "./gradlew check --no-daemon"
+      - name: Test build update4j config
+        if: ${{ !matrix.os.run-integration }}
+        run: |
+          ./gradlew getDependencySources
+          ./gradlew :app:mergeLocalLibs
+          python3 scripts/build.py
       - name: Run integration tests
         if: ${{ matrix.os.run-integration }}
         uses: paambaati/codeclimate-action@v2.7.4
