@@ -1,8 +1,3 @@
-plugins {
-    id 'insulator.common'
-}
-
-
 task mergeLocalLibs(type: Jar) {
     group = 'distribution'
     if (!project.tasks.names.contains("dist")) {
