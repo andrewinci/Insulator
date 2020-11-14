@@ -38,11 +38,7 @@ jobs:
     - uses: olegtarasov/get-tag@v2
       id: tagName
     - name: Gradle package
-      run: |
-        ./gradlew packageApp
-        ./gradlew getDependencySources
-        ./gradlew :app:mergeLocalLibs
-        python3 scripts/build.py
+      run: "./gradlew packageApp"
       env:
         RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - name: Update binary
@@ -51,13 +47,23 @@ jobs:
         name: ${{ matrix.os.artifact }}
         path: "./app/${{ matrix.os.path }}"
         if-no-files-found: error
+    - name: Build update4j config and jar
+      if: ${{ matrix.os.name == 'ubuntu-latest' }}
+      run: |
+        ./gradlew getDependencySources
+        ./gradlew :app:mergeLocalLibs
+        python3 scripts/build.py
+        mv ./app/build/distributions/app/lib/insulator.jar .
+      env:
+        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - name: Update update4j config + jar
+      if: ${{ matrix.os.name == 'ubuntu-latest' }}
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ matrix.os.artifact }}-update
+        name: jar-update
         path: |
-          "./app/build/distributions/app/lib/insulator.jar"
-          "./insulator-update.xml"
+          ./insulator.jar
+          ./insulator-update.xml
         if-no-files-found: error
 
   create-release:
@@ -99,9 +105,11 @@ jobs:
         with:
           name: ${{ matrix.artifact.name }}
       - name: Download update4j config + jar from previous jobs
+        if: ${{ matrix.artifact.name == 'insulator-debian' }}
         uses: actions/download-artifact@v2
         with:
-          name: ${{ matrix.os.artifact }}-update
+          name: jar-update
+
       - name: Zip artifact
         run: |
           zip --junk-paths ${{ matrix.artifact.name }} ${{ matrix.artifact.path }}
@@ -117,6 +125,7 @@ jobs:
           asset_content_type: application/zip
 
       - name: Upload jar
+        if: ${{ matrix.artifact.name == 'insulator-debian' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -127,6 +136,7 @@ jobs:
           asset_content_type: application/java-archive
 
       - name: Upload update4j config
+        if: ${{ matrix.artifact.name == 'insulator-debian' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -147,8 +157,3 @@ jobs:
           git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-insulator.git
         env:
           RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
-      - name: Upload update4j config and jar
-        run: |
-          ./gradlew getDependencySources
-          ./gradlew :app:mergeLocalLibs
-          python3 scripts/build.py
