@@ -18,15 +18,17 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import javax.swing.JFrame
 import javax.swing.JOptionPane
+import javax.swing.WindowConstants.DISPOSE_ON_CLOSE
 import kotlin.system.exitProcess
 
-private val frame = JFrame("Bootstrap")
 const val localPath = "/tmp/insulator-download/"
 const val localConfigFile = "${localPath}insulator-update.xml"
 val updatePath: Path = Path.of(System.getProperty("java.io.tmpdir") ?: "", "update.zip")
 
 // https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-update.xml
 const val configPath = "https://github.com/andrea-vinci/Insulator/releases/download/0.1.75/insulator-update.xml"
+
+private val view = BootstrapViewManager(JFrame("Bootstrap").apply { defaultCloseOperation = DISPOSE_ON_CLOSE })
 
 fun main(args: Array<String>) {
     tryLoadLocalConfig()
@@ -49,7 +51,7 @@ private fun handleErrors(exception: Throwable) {
         is FileNotFoundException -> Triple("Unable to find the remote configuration file. Please, contact the developer.", "Download error", JOptionPane.ERROR_MESSAGE)
         else -> Triple("Unexpected error: $exception. Please, contact the developer.", "Unexpected error", JOptionPane.ERROR_MESSAGE)
     }
-    JOptionPane.showMessageDialog(frame, errorMessage.first, errorMessage.second, errorMessage.third)
+    view.showMessageDialog(errorMessage.first, errorMessage.second, errorMessage.third)
     exitProcess(-1)
 }
 
@@ -79,6 +81,7 @@ fun tryLoadLocalConfig(): Pair<Throwable?, Configuration?> =
         .fold({ Pair(null, it) }, { Pair(it, null) })
 
 class InsulatorUpdateHandler : UpdateHandler {
-    private val view = BootstrapView(frame)
+    override fun startDownloads() = view.showUpdateView()
     override fun updateDownloadProgress(frac: Float) = view.updateDownloadProgress(frac)
+    override fun doneDownloads() = view.closeUpdateView()
 }

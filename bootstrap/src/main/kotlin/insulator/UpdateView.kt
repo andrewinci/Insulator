@@ -5,8 +5,6 @@ import java.awt.Dimension
 import java.awt.Image
 import java.awt.RenderingHints
 import java.awt.Toolkit
-import java.awt.event.WindowEvent
-import java.awt.event.WindowListener
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.BorderFactory
@@ -17,9 +15,8 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 import kotlin.math.floor
-import kotlin.system.exitProcess
 
-class BootstrapView(private val frame: JFrame) : WindowListener {
+class UpdateView(private val frame: JFrame) {
     private val progressBar = JProgressBar().apply { isStringPainted = true }
 
     init {
@@ -35,7 +32,6 @@ class BootstrapView(private val frame: JFrame) : WindowListener {
             )
             fixSize(300, 130)
             center()
-            addWindowListener(this@BootstrapView)
             isVisible = true
         }
     }
@@ -69,14 +65,4 @@ class BootstrapView(private val frame: JFrame) : WindowListener {
         setSize(width, height)
         maximumSize = Dimension(width, height)
     }
-
-    override fun windowClosed(e: WindowEvent?) = exitProcess(0)
-
-    override fun windowClosing(e: WindowEvent?) = exitProcess(0)
-
-    override fun windowOpened(e: WindowEvent?) = Unit
-    override fun windowIconified(e: WindowEvent?) = Unit
-    override fun windowDeiconified(e: WindowEvent?) = Unit
-    override fun windowActivated(e: WindowEvent?) = Unit
-    override fun windowDeactivated(e: WindowEvent?) = Unit
 }
