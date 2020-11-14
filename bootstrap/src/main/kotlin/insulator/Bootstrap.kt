@@ -13,20 +13,12 @@ import java.net.SocketTimeoutException
 import java.net.URL
 import java.net.UnknownHostException
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.WindowConstants.DISPOSE_ON_CLOSE
 import kotlin.system.exitProcess
-
-const val localPath = "/tmp/insulator-download/"
-const val localConfigFile = "${localPath}insulator-update.xml"
-val updatePath: Path = Path.of(System.getProperty("java.io.tmpdir") ?: "", "update.zip")
-
-// https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-update.xml
-const val configPath = "https://github.com/andrea-vinci/Insulator/releases/download/0.1.75/insulator-update.xml"
 
 private val view = BootstrapViewManager(JFrame("Bootstrap").apply { defaultCloseOperation = DISPOSE_ON_CLOSE })
 
