@@ -75,12 +75,8 @@ class BootstrapView(private val frame: JFrame) : WindowListener {
     override fun windowClosing(e: WindowEvent?) = exitProcess(0)
 
     override fun windowOpened(e: WindowEvent?) = Unit
-
     override fun windowIconified(e: WindowEvent?) = Unit
-
     override fun windowDeiconified(e: WindowEvent?) = Unit
-
     override fun windowActivated(e: WindowEvent?) = Unit
-
     override fun windowDeactivated(e: WindowEvent?) = Unit
 }
