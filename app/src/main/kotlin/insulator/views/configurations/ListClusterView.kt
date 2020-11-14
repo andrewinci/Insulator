@@ -120,7 +120,8 @@ class ListClusterView @Inject constructor(
             it.height = 500.0
             it.resizableProperty().value = false
         }
-        checkVersion()
+        // Enable ONLY when the bootstrap need to be updated
+        // checkVersion()
         super.onDock()
         title = "Clusters"
     }

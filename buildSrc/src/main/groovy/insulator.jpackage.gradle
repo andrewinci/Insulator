@@ -4,7 +4,7 @@ task dist(type: Copy) {
     group = 'distribution'
     dependsOn 'distZip'
 
-    def zipFile = file("${buildDir}/distributions/app.zip")
+    def zipFile = file("${buildDir}/distributions/${project.name}.zip")
     def outputDir = file("${buildDir}/distributions")
 
     from zipTree(zipFile)
@@ -17,7 +17,7 @@ task packageApp(type: Exec) {
 
     // build command
     def appVersion = "${System.getenv().get("RELEASE_VERSION") ?: "0.0.0"}"
-    def command = ['jpackage', '--input', './build/distributions/app/lib/', '--main-jar', 'app.jar', '-d', '.',
+    def command = ['jpackage', '--input', "./build/distributions/${project.name}/lib/", '--main-jar', "${project.name}.jar", '-d', '.',
                    '--name', 'Insulator', '--java-options', "'--enable-preview'", '--app-version', appVersion]
 
     // customization for each OS
