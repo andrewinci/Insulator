@@ -30,9 +30,12 @@ const val configPath = "https://github.com/andrea-vinci/Insulator/releases/downl
 
 fun main(args: Array<String>) {
     URL(configPath).runCatching { openConnection().getInputStream() }
-        .fold({ Result.success(it) }, { error ->
-            tryLoadLocalConfig()?.let { Result.success(it) } ?: Result.failure(error)
-        })
+        .fold(
+            { Result.success(it) },
+            { error ->
+                tryLoadLocalConfig()?.let { Result.success(it) } ?: Result.failure(error)
+            }
+        )
         .mapCatching { stream -> saveConfig(stream) }
         .mapCatching { stream -> InputStreamReader(stream).use { Configuration.read(it) } }
         .mapCatching { config ->
@@ -44,24 +47,28 @@ fun main(args: Array<String>) {
             config
         }
         .mapCatching { it.launch() }
-        .fold({}, {
-            val errorMessage = when (it) {
-                is UnknownHostException -> Triple("Unable to check for updates. Check your internet connection and retry", "Download error", JOptionPane.WARNING_MESSAGE)
-                is SocketTimeoutException -> Triple("Unable to complete the download. Check your internet connection and retry", "Timeout error", JOptionPane.WARNING_MESSAGE)
-                is FileNotFoundException -> Triple("Unable to find the remote configuration file. Please, contact the developer.", "Download error", JOptionPane.ERROR_MESSAGE)
-                else -> Triple("Unexpected error: ${it}. Please, contact the developer.", "Unexpected error", JOptionPane.ERROR_MESSAGE)
+        .fold(
+            {},
+            {
+                val errorMessage = when (it) {
+                    is UnknownHostException -> Triple("Unable to check for updates. Check your internet connection and retry", "Download error", JOptionPane.WARNING_MESSAGE)
+                    is SocketTimeoutException -> Triple("Unable to complete the download. Check your internet connection and retry", "Timeout error", JOptionPane.WARNING_MESSAGE)
+                    is FileNotFoundException -> Triple("Unable to find the remote configuration file. Please, contact the developer.", "Download error", JOptionPane.ERROR_MESSAGE)
+                    else -> Triple("Unexpected error: $it. Please, contact the developer.", "Unexpected error", JOptionPane.ERROR_MESSAGE)
+                }
+                JOptionPane.showMessageDialog(frame, errorMessage.first, errorMessage.second, errorMessage.third)
+                exitProcess(-1)
             }
-            JOptionPane.showMessageDialog(frame, errorMessage.first, errorMessage.second, errorMessage.third)
-            exitProcess(-1)
-        })
+        )
 }
 
-fun saveConfig(stream: InputStream) : InputStream {
+fun saveConfig(stream: InputStream): InputStream {
     if (!File(localPath).exists()) File(localPath).mkdirs()
     Files.copy(
         stream,
         Paths.get(localConfigFile),
-        StandardCopyOption.REPLACE_EXISTING)
+        StandardCopyOption.REPLACE_EXISTING
+    )
     return FileInputStream(localConfigFile)
 }
 

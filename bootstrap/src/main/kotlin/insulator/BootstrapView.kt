@@ -1,6 +1,5 @@
 package insulator
 
-import org.update4j.service.UpdateHandler
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Image
@@ -20,19 +19,20 @@ import javax.swing.JProgressBar
 import kotlin.math.floor
 import kotlin.system.exitProcess
 
-
 class BootstrapView(private val frame: JFrame) : WindowListener {
     private val progressBar = JProgressBar().apply { isStringPainted = true }
 
     init {
         with(frame) {
-            add(JPanel().apply {
-                add(insulatorIcon())
-                add(progressBar)
+            add(
+                JPanel().apply {
+                    add(insulatorIcon())
+                    add(progressBar)
 
-                layout = BoxLayout(this, BoxLayout.PAGE_AXIS)
-                border = BorderFactory.createEmptyBorder(10, 20, 20, 20)
-            })
+                    layout = BoxLayout(this, BoxLayout.PAGE_AXIS)
+                    border = BorderFactory.createEmptyBorder(10, 20, 20, 20)
+                }
+            )
             fixSize(300, 130)
             center()
             addWindowListener(this@BootstrapView)
@@ -51,7 +51,6 @@ class BootstrapView(private val frame: JFrame) : WindowListener {
             .let { JLabel(ImageIcon(getScaledImage(it, 60, 60))).apply { text = "Insulator auto-update" } }
             .also { it.alignmentX = Component.CENTER_ALIGNMENT }
 
-
     private fun getScaledImage(srcImg: Image, width: Int, height: Int) =
         BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB).apply {
             with(createGraphics()) {
@@ -64,7 +63,6 @@ class BootstrapView(private val frame: JFrame) : WindowListener {
     private fun JFrame.center() = apply {
         val screen = Toolkit.getDefaultToolkit().screenSize
         setLocation(screen.width / 2 - size.width / 2, screen.height / 2 - size.height / 2)
-
     }
 
     private fun JFrame.fixSize(width: Int, height: Int) = this.apply {
@@ -85,5 +83,4 @@ class BootstrapView(private val frame: JFrame) : WindowListener {
     override fun windowActivated(e: WindowEvent?) = Unit
 
     override fun windowDeactivated(e: WindowEvent?) = Unit
-
 }
