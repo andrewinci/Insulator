@@ -69,7 +69,7 @@ jobs:
         if: ${{ !matrix.os.run-integration }}
         run: "./gradlew check --no-daemon"
       - name: Test build update4j config
-        if: ${{ !matrix.os.run-integration }}
+        if: ${{ matrix.os.run-integration }}
         run: |
           ./gradlew getDependencySources
           ./gradlew :app:mergeLocalLibs
