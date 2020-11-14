@@ -6,9 +6,9 @@ const val appName = "Insulator"
 val localPath: String by lazy {
     with(System.getProperty("os.name")) {
         when {
-            contains("nux") -> "${System.getProperty("user.home")!!}/.config/${appName}/"
-            contains("win") -> "${System.getenv("LOCALAPPDATA")}/${appName}"
-            else -> "${System.getProperty("user.home")!!}/Library/Application Support/${appName}/"
+            contains("nux") -> "${System.getProperty("user.home")!!}/.config/$appName/"
+            contains("win") -> "${System.getenv("LOCALAPPDATA")}/$appName"
+            else -> "${System.getProperty("user.home")!!}/Library/Application Support/$appName/"
         }
     }
 }
