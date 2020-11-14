@@ -2,9 +2,9 @@ header = """<configuration timestamp="2020-11-12T00:00:00.000000000Z">
     <base uri="" path="${app.lib}"/>
     <properties>
         <property key="app.name" value="Insulator"/>
-        <property key="app.dir" value="${user.dir}/${app.name}"/>
-        <property key="app.lib" value="${LOCALAPPDATA}/${app.name}/lib" os="win"/>
-        <property key="app.lib" value="${app.dir}/lib"/>
+        <property key="app.lib" value="${LOCALAPPDATA}/${app.name}/" os="win"/>
+        <property key="app.lib" value="${user.dir}/Library/Application Support/${app.name}/" os="mac"/>
+        <property key="app.lib" value="${user.dir}/.config/${app.name}/" os="linux"/>
         <property key="default.launcher.main.class" value="insulator.AppKt"/>
         <property key="default.launcher.main.classpath" value="insulator.jar"/>
     </properties>
