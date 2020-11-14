@@ -84,6 +84,7 @@ jobs:
           CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
           JACOCO_SOURCE_PATH: |
             ${{github.workspace}}/app/src/main/kotlin \
+            ${{github.workspace}}/bootstrap/src/main/kotlin \
             ${{github.workspace}}/lib/configuration/src/main/kotlin \
             ${{github.workspace}}/lib/helper/src/main/kotlin \
             ${{github.workspace}}/lib/jsonhelper/src/main/kotlin \
