@@ -72,7 +72,8 @@ fun tryLoadLocalConfig(): Pair<Throwable?, Configuration?> =
                     if (exists()) Result.success(inputStream())
                     else Result.failure(error)
                 }
-            })
+            }
+        )
         .mapCatching { stream -> saveConfig(stream) }
         .mapCatching { stream -> InputStreamReader(stream).use { Configuration.read(it) } }
         .fold({ Pair(null, it) }, { Pair(it, null) })
