@@ -82,6 +82,7 @@ brew cask install insulator
 * Cross platform
     - Windows, macOS and Linux ready.
 * Dark/Light theme
+* Auto-update
 
 ## Development
 **🚧Work in progress 🚧**
@@ -91,7 +92,8 @@ The gradle task `packageApp` requires `binutils` and `fakeroot`.
 
 ## Credits
 
-[JetBrains](https://www.jetbrains.com/?from=Insulator)
+- [JetBrains](https://www.jetbrains.com/?from=Insulator)
+- [update4j](https://github.com/update4j/update4j)
 
 ## Support
 

@@ -1,24 +1,10 @@
 plugins {
     id 'idea'
     id 'jacoco'
-    id 'org.jetbrains.kotlin.jvm'
-    id 'org.jetbrains.kotlin.kapt'
+    id 'insulator.base'
     id 'org.jlleitschuh.gradle.ktlint'
     id 'com.adarshr.test-logger'
 }
-
-repositories {
-    jcenter()
-    mavenCentral()
-    maven { url "https://plugins.gradle.org/m2/" }
-    maven { url "https://dl.bintray.com/arrow-kt/arrow-kt/" }
-    maven { url "https://packages.confluent.io/maven/" }
-    maven { url "https://kotlin.bintray.com/kotlinx/" }
-    maven { url "https://repository.mulesoft.org/nexus/content/repositories/public/" }
-}
-
-compileKotlin { kotlinOptions.jvmTarget = "1.8" }
-compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 
 tasks.withType(Test) { useJUnitPlatform() }
 
@@ -26,9 +12,6 @@ def arrow_version = "0.11.0"
 def kotest_version = "4.3.0"
 
 dependencies {
-    // Kotlin
-    implementation platform('org.jetbrains.kotlin:kotlin-bom')
-    implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8')
 
     // Arrow
     implementation(group: 'io.arrow-kt', name: 'arrow-annotations', version: "$arrow_version")
