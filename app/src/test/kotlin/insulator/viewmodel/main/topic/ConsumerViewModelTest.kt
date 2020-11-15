@@ -1,6 +1,5 @@
 package insulator.viewmodel.main.topic
 
-import arrow.core.Tuple3
 import insulator.kafka.consumer.Consumer
 import insulator.kafka.model.Topic
 import io.kotest.core.spec.style.StringSpec
@@ -49,9 +48,9 @@ class ConsumerViewModelTest : StringSpec({
 private class ConsumerViewModelTestContext {
     val mockConsumer = mockk<Consumer> {
         coEvery { start(any(), any(), any(), any()) } answers {
-            arg<(List<Tuple3<String?, String, Long>>) -> Unit>(3)(listOf(Tuple3("1", "2", 3L)))
-            arg<(List<Tuple3<String?, String, Long>>) -> Unit>(3)(listOf(Tuple3("1", "2", 3L)))
-            arg<(List<Tuple3<String?, String, Long>>) -> Unit>(3)(listOf(Tuple3("1", "2", 3L)))
+            arg<(List<insulator.kafka.model.Record>) -> Unit>(3)(listOf(insulator.kafka.model.Record("1", "2", 3L, mockk(), 1, 3L)))
+            arg<(List<insulator.kafka.model.Record>) -> Unit>(3)(listOf(insulator.kafka.model.Record("1", "2", 3L, mockk(), 1, 3L)))
+            arg<(List<insulator.kafka.model.Record>) -> Unit>(3)(listOf(insulator.kafka.model.Record("1", "2", 3L, mockk(), 1, 3L)))
         }
         coEvery { stop() } just runs
         every { isRunning() } returns false

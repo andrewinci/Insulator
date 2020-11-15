@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor(
 
     val contentList: SimpleObjectProperty<Parent> = SimpleObjectProperty<Parent>().also { it.value = clusterComponent.listTopicView().root }
 
-    fun <T : Any> setContentList(clazz: KClass<T>, owner: Window?): Unit = when (clazz) {
+    fun <T : Any> setContentList(clazz: KClass<T>, owner: Window? = null): Unit = when (clazz) {
         ListTopicView::class -> contentList.set(clusterComponent.listTopicView().root)
         ListSchemaView::class -> {
             if (cluster.isSchemaRegistryConfigured()) contentList.set(clusterComponent.listSchemaView().root)

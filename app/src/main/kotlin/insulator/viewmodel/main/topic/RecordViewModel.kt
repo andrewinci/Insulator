@@ -23,7 +23,7 @@ class RecordViewModel(record: Record) : InsulatorViewModel() {
 
     fun toCsv() = "${this.partitionProperty.value}\t" +
         "${this.offsetProperty.value}\t" +
-        "${this.timestampProperty.value}\t" +
+        "${this.formattedTimeStampProperty.value}\t" +
         "${this.keyProperty.value}\t" +
         this.valueProperty.value
 }

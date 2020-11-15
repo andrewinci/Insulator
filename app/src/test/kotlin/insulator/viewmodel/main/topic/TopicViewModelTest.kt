@@ -3,6 +3,7 @@ package insulator.viewmodel.main.topic
 import arrow.core.right
 import helper.FxContext
 import insulator.kafka.AdminApi
+import insulator.kafka.model.Record
 import insulator.kafka.model.Topic
 import io.kotest.core.spec.style.StringSpec
 import io.mockk.coEvery
@@ -32,11 +33,11 @@ class TopicViewModelTest : StringSpec({
             unmockkAll()
             mockkStatic(Clipboard::class)
             every { Clipboard.getSystemClipboard() } returns mockClipboard
-            it.sut.selectedItem.set(RecordViewModel("key", "value", 1599913230000L))
+            it.sut.selectedItem.set(RecordViewModel(Record("key", "value", 1599913230000L, mockk(), 1, 3)))
             // act
             it.sut.copySelectedRecordToClipboard()
             // assert
-            verify(exactly = 1) { mockClipboard.putString("2020-09-12 12:20:30\tkey\tvalue") }
+            verify(exactly = 1) { mockClipboard.putString("1\t3\t2020-09-12 12:20:30\tkey\tvalue") }
         }
     }
 })
@@ -53,5 +54,5 @@ private class TopicViewModelTestContext : FxContext() {
         )
     }
 
-    val sut = TopicViewModel(mockkTopic, mockAdminApi, mockk(relaxed = true), consumerViewModel)
+    val sut = TopicViewModel(mockkTopic, mockAdminApi, mockk(relaxed = true), consumerViewModel, mockk(), mockk())
 }
