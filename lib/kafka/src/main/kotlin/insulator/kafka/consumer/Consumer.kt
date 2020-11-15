@@ -104,6 +104,8 @@ class Consumer(
             key = record.key()?.toString(),
             value = parsedValue,
             timestamp = record.timestamp(),
+            partition = record.partition(),
+            offset = record.offset(),
             headers = record.headers().toArray().map {
                 it.key() to record.headers().headers(it.key()).map { h -> h.value() }
             }.toMap()
