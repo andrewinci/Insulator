@@ -76,6 +76,24 @@ class IntegrationTestFixture : Closeable {
     }
 
     suspend fun createTopic(s: String) = adminApi.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1))
+    suspend fun createTestSchema(schemaName: String) = schemaRegistry.register(schemaName, testSchema)
 
-//    suspend fun createTestSchema(schemaName: String) = schemaRegistry.
+    val testSchema = """
+        {
+          "type": "record", 
+          "name": "value_test_schema", 
+          "namespace": "com.mycorp.mynamespace", 
+          "doc": "Sample schema to help you get started.", 
+          "fields": [{
+              "name": "test", 
+              "type": ["null", {
+                  "type": "bytes", 
+                  "logicalType": "decimal", 
+                  "precision": 5, 
+                  "scale": 2
+                }], 
+              "default": null
+            }]
+        }
+    """.trimIndent()
 }

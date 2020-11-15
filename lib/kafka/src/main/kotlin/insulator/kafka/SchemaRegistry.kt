@@ -2,15 +2,21 @@ package insulator.kafka
 
 import arrow.core.Either
 import arrow.core.computations.either
+import arrow.core.flatMap
 import insulator.helper.runCatchingE
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Schema
 import insulator.kafka.model.Subject
+import io.confluent.kafka.schemaregistry.ParsedSchema
+import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.rest.RestService
 
 class SchemaRegistry(private val client: SchemaRegistryClient) {
+
+    fun register(subject: String, schema: String) = runCatchingE { AvroSchema(schema).also { it.validate() } }
+        .flatMap { client.runCatchingE { register(subject, it) } }.map { Unit }
 
     fun deleteSubject(subject: String) =
         client.runCatchingE { deleteSubject(subject) }.map { Unit }

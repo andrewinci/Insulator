@@ -8,6 +8,7 @@ import insulator.integrationtest.helpers.selectCluster
 import insulator.integrationtest.helpers.waitWindowWithTitle
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
@@ -41,21 +42,22 @@ class RefreshButtonTests : FreeSpec({
                 mainView.lookupFirst<Label>(CssRule.id("topic-$topicName")).text shouldBe topicName
             }
 
-//            "Refresh schema list" {
-//                val schemaName = "test-new-topic-schema"
-//                // select schema registry
-//                mainView.lookupFirst<Node>(CssRule.id("sidebar-item-schema-registry")).click()
-//                // create the schema
-//                fixture.createTestSchema(schemaName)
-//            // the topic shouldn't be visible
-//            mainView.lookupFirst<ListView<String>>(listView).items.count { it == topicName } shouldBe 0
-//            // click the refresh button wil load the new topic
-//            mainView.lookupFirst<Button>(CssRule.id("button-refresh")).click()
-//            screenShoot("refresh-topic-list")
-//            // the list of topic is now updated
-//            mainView.lookupFirst<ListView<String>>(listView).items.count { it == topicName } shouldBe 1
-//            mainView.lookupFirst<Label>(CssRule.id("topic-$topicName")).text shouldBe topicName
-//            }
+            "Refresh schema list" {
+                val schemaName = "test-new-topic-schema"
+                // select schema registry
+                mainView.lookupFirst<Node>(CssRule.id("sidebar-item-schema-registry")).click()
+                // create the schema
+                fixture.createTestSchema(schemaName)
+                delay(1_000)
+                // the topic shouldn't be visible
+                mainView.lookupFirst<ListView<String>>(listView).items.count { it == schemaName } shouldBe 0
+                // click the refresh button wil load the new topic
+                mainView.lookupFirst<Button>(CssRule.id("button-refresh")).click()
+                screenShoot("refresh-schema-registry-list")
+                // the list of topic is now updated
+                mainView.lookupFirst<ListView<String>>(listView).items.count { it == schemaName } shouldBe 1
+                mainView.lookupFirst<Label>(CssRule.id("schema-$schemaName")).text shouldBe schemaName
+            }
         }
     }
 })

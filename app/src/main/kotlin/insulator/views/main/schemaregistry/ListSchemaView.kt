@@ -39,7 +39,7 @@ class ListSchemaView @Inject constructor(
 
     private fun EventTarget.schemasListView() =
         listview<String> {
-            cellFormat { graphic = label(it) }
+            cellFormat { graphic = label(it) { id = "schema-$it" } }
             onDoubleClick { viewModel.dispatch { showSchema() } }
             itemsProperty().set(viewModel.filteredSchemasProperty)
             bindSelected(viewModel.selectedSchemaProperty)
