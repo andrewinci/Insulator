@@ -38,14 +38,14 @@ jobs:
     - uses: olegtarasov/get-tag@v2
       id: tagName
     - name: Gradle package
-      run: "./gradlew packageApp"
+      run: "./gradlew bootstrap:packageApp"
       env:
         RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
     - name: Update binary
       uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.os.artifact }}
-        path: "./app/${{ matrix.os.path }}"
+        path: "./bootstrap/${{ matrix.os.path }}"
         if-no-files-found: error
     - name: Build update4j config and jar
       if: ${{ matrix.os.name == 'ubuntu-latest' }}
