@@ -1,5 +1,6 @@
 package insulator.ui.style
 
+import javafx.geometry.Pos
 import javafx.scene.paint.Color
 import tornadofx.Stylesheet
 import tornadofx.box

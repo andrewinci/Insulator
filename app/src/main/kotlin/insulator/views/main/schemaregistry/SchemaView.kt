@@ -7,7 +7,6 @@ import insulator.ui.common.InsulatorTabView
 import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.fieldName
-import insulator.ui.component.h1
 import insulator.ui.style.theme
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import javafx.event.EventTarget
@@ -36,10 +35,8 @@ class SchemaView @Inject constructor(
 
     override val root = vbox {
         appBar {
-            hbox(alignment = Pos.CENTER_LEFT, spacing = 5.0) {
-                h1(viewModel.nameProperty.value)
-                deleteButton()
-            }
+            title = viewModel.nameProperty.value
+            buttons = listOf(deleteButton())
         }
         hbox(alignment = Pos.CENTER_LEFT) {
             fieldName("Schema")

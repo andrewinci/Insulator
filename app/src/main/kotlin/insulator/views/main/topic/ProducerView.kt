@@ -7,7 +7,6 @@ import insulator.kafka.consumer.DeserializationFormat
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
-import insulator.ui.component.h1
 import insulator.viewmodel.main.topic.ProducerViewModel
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
@@ -39,7 +38,7 @@ class ProducerView @Inject constructor(
     private val recordValueTextArea = TextArea()
 
     override val root = vbox(spacing = 10.0) {
-        appBar { h1(viewModel.topic.name) }
+        appBar { title = viewModel.topic.name }
         fieldName("Key")
         textfield(viewModel.keyProperty) { id = "field-producer-key" }
 
