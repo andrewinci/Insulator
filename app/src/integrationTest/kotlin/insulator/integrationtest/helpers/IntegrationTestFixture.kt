@@ -3,6 +3,7 @@ package insulator.integrationtest.helpers
 import insulator.Insulator
 import insulator.configuration.ConfigurationRepo
 import insulator.kafka.AdminApi
+import insulator.kafka.SchemaRegistry
 import insulator.kafka.adminApi
 import insulator.kafka.local.SchemaRegistryContainer
 import insulator.kafka.model.Cluster
@@ -10,6 +11,7 @@ import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.kafka.model.Topic
 import insulator.kafka.producer.Producer
 import insulator.kafka.producer.stringProducer
+import insulator.kafka.schemaRegistry
 import insulator.test.helper.deleteTestSandboxFolder
 import insulator.test.helper.getTestSandboxFolder
 import org.testcontainers.containers.KafkaContainer
@@ -20,10 +22,11 @@ import java.io.Closeable
 
 class IntegrationTestFixture : Closeable {
     private lateinit var adminApi: AdminApi
+    private lateinit var schemaRegistry: SchemaRegistry
     lateinit var stringProducer: Producer
     private val currentHomeFolder = getTestSandboxFolder().toAbsolutePath()
     private val kafka = KafkaContainer()
-    private val schemaRegistry = SchemaRegistryContainer().withKafka(kafka)
+    private val schemaRegistryContainer = SchemaRegistryContainer().withKafka(kafka)
     lateinit var currentKafkaCluster: Cluster
 
     init {
@@ -40,12 +43,13 @@ class IntegrationTestFixture : Closeable {
             name = clusterName,
             endpoint = kafka.bootstrapServers,
             schemaRegistryConfig = if (createSchemaRegistry) {
-                schemaRegistry.start()
-                schemaRegistry.waitingFor(Wait.forListeningPort())
-                SchemaRegistryConfiguration(schemaRegistry.endpoint)
+                schemaRegistryContainer.start()
+                schemaRegistryContainer.waitingFor(Wait.forListeningPort())
+                SchemaRegistryConfiguration(schemaRegistryContainer.endpoint)
             } else SchemaRegistryConfiguration()
         )
         startApp(currentKafkaCluster)
+        schemaRegistry = schemaRegistry(currentKafkaCluster)
         adminApi = adminApi(currentKafkaCluster)
         stringProducer = stringProducer(currentKafkaCluster)
     }
@@ -68,8 +72,10 @@ class IntegrationTestFixture : Closeable {
         kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         deleteTestSandboxFolder()
         kafka.runCatching { stop(); close() }
-        schemaRegistry.runCatching { stop(); close() }
+        schemaRegistryContainer.runCatching { stop(); close() }
     }
 
     suspend fun createTopic(s: String) = adminApi.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1))
+
+//    suspend fun createTestSchema(schemaName: String) = schemaRegistry.
 }

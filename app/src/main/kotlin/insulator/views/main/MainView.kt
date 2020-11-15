@@ -94,8 +94,8 @@ class MainView @Inject constructor(
                 button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
             }
             center = vbox {
-                menuItem("Topics", ICON_TOPICS) { viewModel.setContentList(ListTopicView::class) }
-                menuItem("Schema Registry", ICON_REGISTRY) { viewModel.setContentList(ListSchemaView::class) }
+                menuItem("Topics", ICON_TOPICS, "sidebar-item-topics") { viewModel.setContentList(ListTopicView::class) }
+                menuItem("Schema Registry", ICON_REGISTRY, "sidebar-item-schema-registry") { viewModel.setContentList(ListSchemaView::class) }
             }
             bottom = hbox(alignment = Pos.CENTER) {
                 themeButton { themeHelper.dispatch { changeTheme() } }
@@ -105,12 +105,13 @@ class MainView @Inject constructor(
             maxWidth = SIDEBAR_WIDTH
         }
 
-    private fun EventTarget.menuItem(name: String, icon: String, onClick: () -> Unit) =
+    private fun EventTarget.menuItem(name: String, icon: String, id: String, onClick: () -> Unit) =
         hbox(spacing = 5.0) {
             imageview(Image(icon)) { fitHeight = 35.0; fitWidth = 35.0; }
             h2(name)
             onMouseClicked = EventHandler { onClick() }
             addClass(MainViewStyle.sidebarItem)
+            this.id = id
         }
 
     private fun setSize() {
