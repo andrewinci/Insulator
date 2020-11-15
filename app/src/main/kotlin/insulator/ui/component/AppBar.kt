@@ -1,17 +1,13 @@
 package insulator.ui.component
 
 import insulator.ui.style.AppBarStyle
-import javafx.beans.property.SimpleStringProperty
-import javafx.beans.value.ObservableObjectValue
 import javafx.beans.value.ObservableStringValue
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.Button
-import javafx.scene.layout.Priority
 import tornadofx.addClass
 import tornadofx.borderpane
 import tornadofx.buttonbar
-import tornadofx.hgrow
 import tornadofx.vbox
 
 data class AppBarBuilder(

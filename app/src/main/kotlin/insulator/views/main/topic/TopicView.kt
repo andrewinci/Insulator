@@ -55,7 +55,7 @@ class TopicView @Inject constructor(
         appBar {
             title = viewModel.nameProperty.value
             subtitle = viewModel.subtitleProperty
-            buttons = listOf( deleteButton())
+            buttons = listOf(deleteButton())
         }
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)

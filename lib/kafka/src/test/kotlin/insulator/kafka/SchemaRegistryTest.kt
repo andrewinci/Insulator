@@ -73,7 +73,7 @@ class SchemaRegistryTest : StringSpec({
         res shouldBeRight { }
     }
 
-    "register an invalid schema return left"{
+    "register an invalid schema return left" {
         // arrange
         val mockSchema = mockk<SchemaRegistryClient>()
         val sut = SchemaRegistry(mockSchema)
@@ -83,15 +83,16 @@ class SchemaRegistryTest : StringSpec({
         res shouldBeLeft {}
     }
 
-    "register a valid schema return true if accepted by the schema registry"{
+    "register a valid schema return true if accepted by the schema registry" {
         // arrange
         val mockSchema = mockk<SchemaRegistryClient> {
             every { register(any(), any<ParsedSchema>()) } returns 1
         }
         val sut = SchemaRegistry(mockSchema)
-        val testSchema = """
+        val testSchema =
+            """
             { "type": "record", "namespace": "com.example", "name": "FullName", "fields": [{ "name": "first", "type": "string" }] } 
-        """.trimIndent()
+            """.trimIndent()
         // act
         val res = sut.register("test", testSchema)
         // assert

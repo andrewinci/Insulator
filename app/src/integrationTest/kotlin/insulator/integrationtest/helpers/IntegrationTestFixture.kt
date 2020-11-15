@@ -78,7 +78,8 @@ class IntegrationTestFixture : Closeable {
     suspend fun createTopic(s: String) = adminApi.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1))
     suspend fun createTestSchema(schemaName: String) = schemaRegistry.register(schemaName, testSchema)
 
-    val testSchema = """
+    val testSchema =
+        """
         {
           "type": "record", 
           "name": "value_test_schema", 
@@ -95,5 +96,5 @@ class IntegrationTestFixture : Closeable {
               "default": null
             }]
         }
-    """.trimIndent()
+        """.trimIndent()
 }

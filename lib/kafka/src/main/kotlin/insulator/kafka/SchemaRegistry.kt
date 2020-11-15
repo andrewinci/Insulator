@@ -7,7 +7,6 @@ import insulator.helper.runCatchingE
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Schema
 import insulator.kafka.model.Subject
-import io.confluent.kafka.schemaregistry.ParsedSchema
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
