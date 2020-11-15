@@ -76,7 +76,7 @@ class TopicView @Inject constructor(
     private fun EventTarget.produceButton() {
         button("Produce") {
             id = "button-produce"
-            action { viewModel.showProducerView() }
+            action { viewModel.showProducerView(currentWindow) }
             addClass(ButtonStyle.blueButton)
         }
     }
@@ -151,7 +151,7 @@ class TopicView @Inject constructor(
                 item("Copy all") { action { viewModel.copyAllRecordsToClipboard() } }
             }
             onDoubleClick {
-                viewModel.showRecordInfoView()
+                viewModel.showRecordInfoView(currentWindow)
             }
             bindSelected(viewModel.selectedItem)
             selectionModel.selectionMode = SelectionMode.SINGLE

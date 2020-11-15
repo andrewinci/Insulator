@@ -7,6 +7,7 @@ import insulator.helper.runOnFXThread
 import insulator.jsonhelper.JsonFormatter
 import insulator.kafka.AdminApi
 import insulator.kafka.model.Topic
+import insulator.ui.WindowsManager
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.main.topic.RecordView
 import javafx.beans.binding.Bindings
@@ -32,7 +33,8 @@ class TopicViewModel @Inject constructor(
     val adminApi: AdminApi,
     private val topicComponent: TopicComponent,
     val consumerViewModel: ConsumerViewModel,
-    private val formatter: JsonFormatter
+    private val formatter: JsonFormatter,
+    private val windowsManager: WindowsManager
 ) : InsulatorViewModel() {
 
     private val isInternalProperty = SimpleBooleanProperty()
@@ -84,16 +86,14 @@ class TopicViewModel @Inject constructor(
         isCompactedProperty.set(isCompacted)
     }
 
-    fun showProducerView() {
-        val producerView = topicComponent.getProducerView()
-        Window.getWindows().map { it as Stage }.firstOrNull { it.title == producerView.title }?.toFront()
-            ?: producerView.also { it.whenUndocked { dispatch { refresh() } } }
-                .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+    fun showProducerView(owner: Window?) {
+        windowsManager.openWindow("producer-${topic.name}", owner) {
+            topicComponent.getProducerView().also { it.whenUndocked { dispatch { refresh() } } }
+        }
     }
 
-    fun showRecordInfoView() {
+    fun showRecordInfoView(owner: Window?) {
         if (selectedItem.value != null)
-            RecordView(selectedItem.value, formatter)
-                .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+            windowsManager.openWindow("record-${selectedItem.value.hashCode()}", owner) { RecordView(selectedItem.value, formatter) }
     }
 }

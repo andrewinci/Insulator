@@ -19,6 +19,7 @@ import tornadofx.App
 import tornadofx.FX
 import tornadofx.NoPrimaryViewSpecified
 import tornadofx.launch
+import tornadofx.whenUndocked
 
 class Insulator : App(
     NoPrimaryViewSpecified::class,

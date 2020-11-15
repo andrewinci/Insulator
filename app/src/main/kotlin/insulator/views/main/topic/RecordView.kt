@@ -60,7 +60,7 @@ class RecordView(
         }
 
         prefWidth = 800.0
-        prefHeight = 800.0
+        prefHeight = 600.0
     }
 
     private fun EventTarget.field(title: String, value: String) = with(this) {
