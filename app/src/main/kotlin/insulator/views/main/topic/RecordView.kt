@@ -49,7 +49,7 @@ class RecordView(
         }
 
         fieldName("Headers")
-        textarea(viewModel.headersProperty.value.map { (key, value) -> "${key}=${value}" }.joinToString("\n")) {
+        textarea(viewModel.headersProperty.value.map { (key, value) -> "$key=$value" }.joinToString("\n")) {
             isEditable = false
         }
 

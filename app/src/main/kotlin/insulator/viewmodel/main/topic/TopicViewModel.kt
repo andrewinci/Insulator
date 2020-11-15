@@ -18,9 +18,6 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.scene.input.Clipboard
-import javafx.stage.Modality
-import javafx.stage.Stage
-import javafx.stage.StageStyle
 import javafx.stage.Window
 import tornadofx.putString
 import tornadofx.whenUndocked

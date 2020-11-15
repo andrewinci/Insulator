@@ -49,5 +49,5 @@ interface ClusterComponent {
     fun avroToJsonConverter(): AvroToJsonConverter
 
     // Windows manager
-    fun windowsManager() : WindowsManager
+    fun windowsManager(): WindowsManager
 }
