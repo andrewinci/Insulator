@@ -1,5 +1,6 @@
 package insulator.viewmodel.main.topic
 
+import insulator.di.ClusterScope
 import insulator.di.factories.TopicComponentFactory
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
@@ -19,6 +20,7 @@ import tornadofx.SortedFilteredList
 import tornadofx.whenUndockedOnce
 import javax.inject.Inject
 
+@ClusterScope
 class ListTopicViewModel @Inject constructor(
     val cluster: Cluster,
     val adminApi: AdminApi,

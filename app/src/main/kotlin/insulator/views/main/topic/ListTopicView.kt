@@ -1,5 +1,6 @@
 package insulator.views.main.topic
 
+import insulator.di.ClusterScope
 import insulator.helper.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
@@ -23,6 +24,7 @@ import tornadofx.vbox
 import tornadofx.vgrow
 import javax.inject.Inject
 
+@ClusterScope
 class ListTopicView @Inject constructor(override val viewModel: ListTopicViewModel) : InsulatorView("Topics") {
 
     override val root = vbox(spacing = 5.0) {
