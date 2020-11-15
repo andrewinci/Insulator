@@ -49,7 +49,7 @@ class IntegrationTestFixture : Closeable {
             } else SchemaRegistryConfiguration()
         )
         startApp(currentKafkaCluster)
-        schemaRegistry = schemaRegistry(currentKafkaCluster)
+        if (createSchemaRegistry) schemaRegistry = schemaRegistry(currentKafkaCluster)
         adminApi = adminApi(currentKafkaCluster)
         stringProducer = stringProducer(currentKafkaCluster)
     }

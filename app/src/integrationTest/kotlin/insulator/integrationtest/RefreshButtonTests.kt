@@ -26,6 +26,7 @@ class RefreshButtonTests : FreeSpec({
             selectCluster(fixture.currentKafkaCluster)
 
             val mainView = waitWindowWithTitle("Insulator")
+            suspend fun getListViewItems() = mainView.lookupFirst<ListView<String>>(listView).items
 
             "Refresh topic list" {
                 val topicName = "test-new-topic"
@@ -33,12 +34,12 @@ class RefreshButtonTests : FreeSpec({
                 fixture.createTopic(topicName)
                 delay(1_000)
                 // the topic shouldn't be visible
-                mainView.lookupFirst<ListView<String>>(listView).items.count { it == topicName } shouldBe 0
+                getListViewItems().count { it == topicName } shouldBe 0
                 // click the refresh button wil load the new topic
                 mainView.lookupFirst<Button>(CssRule.id("button-refresh")).click()
                 screenShoot("refresh-topic-list")
                 // the list of topic is now updated
-                mainView.lookupFirst<ListView<String>>(listView).items.count { it == topicName } shouldBe 1
+                getListViewItems().count { it == topicName } shouldBe 1
                 mainView.lookupFirst<Label>(CssRule.id("topic-$topicName")).text shouldBe topicName
             }
 
@@ -50,12 +51,12 @@ class RefreshButtonTests : FreeSpec({
                 fixture.createTestSchema(schemaName)
                 delay(1_000)
                 // the topic shouldn't be visible
-                mainView.lookupFirst<ListView<String>>(listView).items.count { it == schemaName } shouldBe 0
+                getListViewItems().count { it == schemaName } shouldBe 0
                 // click the refresh button wil load the new topic
                 mainView.lookupFirst<Button>(CssRule.id("button-refresh")).click()
                 screenShoot("refresh-schema-registry-list")
                 // the list of topic is now updated
-                mainView.lookupFirst<ListView<String>>(listView).items.count { it == schemaName } shouldBe 1
+                getListViewItems().count { it == schemaName } shouldBe 1
                 mainView.lookupFirst<Label>(CssRule.id("schema-$schemaName")).text shouldBe schemaName
             }
         }
