@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class SchemaViewModel @Inject constructor(
     val cluster: Cluster,
-    val subject: Subject,
+    private val subject: Subject,
     private val formatter: JsonFormatter,
     private val schemaRegistry: SchemaRegistry?,
 ) : InsulatorViewModel() {
