@@ -4,9 +4,11 @@ import insulator.di.TopicScope
 import insulator.di.components.TopicComponent
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
+import insulator.jsonhelper.JsonFormatter
 import insulator.kafka.AdminApi
 import insulator.kafka.model.Topic
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.main.topic.RecordView
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
@@ -29,7 +31,8 @@ class TopicViewModel @Inject constructor(
     val topic: Topic,
     val adminApi: AdminApi,
     private val topicComponent: TopicComponent,
-    val consumerViewModel: ConsumerViewModel
+    val consumerViewModel: ConsumerViewModel,
+    private val formatter: JsonFormatter
 ) : InsulatorViewModel() {
 
     private val isInternalProperty = SimpleBooleanProperty()
@@ -85,6 +88,12 @@ class TopicViewModel @Inject constructor(
         val producerView = topicComponent.getProducerView()
         Window.getWindows().map { it as Stage }.firstOrNull { it.title == producerView.title }?.toFront()
             ?: producerView.also { it.whenUndocked { dispatch { refresh() } } }
+                .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
+    }
+
+    fun showRecordInfoView() {
+        if (selectedItem.value != null)
+            RecordView(selectedItem.value, formatter)
                 .openWindow(modality = Modality.WINDOW_MODAL, stageStyle = StageStyle.UTILITY)
     }
 }

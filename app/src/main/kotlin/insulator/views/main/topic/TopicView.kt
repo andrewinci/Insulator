@@ -35,6 +35,7 @@ import tornadofx.hbox
 import tornadofx.hgrow
 import tornadofx.item
 import tornadofx.minus
+import tornadofx.onDoubleClick
 import tornadofx.stringBinding
 import tornadofx.tableview
 import tornadofx.text
@@ -119,7 +120,7 @@ class TopicView @Inject constructor(
         tableview<RecordViewModel> {
             val partitionColumn = column("P", RecordViewModel::partitionProperty) { prefWidthProperty().set(30.0); isReorderable = false }
             val offsetColumn = column("O", RecordViewModel::offsetProperty) { prefWidthProperty().set(30.0); isReorderable = false }
-            val timeColumn = column("Time", RecordViewModel::timestampProperty) { prefWidthProperty().set(150.0); isReorderable = false }
+            val timeColumn = column("Time", RecordViewModel::formattedTimeStampProperty) { prefWidthProperty().set(150.0); isReorderable = false }
             val keyColumn = column("Key", RecordViewModel::keyProperty) { prefWidthProperty().set(300.0); isReorderable = false }
             val valueColumn = column("Value", RecordViewModel::valueProperty) {
                 isReorderable = false
@@ -149,7 +150,9 @@ class TopicView @Inject constructor(
                 item("Copy") { action { viewModel.copySelectedRecordToClipboard() } }
                 item("Copy all") { action { viewModel.copyAllRecordsToClipboard() } }
             }
-
+            onDoubleClick {
+                viewModel.showRecordInfoView()
+            }
             bindSelected(viewModel.selectedItem)
             selectionModel.selectionMode = SelectionMode.SINGLE
 
@@ -157,9 +160,7 @@ class TopicView @Inject constructor(
             hgrow = Priority.ALWAYS
         }
 
-    override fun onError(throwable: Throwable) {
-        close()
-    }
+    override fun onError(throwable: Throwable) = close()
 
     override fun onTabClosed() {
         viewModel.dispatch { viewModel.consumerViewModel.stop() }
