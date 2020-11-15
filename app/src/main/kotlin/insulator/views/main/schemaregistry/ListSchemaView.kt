@@ -4,16 +4,17 @@ import insulator.di.ClusterScope
 import insulator.helper.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
-import insulator.ui.component.h1
 import insulator.ui.component.searchBox
-import insulator.ui.component.subTitle
+import insulator.ui.style.ButtonStyle
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
+import tornadofx.action
+import tornadofx.addClass
 import tornadofx.bindSelected
-import tornadofx.hbox
+import tornadofx.button
 import tornadofx.label
 import tornadofx.listview
 import tornadofx.onDoubleClick
@@ -28,10 +29,9 @@ class ListSchemaView @Inject constructor(
 
     override val root = vbox(spacing = 5.0) {
         appBar {
-            hbox {
-                h1("Schema registry")
-            }
-            subTitle(viewModel.subtitleProperty)
+            title = "Schema registry"
+            subtitle = viewModel.subtitleProperty
+            buttons = listOf(refreshButton())
         }
         searchBox(viewModel.searchItemProperty, currentView = this@ListSchemaView)
         schemasListView()
@@ -39,7 +39,7 @@ class ListSchemaView @Inject constructor(
 
     private fun EventTarget.schemasListView() =
         listview<String> {
-            cellFormat { graphic = label(it) }
+            cellFormat { graphic = label(it) { id = "schema-$it" } }
             onDoubleClick { viewModel.dispatch { showSchema() } }
             itemsProperty().set(viewModel.filteredSchemasProperty)
             bindSelected(viewModel.selectedSchemaProperty)
@@ -55,4 +55,11 @@ class ListSchemaView @Inject constructor(
             else -> viewModel.refresh()
         }
     }
+
+    private fun EventTarget.refreshButton() =
+        button("Refresh") {
+            id = "button-refresh"
+            action { dispatch { viewModel.refresh() } }
+            addClass(ButtonStyle.blueButton)
+        }
 }

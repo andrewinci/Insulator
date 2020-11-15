@@ -10,9 +10,7 @@ import insulator.ui.common.InsulatorTabView
 import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.fieldName
-import insulator.ui.component.h1
 import insulator.ui.component.searchBox
-import insulator.ui.component.subTitle
 import insulator.ui.style.ButtonStyle
 import insulator.viewmodel.main.topic.RecordViewModel
 import insulator.viewmodel.main.topic.TopicViewModel
@@ -55,11 +53,9 @@ class TopicView @Inject constructor(
 
     override val root = vbox {
         appBar {
-            hbox(alignment = Pos.CENTER_LEFT, spacing = 5.0) {
-                h1(viewModel.nameProperty.value)
-                deleteButton()
-            }
-            subTitle(viewModel.subtitleProperty)
+            title = viewModel.nameProperty.value
+            subtitle = viewModel.subtitleProperty
+            buttons = listOf(deleteButton())
         }
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
@@ -114,7 +110,7 @@ class TopicView @Inject constructor(
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 
     private fun EventTarget.deleteButton() =
-        confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
+        confirmationButton("Delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.dispatch { delete() }
             closeTab()
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
