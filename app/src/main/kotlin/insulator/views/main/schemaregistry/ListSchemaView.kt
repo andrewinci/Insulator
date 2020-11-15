@@ -57,7 +57,7 @@ class ListSchemaView @Inject constructor(
     }
 
     private fun EventTarget.refreshButton() =
-        button("refresh") {
+        button("Refresh") {
             id = "button-refresh"
             action { dispatch { viewModel.refresh() } }
             addClass(ButtonStyle.blueButton)

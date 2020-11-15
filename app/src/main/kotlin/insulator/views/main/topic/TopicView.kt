@@ -110,7 +110,7 @@ class TopicView @Inject constructor(
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 
     private fun EventTarget.deleteButton() =
-        confirmationButton("delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
+        confirmationButton("Delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.dispatch { delete() }
             closeTab()
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())

@@ -56,7 +56,7 @@ class SchemaView @Inject constructor(
         }
 
     private fun EventTarget.deleteButton() =
-        confirmationButton("delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
+        confirmationButton("Delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.delete()
             closeTab()
         }

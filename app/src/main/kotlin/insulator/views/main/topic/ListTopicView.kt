@@ -59,7 +59,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
         }
 
     private fun EventTarget.refreshButton() =
-        button("refresh") {
+        button("Refresh") {
             action { viewModel.dispatch { viewModel.refresh() } }
             addClass(ButtonStyle.blueButton)
             alignment = Pos.CENTER
