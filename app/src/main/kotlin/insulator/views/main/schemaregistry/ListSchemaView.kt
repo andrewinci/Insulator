@@ -14,6 +14,7 @@ import javafx.scene.layout.Priority
 import tornadofx.action
 import tornadofx.addClass
 import tornadofx.bindSelected
+import tornadofx.borderpane
 import tornadofx.button
 import tornadofx.label
 import tornadofx.listview
@@ -33,7 +34,10 @@ class ListSchemaView @Inject constructor(
             subtitle = viewModel.subtitleProperty
             buttons = listOf(refreshButton())
         }
-        searchBox(viewModel.searchItemProperty, currentView = this@ListSchemaView)
+        borderpane {
+            left = createSchemaButton()
+            right = searchBox(viewModel.searchItemProperty, currentView = this@ListSchemaView)
+        }
         schemasListView()
     }
 
@@ -61,5 +65,11 @@ class ListSchemaView @Inject constructor(
             id = "button-refresh"
             action { dispatch { viewModel.refresh() } }
             addClass(ButtonStyle.blueButton)
+        }
+
+    private fun EventTarget.createSchemaButton() =
+        button("Create schema") {
+            action { viewModel.createNewSchema(currentWindow) }
+            id = "button-create-schema"
         }
 }
