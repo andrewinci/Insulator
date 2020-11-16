@@ -24,7 +24,8 @@ class CreateSchemaViewModel @Inject constructor(private val client: SchemaRegist
     val isSchemaValidProperty: ObservableBooleanValue = Bindings.createBooleanBinding(
         { validationErrorProperty.value == VALID && !subjectProperty.value.isNullOrEmpty() },
         schemaProperty,
-        validationErrorProperty
+        validationErrorProperty,
+        subjectProperty
     )
 
     private fun parseException(ex: Throwable) =

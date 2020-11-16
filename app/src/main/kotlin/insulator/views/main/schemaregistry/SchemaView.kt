@@ -1,6 +1,7 @@
 package insulator.views.main.schemaregistry
 
 import insulator.di.SubjectScope
+import insulator.helper.dispatch
 import insulator.jsonhelper.JsonFormatter
 import insulator.kafka.model.Schema
 import insulator.ui.common.InsulatorTabView
@@ -8,10 +9,14 @@ import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.fieldName
 import insulator.ui.component.jsonView
+import insulator.ui.style.ButtonStyle
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import javafx.event.EventTarget
 import javafx.geometry.Pos
+import tornadofx.action
+import tornadofx.addClass
 import tornadofx.bind
+import tornadofx.button
 import tornadofx.combobox
 import tornadofx.hbox
 import tornadofx.text
@@ -27,7 +32,7 @@ class SchemaView @Inject constructor(
     override val root = vbox {
         appBar {
             title = viewModel.nameProperty.value
-            buttons = listOf(deleteButton())
+            buttons = listOf(deleteButton(), refreshButton())
         }
         hbox(alignment = Pos.CENTER_LEFT) {
             fieldName("Schema")
@@ -35,6 +40,13 @@ class SchemaView @Inject constructor(
         }
         jsonView(viewModel.schemaProperty, formatter)
     }
+
+    private fun EventTarget.refreshButton() =
+        button("Refresh") {
+            id = "button-refresh"
+            action { dispatch { viewModel.refresh() } }
+            addClass(ButtonStyle.blueButton)
+        }
 
     private fun EventTarget.schemaComboBox() =
         combobox<Schema> {

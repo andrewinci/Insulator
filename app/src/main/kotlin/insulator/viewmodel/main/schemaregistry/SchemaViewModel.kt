@@ -1,5 +1,6 @@
 package insulator.viewmodel.main.schemaregistry
 
+import insulator.helper.dispatch
 import insulator.kafka.SchemaRegistry
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Schema
@@ -25,9 +26,19 @@ class SchemaViewModel @Inject constructor(
     val selectedVersionProperty: Property<Schema> = SimpleObjectProperty(null)
     val schemaProperty: ObservableStringValue = Bindings.createStringBinding({ selectedVersionProperty.value.schema }, selectedVersionProperty)
 
-    init { refresh() }
+    init {
+        dispatch { refresh() }
+    }
 
-    private fun refresh() { selectedVersionProperty.value = subject.schemas.last() }
+    suspend fun refresh() {
+        schemaRegistry!!.getSubject(subject.name)
+            .map { subject ->
+                nameProperty.set(subject.name)
+                versionsProperty.clear()
+                versionsProperty.setAll(subject.schemas)
+                selectedVersionProperty.value = subject.schemas.last()
+            }
+    }
 
     fun delete() = schemaRegistry?.deleteSubject(nameProperty.value)
 }
