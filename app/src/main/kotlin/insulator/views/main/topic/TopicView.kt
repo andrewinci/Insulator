@@ -150,9 +150,7 @@ class TopicView @Inject constructor(
                 item("Copy") { action { viewModel.copySelectedRecordToClipboard() } }
                 item("Copy all") { action { viewModel.copyAllRecordsToClipboard() } }
             }
-            onDoubleClick {
-                viewModel.showRecordInfoView(currentWindow)
-            }
+            onDoubleClick { viewModel.showRecordInfoView(currentWindow) }
             bindSelected(viewModel.selectedItem)
             selectionModel.selectionMode = SelectionMode.SINGLE
 
