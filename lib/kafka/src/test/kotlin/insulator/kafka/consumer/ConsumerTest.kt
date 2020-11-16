@@ -30,7 +30,7 @@ class ConsumerTest : StringSpec({
                 // arrange
                 val messages = mutableListOf<String>()
                 // act
-                it.sut.start("testTopic", consumerFrom, deserializationFormat) { lst -> messages.addAll(lst.map { record -> record.b }) }
+                it.sut.start("testTopic", consumerFrom, deserializationFormat) { lst -> messages.addAll(lst.map { r -> r.value }) }
                 // assert
                 delay(300L)
                 eventually(3.seconds) {
@@ -53,7 +53,7 @@ class ConsumerTest : StringSpec({
             val messages = mutableListOf<String>()
             val sut = Consumer(it.consumerFactory) { Throwable("").left() }
             // act
-            sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { record -> record.b }) }
+            sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { r -> r.value }) }
             // assert
             eventually(10.seconds) {
                 messages.size shouldBe 1
@@ -66,7 +66,7 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { record -> record.b }) }
+            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { r -> r.value }) }
             // assert
             it.sut.isRunning() shouldBe true
             it.sut.stop()

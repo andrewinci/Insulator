@@ -35,6 +35,7 @@ import tornadofx.hbox
 import tornadofx.hgrow
 import tornadofx.item
 import tornadofx.minus
+import tornadofx.onDoubleClick
 import tornadofx.stringBinding
 import tornadofx.tableview
 import tornadofx.text
@@ -75,7 +76,7 @@ class TopicView @Inject constructor(
     private fun EventTarget.produceButton() {
         button("Produce") {
             id = "button-produce"
-            action { viewModel.showProducerView() }
+            action { viewModel.showProducerView(currentWindow) }
             addClass(ButtonStyle.blueButton)
         }
     }
@@ -117,17 +118,21 @@ class TopicView @Inject constructor(
 
     private fun EventTarget.recordsTable() =
         tableview<RecordViewModel> {
-            val timeColumn = column("Time", RecordViewModel::timestampProperty) { prefWidthProperty().set(150.0) }
-            val keyColumn = column("Key", RecordViewModel::keyProperty) { prefWidthProperty().set(300.0) }
+            val partitionColumn = column("P", RecordViewModel::partitionProperty) { prefWidthProperty().set(30.0); isReorderable = false }
+            val offsetColumn = column("O", RecordViewModel::offsetProperty) { prefWidthProperty().set(30.0); isReorderable = false }
+            val timeColumn = column("Time", RecordViewModel::formattedTimeStampProperty) { prefWidthProperty().set(150.0); isReorderable = false }
+            val keyColumn = column("Key", RecordViewModel::keyProperty) { prefWidthProperty().set(300.0); isReorderable = false }
             val valueColumn = column("Value", RecordViewModel::valueProperty) {
+                isReorderable = false
                 prefWidthProperty().bind(
                     this.tableView.widthProperty()
-                        .minus(keyColumn.widthProperty())
+                        .minus(partitionColumn.widthProperty())
+                        .minus(offsetColumn.widthProperty())
                         .minus(timeColumn.widthProperty())
+                        .minus(keyColumn.widthProperty())
                         .minus(20.0)
                 )
             }
-
             valueColumn.setCellFactory {
                 TableCell<RecordViewModel, String>().apply {
                     graphic = text {
@@ -145,7 +150,7 @@ class TopicView @Inject constructor(
                 item("Copy") { action { viewModel.copySelectedRecordToClipboard() } }
                 item("Copy all") { action { viewModel.copyAllRecordsToClipboard() } }
             }
-
+            onDoubleClick { viewModel.showRecordInfoView(currentWindow) }
             bindSelected(viewModel.selectedItem)
             selectionModel.selectionMode = SelectionMode.SINGLE
 
@@ -153,9 +158,7 @@ class TopicView @Inject constructor(
             hgrow = Priority.ALWAYS
         }
 
-    override fun onError(throwable: Throwable) {
-        close()
-    }
+    override fun onError(throwable: Throwable) = close()
 
     override fun onTabClosed() {
         viewModel.dispatch { viewModel.consumerViewModel.stop() }

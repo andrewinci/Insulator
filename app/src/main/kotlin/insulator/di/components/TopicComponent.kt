@@ -4,6 +4,7 @@ import dagger.BindsInstance
 import dagger.Component
 import insulator.di.TopicScope
 import insulator.di.modules.TopicModule
+import insulator.jsonhelper.JsonFormatter
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
 import insulator.views.main.topic.CreateTopicView
@@ -24,4 +25,5 @@ interface TopicComponent {
     fun getCreateTopicView(): CreateTopicView
     fun getTopicView(): TopicView
     fun getProducerView(): ProducerView
+    fun jsonFormatter(): JsonFormatter
 }

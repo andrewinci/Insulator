@@ -19,7 +19,7 @@ class SchemaViewModelTest : StringSpec({
         SchemaViewModelTestFixture().use {
             // arrange
             val subject = Subject(name = it.targetSubject, schemas = listOf(Schema("{}", 1, 4)))
-            val sut = SchemaViewModel(it.cluster, subject, it.mockJsonFormatter, it.mockSchemaRegistry)
+            val sut = SchemaViewModel(it.cluster, subject, it.mockSchemaRegistry)
             // act
             sut.delete()
             // assert

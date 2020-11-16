@@ -11,6 +11,7 @@ import insulator.kafka.SchemaRegistry
 import insulator.kafka.model.Cluster
 import insulator.kafka.producer.AvroProducer
 import insulator.kafka.producer.StringProducer
+import insulator.ui.WindowsManager
 import insulator.views.configurations.ClusterView
 import insulator.views.main.MainView
 import insulator.views.main.schemaregistry.ListSchemaView
@@ -46,4 +47,7 @@ interface ClusterComponent {
     // Helpers
     fun jsonFormatter(): JsonFormatter
     fun avroToJsonConverter(): AvroToJsonConverter
+
+    // Windows manager
+    fun windowsManager(): WindowsManager
 }

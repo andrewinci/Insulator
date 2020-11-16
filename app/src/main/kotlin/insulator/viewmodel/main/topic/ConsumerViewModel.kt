@@ -47,9 +47,10 @@ class ConsumerViewModel @Inject constructor(
         if (!isConsumingProperty.value) {
             isConsumingProperty.value = true
             clearRecords()
-            consumer.start(topic.name, ConsumeFrom.valueOf(consumeFromProperty.value), DeserializationFormat.valueOf(deserializeValueProperty.value)) {
-                val recordViewModels = it.map { (k, v, t) -> RecordViewModel(k, v, t) }
-                records.runOnFXThread { addAll(recordViewModels) }
+            val consumerFrom = ConsumeFrom.valueOf(consumeFromProperty.value)
+            val deserializationFormat = DeserializationFormat.valueOf(deserializeValueProperty.value)
+            consumer.start(topic.name, consumerFrom, deserializationFormat) {
+                records.runOnFXThread { addAll(it.map { record -> RecordViewModel(record) }) }
             }
         } else stop()
     }

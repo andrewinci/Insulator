@@ -1,8 +1,8 @@
 package insulator.kafka.consumer
 
 import arrow.core.Either
-import arrow.core.Tuple3
 import insulator.kafka.model.Cluster
+import insulator.kafka.model.Record
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.apache.avro.generic.GenericRecord
@@ -18,7 +18,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 typealias GenericAvroToJsonConverter = (record: GenericRecord) -> Either<Throwable, String>
-typealias ConsumerCallback = (List<Tuple3<String?, String, Long>>) -> Unit
+typealias ConsumerCallback = (List<Record>) -> Unit
 
 fun consumer(cluster: Cluster, avroToJson: GenericAvroToJsonConverter) =
     Consumer(ConsumerFactory(cluster), avroToJson)
@@ -95,12 +95,21 @@ class Consumer(
                     }
         }
 
-    private fun parse(record: ConsumerRecord<Any, Any>): Tuple3<String?, String, Long> {
+    private fun parse(record: ConsumerRecord<Any, Any>): Record {
         val parsedValue = if (record.value() is GenericRecord) avroToJson(record.value() as GenericRecord)
             // fallback to Avro.toString if unable to parse with the custom parser
             .fold({ record.value().toString() }, { it })
         else record.value().toString()
-        return Tuple3(record.key()?.toString(), parsedValue, record.timestamp())
+        return Record(
+            key = record.key()?.toString(),
+            value = parsedValue,
+            timestamp = record.timestamp(),
+            partition = record.partition(),
+            offset = record.offset(),
+            headers = record.headers().toArray().map {
+                it.key() to record.headers().headers(it.key()).map { h -> h.value() }
+            }.toMap()
+        )
     }
 }
 

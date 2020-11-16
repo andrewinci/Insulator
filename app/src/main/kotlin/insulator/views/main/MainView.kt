@@ -94,8 +94,8 @@ class MainView @Inject constructor(
                 button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
             }
             center = vbox {
-                menuItem("Topics", ICON_TOPICS, "sidebar-item-topics") { viewModel.setContentList(ListTopicView::class) }
-                menuItem("Schema Registry", ICON_REGISTRY, "sidebar-item-schema-registry") { viewModel.setContentList(ListSchemaView::class) }
+                menuItem("Topics", ICON_TOPICS, "sidebar-item-topics") { viewModel.setContentList(ListTopicView::class, currentWindow) }
+                menuItem("Schema Registry", ICON_REGISTRY, "sidebar-item-schema-registry") { viewModel.setContentList(ListSchemaView::class, currentWindow) }
             }
             bottom = hbox(alignment = Pos.CENTER) {
                 themeButton { themeHelper.dispatch { changeTheme() } }
