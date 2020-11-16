@@ -28,7 +28,7 @@ class ListTopicViewModelTest : StringSpec({
             val res = sut.filteredTopicsProperty
             // assert
             sut.refresh()
-            eventually(1.seconds) {
+            eventually(2.seconds) {
                 res.size shouldBe 0
                 sut.error.value!!.message shouldBe errorMessage
             }
@@ -46,7 +46,7 @@ class ListTopicViewModelTest : StringSpec({
             val res = sut.filteredTopicsProperty
             // assert
             sut.refresh()
-            eventually(1.seconds) {
+            eventually(2.seconds) {
                 res.size shouldBe 2
                 sut.error.value shouldBe null
             }
