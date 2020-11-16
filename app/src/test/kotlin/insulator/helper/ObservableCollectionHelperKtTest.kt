@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
 
 class ObservableCollectionHelperKtTest : FreeSpec({
-    
+
     "createListBindings" - {
         // arrange
         val prop = SimpleStringProperty("")

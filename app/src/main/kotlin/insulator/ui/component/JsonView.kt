@@ -21,23 +21,24 @@ import tornadofx.textflow
 import tornadofx.vgrow
 
 fun EventTarget.jsonView(value: ObservableStringValue, formatter: JsonFormatter) {
-    val tokens = createListBindings(
-        {
-            formatter.formatJsonString(value.value)
-                .map { records -> records.map { mapJsonTokenToFxText(it) } }
-                .fold({ listOf(text(value)) }, { it })
-        },
-        value
-    )
     this.scrollpane {
         textflow {
-            children.bind(tokens) { it }
+            children.bind(buildTokensList(value, formatter)) { it }
             contextMenu = contextmenu { item("Copy") { action { Clipboard.getSystemClipboard().putString(value.value) } } }
         }
         vgrow = Priority.ALWAYS
         minHeight = 50.0
     }
 }
+
+private fun EventTarget.buildTokensList(value: ObservableStringValue, formatter: JsonFormatter) = createListBindings(
+    {
+        formatter.formatJsonString(value.value)
+            .map { records -> records.map { mapJsonTokenToFxText(it) } }
+            .fold({ listOf(text(value)) }, { it })
+    },
+    value
+)
 
 private fun EventTarget.mapJsonTokenToFxText(it: Token): Text =
     text(it.text) {
