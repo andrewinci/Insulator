@@ -8,6 +8,7 @@ import insulator.ui.component.jsonView
 import insulator.viewmodel.main.topic.RecordViewModel
 import javafx.event.EventTarget
 import tornadofx.* // ktlint-disable no-wildcard-imports
+import java.util.Base64
 
 class RecordView(
     override val viewModel: RecordViewModel,
@@ -25,7 +26,7 @@ class RecordView(
         jsonView(viewModel.valueProperty, formatter)
 
         fieldName("Headers")
-        textarea(viewModel.headersProperty.value.map { (key, value) -> "$key=$value" }.joinToString("\n")) {
+        textarea(viewModel.formattedHeadersProperty) {
             isEditable = false
         }
 
