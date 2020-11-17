@@ -20,6 +20,7 @@ abstract class InsulatorView(title: String? = null) : View(title) {
             if (it != null) {
                 alert(Alert.AlertType.WARNING, owner = currentWindow, header = it.message ?: it.toString())
                 onError(it)
+                viewModel.error.value = null
             }
         }
         if (viewModel.error.value != null) handleError(viewModel.error.value)
