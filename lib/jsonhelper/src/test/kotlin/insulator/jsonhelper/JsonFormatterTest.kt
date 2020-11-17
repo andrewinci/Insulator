@@ -49,4 +49,40 @@ class JsonFormatterTest : StringSpec({
         // assert
         res.isRight() shouldBe true
     }
+
+    "format object containing an empty array" {
+        // arrange
+        val sut = JsonFormatter()
+        // act
+        val res = sut.formatJsonString(
+            """{ "array": [] }""".trimMargin(),
+            false
+        )
+        // assert
+        res.isRight() shouldBe true
+    }
+
+    "format an empty object" {
+        // arrange
+        val sut = JsonFormatter()
+        // act
+        val res = sut.formatJsonString(
+            """{ }""".trimMargin(),
+            false
+        )
+        // assert
+        res.isRight() shouldBe true
+    }
+
+    "format an empty object 2" {
+        // arrange
+        val sut = JsonFormatter()
+        // act
+        val res = sut.formatJsonString(
+            """{ "test": {} }""".trimMargin(),
+            false
+        )
+        // assert
+        res.isRight() shouldBe true
+    }
 })
