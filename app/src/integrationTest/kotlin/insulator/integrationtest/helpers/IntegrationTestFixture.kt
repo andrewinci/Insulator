@@ -79,7 +79,7 @@ class IntegrationTestFixture : Closeable {
     fun createTestSchema(schemaName: String) = schemaRegistry.register(schemaName, testSchema(5))
     fun createTestSchemaUpdate(schemaName: String) = schemaRegistry.register(schemaName, testSchema(4))
 
-    fun testSchema(i: Int) =
+    fun testSchema(i: Int = 5) =
         """
         {
           "type": "record", 
