@@ -29,9 +29,9 @@ class SchemaViewModel @Inject constructor(
         schemaRegistry!!.getSubject(subject.name)
             .map { subject ->
                 nameProperty.set(subject.name)
+                selectedVersionProperty.value = subject.schemas.last()
                 versionsProperty.clear()
                 versionsProperty.setAll(subject.schemas)
-                selectedVersionProperty.value = subject.schemas.last()
             }
     }
 

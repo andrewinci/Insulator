@@ -29,7 +29,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
         appBar {
             title = "Topics"
             subtitle = viewModel.subtitleProperty
-            buttons = listOf(refreshButton(viewModel::refresh))
+            buttons = listOf(refreshButton("topic-list", viewModel::refresh))
         }
         borderpane {
             left = createTopicButton()

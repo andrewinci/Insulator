@@ -31,7 +31,7 @@ class ListSchemaView @Inject constructor(
         appBar {
             title = "Schema registry"
             subtitle = viewModel.subtitleProperty
-            buttons = listOf(refreshButton(viewModel::refresh))
+            buttons = listOf(refreshButton("schema-list", viewModel::refresh))
         }
         borderpane {
             left = createSchemaButton()
