@@ -1,6 +1,5 @@
 package insulator.viewmodel.main.schemaregistry
 
-import insulator.helper.dispatch
 import insulator.kafka.SchemaRegistry
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Schema

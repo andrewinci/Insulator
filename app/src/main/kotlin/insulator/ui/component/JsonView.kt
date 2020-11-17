@@ -23,8 +23,8 @@ import tornadofx.vgrow
 fun EventTarget.jsonView(value: ObservableStringValue, formatter: JsonFormatter) {
     this.scrollpane {
         textflow {
-           val lst =  buildTokensList(value, formatter)
-           lst.onChange {
+            val lst = buildTokensList(value, formatter)
+            lst.onChange {
                 children.clear()
                 children.addAll(lst)
             }

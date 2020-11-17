@@ -33,8 +33,10 @@ class JsonFormatter {
                         .plus(newLine).plus(indent(level - 1)).plus(Token.Symbol("}")).toList()
                 is JsonArray ->
                     listOf(Token.Symbol("["))
-                        .plus(json.map { format(it, level + 1) }.reduceOrNull { a, b -> a.plus(Token.COMMA).plus(b) }
-                            ?: emptyList())
+                        .plus(
+                            json.map { format(it, level + 1) }.reduceOrNull { a, b -> a.plus(Token.COMMA).plus(b) }
+                                ?: emptyList()
+                        )
                         .plus(Token.Symbol("]"))
                 else -> if (json is JsonNull) listOf(Token.Value("null")) else throw Exception("Unable to parse")
             }
