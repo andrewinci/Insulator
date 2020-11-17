@@ -34,7 +34,8 @@ class JsonFormatter {
                 is JsonArray ->
                     listOf(Token.Symbol("["))
                         .plus(
-                            json.map { format(it, level + 1) }.reduceOrNull { a, b -> a.plus(Token.COMMA).plus(b) }
+                            json.map { format(it, level + 1) }
+                                .reduceOrNull { a, b -> a.plus(Token.COMMA).plus(b) }
                                 ?: emptyList()
                         )
                         .plus(Token.Symbol("]"))

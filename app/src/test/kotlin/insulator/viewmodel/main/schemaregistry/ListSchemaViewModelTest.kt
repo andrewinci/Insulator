@@ -19,7 +19,7 @@ class ListSchemaViewModelTest : StringSpec({
     "Happy path" {
         ListSchemaViewModelTestFixture().use {
             // arrange
-            val sut = ListSchemaViewModel(it.cluster, it.schemaRegistry, mockk(), mockk())
+            val sut = ListSchemaViewModel(it.cluster, it.schemaRegistry, mockk(), mockk(), mockk())
             // act
             val schemas = sut.filteredSchemasProperty
             // assert
@@ -33,7 +33,7 @@ class ListSchemaViewModelTest : StringSpec({
         ListSchemaViewModelTestFixture().use {
             // arrange
             every { it.schemaRegistry.getAllSubjects() } returns Throwable(it.errorMessage).left()
-            val sut = ListSchemaViewModel(it.cluster, it.schemaRegistry, mockk(), mockk())
+            val sut = ListSchemaViewModel(it.cluster, it.schemaRegistry, mockk(), mockk(), mockk())
             // act
             val schemas = sut.filteredSchemasProperty
             // assert
@@ -63,7 +63,7 @@ class ListSchemaViewModelTest : StringSpec({
         ListSchemaViewModelTestFixture().use {
             // arrange
             coEvery { it.schemaRegistry.getSubject(any()) } returns Throwable(it.errorMessage).left()
-            val sut = ListSchemaViewModel(it.cluster, it.schemaRegistry, mockk(), mockk())
+            val sut = ListSchemaViewModel(it.cluster, it.schemaRegistry, mockk(), mockk(), mockk())
             sut.selectedSchemaProperty.value = it.targetSubject
             // act
             sut.dispatch { showSchema() }
