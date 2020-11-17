@@ -23,7 +23,7 @@ class ListTopicViewModelTest : StringSpec({
             val adminApi = mockk<AdminApi> {
                 coEvery { listTopics() } returns Throwable(errorMessage).left()
             }
-            val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk())
+            val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk(), mockk())
             // act
             val res = sut.filteredTopicsProperty
             // assert
@@ -41,7 +41,7 @@ class ListTopicViewModelTest : StringSpec({
             val adminApi = mockk<AdminApi> {
                 coEvery { listTopics() } returns listOf("topic1", "topic2").right()
             }
-            val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk())
+            val sut = ListTopicViewModel(it.cluster, adminApi, mockk(), mockk(), mockk())
             // act
             val res = sut.filteredTopicsProperty
             // assert
