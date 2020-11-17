@@ -35,7 +35,7 @@ class CreateSchemaView @Inject constructor(
         textfield(viewModel.subjectProperty)
 
         fieldName("Value")
-        recordValueTextArea()
+        schemaValueTextArea()
 
         fieldName("Validation")
         validationArea()
@@ -61,7 +61,7 @@ class CreateSchemaView @Inject constructor(
             maxHeight = 100.0
         }
 
-    private fun EventTarget.recordValueTextArea() {
+    private fun EventTarget.schemaValueTextArea() {
         recordValueTextArea.apply {
             id = "field-schema-value"
             textProperty().bindBidirectional(viewModel.schemaProperty)
