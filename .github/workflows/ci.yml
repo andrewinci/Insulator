@@ -109,8 +109,8 @@ jobs:
             http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.event.pull_request.head.sha }}
           allow-repeats: false
       - name: Test build update4j config
-          if: ${{ matrix.os.run-integration }}
-          run: |
-            ./gradlew getDependencySources
-            ./gradlew :app:mergeLocalLibs
-            python3 scripts/build.py
+        if: ${{ matrix.os.run-integration }}
+        run: |
+          ./gradlew getDependencySources
+          ./gradlew :app:mergeLocalLibs
+          python3 scripts/build.py
