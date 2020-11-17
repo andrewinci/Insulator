@@ -66,7 +66,7 @@ class RefreshButtonTests : FreeSpec({
             }
 
             "Refresh single schema" {
-                val schemaName = "test-new-topic-schema"
+                val schemaName = "test-new-topic-schema-2"
                 // select schema registry
                 mainView.lookupFirst<Node>(CssRule.id("sidebar-item-schema-registry")).click()
                 // create the schema
