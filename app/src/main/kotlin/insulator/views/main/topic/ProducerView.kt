@@ -35,8 +35,6 @@ class ProducerView @Inject constructor(
     override val viewModel: ProducerViewModel
 ) : InsulatorView() {
 
-    private val recordValueTextArea = TextArea()
-
     override val root = vbox(spacing = 10.0) {
         appBar { title = viewModel.topic.name }
         fieldName("Key")
@@ -87,9 +85,11 @@ class ProducerView @Inject constructor(
                 onDoubleClick { autoComplete() }
             }
             vbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-            minHeight = 15.0
+            minHeight = 30.0
             maxHeight = 100.0
         }
+
+    private val recordValueTextArea = TextArea()
 
     private fun EventTarget.recordValueTextArea() {
         recordValueTextArea.apply {

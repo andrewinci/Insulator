@@ -8,16 +8,15 @@ import insulator.viewmodel.main.schemaregistry.CreateSchemaViewModel
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
 import javafx.scene.control.ScrollPane
-import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import tornadofx.action
-import tornadofx.attachTo
 import tornadofx.borderpane
 import tornadofx.button
 import tornadofx.enableWhen
 import tornadofx.label
 import tornadofx.scrollpane
+import tornadofx.textarea
 import tornadofx.textfield
 import tornadofx.vbox
 import tornadofx.vgrow
@@ -26,8 +25,6 @@ import javax.inject.Inject
 class CreateSchemaView @Inject constructor(
     override val viewModel: CreateSchemaViewModel
 ) : InsulatorView() {
-
-    private val recordValueTextArea = TextArea()
 
     override val root = vbox(spacing = 10.0) {
         appBar { title = "Register new subject" }
@@ -61,12 +58,10 @@ class CreateSchemaView @Inject constructor(
             maxHeight = 100.0
         }
 
-    private fun EventTarget.schemaValueTextArea() {
-        recordValueTextArea.apply {
-            id = "field-schema-value"
-            textProperty().bindBidirectional(viewModel.schemaProperty)
-            vgrow = Priority.ALWAYS
-        }.attachTo(this)
+    private fun EventTarget.schemaValueTextArea() = textarea {
+        id = "field-schema-value"
+        textProperty().bindBidirectional(viewModel.schemaProperty)
+        vgrow = Priority.ALWAYS
     }
 
     private fun EventTarget.registerButton() =
