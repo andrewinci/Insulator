@@ -8,6 +8,7 @@ import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
 import insulator.ui.component.fieldName
 import insulator.ui.component.jsonView
+import insulator.ui.component.refreshButton
 import insulator.viewmodel.main.schemaregistry.SchemaViewModel
 import javafx.event.EventTarget
 import javafx.geometry.Pos
@@ -27,7 +28,7 @@ class SchemaView @Inject constructor(
     override val root = vbox {
         appBar {
             title = viewModel.nameProperty.value
-            buttons = listOf(deleteButton())
+            buttons = listOf(deleteButton(), refreshButton("schema", viewModel::refresh))
         }
         hbox(alignment = Pos.CENTER_LEFT) {
             fieldName("Schema")
@@ -38,6 +39,7 @@ class SchemaView @Inject constructor(
 
     private fun EventTarget.schemaComboBox() =
         combobox<Schema> {
+            id = "combobox-schema-version"
             items.bind(viewModel.versionsProperty) { it }
             valueProperty().bindBidirectional(viewModel.selectedVersionProperty)
             cellFormat { text = "v: ${it.version} id: ${it.id}" }

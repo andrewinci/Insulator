@@ -14,7 +14,9 @@ import io.confluent.kafka.schemaregistry.client.rest.RestService
 
 class SchemaRegistry(private val client: SchemaRegistryClient) {
 
-    fun register(subject: String, schema: String) = runCatchingE { AvroSchema(schema).also { it.validate() } }
+    fun validate(schema: String) = runCatchingE { AvroSchema(schema).also { it.validate() } }
+
+    fun register(subject: String, schema: String) = validate(schema)
         .flatMap { client.runCatchingE { register(subject, it) } }.map { Unit }
 
     fun deleteSubject(subject: String) =

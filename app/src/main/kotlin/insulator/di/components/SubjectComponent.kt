@@ -5,6 +5,7 @@ import dagger.Component
 import insulator.di.SubjectScope
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Subject
+import insulator.views.main.schemaregistry.CreateSchemaView
 import insulator.views.main.schemaregistry.SchemaView
 
 @SubjectScope
@@ -19,4 +20,6 @@ interface SubjectComponent {
     fun cluster(): Cluster
     fun subject(): Subject
     fun getSchemaView(): SchemaView
+
+    fun getCreateSchemaView(): CreateSchemaView
 }

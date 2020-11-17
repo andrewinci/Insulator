@@ -2,9 +2,12 @@ package insulator.viewmodel.main.schemaregistry
 
 import insulator.di.ClusterScope
 import insulator.di.factories.SubjectComponentFactory
+import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.kafka.SchemaRegistry
 import insulator.kafka.model.Cluster
+import insulator.kafka.model.Subject
+import insulator.ui.WindowsManager
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
@@ -12,6 +15,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import javafx.stage.Window
 import tornadofx.SortedFilteredList
 import tornadofx.whenUndockedOnce
 import javax.inject.Inject
@@ -21,7 +25,8 @@ class ListSchemaViewModel @Inject constructor(
     val cluster: Cluster,
     val schemaRegistry: SchemaRegistry?,
     private val subjectComponentFactory: SubjectComponentFactory,
-    private val tabViewModel: TabViewModel
+    private val tabViewModel: TabViewModel,
+    private val windowsManager: WindowsManager
 ) : InsulatorViewModel() {
 
     private val schemasProperty: ObservableList<String> = FXCollections.observableArrayList()
@@ -67,6 +72,12 @@ class ListSchemaViewModel @Inject constructor(
                     .let { schemaViewTab -> tabViewModel.setMainContent(it.name, schemaViewTab) }
             }
             ?.mapLeft { error.set(LoadSchemaError(it.message ?: "Unable to load the schema")) }
+    }
+
+    fun createNewSchema(owner: Window?) = windowsManager.openWindow("new-schema", owner) {
+        subjectComponentFactory.build(Subject.empty())
+            .getCreateSchemaView()
+            .also { it.whenUndockedOnce { dispatch { refresh() } } }
     }
 }
 

@@ -18,8 +18,9 @@ abstract class InsulatorView(title: String? = null) : View(title) {
         root.addClass(Root.insulatorView)
         val handleError: (Throwable?) -> Unit = {
             if (it != null) {
-                alert(Alert.AlertType.WARNING, it.message ?: it.toString())
+                alert(Alert.AlertType.WARNING, owner = currentWindow, header = it.message ?: it.toString())
                 onError(it)
+                viewModel.error.value = null
             }
         }
         if (viewModel.error.value != null) handleError(viewModel.error.value)

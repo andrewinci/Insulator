@@ -21,23 +21,31 @@ class JsonFormatter {
             val newLine = if (indent) Token.Symbol("\n") else Token.Symbol(" ")
             return when (json) {
                 is JsonPrimitive -> listOf(Token.Value(json.toString()))
-                is JsonObject ->
-                    listOf(Token.Symbol("{"), newLine, indent(level))
-                        .asSequence()
-                        .plus(
-                            json.entries
-                                .map { (key, value) -> listOf(Token.Key(key), Token.COLON).plus(format(value, level + 1)) }
-                                .reduceOrNull { a, b -> a.plus(Token.COMMA).plus(newLine).plus(indent(level)).plus(b) }
-                                ?: emptyList()
-                        )
-                        .plus(newLine).plus(indent(level - 1)).plus(Token.Symbol("}")).toList()
-                is JsonArray ->
-                    listOf(Token.Symbol("["))
-                        .plus(json.map { format(it, level + 1) }.reduce { a, b -> a.plus(Token.COMMA).plus(b) })
-                        .plus(Token.Symbol("]"))
+                is JsonObject -> parseObject(newLine, level, json)
+                is JsonArray -> parseArray(json, level)
                 else -> if (json is JsonNull) listOf(Token.Value("null")) else throw Exception("Unable to parse")
             }
         }
+
+        private fun parseObject(newLine: Token.Symbol, level: Int, json: JsonObject): List<Token> =
+            listOf(Token.Symbol("{"), newLine, indent(level))
+                .asSequence()
+                .plus(
+                    json.entries
+                        .map { (key, value) -> listOf(Token.Key(key), Token.COLON).plus(format(value, level + 1)) }
+                        .reduceOrNull { a, b -> a.plus(Token.COMMA).plus(newLine).plus(indent(level)).plus(b) }
+                        ?: emptyList()
+                )
+                .plus(newLine).plus(indent(level - 1)).plus(Token.Symbol("}")).toList()
+
+        private fun parseArray(json: JsonArray, level: Int): List<Token> =
+            listOf(Token.Symbol("["))
+                .plus(
+                    json.map { format(it, level + 1) }
+                        .reduceOrNull { a, b -> a.plus(Token.COMMA).plus(b) }
+                        ?: emptyList()
+                )
+                .plus(Token.Symbol("]"))
 
         private fun indent(value: Int): Token {
             return if (indent) Token.Symbol("".padStart(value * 2, ' ')) else Token.Symbol("")

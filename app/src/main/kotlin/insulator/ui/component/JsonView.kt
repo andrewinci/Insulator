@@ -11,9 +11,9 @@ import javafx.scene.layout.Priority
 import javafx.scene.text.Font
 import javafx.scene.text.Text
 import tornadofx.action
-import tornadofx.bind
 import tornadofx.contextmenu
 import tornadofx.item
+import tornadofx.onChange
 import tornadofx.putString
 import tornadofx.scrollpane
 import tornadofx.text
@@ -23,7 +23,11 @@ import tornadofx.vgrow
 fun EventTarget.jsonView(value: ObservableStringValue, formatter: JsonFormatter) {
     this.scrollpane {
         textflow {
-            children.bind(buildTokensList(value, formatter)) { it }
+            val lst = buildTokensList(value, formatter)
+            lst.onChange {
+                children.clear()
+                children.addAll(lst)
+            }
             contextMenu = contextmenu { item("Copy") { action { Clipboard.getSystemClipboard().putString(value.value) } } }
         }
         vgrow = Priority.ALWAYS

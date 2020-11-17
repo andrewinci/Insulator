@@ -7,6 +7,7 @@ import insulator.helper.runOnFXThread
 import insulator.kafka.AdminApi
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
+import insulator.ui.WindowsManager
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
@@ -14,8 +15,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.stage.Modality
-import javafx.stage.StageStyle
+import javafx.stage.Window
 import tornadofx.SortedFilteredList
 import tornadofx.whenUndockedOnce
 import javax.inject.Inject
@@ -25,7 +25,8 @@ class ListTopicViewModel @Inject constructor(
     val cluster: Cluster,
     val adminApi: AdminApi,
     private val topicComponentFactory: TopicComponentFactory,
-    val tabViewModel: TabViewModel
+    val tabViewModel: TabViewModel,
+    val windowsManager: WindowsManager
 ) : InsulatorViewModel() {
 
     private val topicListProperty: ObservableList<String> = FXCollections.observableArrayList()
@@ -62,7 +63,6 @@ class ListTopicViewModel @Inject constructor(
 
     suspend fun showTopic() {
         val selectedTopicName = selectedItemProperty.value ?: return
-        // adminApi.describeTopic(selectedTopicName)
         topicComponentFactory
             .build(Topic(selectedTopicName))
             .getTopicView()
@@ -70,8 +70,9 @@ class ListTopicViewModel @Inject constructor(
             .let { topicView -> tabViewModel.setMainContent(selectedTopicName, topicView) }
     }
 
-    fun createNewTopic() = topicComponentFactory.build(Topic.empty())
-        .getCreateTopicView()
-        .also { it.whenUndockedOnce { dispatch { refresh() } } }
-        .openWindow(StageStyle.UTILITY, Modality.WINDOW_MODAL)
+    fun createNewTopic(owner: Window?) = windowsManager.openWindow("create-new-topic", owner) {
+        topicComponentFactory.build(Topic.empty())
+            .getCreateTopicView()
+            .also { it.whenUndockedOnce { dispatch { refresh() } } }
+    }
 }

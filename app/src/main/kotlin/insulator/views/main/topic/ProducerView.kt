@@ -68,7 +68,7 @@ class ProducerView @Inject constructor(
             hbox(alignment = Pos.CENTER_LEFT) {
                 fieldName("Serializer")
                 combobox<String> {
-                    items = DeserializationFormat.values().toObservable()
+                    items = DeserializationFormat.values().toObservable { it.toString() }
                     valueProperty().bindBidirectional(viewModel.serializeValueProperty)
                 }
             }
@@ -87,7 +87,7 @@ class ProducerView @Inject constructor(
                 onDoubleClick { autoComplete() }
             }
             vbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-            minHeight = 15.0
+            minHeight = 30.0
             maxHeight = 100.0
         }
 

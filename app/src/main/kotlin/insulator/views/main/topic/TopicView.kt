@@ -97,7 +97,7 @@ class TopicView @Inject constructor(
             viewModel.consumerViewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
             fieldName("deserializer")
             combobox<String> {
-                items = DeserializationFormat.values().toObservable()
+                items = DeserializationFormat.values().toObservable { it.toString() }
                 valueProperty().bindBidirectional(viewModel.consumerViewModel.deserializeValueProperty)
                 enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
             }
@@ -106,7 +106,7 @@ class TopicView @Inject constructor(
 
     private fun EventTarget.consumeFromComboBox() =
         combobox<String> {
-            items = ConsumeFrom.values().toObservable()
+            items = ConsumeFrom.values().toObservable { it.text }
             valueProperty().bindBidirectional(viewModel.consumerViewModel.consumeFromProperty)
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
 
