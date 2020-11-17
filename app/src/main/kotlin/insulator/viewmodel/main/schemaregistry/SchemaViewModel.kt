@@ -23,12 +23,8 @@ class SchemaViewModel @Inject constructor(
 
     val nameProperty = SimpleStringProperty(subject.name)
     val versionsProperty: ObservableList<Schema> = FXCollections.observableArrayList(subject.schemas)
-    val selectedVersionProperty: Property<Schema> = SimpleObjectProperty(null)
+    val selectedVersionProperty: Property<Schema> = SimpleObjectProperty(subject.schemas.last())
     val schemaProperty: ObservableStringValue = Bindings.createStringBinding({ selectedVersionProperty.value.schema }, selectedVersionProperty)
-
-    init {
-        dispatch { refresh() }
-    }
 
     suspend fun refresh() {
         schemaRegistry!!.getSubject(subject.name)
