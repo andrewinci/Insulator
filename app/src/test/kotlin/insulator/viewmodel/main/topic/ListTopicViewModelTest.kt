@@ -9,6 +9,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
+import org.testcontainers.shaded.org.apache.commons.lang.SystemUtils.IS_OS_WINDOWS
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
@@ -35,7 +36,8 @@ class ListTopicViewModelTest : StringSpec({
         }
     }
 
-    "happy path" {
+    "happy path".config(enabled = !IS_OS_WINDOWS) {
+        // todo: this test is fleaky on windows
         FxContext().use {
             // arrange
             val adminApi = mockk<AdminApi> {
