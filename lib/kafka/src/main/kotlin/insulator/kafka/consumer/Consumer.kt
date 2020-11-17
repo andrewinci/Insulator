@@ -74,6 +74,7 @@ class Consumer(
         consumer.assign(partitions)
         when (from) {
             ConsumeFrom.Now -> Long.MAX_VALUE
+            ConsumeFrom.Last15min -> Duration.ofMinutes(15).ago()
             ConsumeFrom.LastHour -> Duration.ofMinutes(60).ago()
             ConsumeFrom.LastDay -> Duration.ofDays(1).ago()
             ConsumeFrom.LastWeek -> Duration.ofDays(7).ago()
@@ -113,12 +114,13 @@ class Consumer(
     }
 }
 
-enum class ConsumeFrom {
-    Now,
-    LastHour,
-    LastDay,
-    LastWeek,
-    Beginning,
+enum class ConsumeFrom(val text: String) {
+    Now("Now"),
+    Last15min("Last 15 min"),
+    LastHour("Last hour"),
+    LastDay("Last day"),
+    LastWeek("Last week"),
+    Beginning("Beginning"),
 }
 
 enum class DeserializationFormat {

@@ -35,6 +35,8 @@ class ProducerView @Inject constructor(
     override val viewModel: ProducerViewModel
 ) : InsulatorView() {
 
+    private val recordValueTextArea = TextArea()
+
     override val root = vbox(spacing = 10.0) {
         appBar { title = viewModel.topic.name }
         fieldName("Key")
@@ -66,7 +68,7 @@ class ProducerView @Inject constructor(
             hbox(alignment = Pos.CENTER_LEFT) {
                 fieldName("Serializer")
                 combobox<String> {
-                    items = DeserializationFormat.values().toObservable()
+                    items = DeserializationFormat.values().toObservable { it.toString() }
                     valueProperty().bindBidirectional(viewModel.serializeValueProperty)
                 }
             }
@@ -88,8 +90,6 @@ class ProducerView @Inject constructor(
             minHeight = 30.0
             maxHeight = 100.0
         }
-
-    private val recordValueTextArea = TextArea()
 
     private fun EventTarget.recordValueTextArea() {
         recordValueTextArea.apply {

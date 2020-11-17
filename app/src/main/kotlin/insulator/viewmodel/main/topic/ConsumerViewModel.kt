@@ -23,7 +23,7 @@ class ConsumerViewModel @Inject constructor(
 
     val records: ObservableList<RecordViewModel> = FXCollections.observableList(LinkedList())
     val isConsumingProperty = SimpleBooleanProperty(false)
-    val consumeFromProperty = SimpleStringProperty(ConsumeFrom.LastDay.toString())
+    val consumeFromProperty = SimpleStringProperty(ConsumeFrom.LastDay.text)
     val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.toString())
     val searchItem = SimpleStringProperty("")
     val comparatorProperty = SimpleObjectProperty<Comparator<RecordViewModel>>()
@@ -47,7 +47,7 @@ class ConsumerViewModel @Inject constructor(
         if (!isConsumingProperty.value) {
             isConsumingProperty.value = true
             clearRecords()
-            val consumerFrom = ConsumeFrom.valueOf(consumeFromProperty.value)
+            val consumerFrom = ConsumeFrom.values().first { it.text == consumeFromProperty.value }
             val deserializationFormat = DeserializationFormat.valueOf(deserializeValueProperty.value)
             consumer.start(topic.name, consumerFrom, deserializationFormat) {
                 records.runOnFXThread { addAll(it.map { record -> RecordViewModel(record) }) }
