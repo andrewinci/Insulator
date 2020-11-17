@@ -35,12 +35,12 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle-
-    - uses: olegtarasov/get-tag@v2
-      id: tagName
+    - uses: battila7/get-version-action@v2
+      id: get_version
     - name: Gradle package
       run: "./gradlew bootstrap:packageApp"
       env:
-        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
+        RELEASE_VERSION: ${{ steps.get_version.outputs.version }}
     - name: Update binary
       uses: actions/upload-artifact@v2
       with:
@@ -55,7 +55,7 @@ jobs:
         python3 scripts/build.py
         mv ./app/build/distributions/app/lib/insulator.jar .
       env:
-        RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
+        RELEASE_VERSION: ${{ steps.get_version.outputs.version }}
     - name: Update update4j config + jar
       if: ${{ matrix.os.name == 'ubuntu-latest' }}
       uses: actions/upload-artifact@v2
@@ -72,16 +72,16 @@ jobs:
     outputs:
       release-url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - uses: olegtarasov/get-tag@v2
-        id: tagName
+      - uses: battila7/get-version-action@v2
+        id: get_version
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tagName.outputs.tag }}
-          release_name: Release Candidate ${{ steps.tagName.outputs.tag }}
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_name: Release Candidate ${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: true
 
@@ -98,8 +98,8 @@ jobs:
           - name: insulator-debian
             path: insulator*.deb
     steps:
-      - uses: olegtarasov/get-tag@v2
-        id: tagName
+      - uses: battila7/get-version-action@v2
+        id: get_version
       - name: Download binary from previous jobs
         uses: actions/download-artifact@v2
         with:
@@ -156,4 +156,4 @@ jobs:
           cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrea-vinci/homebrew-insulator
           git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-insulator.git
         env:
-          RELEASE_VERSION: ${{ steps.tagName.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.get_version.outputs.version }}
