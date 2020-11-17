@@ -4,15 +4,14 @@ import insulator.di.ClusterScope
 import insulator.helper.dispatch
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
+import insulator.ui.component.refreshButton
 import insulator.ui.component.searchBox
-import insulator.ui.style.ButtonStyle
 import insulator.viewmodel.main.schemaregistry.ListSchemaViewModel
 import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import tornadofx.action
-import tornadofx.addClass
 import tornadofx.bindSelected
 import tornadofx.borderpane
 import tornadofx.button
@@ -32,7 +31,7 @@ class ListSchemaView @Inject constructor(
         appBar {
             title = "Schema registry"
             subtitle = viewModel.subtitleProperty
-            buttons = listOf(refreshButton())
+            buttons = listOf(refreshButton(viewModel::refresh))
         }
         borderpane {
             left = createSchemaButton()
@@ -59,13 +58,6 @@ class ListSchemaView @Inject constructor(
             else -> viewModel.refresh()
         }
     }
-
-    private fun EventTarget.refreshButton() =
-        button("Refresh") {
-            id = "button-refresh"
-            action { dispatch { viewModel.refresh() } }
-            addClass(ButtonStyle.blueButton)
-        }
 
     private fun EventTarget.createSchemaButton() =
         button("Create schema") {

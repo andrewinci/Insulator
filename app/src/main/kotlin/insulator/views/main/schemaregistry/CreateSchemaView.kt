@@ -41,11 +41,7 @@ class CreateSchemaView @Inject constructor(
         validationArea()
 
         borderpane {
-            right = button("Save") {
-                id = "button-schema-register"
-                enableWhen(viewModel.isSchemaValidProperty)
-                action { viewModel.dispatch { register() }; close() }
-            }
+            right = registerButton()
         }
 
         prefWidth = 800.0
@@ -72,6 +68,13 @@ class CreateSchemaView @Inject constructor(
             vgrow = Priority.ALWAYS
         }.attachTo(this)
     }
+
+    private fun EventTarget.registerButton() =
+        button("Register") {
+            id = "button-schema-register"
+            enableWhen(viewModel.isSchemaValidProperty)
+            action { viewModel.dispatch { register() }; close() }
+        }
 
     override fun onDock() {
         title = "New subject"
