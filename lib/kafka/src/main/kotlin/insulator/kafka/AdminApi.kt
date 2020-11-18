@@ -29,9 +29,7 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
         val configResource = ConfigResource(ConfigResource.Type.TOPIC, topicName)
         val configuration = !admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
             .map {
-                TopicConfiguration(
-                    isCompacted = it.get(TopicConfig.CLEANUP_POLICY_CONFIG).value() == TopicConfig.CLEANUP_POLICY_COMPACT
-                )
+                TopicConfiguration(rawConfiguration = it.entries().map { config -> config.name() to config.value() }.toMap())
             }
 
         val description = !(
@@ -46,7 +44,8 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
             partitionCount = description.partitions().size,
             messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(description.toTopicPartitions()).values.sum(),
             replicationFactor = description.partitions()[0].replicas().count().toShort(),
-            isCompacted = configuration.isCompacted
+            isCompacted = configuration.isCompacted,
+            configuration = configuration,
         )
     }
 

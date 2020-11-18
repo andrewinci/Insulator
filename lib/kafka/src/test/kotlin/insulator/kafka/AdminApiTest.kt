@@ -93,7 +93,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.describeTopic("topic2")
         // assert
-        res shouldBeRight Topic("topic2", false, 2, 5, 1, true)
+        res shouldBeRight Topic("topic2", false, 2, 5, 1, true, configuration)
     }
 
     "Create topic happy path" {
@@ -106,7 +106,7 @@ class AdminApiTest : StringSpec({
         val consumerMock = mockk<Consumer<Any, Any>>()
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
-        val res = sut.createTopics(Topic("name", null, 2, null, 1, false))
+        val res = sut.createTopics(Topic("name", null, 2, null, 1, false, configuration))
         // assert
         res shouldBeRight {}
     }
@@ -121,7 +121,7 @@ class AdminApiTest : StringSpec({
         val consumerMock = mockk<Consumer<Any, Any>>()
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
-        val res = sut.createTopics(Topic("name", null, 2, null, 1, true))
+        val res = sut.createTopics(Topic("name", null, 2, null, 1, true, configuration))
         // assert
         res shouldBeRight {}
     }

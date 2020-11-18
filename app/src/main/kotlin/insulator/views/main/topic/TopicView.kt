@@ -56,7 +56,7 @@ class TopicView @Inject constructor(
         appBar {
             title = viewModel.nameProperty.value
             subtitle = viewModel.subtitleProperty
-            buttons = listOf(deleteButton())
+            buttons = listOf(showInfoButton(), deleteButton())
         }
         borderpane {
             padding = Insets(-5.0, 0.0, 10.0, 0.0)
@@ -115,6 +115,13 @@ class TopicView @Inject constructor(
             viewModel.dispatch { delete() }
             closeTab()
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
+
+    private fun EventTarget.showInfoButton() = button("Info") {
+        id = "button-info"
+        action { viewModel.showTopicInfoView(currentWindow) }
+        addClass(ButtonStyle.blueButton)
+    }
+
 
     private fun EventTarget.recordsTable() =
         tableview<RecordViewModel> {
