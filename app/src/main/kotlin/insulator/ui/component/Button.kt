@@ -5,7 +5,6 @@ import insulator.ui.style.ButtonStyle
 import insulator.ui.style.theme
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.value.ObservableValue
-import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
