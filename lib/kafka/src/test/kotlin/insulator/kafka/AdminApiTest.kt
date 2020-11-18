@@ -2,6 +2,7 @@ package insulator.kafka
 
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
+import insulator.kafka.model.TopicConfiguration
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
@@ -93,7 +94,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.describeTopic("topic2")
         // assert
-        res shouldBeRight Topic("topic2", false, 2, 5, 1, true)
+        res shouldBeRight Topic("topic2", false, 2, 5, 1, true, configuration = TopicConfiguration(mapOf("cleanup.policy" to "compact")))
     }
 
     "Create topic happy path" {

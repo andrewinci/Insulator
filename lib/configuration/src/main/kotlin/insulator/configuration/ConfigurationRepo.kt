@@ -38,10 +38,11 @@ class ConfigurationRepo(private val configPath: String) {
     }
 
     suspend fun store(cluster: Cluster): Either<ConfigurationRepoException, Unit> = either {
-        val configuration = (!getConfiguration()).clusters
+        val currentConfiguration = !getConfiguration()
+        val configuration = currentConfiguration.clusters
             .map { it.guid to it }.toMap().plus(cluster.guid to cluster)
             .map { it.value }
-            .let { Configuration(it) }
+            .let { currentConfiguration.copy(clusters = it) }
         !store(configuration)
         callbacks.forEach { it(configuration) }
     }

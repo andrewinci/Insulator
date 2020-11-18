@@ -151,11 +151,23 @@ class ConfigurationRepoTest : FreeSpec({
         // arrange
         val testConfig = mockConfigPath()
         val sut = ConfigurationRepo(testConfig)
-        val testCluster = UUID.randomUUID()
         // act
         val res = sut.store(InsulatorTheme.Dark)
         // assert
         res shouldBeRight Unit
         File(testConfig).readText().replace("\n", "").replace(" ", "") shouldBe "{\"clusters\":[],\"theme\":\"Dark\"}"
+    }
+
+    "store new record doesn't reset the team" {
+        // arrange
+        val testConfig = mockConfigPath()
+        val sut = ConfigurationRepo(testConfig)
+        val testCluster = Cluster.empty()
+        sut.store(InsulatorTheme.Dark)
+        // act
+        val res = sut.store(testCluster)
+        // assert
+        res shouldBeRight Unit
+        sut.getConfiguration() shouldBeRight { it.theme shouldBe InsulatorTheme.Dark }
     }
 })

@@ -10,12 +10,10 @@ import insulator.kafka.model.Topic
 import insulator.ui.WindowsManager
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.main.topic.RecordView
+import insulator.views.main.topic.TopicInfoView
+import insulator.views.main.topic.TopicInfoViewModel
 import javafx.beans.binding.Bindings
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.scene.input.Clipboard
 import javafx.stage.Window
@@ -34,27 +32,21 @@ class TopicViewModel @Inject constructor(
     private val windowsManager: WindowsManager
 ) : InsulatorViewModel() {
 
-    private val isInternalProperty = SimpleBooleanProperty()
-    private val partitionCountProperty = SimpleIntegerProperty()
-    private val messageCountProperty = SimpleLongProperty()
-    private val isCompactedProperty = SimpleBooleanProperty()
+    private val topicProperty = SimpleObjectProperty(topic)
 
-    val nameProperty = SimpleStringProperty(topic.name)
+    val nameProperty: ObservableStringValue = Bindings.createStringBinding({ topicProperty.value.name }, topicProperty)
     val selectedItem = SimpleObjectProperty<RecordViewModel>()
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
         {
-            val totalMessages = max(messageCountProperty.value, consumerViewModel.records.size.toLong())
+            val totalMessages = max(topicProperty.value.messageCount ?: 0, consumerViewModel.records.size.toLong())
             val filteredMessages = consumerViewModel.filteredRecords.value.size
             "Message count: $filteredMessages/$totalMessages - " +
-                "Is internal: ${isInternalProperty.value} - " +
-                "Partitions count: ${partitionCountProperty.value} - " +
-                "Compacted: ${isCompactedProperty.value}"
+                "Is internal: ${topicProperty.value.isInternal} - " +
+                "Partitions count: ${topicProperty.value.partitionCount} - " +
+                "Compacted: ${topicProperty.value.isCompacted}"
         },
         consumerViewModel.filteredRecords.value,
-        isCompactedProperty,
-        partitionCountProperty,
-        isInternalProperty,
-        messageCountProperty
+        topicProperty
     )
 
     init {
@@ -73,15 +65,7 @@ class TopicViewModel @Inject constructor(
     }
 
     private suspend fun refresh() =
-        adminApi.describeTopic(topic.name).map { runOnFXThread { updateTopicProperties(it) } }
-
-    private fun updateTopicProperties(topic: Topic) = with(topic) {
-        nameProperty.set(name)
-        isInternalProperty.set(isInternal ?: false)
-        partitionCountProperty.set(partitionCount)
-        messageCountProperty.set(messageCount ?: -1)
-        isCompactedProperty.set(isCompacted)
-    }
+        adminApi.describeTopic(topic.name).map { runOnFXThread { topicProperty.set(it) } }
 
     fun showProducerView(owner: Window?) {
         windowsManager.openWindow("producer-${topic.name}", owner) {
@@ -92,5 +76,9 @@ class TopicViewModel @Inject constructor(
     fun showRecordInfoView(owner: Window?) {
         if (selectedItem.value != null)
             windowsManager.openWindow("record-${selectedItem.value.hashCode()}", owner) { RecordView(selectedItem.value, formatter) }
+    }
+
+    fun showTopicInfoView(owner: Window?) {
+        windowsManager.openWindow("topic-${topicProperty.value.hashCode()}", owner) { TopicInfoView(TopicInfoViewModel(topicProperty.value)) }
     }
 }

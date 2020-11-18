@@ -87,7 +87,7 @@ class ProducerView @Inject constructor(
                 onDoubleClick { autoComplete() }
             }
             vbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-            minHeight = 30.0
+            minHeight = 50.0
             maxHeight = 100.0
         }
 

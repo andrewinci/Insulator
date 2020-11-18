@@ -27,6 +27,7 @@ class RecordView(
         fieldName("Headers")
         textarea(viewModel.formattedHeadersProperty) {
             isEditable = false
+            minHeight = 50.0
         }
 
         borderpane {
@@ -36,6 +37,7 @@ class RecordView(
         }
 
         prefWidth = 800.0
+        minHeight = 560.0
         prefHeight = 800.0
     }
 
