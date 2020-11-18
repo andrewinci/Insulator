@@ -9,11 +9,9 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import javafx.scene.Node
 import javafx.scene.control.Label
-import kotlinx.coroutines.delay
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.kafka.common.serialization.StringSerializer
 import tornadofx.CssRule
 import java.time.Duration
 import kotlin.time.ExperimentalTime
@@ -35,12 +33,16 @@ class ConsumerGroupsTests : FreeSpec({
             fixture.createTopic(testTopic)
             fixture.stringProducer.send(testTopic, "k", "v")
             // Create a consumer group
-            with(KafkaConsumer<String, String>(mapOf(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to fixture.currentKafkaCluster.endpoint,
-                ConsumerConfig.GROUP_ID_CONFIG to groupIdName,
-                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
-            ))) {
+            with(
+                KafkaConsumer<String, String>(
+                    mapOf(
+                        ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to fixture.currentKafkaCluster.endpoint,
+                        ConsumerConfig.GROUP_ID_CONFIG to groupIdName,
+                        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+                        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+                    )
+                )
+            ) {
                 subscribe(listOf(testTopic))
                 poll(Duration.ofMillis(300))
                 commitSync()
