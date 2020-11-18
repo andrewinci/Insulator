@@ -2,6 +2,7 @@ package insulator.kafka
 
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
+import insulator.kafka.model.TopicConfiguration
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
@@ -93,7 +94,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.describeTopic("topic2")
         // assert
-        res shouldBeRight Topic("topic2", false, 2, 5, 1, true, configuration)
+        res shouldBeRight Topic("topic2", false, 2, 5, 1, true, configuration = TopicConfiguration(mapOf("cleanup.policy" to "compact")))
     }
 
     "Create topic happy path" {
@@ -106,7 +107,7 @@ class AdminApiTest : StringSpec({
         val consumerMock = mockk<Consumer<Any, Any>>()
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
-        val res = sut.createTopics(Topic("name", null, 2, null, 1, false, configuration))
+        val res = sut.createTopics(Topic("name", null, 2, null, 1, false))
         // assert
         res shouldBeRight {}
     }
@@ -121,7 +122,7 @@ class AdminApiTest : StringSpec({
         val consumerMock = mockk<Consumer<Any, Any>>()
         val sut = AdminApi(kafkaAdminClientMock, consumerMock)
         // act
-        val res = sut.createTopics(Topic("name", null, 2, null, 1, true, configuration))
+        val res = sut.createTopics(Topic("name", null, 2, null, 1, true))
         // assert
         res shouldBeRight {}
     }

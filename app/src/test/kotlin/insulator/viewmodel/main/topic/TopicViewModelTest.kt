@@ -45,7 +45,7 @@ class TopicViewModelTest : StringSpec({
 private class TopicViewModelTestContext : FxContext() {
     val mockkTopic = Topic.empty()
     val mockAdminApi = mockk<AdminApi> {
-        coEvery { describeTopic(any()) } returns Topic("Topic name", configuration = configuration).right()
+        coEvery { describeTopic(any()) } returns Topic("Topic name").right()
         coEvery { deleteTopic(any()) } returns null.right()
     }
     val consumerViewModel = mockk<ConsumerViewModel>(relaxed = true) {

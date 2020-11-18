@@ -20,7 +20,7 @@ class CreateTopicViewModelTest : StringSpec({
             val mockAdminApi = mockk<AdminApi> {
                 coEvery { createTopics(any()) } returns Unit.right()
             }
-            val sampleTopic = Topic(name = "sampleTopic", configuration = configuration)
+            val sampleTopic = Topic(name = "sampleTopic")
             val sut = CreateTopicViewModel(CreateTopicModel(sampleTopic), mockAdminApi)
             // act
             sut.save()
