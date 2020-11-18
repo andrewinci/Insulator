@@ -38,7 +38,7 @@ class ListConsumerGroupView @Inject constructor(
 
     private fun EventTarget.schemasListView() =
         listview<String> {
-            cellFormat { graphic = label(it) { id = "schema-$it" } }
+            cellFormat { graphic = label(it) { id = "consumer-$it" } }
             itemsProperty().set(viewModel.filteredConsumerGroupsProperty)
             bindSelected(viewModel.selectedConsumerGroupProperty)
 
