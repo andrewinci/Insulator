@@ -36,7 +36,7 @@ fun EventTarget.themeButton(op: () -> Unit) =
 
 fun EventTarget.settingsButton(op: () -> Unit) = button {
     graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
-    onMouseClicked = EventHandler { op() }
+    action(op)
     alignment = Pos.CENTER_RIGHT
     addClass(ButtonStyle.settingsButton)
 }
