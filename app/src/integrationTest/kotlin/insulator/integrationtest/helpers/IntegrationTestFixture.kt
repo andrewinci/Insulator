@@ -14,19 +14,28 @@ import insulator.kafka.producer.stringProducer
 import insulator.kafka.schemaRegistry
 import insulator.test.helper.deleteTestSandboxFolder
 import insulator.test.helper.getTestSandboxFolder
+import kotlinx.coroutines.runBlocking
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testfx.api.FxToolkit
 import tornadofx.FX
 import java.io.Closeable
 
+private val kafka = KafkaContainer().also {
+    it.start()
+    it.waitingFor(Wait.forListeningPort())
+}
+private val schemaRegistryContainer = SchemaRegistryContainer().withKafka(kafka).also {
+    it.start()
+    it.waitingFor(Wait.forListeningPort())
+}
+
 class IntegrationTestFixture : Closeable {
-    private lateinit var adminApi: AdminApi
-    private lateinit var schemaRegistry: SchemaRegistry
+    private var adminApi: AdminApi? = null
+    private var schemaRegistry: SchemaRegistry? = null
     lateinit var stringProducer: Producer
     private val currentHomeFolder = getTestSandboxFolder().toAbsolutePath()
-    private val kafka = KafkaContainer()
-    private val schemaRegistryContainer = SchemaRegistryContainer().withKafka(kafka)
+
     lateinit var currentKafkaCluster: Cluster
 
     init {
@@ -37,14 +46,10 @@ class IntegrationTestFixture : Closeable {
     }
 
     suspend fun startAppWithKafkaCuster(clusterName: String, createSchemaRegistry: Boolean = true) {
-        kafka.start()
-        kafka.waitingFor(Wait.forListeningPort())
         currentKafkaCluster = Cluster(
             name = clusterName,
             endpoint = kafka.bootstrapServers,
             schemaRegistryConfig = if (createSchemaRegistry) {
-                schemaRegistryContainer.start()
-                schemaRegistryContainer.waitingFor(Wait.forListeningPort())
                 SchemaRegistryConfiguration(schemaRegistryContainer.endpoint)
             } else SchemaRegistryConfiguration()
         )
@@ -71,13 +76,19 @@ class IntegrationTestFixture : Closeable {
         kotlin.runCatching { FxToolkit.cleanupStages() }
         kotlin.runCatching { FxToolkit.cleanupApplication(FX.application) }
         deleteTestSandboxFolder()
-        kafka.runCatching { stop(); close() }
-        schemaRegistryContainer.runCatching { stop(); close() }
+        cleanUpKafka()
     }
 
-    suspend fun createTopic(s: String) = adminApi.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1))
-    fun createTestSchema(schemaName: String) = schemaRegistry.register(schemaName, testSchema(5))
-    fun createTestSchemaUpdate(schemaName: String) = schemaRegistry.register(schemaName, testSchema(4))
+    private fun cleanUpKafka() {
+        runBlocking {
+            adminApi?.listTopics()?.fold({ throw it }, { it })?.forEach { adminApi?.deleteTopic(it) }
+            schemaRegistry?.getAllSubjects()?.map { it.forEach { schema -> schemaRegistry?.deleteSubject(schema) } }
+        }
+    }
+
+    suspend fun createTopic(s: String) = adminApi!!.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1))
+    fun createTestSchema(schemaName: String) = schemaRegistry!!.register(schemaName, testSchema(5))
+    fun createTestSchemaUpdate(schemaName: String) = schemaRegistry!!.register(schemaName, testSchema(4))
 
     fun testSchema(i: Int = 5) =
         """

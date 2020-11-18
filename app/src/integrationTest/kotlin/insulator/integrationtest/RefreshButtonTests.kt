@@ -15,7 +15,6 @@ import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
-import kotlinx.coroutines.delay
 import tornadofx.CssRule
 import tornadofx.Stylesheet.Companion.listView
 import tornadofx.Stylesheet.Companion.text
@@ -37,7 +36,6 @@ class RefreshButtonTests : FreeSpec({
                 val topicName = "test-new-topic"
                 // create topic
                 fixture.createTopic(topicName)
-                delay(1_000)
                 // the topic shouldn't be visible
                 getListViewItems().count { it == topicName } shouldBe 0
                 // click the refresh button wil load the new topic
@@ -49,12 +47,11 @@ class RefreshButtonTests : FreeSpec({
             }
 
             "Refresh schema list" {
-                val schemaName = "test-new-topic-schema"
+                val schemaName = "test-refresh-list-of-schema"
                 // select schema registry
                 mainView.lookupFirst<Node>(CssRule.id("sidebar-item-schema-registry")).click()
                 // create the schema
                 fixture.createTestSchema(schemaName)
-                delay(1_000)
                 // the schema shouldn't be visible
                 getListViewItems().count { it == schemaName } shouldBe 0
                 // click the refresh button wil load the new schema
@@ -75,7 +72,6 @@ class RefreshButtonTests : FreeSpec({
                 mainView.lookupFirst<Button>(CssRule.id("button-refresh-schema-list")).click()
                 // select the test schema
                 mainView.lookupFirst<Label>(CssRule.id("schema-$schemaName")).doubleClick()
-                delay(500)
                 with(mainView.lookupFirst<ComboBox<Schema>>(CssRule.id("combobox-schema-version"))) {
                     selectedItem?.version shouldBe 1
                     items.size shouldBe 1
@@ -83,7 +79,6 @@ class RefreshButtonTests : FreeSpec({
 
                 // update the schema
                 fixture.createTestSchemaUpdate(schemaName)
-                delay(500)
                 // click the refresh button will load the new schema
                 mainView.lookupFirst<Button>(CssRule.id("button-refresh-schema")).click()
                 with(mainView.lookupFirst<ComboBox<Schema>>(CssRule.id("combobox-schema-version"))) {

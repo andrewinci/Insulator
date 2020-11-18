@@ -5,7 +5,6 @@ import insulator.ui.style.ButtonStyle
 import insulator.ui.style.theme
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.value.ObservableValue
-import javafx.event.EventHandler
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
@@ -36,7 +35,7 @@ fun EventTarget.themeButton(op: () -> Unit) =
 
 fun EventTarget.settingsButton(op: () -> Unit) = button {
     graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
-    onMouseClicked = EventHandler { op() }
+    action(op)
     alignment = Pos.CENTER_RIGHT
     addClass(ButtonStyle.settingsButton)
 }
