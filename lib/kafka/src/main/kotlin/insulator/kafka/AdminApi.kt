@@ -23,6 +23,9 @@ import java.io.Closeable
 
 class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) : Closeable {
 
+    suspend fun listConsumerGroups() = admin.listConsumerGroups().all().toSuspendCoroutine()
+        .map { consumerGroup -> consumerGroup.map { it.groupId() } }
+
     suspend fun listTopics() = admin.listTopics().names().toSuspendCoroutine().map { it.toList() }
 
     suspend fun describeTopic(topicName: String): Either<Throwable, Topic> = either {

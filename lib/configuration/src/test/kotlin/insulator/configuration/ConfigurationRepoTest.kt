@@ -165,7 +165,7 @@ class ConfigurationRepoTest : FreeSpec({
         val testCluster = Cluster.empty()
         sut.store(InsulatorTheme.Dark)
         // act
-        val res = sut.store(testCluster)
+        val res = sut.stowwre(testCluster)
         // assert
         res shouldBeRight Unit
         sut.getConfiguration() shouldBeRight { it.theme shouldBe InsulatorTheme.Dark }
