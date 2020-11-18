@@ -1,5 +1,6 @@
 package insulator.integrationtest.helpers
 
+import insulator.helper.runOnFXThread
 import javafx.application.Platform
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.Node
@@ -36,7 +37,8 @@ suspend fun Node.doubleClick() {
 }
 
 suspend fun Node.click() {
-    FxRobot().clickOn(this)
+    if (this is Button) runOnFXThread { fire() }
+    else FxRobot().clickOn(this)
     waitFXThread()
     delay(1_000)
 }
