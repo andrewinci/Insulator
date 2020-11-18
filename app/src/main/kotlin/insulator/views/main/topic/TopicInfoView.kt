@@ -28,8 +28,14 @@ class TopicInfoView(
         field("Is Compacted", topic.isCompacted.toString())
 
         tableview<Pair<String, String>> {
-            readonlyColumn("Configuration Name", Pair<String, String>::first) { prefWidthProperty().set(380.0) }
-            readonlyColumn("Value", Pair<String, String>::second) { prefWidthProperty().set(380.0) }
+            readonlyColumn("Configuration Name", Pair<String, String>::first) {
+                prefWidthProperty().bind(this.tableView.widthProperty().divide(2).minus(10))
+                isReorderable = false
+            }
+            readonlyColumn("Value", Pair<String, String>::second) {
+                prefWidthProperty().bind(this.tableView.widthProperty().divide(2).minus(10))
+                isReorderable = false
+            }
             items = observableListOf(topic.configuration.rawConfiguration.toList())
             hgrow = Priority.ALWAYS
             vgrow = Priority.ALWAYS
