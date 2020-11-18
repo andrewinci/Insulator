@@ -4,6 +4,7 @@ import insulator.di.ClusterScope
 import insulator.di.components.ClusterComponent
 import insulator.kafka.model.Cluster
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.main.consumergroup.ListConsumerGroupView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.beans.property.SimpleObjectProperty
@@ -24,6 +25,7 @@ class MainViewModel @Inject constructor(
 
     fun <T : Any> setContentList(clazz: KClass<T>, owner: Window? = null): Unit = when (clazz) {
         ListTopicView::class -> contentList.set(clusterComponent.listTopicView().root)
+        ListConsumerGroupView::class -> contentList.set(clusterComponent.listConsumerGroupView().root)
         ListSchemaView::class -> {
             if (cluster.isSchemaRegistryConfigured()) contentList.set(clusterComponent.listSchemaView().root)
             else alert(Alert.AlertType.WARNING, "Schema registry configuration not found", owner = owner); Unit

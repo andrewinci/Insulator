@@ -41,6 +41,7 @@ class ListConsumerGroupViewModel @Inject constructor(
 
     suspend fun refresh() = adminClient
         .listConsumerGroups()
+        .map { it.sorted() }
         .map {
             it.runOnFXThread {
                 consumerGroupsProperty.clear()

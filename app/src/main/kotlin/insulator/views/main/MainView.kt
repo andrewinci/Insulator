@@ -13,6 +13,7 @@ import insulator.ui.style.MainViewStyle
 import insulator.viewmodel.main.MainViewModel
 import insulator.viewmodel.main.TabViewModel
 import insulator.views.configurations.ClusterView
+import insulator.views.main.consumergroup.ListConsumerGroupView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
 import javafx.collections.FXCollections
@@ -38,6 +39,8 @@ import javax.inject.Inject
 
 private const val ICON_TOPICS = "icons/topics.png"
 private const val ICON_REGISTRY = "icons/schemaRegistryIcon.png"
+private const val ICON_CONSUMERS = "icons/consumerGroupsIcon.png"
+
 const val SIDEBAR_WIDTH = 250.0
 const val CONTENT_LIST_WIDTH = 450.0
 const val CONTENT_WIDTH = 780.0
@@ -96,6 +99,7 @@ class MainView @Inject constructor(
             center = vbox {
                 menuItem("Topics", ICON_TOPICS, "sidebar-item-topics") { viewModel.setContentList(ListTopicView::class, currentWindow) }
                 menuItem("Schema Registry", ICON_REGISTRY, "sidebar-item-schema-registry") { viewModel.setContentList(ListSchemaView::class, currentWindow) }
+                menuItem("Consumer Groups", ICON_CONSUMERS, "sidebar-item-consumer-group") { viewModel.setContentList(ListConsumerGroupView::class, currentWindow) }
             }
             bottom = hbox(alignment = Pos.CENTER) {
                 themeButton { themeHelper.dispatch { changeTheme() } }
