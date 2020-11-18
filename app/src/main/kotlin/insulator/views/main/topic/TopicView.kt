@@ -122,7 +122,6 @@ class TopicView @Inject constructor(
         addClass(ButtonStyle.blueButton)
     }
 
-
     private fun EventTarget.recordsTable() =
         tableview<RecordViewModel> {
             val partitionColumn = column("P", RecordViewModel::partitionProperty) { prefWidthProperty().set(30.0); isReorderable = false }

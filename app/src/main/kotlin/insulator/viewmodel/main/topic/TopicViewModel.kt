@@ -13,11 +13,7 @@ import insulator.views.main.topic.RecordView
 import insulator.views.main.topic.TopicInfoView
 import insulator.views.main.topic.TopicInfoViewModel
 import javafx.beans.binding.Bindings
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
 import javafx.scene.input.Clipboard
 import javafx.stage.Window
