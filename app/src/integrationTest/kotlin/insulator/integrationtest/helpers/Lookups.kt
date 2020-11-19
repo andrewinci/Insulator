@@ -13,9 +13,10 @@ fun getPrimaryWindow(): Node = nodeFinder.rootNode(Window.getWindows().first())
 
 @ExperimentalTime
 suspend fun waitWindowWithTitle(title: String): Node = eventually {
+    val windows = Window.getWindows().map { (it as? Stage) }
     nodeFinder.rootNode(
-        Window.getWindows().firstOrNull { (it as? Stage)?.title == title }
-            ?: throw AssertionError("There is no window in the scene-graph matching the title $title")
+        windows.firstOrNull { it?.title == title }
+            ?: throw AssertionError("There is no window in the scene-graph matching the title $title. Other windows are: ${windows.map { it?.title }} ")
     )
 }
 

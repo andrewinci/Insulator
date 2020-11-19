@@ -20,6 +20,7 @@ import org.testcontainers.containers.wait.strategy.Wait
 import org.testfx.api.FxToolkit
 import tornadofx.FX
 import java.io.Closeable
+import kotlin.time.ExperimentalTime
 
 private val kafka = KafkaContainer().also {
     it.start()
@@ -30,6 +31,7 @@ private val schemaRegistryContainer = SchemaRegistryContainer().withKafka(kafka)
     it.waitingFor(Wait.forListeningPort())
 }
 
+@ExperimentalTime
 class IntegrationTestFixture : Closeable {
     private var adminApi: AdminApi? = null
     private var schemaRegistry: SchemaRegistry? = null
@@ -45,18 +47,20 @@ class IntegrationTestFixture : Closeable {
         System.setProperty("user.home", currentHomeFolder.toString())
     }
 
-    suspend fun startAppWithKafkaCuster(clusterName: String, createSchemaRegistry: Boolean = true) {
-        currentKafkaCluster = Cluster(
-            name = clusterName,
-            endpoint = kafka.bootstrapServers,
-            schemaRegistryConfig = if (createSchemaRegistry) {
-                SchemaRegistryConfiguration(schemaRegistryContainer.endpoint)
-            } else SchemaRegistryConfiguration()
-        )
-        startApp(currentKafkaCluster)
-        if (createSchemaRegistry) schemaRegistry = schemaRegistry(currentKafkaCluster)
-        adminApi = adminApi(currentKafkaCluster)
-        stringProducer = stringProducer(currentKafkaCluster)
+    fun startAppWithKafkaCuster(clusterName: String, createSchemaRegistry: Boolean = true) {
+        runBlocking {
+            currentKafkaCluster = Cluster(
+                name = clusterName,
+                endpoint = kafka.bootstrapServers,
+                schemaRegistryConfig = if (createSchemaRegistry) {
+                    SchemaRegistryConfiguration(schemaRegistryContainer.endpoint)
+                } else SchemaRegistryConfiguration()
+            )
+            startApp(currentKafkaCluster)
+            if (createSchemaRegistry) schemaRegistry = schemaRegistry(currentKafkaCluster)
+            adminApi = adminApi(currentKafkaCluster)
+            stringProducer = stringProducer(currentKafkaCluster)
+        }
     }
 
     suspend fun startApp(vararg clusters: Cluster) {
@@ -81,7 +85,11 @@ class IntegrationTestFixture : Closeable {
 
     private fun cleanUpKafka() {
         runBlocking {
+            // delete all topics
             adminApi?.listTopics()?.fold({ throw it }, { it })?.forEach { adminApi?.deleteTopic(it) }
+            // delete all consumer groups
+            adminApi?.listConsumerGroups()?.fold({ throw it }, { it })?.forEach { adminApi?.deleteConsumerGroup(it) }
+            // delete all schemas
             schemaRegistry?.getAllSubjects()?.map { it.forEach { schema -> schemaRegistry?.deleteSubject(schema) } }
         }
     }

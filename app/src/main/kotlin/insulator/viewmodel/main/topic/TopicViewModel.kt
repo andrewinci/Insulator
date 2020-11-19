@@ -11,7 +11,6 @@ import insulator.ui.WindowsManager
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.main.topic.RecordView
 import insulator.views.main.topic.TopicInfoView
-import insulator.views.main.topic.TopicInfoViewModel
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.value.ObservableStringValue

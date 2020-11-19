@@ -99,11 +99,11 @@ class Consumer(
     private fun parse(record: ConsumerRecord<Any, Any>): Record {
         val parsedValue = if (record.value() is GenericRecord) avroToJson(record.value() as GenericRecord)
             // fallback to Avro.toString if unable to parse with the custom parser
-            .fold({ record.value().toString() }, { it })
-        else record.value().toString()
+            .fold({ record.value()?.toString() }, { it })
+        else record.value()?.toString()
         return Record(
             key = record.key()?.toString(),
-            value = parsedValue,
+            value = parsedValue ?: "<null>",
             timestamp = record.timestamp(),
             partition = record.partition(),
             offset = record.offset(),

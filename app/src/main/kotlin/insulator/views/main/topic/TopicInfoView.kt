@@ -1,16 +1,13 @@
 package insulator.views.main.topic
 
-import insulator.kafka.model.Topic
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
-import insulator.viewmodel.common.InsulatorViewModel
+import insulator.viewmodel.main.topic.TopicInfoViewModel
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import tornadofx.* // ktlint-disable no-wildcard-imports
-
-class TopicInfoViewModel(val topic: Topic) : InsulatorViewModel()
 
 class TopicInfoView(
     override val viewModel: TopicInfoViewModel
