@@ -47,3 +47,8 @@ jacocoIntegrationTestReport {
         html.enabled true
     }
 }
+
+integrationTest{
+    minHeapSize = "512m"
+    maxHeapSize = "2G"
+}

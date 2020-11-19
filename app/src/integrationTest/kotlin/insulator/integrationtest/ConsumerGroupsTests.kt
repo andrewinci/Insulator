@@ -21,11 +21,9 @@ class ConsumerGroupsTests : FreeSpec({
 
     "Test consumer groups" {
         IntegrationTestFixture().use { fixture ->
-            suspend fun List<Pair<String, String>>.produce(topicName: String) = forEach { (k, v) -> fixture.stringProducer.send(topicName, k, v) }
-
             val clusterName = "Test cluster"
             val groupIdName = "test-consumer-group-id"
-            val testTopic = "topic-name"
+            val testTopic = "topic-consumer-topic"
 
             fixture.startAppWithKafkaCuster(clusterName, false)
 
@@ -46,6 +44,7 @@ class ConsumerGroupsTests : FreeSpec({
                 subscribe(listOf(testTopic))
                 poll(Duration.ofMillis(300))
                 commitSync()
+                close()
             }
 
             // open main view

@@ -29,7 +29,7 @@ class ProducerTest : FreeSpec({
             fixture.startAppWithKafkaCuster(clusterName, false)
 
             // create topic
-            val testTopicName = "test-topic"
+            val testTopicName = "test-producer-topic"
             fixture.createTopic(testTopicName)
 
             // open main view
