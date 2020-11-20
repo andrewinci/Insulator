@@ -131,6 +131,35 @@ class ClusterViewModelTest : StringSpec({
             }
         }
     }
+
+    "viewModel is valid if only cluster name and endpoint are provided"{
+        // arrange
+        val sut = ClusterViewModel(Cluster.empty(), mockk())
+        // act
+        sut.nameProperty.set("test")
+        sut.endpointProperty.set("test-endpoint")
+        // assert
+        sut.isValidProperty.value shouldBe true
+    }
+
+    "viewModel is not valid if only cluster name is provided"{
+        // arrange
+        val sut = ClusterViewModel(Cluster.empty(), mockk())
+        // act
+        sut.nameProperty.set("test")
+        // assert
+        sut.isValidProperty.value shouldBe false
+    }
+
+    "isValid property is false if ssl is selected but not all SSL configurations are set"{
+        // arrange
+        val sut = ClusterViewModel(Cluster.empty(), mockk())
+        // act
+        sut.useSSLProperty.set(true)
+        sut.sslTruststoreLocationProperty.set("some location")
+        // assert
+        sut.isValidProperty.value shouldBe false
+    }
 })
 
 private val sampleCluster = Cluster(
