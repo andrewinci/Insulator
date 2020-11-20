@@ -27,7 +27,7 @@ class ClusterViewModelTest : StringSpec({
             FxContext().use {
                 // arrange
                 val mockConfigurationRepo = mockConfigurationRepo()
-                val sut = ClusterViewModel(ClusterModel(cluster), mockConfigurationRepo)
+                val sut = ClusterViewModel(cluster, mockConfigurationRepo)
                 // act
                 sut.save()
                 // assert
@@ -55,7 +55,7 @@ class ClusterViewModelTest : StringSpec({
             // arrange
             val mockConfigurationRepo = mockConfigurationRepo()
             val mockCluster = Cluster.empty()
-            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
+            val sut = ClusterViewModel(mockCluster, mockConfigurationRepo)
             // act
             sut.delete()
             // assert
@@ -69,7 +69,7 @@ class ClusterViewModelTest : StringSpec({
             val mockConfigurationRepo = mockConfigurationRepo()
             val mockCluster = Cluster.empty()
             // act
-            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
+            val sut = ClusterViewModel(mockCluster, mockConfigurationRepo)
             // assert
             with(sut) {
                 nameProperty.value shouldBe ""
@@ -99,7 +99,7 @@ class ClusterViewModelTest : StringSpec({
             val mockCluster = Cluster.empty()
 
             // act
-            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
+            val sut = ClusterViewModel(mockCluster, mockConfigurationRepo)
             with(sut) {
                 nameProperty.set("test-name")
                 endpointProperty.set("test-endpoint")

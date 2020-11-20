@@ -20,7 +20,7 @@ class ClusterViewModel @Inject constructor(cluster: Cluster, private val configu
     val endpointProperty = SimpleStringProperty(cluster.endpoint)
 
     val useSSLProperty = SimpleBooleanProperty(cluster.useSSL)
-    val sslTruststoreLocationProperty = SimpleStringProperty(cluster.sslConfiguration.sslTruststoreLocation ?: "")
+    val sslTruststoreLocationProperty = SimpleStringProperty(cluster.sslConfiguration.sslTruststoreLocation)
     val sslTruststorePasswordProperty = SimpleStringProperty(cluster.sslConfiguration.sslTruststorePassword)
     val sslKeystoreLocationProperty = SimpleStringProperty(cluster.sslConfiguration.sslKeystoreLocation)
     val sslKeyStorePasswordProperty = SimpleStringProperty(cluster.sslConfiguration.sslKeyStorePassword)
