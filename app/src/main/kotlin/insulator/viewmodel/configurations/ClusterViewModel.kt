@@ -5,36 +5,16 @@ import insulator.kafka.model.Cluster
 import insulator.kafka.model.SaslConfiguration
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.kafka.model.SslConfiguration
+import javafx.beans.binding.Bindings
+import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
-import tornadofx.ItemViewModel
+import javafx.beans.value.ObservableBooleanValue
+import tornadofx.ViewModel
+import tornadofx.onChange
 import javax.inject.Inject
 
-class ClusterViewModel @Inject constructor(cluster: ClusterModel, private val configurationRepo: ConfigurationRepo) : ItemViewModel<ClusterModel>(cluster) {
-
-    val nameProperty = bind { item.nameProperty }
-    val endpointProperty = bind { item.endpointProperty }
-    val useSSLProperty = bind { item.useSSLProperty }
-
-    val sslTruststoreLocationProperty = bind { item.sslTruststoreLocationProperty }
-    val sslTruststorePasswordProperty = bind { item.sslTruststorePasswordProperty }
-    val sslKeystoreLocationProperty = bind { item.sslKeystoreLocationProperty }
-    val sslKeyStorePasswordProperty = bind { item.sslKeyStorePasswordProperty }
-
-    val useSaslProperty = bind { item.useSaslProperty }
-    val saslUsernameProperty = bind { item.saslUsernameProperty }
-    val saslPasswordProperty = bind { item.saslPasswordProperty }
-    val useScramProperty = bind { item.useScramProperty }
-
-    val schemaRegistryEndpointProperty = bind { item.schemaRegistryEndpointProperty }
-    val schemaRegistryUsernameProperty = bind { item.schemaRegistryUsernameProperty }
-    val schemaRegistryPasswordProperty = bind { item.schemaRegistryPasswordProperty }
-
-    suspend fun save() = configurationRepo.store(item.toClusterConfig())
-    suspend fun delete() = configurationRepo.delete(item.toClusterConfig())
-}
-
-class ClusterModel @Inject constructor(cluster: Cluster) {
+class ClusterViewModel @Inject constructor(cluster: Cluster, private val configurationRepo: ConfigurationRepo) : ViewModel() {
     private val guid = cluster.guid
     val nameProperty = SimpleStringProperty(cluster.name)
     val endpointProperty = SimpleStringProperty(cluster.endpoint)
@@ -54,7 +34,55 @@ class ClusterModel @Inject constructor(cluster: Cluster) {
     val schemaRegistryUsernameProperty = SimpleStringProperty(cluster.schemaRegistryConfig.username)
     val schemaRegistryPasswordProperty = SimpleStringProperty(cluster.schemaRegistryConfig.password)
 
-    fun toClusterConfig() =
+    val isValidProperty: ObservableBooleanValue = Bindings.createBooleanBinding(
+        {
+            val baseConfig = !nameProperty.value.isNullOrEmpty() && !endpointProperty.value.isNullOrEmpty()
+            // if useSSL is true then all the ssl properties need to be not empty
+            val sslConfig = (
+                !useSSLProperty.value || (
+                    !sslTruststoreLocationProperty.value.isNullOrEmpty() &&
+                        !sslTruststorePasswordProperty.value.isNullOrEmpty() &&
+                        !sslKeystoreLocationProperty.value.isNullOrEmpty() &&
+                        !sslKeyStorePasswordProperty.value.isNullOrEmpty()
+                    )
+                )
+            // if useSASL is true then all the sasl related properties need to be not empty
+            val saslConfig = (
+                !useSaslProperty.value || (
+                    !saslUsernameProperty.value.isNullOrEmpty() &&
+                        !saslPasswordProperty.value.isNullOrEmpty()
+                    )
+                )
+            // in the schema registry section both user and password needs to be configured or none of them
+            val schemaRegistryConfig = !(
+                schemaRegistryUsernameProperty.value.isNullOrEmpty().xor(
+                    schemaRegistryPasswordProperty.value.isNullOrEmpty()
+                )
+                )
+
+            baseConfig && sslConfig && saslConfig && schemaRegistryConfig
+        },
+        nameProperty, endpointProperty,
+        useSSLProperty, sslTruststoreLocationProperty, sslTruststorePasswordProperty, sslKeystoreLocationProperty, sslKeyStorePasswordProperty,
+        useSaslProperty, saslUsernameProperty, saslPasswordProperty,
+        schemaRegistryUsernameProperty, schemaRegistryPasswordProperty
+    )
+
+    init {
+        useSaslProperty.onEnabledDisable(useSSLProperty)
+        useSSLProperty.onEnabledDisable(useSaslProperty)
+    }
+
+    suspend fun save() = configurationRepo.store(toClusterConfig())
+    suspend fun delete() = configurationRepo.delete(toClusterConfig())
+
+    private fun BooleanProperty.onEnabledDisable(vararg property: BooleanProperty) {
+        onChange { base ->
+            if (base) property.forEach { it.set(false) }
+        }
+    }
+
+    private fun toClusterConfig() =
         Cluster(
             guid = this.guid,
             name = this.nameProperty.value,

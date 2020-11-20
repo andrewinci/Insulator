@@ -27,7 +27,7 @@ class ClusterViewModelTest : StringSpec({
             FxContext().use {
                 // arrange
                 val mockConfigurationRepo = mockConfigurationRepo()
-                val sut = ClusterViewModel(ClusterModel(cluster), mockConfigurationRepo)
+                val sut = ClusterViewModel(cluster, mockConfigurationRepo)
                 // act
                 sut.save()
                 // assert
@@ -55,7 +55,7 @@ class ClusterViewModelTest : StringSpec({
             // arrange
             val mockConfigurationRepo = mockConfigurationRepo()
             val mockCluster = Cluster.empty()
-            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
+            val sut = ClusterViewModel(mockCluster, mockConfigurationRepo)
             // act
             sut.delete()
             // assert
@@ -69,7 +69,7 @@ class ClusterViewModelTest : StringSpec({
             val mockConfigurationRepo = mockConfigurationRepo()
             val mockCluster = Cluster.empty()
             // act
-            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
+            val sut = ClusterViewModel(mockCluster, mockConfigurationRepo)
             // assert
             with(sut) {
                 nameProperty.value shouldBe ""
@@ -99,7 +99,7 @@ class ClusterViewModelTest : StringSpec({
             val mockCluster = Cluster.empty()
 
             // act
-            val sut = ClusterViewModel(ClusterModel(mockCluster), mockConfigurationRepo)
+            val sut = ClusterViewModel(mockCluster, mockConfigurationRepo)
             with(sut) {
                 nameProperty.set("test-name")
                 endpointProperty.set("test-endpoint")
@@ -130,6 +130,35 @@ class ClusterViewModelTest : StringSpec({
                 schemaRegistryPasswordProperty.value shouldBe null
             }
         }
+    }
+
+    "viewModel is valid if only cluster name and endpoint are provided" {
+        // arrange
+        val sut = ClusterViewModel(Cluster.empty(), mockk())
+        // act
+        sut.nameProperty.set("test")
+        sut.endpointProperty.set("test-endpoint")
+        // assert
+        sut.isValidProperty.value shouldBe true
+    }
+
+    "viewModel is not valid if only cluster name is provided" {
+        // arrange
+        val sut = ClusterViewModel(Cluster.empty(), mockk())
+        // act
+        sut.nameProperty.set("test")
+        // assert
+        sut.isValidProperty.value shouldBe false
+    }
+
+    "isValid property is false if ssl is selected but not all SSL configurations are set" {
+        // arrange
+        val sut = ClusterViewModel(Cluster.empty(), mockk())
+        // act
+        sut.useSSLProperty.set(true)
+        sut.sslTruststoreLocationProperty.set("some location")
+        // assert
+        sut.isValidProperty.value shouldBe false
     }
 })
 
