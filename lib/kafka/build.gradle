@@ -11,7 +11,7 @@ dependencies {
     implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-serialization-runtime', version: '1.0-M1-1.4.0-rc-218')
 
     // Coroutines
-    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: '1.4.1')
+    implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: '1.4.1-native-mt')
 
     // Test Container
     api(group: 'org.testcontainers', name: 'kafka', version: "1.14.3")
