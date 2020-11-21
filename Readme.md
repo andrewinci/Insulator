@@ -54,9 +54,7 @@
 Download the binary from the latest release for your OS.
 
 [![Mac release](https://badgen.net/badge/icon/Mac%20Os?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-mac.zip)
-
 [![Windows release](https://badgen.net/badge/icon/Windows?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-win.zip)
-
 [![Debian release](https://badgen.net/badge/icon/Debian?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-debian.zip)
 
 ![brew cask install andrea-vinci/insulator/insulator](https://badgen.net/badge/icon/brew%20cask%20install%20andrea-vinci%2Finsulator%2Finsulator?label=🍻%20Brew&color=orange)
@@ -90,13 +88,18 @@ Download the binary from the latest release for your OS.
 
 ## Development
 
-The JDK version in use  
+The JDK version used is the adoptjdk 14.
 
-### Mac os
+To run the integration tests in headless mode, run
 
-### Linux
+```bash
+export _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k  -Dtestfx.setup.timeout=2500 -Dheadless.geometry=1920x1080-64"
+./gradlew app:integrationTest
+```
 
-The gradle task `packageApp` requires `binutils` and `fakeroot`.
+To package the app, JPackage is used. The call is wrapped into the `gradle` task `app:packageApp`.
+Notice that, to package the app in Ubuntu, `binutils` and `fakeroot` are required.
+See https://openjdk.java.net/jeps/343 for more info.
 
 ### Build documentation
 
