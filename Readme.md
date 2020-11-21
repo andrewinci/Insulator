@@ -7,7 +7,7 @@
 </h1>
 
 <h4 align="center">A tool for devs to debug Kafka based applications and services</h4>
-
+<br/>
 <p align="center">
 
 <a href="https://github.com/andrea-vinci/Insulator/releases">
@@ -36,7 +36,6 @@
   </a>
 
 </p>
-<p align="center"><strong> 🚧🚧Currently under development, use at your own risk 🚧🚧 </strong></p>
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
@@ -54,44 +53,67 @@
 
 Download the binary from the latest release for your OS.
 
-### Mac
-```
-brew cask install andrea-vinci/insulator/insulator
-```
+[![Mac release](https://badgen.net/badge/icon/Mac%20Os?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-mac.zip)
+[![Windows release](https://badgen.net/badge/icon/Windows?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-win.zip)
+[![Debian release](https://badgen.net/badge/icon/Debian?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-debian.zip)
+
+![brew cask install andrea-vinci/insulator/insulator](https://badgen.net/badge/icon/brew%20cask%20install%20andrea-vinci%2Finsulator%2Finsulator?label=🍻%20Brew&color=orange)
 
 ## Key Features
 
-* Authenticate to clusters with: SSL and SASL (SCRAM or PLAIN) authentication
-* Topics
-    - List available topics
-    - Messages count and basic topic info
-    - Delete a topic
-    - Create a topic with basic configuration (Compaction policy, \#Partitions, ...)
-* Consumer
-    - Avro and String deserialization
-    - Seek based on record timestamp
-    - Easy search and filtering
-* Schema registry
-    - List subjects
-    - Show all schema versions for a given subject
-* Producer
-    - Avro producer with **autocompletion** based on the schema
-    - String producer
-* Cross platform
-    - Windows, macOS and Linux ready.
-* Dark/Light theme
-* Auto-update
+* **Clusters**
+  * Authentication with: PLAN, SSL and SASL (SCRAM or PLAIN) authentication
+* **Topics**
+  * List available topics
+  * Messages count and basic topic info
+  * Delete a topic
+  * Create a topic with basic configuration (Compaction policy, \#Partitions, ...)
+  * Topic configurations
+* **Consumer**
+  * Avro and String deserialization
+  * Seek based on record timestamp
+  * Easy search and filtering
+* **Schema registry**
+  * List subjects
+  * Show all schema versions for a given subject
+* **Producer**
+  * Avro producer with **autocompletion** based on the schema
+  * String producer
+* 🚧  **Consumer groups** 🚧
+  * List consumer groups
+* **Cross platform**
+  * Windows, macOS and Linux ready.
+* **Dark/Light theme**
+* **Auto-update**
 
 ## Development
-**🚧Work in progress 🚧**
-### Linux
 
-The gradle task `packageApp` requires `binutils` and `fakeroot`.
+The JDK version used is the adoptjdk 14.
+
+To run the integration tests in headless mode, run
+
+```bash
+export _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k  -Dtestfx.setup.timeout=2500 -Dheadless.geometry=1920x1080-64"
+./gradlew app:integrationTest
+```
+
+To package the app, JPackage is used. The call is wrapped into the `gradle` task `app:packageApp`.
+Notice that, to package the app in Ubuntu, `binutils` and `fakeroot` are required.
+See https://openjdk.java.net/jeps/343 for more info.
+
+### Build documentation
+
+The documentation for the github page is available under the `/docs/` folder
+
+```bash
+bundle exec jekyll serve
+```
 
 ## Credits
 
-- [JetBrains](https://www.jetbrains.com/?from=Insulator)
-- [update4j](https://github.com/update4j/update4j)
+[JetBrains](https://www.jetbrains.com/?from=Insulator)
+
+[update4j](https://github.com/update4j/update4j)
 
 ## Support
 
