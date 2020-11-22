@@ -15,6 +15,7 @@ theme: just-the-docs
 plugins:
   - jekyll-feed
 
+color_scheme: insulator
 collections:
   wiki:
     permalink: "/:collection/:path/"
