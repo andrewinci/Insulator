@@ -151,9 +151,9 @@ jobs:
         run: |
           git config --global user.name ${{ github.actor }}
           git config --global user.email andrea-vinci@users.noreply.github.com
-          brew tap andrea-vinci/insulator
+          brew tap andrea-vinci/tap
           brew bump-cask-pr --write --commit --no-audit --no-browse --no-fork --version $RELEASE_VERSION --force insulator
-          cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrea-vinci/homebrew-insulator
-          git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-insulator.git
+          cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrea-vinci/homebrew-tap
+          git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-tap.git
         env:
           RELEASE_VERSION: ${{ steps.get_version.outputs.version }}
