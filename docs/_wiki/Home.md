@@ -51,10 +51,6 @@ nav_order: 1
   <a href="#license">License</a>
 </p>
 
-<p align="center">
-        <img src="assets/insulator_dark_mode.gif">
-</p>
-
 ## Installation
 
 Download the binary from the latest release for your OS.
@@ -107,7 +103,7 @@ To package the app, JPackage is used. The call is wrapped into the `gradle` task
 Notice that, to package the app in Ubuntu, `binutils` and `fakeroot` are required.
 See https://openjdk.java.net/jeps/343 for more info.
 
-### Build documentation
+### Build the documentation
 
 The documentation for the github page is available under the `/docs/` folder
 
