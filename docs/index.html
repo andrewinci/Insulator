@@ -35,8 +35,11 @@ description: The companion for kafka developers.
 	<section>
 		<div class="container flex">
 			<div class="text editable">
-				<h2>Consumers</h2>
-				<p>Inspect, search records in your topics.</p>
+				<h2>Consumer</h2>
+				<p>Consume from a specific topic deserializing Avro or String values.
+				Smart research across all consumed records.
+				Inspect record informations such as headers, partition, offset and timestamp.
+				Specify the timeframe avoiding to dump the whole topic.</p>
 			</div>
 			<div class="image">
 				<img src="{{ site.baseurl }}/images/consumer.png" alt="Consumer" class="screenshot editable" />
@@ -48,7 +51,7 @@ description: The companion for kafka developers.
 		<div class="container flex">
 			<div class="text editable">
 				<h2>Schema registry</h2>
-				<p>Find and inspect your Avro schemas.</p>
+				<p>Find and inspect Avro schemas. Inspect all versions of a specific subject and create new schemas.</p>
 			</div>
 			<div class="image">
 				<img src="{{ site.baseurl }}/images/schema-registry.png" alt="Schema tegistry" class="screenshot editable" />
@@ -60,7 +63,7 @@ description: The companion for kafka developers.
 		<div class="container flex">
 			<div class="text editable">
 				<h2>Producer</h2>
-				<p>Avro producer with autocompletion and validation.</p>
+				<p>Produce Avro or String records with schema validation and autocompletion to improve productivity.</p>
 			</div>
 			<div class="image">
 				<img src="{{ site.baseurl }}/images/producer.png" alt="Producer" class="screenshot editable" />
