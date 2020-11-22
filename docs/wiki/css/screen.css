@@ -64,7 +64,7 @@ header .company-name { font-size: 1.7em; line-height: 0; }
 
 header .company-name h1 { padding-top: 0.6em; font-size: 1.2em; }
 
-header .company-name img { width: auto; float: left; margin-right: 0.5em; }
+header .company-name img { width: auto; float: left; }
 
 .content { background: #fff; padding: 1px 0 0 0; position: relative; }
 
