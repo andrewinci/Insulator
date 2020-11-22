@@ -1,4 +1,4 @@
-name: Release
+nrame: Release
 
 on:
   push:

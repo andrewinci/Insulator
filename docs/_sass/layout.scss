@@ -10,7 +10,11 @@
 	.code {
 		margin-top: 1.5em;
 		font-size: 1.4em;
+		@media (max-width: $tablet-size) {
+			font-size: 0.9em;
+		}
 	}
+
 }
 
 .container {
