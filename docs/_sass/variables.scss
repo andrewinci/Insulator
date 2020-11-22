@@ -1,8 +1,10 @@
-$brand-color: #E9982f;
-$secondary-brand-color: #E9982f;
+$brand-color: #ff8c00;
+$secondary-brand-color: #ff8c00;
 $middle-gradient-color: mix($brand-color, $secondary-brand-color, 95%);
 
 // Breakpoints
 $tablet: "(min-width: 450px)";
 $mid-point: "(min-width: 620px)";
 $desktop: "(min-width: 768px)";
+
+$tablet-size: "450px"
