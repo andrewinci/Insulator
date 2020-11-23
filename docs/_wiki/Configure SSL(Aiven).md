@@ -3,7 +3,7 @@ layout: page
 title: Configure SSL (Aiven)
 parent: Configuration
 ---
-# Configure SSL (Aiven)
+# Configure a SSL connection
 
 To configure a connection to an SSL cluster, open Insulator and click on the `Add new cluster` button.
 
@@ -18,7 +18,7 @@ If you already have the `keystore` and `truststore` files, click on `Select file
 
 Click `Save` when you are happy with the configuration.
 
-# Configure for Aiven cluster
+# Configure an Aiven cluster
 
 If you don't have a keystore and a truststore file (e.g. if you use Aiven Kafka cluster), dowload `Access key`, `Access certificate` and `CA Certificate` from the Aiven console and rename, respectively, as `service.key`, `service.cert` and `ca.pem`.
 

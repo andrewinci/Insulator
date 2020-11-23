@@ -3,7 +3,7 @@ layout: page
 title: Configure Schema registry
 parent: Configuration
 ---
-# Configure Schema registry
+# Configure the schema registry
 
 To edit a previously created cluster click on the settings button from the cluster
 list view.
