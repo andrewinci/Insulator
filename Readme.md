@@ -101,7 +101,7 @@ To package the app, JPackage is used. The call is wrapped into the `gradle` task
 Notice that, to package the app in Ubuntu, `binutils` and `fakeroot` are required.
 See https://openjdk.java.net/jeps/343 for more info.
 
-### Build documentation
+### Build the documentation
 
 The documentation for the github page is available under the `/docs/` folder
 
