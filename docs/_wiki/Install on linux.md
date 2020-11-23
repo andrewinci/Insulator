@@ -5,18 +5,20 @@ parent: Installation
 ---
 # Install on linux
 
-## Debian distros
+Currently the application is packaged and tested only on ubuntu.
 
-To edit a previously created cluster click on the settings button from the cluster
-list view.
+## Debian distros (Ubuntu)
 
-![Aiven]({{site.baseurl}}/images/wiki/Configuration/ClusterSettings.png)
+Download the archive `insulator-debian.zip` from the [latest release](https://github.com/andrea-vinci/Insulator/releases/latest/).
 
-A window to edit the cluster configurations will open and the schema registry endpoint can be set (notice the protocol is mandatory [`https/http`]).
-If required, also the `Username` and `Password` could be provided.
-See the image below as example.
+In a terminal, navigate to the folder containing the zip previously downloaded and run the following
 
-![New SSL Cluster view]({{site.baseurl}}/images/wiki/Configuration/NewSSLCluster.png)
+```bash
+unzip insulator-debian.zip
+# if unzip is not installed it is possible to install it using `sudo apt instal unzip`
+# or unzip it with another available tool
+sudo dpkg -i insulator_x.y.z-1_amd64.deb
+```
 
 ## Other distros
 

@@ -5,13 +5,7 @@ parent: Installation
 ---
 # Install on windows
 
-To edit a previously created cluster click on the settings button from the cluster
-list view.
+Download the archive `insulator-win.zip` from the [latest release](https://github.com/andrea-vinci/Insulator/releases/latest/)
+and unzip it.
 
-![Aiven]({{site.baseurl}}/images/wiki/Configuration/ClusterSettings.png)
-
-A window to edit the cluster configurations will open and the schema registry endpoint can be set (notice the protocol is mandatory [`https/http`]).
-If required, also the `Username` and `Password` could be provided.
-See the image below as example.
-
-![New SSL Cluster view]({{site.baseurl}}/images/wiki/Configuration/NewSSLCluster.png)
+Double click on `Insulator-x.y.z.exe` and follow the instruction in the installation wizard.
