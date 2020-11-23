@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Configure SSL (Aiven)
+title: Configure a SSL connection
 parent: Configuration
 ---
 # Configure a SSL connection

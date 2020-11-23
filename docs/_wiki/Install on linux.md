@@ -1,9 +1,11 @@
 ---
 layout: page
-title: Configure the schema registry
-parent: Configuration
+title: Install on linux
+parent: Installation
 ---
-# Configure the schema registry
+# Install on linux
+
+## Debian distros
 
 To edit a previously created cluster click on the settings button from the cluster
 list view.
@@ -15,3 +17,7 @@ If required, also the `Username` and `Password` could be provided.
 See the image below as example.
 
 ![New SSL Cluster view]({{site.baseurl}}/images/wiki/Configuration/NewSSLCluster.png)
+
+## Other distros
+
+🚧 In progress ... 🚧

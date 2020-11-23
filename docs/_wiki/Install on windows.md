@@ -1,9 +1,9 @@
 ---
 layout: page
-title: Configure the schema registry
-parent: Configuration
+title: Install on windows
+parent: Installation
 ---
-# Configure the schema registry
+# Install on windows
 
 To edit a previously created cluster click on the settings button from the cluster
 list view.

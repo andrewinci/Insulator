@@ -51,16 +51,6 @@ nav_order: 1
   <a href="#license">License</a>
 </p>
 
-## Installation
-
-Download the binary from the latest release for your OS.
-
-[![Mac release](https://badgen.net/badge/icon/Mac%20Os?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-mac.zip)
-[![Windows release](https://badgen.net/badge/icon/Windows?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-win.zip)
-[![Debian release](https://badgen.net/badge/icon/Debian?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/download/0.3.2/insulator-debian.zip)
-
-![brew cask install andrea-vinci/tap/insulator](https://badgen.net/badge/icon/brew%20cask%20install%20andrea-vinci%2Ftap%2Finsulator?label=🍻%20Brew&color=orange)
-
 ## Key Features
 
 * **Clusters**
