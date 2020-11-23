@@ -5,6 +5,9 @@ parent: Installation
 ---
 # Install on mac
 
+- TOC
+{:toc}
+
 The installation using brew is to be preferred, it makes it easy to perform future upgrades.
 If brew is not available in your system, it is possible to download and install the DMG manually.
 
@@ -22,7 +25,8 @@ brew install cask andrea-vinci/tap/Insulator
 
 ## Using the DMG from the Github release
 
-Download the archive `insulator-mac.zip` from the [latest release](https://github.com/andrea-vinci/Insulator/releases/latest/)
-and unzip it.
+Download the archive `insulator-mac.zip` using the button below.
+
+[Latest release](https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-mac.zip){: .btn }
 
 Mount the DMG `Insulator-x.y.z.dmg` and move the file `Insulator` to the `Application` folder.

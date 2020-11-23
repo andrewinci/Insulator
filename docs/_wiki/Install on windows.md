@@ -5,7 +5,8 @@ parent: Installation
 ---
 # Install on windows
 
-Download the archive `insulator-win.zip` from the [latest release](https://github.com/andrea-vinci/Insulator/releases/latest/)
-and unzip it.
+Download the archive `insulator-win.zip` using the button below.
+
+[Latest release](https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-win.zip){: .btn }
 
 Double click on `Insulator-x.y.z.exe` and follow the instruction in the installation wizard.

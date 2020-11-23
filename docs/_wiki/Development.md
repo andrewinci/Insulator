@@ -2,11 +2,11 @@
 layout: page
 title: Development
 has_children: false
-nav_order: 4
 ---
 # Development
 
-🚧 This page is a WIP 🚧
+Working in progress
+{: .label .label-yellow }
 
 The JDK version used is the adoptjdk 14.
 

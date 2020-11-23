@@ -5,6 +5,9 @@ parent: Configuration
 ---
 # Configure the schema registry
 
+- TOC
+{:toc}
+
 To edit a previously created cluster click on the settings button from the cluster
 list view.
 

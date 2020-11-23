@@ -5,6 +5,9 @@ parent: Configuration
 ---
 # Configure a SSL connection
 
+- TOC
+{:toc}
+
 To configure a connection to an SSL cluster, open Insulator and click on the `Add new cluster` button.
 
 ![Cluster list view]({{site.baseurl}}/images/wiki/Configuration/ClusterList.png)
