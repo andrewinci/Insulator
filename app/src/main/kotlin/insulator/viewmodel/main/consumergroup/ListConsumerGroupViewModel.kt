@@ -1,10 +1,13 @@
 package insulator.viewmodel.main.consumergroup
 
 import insulator.di.ClusterScope
+import insulator.di.factories.ConsumerGroupComponentFactory
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.kafka.AdminApi
+import insulator.model.ConsumerGroupId
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
@@ -16,6 +19,8 @@ import javax.inject.Inject
 @ClusterScope
 class ListConsumerGroupViewModel @Inject constructor(
     private val adminClient: AdminApi,
+    private val tabViewModel: TabViewModel,
+    private val consumerGroupComponentFactory: ConsumerGroupComponentFactory,
 ) : InsulatorViewModel() {
 
     private val consumerGroupsProperty: ObservableList<String> = FXCollections.observableArrayList()
@@ -50,6 +55,15 @@ class ListConsumerGroupViewModel @Inject constructor(
         }.mapLeft {
             error.set(LoadConsumerGroupError(it.message ?: "Unable to load the consumer group list"))
         }
+
+    suspend fun showConsumerGroup() {
+        val selectedConsumerGroup = selectedConsumerGroupProperty.value ?: return
+        consumerGroupComponentFactory
+            .build(ConsumerGroupId(selectedConsumerGroup))
+            .getConsumerGroupView()
+            .also { consumerGroupView -> consumerGroupView.setOnCloseListener { dispatch { refresh() } } }
+            .let { consumerGroupView -> tabViewModel.setMainContent(selectedConsumerGroup, consumerGroupView) }
+    }
 }
 
 class LoadConsumerGroupError(message: String) : Error(message)

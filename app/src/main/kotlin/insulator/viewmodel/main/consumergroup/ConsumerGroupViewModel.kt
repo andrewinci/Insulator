@@ -2,27 +2,31 @@ package insulator.viewmodel.main.consumergroup
 
 import arrow.core.computations.either
 import insulator.helper.dispatch
+import insulator.helper.runOnFXThread
 import insulator.kafka.AdminApi
+import insulator.kafka.model.ConsumerGroupState
+import insulator.model.ConsumerGroupId
 import insulator.viewmodel.common.InsulatorViewModel
+import javafx.beans.binding.Bindings
+import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.value.ObservableStringValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javax.inject.Inject
 
+class ConsumerGroupViewModel @Inject constructor(
+    val adminApi: AdminApi,
+    private val consumerGroupId: ConsumerGroupId
+) : InsulatorViewModel() {
 
-class ConsumerGroupViewModel @Inject constructor(val adminApi: AdminApi) : InsulatorViewModel() {
-    private val consumerGroupId = "test" //todo: need to pass the consumer groupId
-
-    val nameProperty = SimpleStringProperty(consumerGroupId)
-    val state = SimpleStringProperty("...")
+    val nameProperty = SimpleStringProperty(consumerGroupId.id)
+    private val stateProperty = SimpleObjectProperty(ConsumerGroupState.UNKNOWN)
+    val subtitleProperty: ObservableStringValue = Bindings.createStringBinding({ "State: ${stateProperty.value}" }, stateProperty)
     val consumerGroupMembers: ObservableList<GroupMember> = FXCollections.observableArrayList<GroupMember>()
 
-    init {
-        dispatch { refresh() }
-    }
-
     suspend fun refresh() = either<Throwable, Unit> {
-        val consumerGroup = !adminApi.describeConsumerGroup(consumerGroupId)
+        val consumerGroup = !adminApi.describeConsumerGroup(consumerGroupId.id)
         val sorted = consumerGroup.members
             .map { it.clientId to it.topicPartitions }
             .map { (memberName, topicPartitions) ->
@@ -33,11 +37,16 @@ class ConsumerGroupViewModel @Inject constructor(val adminApi: AdminApi) : Insul
                     }
                 )
             }
-        consumerGroupMembers.clear()
-        consumerGroupMembers.addAll(sorted)
-        state.value = consumerGroup.state.toString()
+        runOnFXThread {
+            consumerGroupMembers.clear()
+            consumerGroupMembers.addAll(sorted)
+            stateProperty.set(consumerGroup.state)
+        }
     }.mapLeft { error.set(it) }
 
+    init {
+        dispatch { refresh() }
+    }
 
     fun resetOffset() {
         TODO("Not yet implemented")

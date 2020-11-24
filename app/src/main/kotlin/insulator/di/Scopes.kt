@@ -10,3 +10,6 @@ annotation class TopicScope
 
 @Scope
 annotation class SubjectScope
+
+@Scope
+annotation class ConsumerGroupScope

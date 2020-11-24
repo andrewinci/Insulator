@@ -15,6 +15,7 @@ import tornadofx.bindSelected
 import tornadofx.borderpane
 import tornadofx.label
 import tornadofx.listview
+import tornadofx.onDoubleClick
 import tornadofx.vbox
 import tornadofx.vgrow
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class ListConsumerGroupView @Inject constructor(
             cellFormat { graphic = label(it) { id = "consumer-$it" } }
             itemsProperty().set(viewModel.filteredConsumerGroupsProperty)
             bindSelected(viewModel.selectedConsumerGroupProperty)
-
+            onDoubleClick { dispatch { viewModel.showConsumerGroup() } }
             placeholder = label("No schema found")
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS

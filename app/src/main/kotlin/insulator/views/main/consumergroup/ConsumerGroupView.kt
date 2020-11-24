@@ -1,6 +1,7 @@
 package insulator.views.main.consumergroup
 
-import insulator.ui.common.InsulatorView
+import insulator.di.ConsumerGroupScope
+import insulator.ui.common.InsulatorTabView
 import insulator.ui.component.appBar
 import insulator.ui.component.refreshButton
 import insulator.viewmodel.main.consumergroup.ConsumerGroupViewModel
@@ -16,13 +17,15 @@ import tornadofx.populate
 import tornadofx.treeview
 import tornadofx.vbox
 import tornadofx.vgrow
+import javax.inject.Inject
 
-class ConsumerGroupView(override val viewModel: ConsumerGroupViewModel) : InsulatorView() {
+@ConsumerGroupScope
+class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGroupViewModel) : InsulatorTabView() {
 
     override val root = vbox {
         appBar {
             title = viewModel.nameProperty.value
-            subtitle = Bindings.createStringBinding({ "State: ${viewModel.state}" }, viewModel.state)
+            subtitle = viewModel.subtitleProperty
             buttons = listOf(refreshButton("schema", viewModel::refresh))
         }
         treeView()
