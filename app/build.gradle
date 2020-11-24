@@ -13,7 +13,7 @@ javafx {
 
 apply plugin: 'kotlin-kapt'
 
-def dagger_version = "2.30"
+def dagger_version = "2.30.1"
 
 testSets { integrationTest }
 
