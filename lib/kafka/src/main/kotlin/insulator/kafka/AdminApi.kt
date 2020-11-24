@@ -7,14 +7,19 @@ import arrow.core.rightIfNotNull
 import insulator.kafka.factories.kafkaConfig
 import insulator.kafka.helper.toSuspendCoroutine
 import insulator.kafka.model.Cluster
+import insulator.kafka.model.ConsumerGroup
+import insulator.kafka.model.ConsumerGroupMember
 import insulator.kafka.model.Topic
 import insulator.kafka.model.TopicConfiguration
+import insulator.kafka.model.TopicPartitionLag
+import insulator.kafka.model.toInternal
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.admin.TopicDescription
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
+import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.config.ConfigResource
 import org.apache.kafka.common.config.TopicConfig
@@ -22,6 +27,24 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import java.io.Closeable
 
 class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) : Closeable {
+
+    suspend fun describeConsumerGroup(groupId: String) = either<Throwable, ConsumerGroup> {
+        val getLag = { partition: TopicPartition, currentOffset: OffsetAndMetadata? ->
+            consumer.endOffsets(mutableListOf(partition)).values.first() - (currentOffset?.offset() ?: 0)
+        }
+        val partitionToOffset = !admin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().toSuspendCoroutine()
+        val description = !admin.describeConsumerGroups(listOf(groupId)).all().toSuspendCoroutine().map { it.values.first() }
+        ConsumerGroup(
+            groupId = description.groupId(),
+            state = description.state().toInternal(),
+            members = description.members().map {
+                ConsumerGroupMember(
+                    it.clientId(),
+                    it.assignment().topicPartitions().map { tp -> TopicPartitionLag(tp.topic(), tp.partition(), getLag(tp, partitionToOffset[tp])) }
+                )
+            }
+        )
+    }
 
     suspend fun listConsumerGroups() = admin.listConsumerGroups().all().toSuspendCoroutine()
         .map { consumerGroup -> consumerGroup.map { it.groupId() } }
