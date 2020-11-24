@@ -18,7 +18,6 @@ class SubjectComponentFactory @Inject constructor(clusterComponent: ClusterCompo
         DaggerSubjectComponent.factory().build(clusterComponent, subject)
     })
 
-
 @SubjectScope
 @Component(dependencies = [ClusterComponent::class])
 interface SubjectComponent {

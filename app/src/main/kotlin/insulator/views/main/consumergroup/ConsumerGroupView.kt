@@ -8,7 +8,6 @@ import insulator.viewmodel.main.consumergroup.ConsumerGroupViewModel
 import insulator.viewmodel.main.consumergroup.GroupMember
 import insulator.viewmodel.main.consumergroup.GroupMemberTopic
 import insulator.viewmodel.main.consumergroup.GroupMemberTopicPartitionLag
-import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Priority

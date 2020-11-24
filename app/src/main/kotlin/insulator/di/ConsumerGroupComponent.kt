@@ -12,12 +12,10 @@ import javax.inject.Scope
 annotation class ConsumerGroupScope
 data class ConsumerGroupId(val id: String)
 
-
 class ConsumerGroupComponentFactory @Inject constructor(clusterComponent: ClusterComponent) :
     CachedFactory<ConsumerGroupId, ConsumerGroupComponent>({ consumerGroup: ConsumerGroupId ->
         DaggerConsumerGroupComponent.factory().build(clusterComponent, consumerGroup)
     })
-
 
 @ConsumerGroupScope
 @Component(dependencies = [ClusterComponent::class])

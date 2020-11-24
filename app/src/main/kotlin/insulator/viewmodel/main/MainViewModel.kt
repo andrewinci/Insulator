@@ -1,7 +1,7 @@
 package insulator.viewmodel.main
 
-import insulator.di.ClusterScope
 import insulator.di.ClusterComponent
+import insulator.di.ClusterScope
 import insulator.kafka.model.Cluster
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.views.main.consumergroup.ListConsumerGroupView

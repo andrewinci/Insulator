@@ -20,7 +20,6 @@ import insulator.views.main.topic.ListTopicView
 import javax.inject.Inject
 import javax.inject.Scope
 
-
 @Scope
 annotation class ClusterScope
 
