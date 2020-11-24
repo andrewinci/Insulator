@@ -1,6 +1,6 @@
 package insulator
 
-import insulator.di.components.DaggerInsulatorComponent
+import insulator.di.DaggerInsulatorComponent
 import insulator.helper.dispatch
 import insulator.ui.style.AppBarStyle
 import insulator.ui.style.ButtonStyle

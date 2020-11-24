@@ -1,11 +1,11 @@
 package insulator.viewmodel.main.consumergroup
 
 import insulator.di.ClusterScope
-import insulator.di.factories.ConsumerGroupComponentFactory
+import insulator.di.ConsumerGroupComponentFactory
+import insulator.di.ConsumerGroupId
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.kafka.AdminApi
-import insulator.model.ConsumerGroupId
 import insulator.viewmodel.common.InsulatorViewModel
 import insulator.viewmodel.main.TabViewModel
 import javafx.beans.binding.Bindings

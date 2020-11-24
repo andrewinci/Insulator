@@ -1,7 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import insulator.di.TopicScope
-import insulator.di.components.TopicComponent
+import insulator.di.TopicComponent
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.jsonhelper.JsonFormatter

@@ -1,11 +1,11 @@
 package insulator.viewmodel.main.consumergroup
 
 import arrow.core.computations.either
+import insulator.di.ConsumerGroupId
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.kafka.AdminApi
 import insulator.kafka.model.ConsumerGroupState
-import insulator.model.ConsumerGroupId
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleObjectProperty

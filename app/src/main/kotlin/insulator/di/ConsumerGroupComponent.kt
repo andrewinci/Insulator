@@ -1,12 +1,23 @@
-package insulator.di.components
+package insulator.di
 
 import dagger.BindsInstance
 import dagger.Component
-import insulator.di.ConsumerGroupScope
-import insulator.di.SubjectScope
+import insulator.CachedFactory
 import insulator.kafka.model.Cluster
-import insulator.model.ConsumerGroupId
 import insulator.views.main.consumergroup.ConsumerGroupView
+import javax.inject.Inject
+import javax.inject.Scope
+
+@Scope
+annotation class ConsumerGroupScope
+data class ConsumerGroupId(val id: String)
+
+
+class ConsumerGroupComponentFactory @Inject constructor(clusterComponent: ClusterComponent) :
+    CachedFactory<ConsumerGroupId, ConsumerGroupComponent>({ consumerGroup: ConsumerGroupId ->
+        DaggerConsumerGroupComponent.factory().build(clusterComponent, consumerGroup)
+    })
+
 
 @ConsumerGroupScope
 @Component(dependencies = [ClusterComponent::class])
