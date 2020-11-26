@@ -82,7 +82,7 @@ Download the binary from the latest release for your OS. Learn more [here](https
   * String producer
 * 🚧  **Consumer groups** 🚧
   * List consumer groups
-  * Show topics, partition and lag
+  * Show topics, partitions and lags
 * **Cross platform**
   * Windows, macOS and Linux ready.
 * **Dark/Light theme**
