@@ -1,4 +1,4 @@
-package insulator.di.components
+package insulator.di
 
 import dagger.Component
 import insulator.configuration.ConfigurationRepo

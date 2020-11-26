@@ -1,7 +1,7 @@
 package insulator.viewmodel.main
 
 import helper.FxContext
-import insulator.di.components.ClusterComponent
+import insulator.di.ClusterComponent
 import insulator.helper.runOnFXThread
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.views.configurations.ClusterView

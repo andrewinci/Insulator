@@ -1,7 +1,7 @@
 package insulator.viewmodel.main.topic
 
 import insulator.di.ClusterScope
-import insulator.di.factories.TopicComponentFactory
+import insulator.di.TopicComponentFactory
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.kafka.AdminApi

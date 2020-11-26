@@ -1,6 +1,6 @@
 package insulator.views.configurations
 
-import insulator.di.factories.ClusterComponentFactory
+import insulator.di.ClusterComponentFactory
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.kafka.local.LocalKafkaException

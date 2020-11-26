@@ -2,6 +2,7 @@ package insulator.integrationtest.helpers
 
 import insulator.Insulator
 import insulator.configuration.ConfigurationRepo
+import insulator.configuration.model.InsulatorTheme
 import insulator.kafka.AdminApi
 import insulator.kafka.SchemaRegistry
 import insulator.kafka.adminApi
@@ -73,6 +74,7 @@ class IntegrationTestFixture : Closeable {
     private suspend fun storeConfiguration(vararg cluster: Cluster) =
         ConfigurationRepo("$currentHomeFolder/.insulator.config").let { repo ->
             cluster.forEach { repo.store(it) }
+            repo.store(InsulatorTheme.Dark)
         }
 
     override fun close() {

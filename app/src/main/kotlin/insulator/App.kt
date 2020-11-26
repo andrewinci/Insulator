@@ -1,6 +1,6 @@
 package insulator
 
-import insulator.di.components.DaggerInsulatorComponent
+import insulator.di.DaggerInsulatorComponent
 import insulator.helper.dispatch
 import insulator.ui.style.AppBarStyle
 import insulator.ui.style.ButtonStyle
@@ -14,6 +14,7 @@ import insulator.ui.style.ScrollBarStyle
 import insulator.ui.style.ScrollPaneStyle
 import insulator.ui.style.TableViewStyle
 import insulator.ui.style.TextStyle
+import insulator.ui.style.TreeViewStyle
 import javafx.stage.Stage
 import tornadofx.App
 import tornadofx.FX
@@ -33,7 +34,8 @@ class Insulator : App(
     DialogPaneStyle::class,
     ScrollPaneStyle::class,
     MainViewStyle::class,
-    ScrollBarStyle::class
+    ScrollBarStyle::class,
+    TreeViewStyle::class
 ) {
     private val daggerInsulator = DaggerInsulatorComponent.builder().build()
 

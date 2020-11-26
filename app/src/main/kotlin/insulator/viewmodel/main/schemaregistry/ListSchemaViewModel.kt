@@ -1,7 +1,7 @@
 package insulator.viewmodel.main.schemaregistry
 
 import insulator.di.ClusterScope
-import insulator.di.factories.SubjectComponentFactory
+import insulator.di.SubjectComponentFactory
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
 import insulator.kafka.SchemaRegistry
