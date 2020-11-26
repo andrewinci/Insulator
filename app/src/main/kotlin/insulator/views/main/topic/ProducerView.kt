@@ -19,15 +19,18 @@ import tornadofx.action
 import tornadofx.attachTo
 import tornadofx.borderpane
 import tornadofx.button
+import tornadofx.checkbox
 import tornadofx.combobox
 import tornadofx.enableWhen
 import tornadofx.hbox
+import tornadofx.hiddenWhen
 import tornadofx.label
 import tornadofx.onDoubleClick
 import tornadofx.scrollpane
 import tornadofx.textfield
 import tornadofx.vbox
 import tornadofx.vgrow
+import tornadofx.visibleWhen
 import javax.inject.Inject
 
 @TopicScope
@@ -42,13 +45,16 @@ class ProducerView @Inject constructor(
         fieldName("Key")
         textfield(viewModel.keyProperty) { id = "field-producer-key" }
 
-        valueFormatOptions()
+        valueFormatOptions()?.visibleWhen { viewModel.isTombstoneProperty.not() }
 
-        fieldName("Value")
-        recordValueTextArea()
+        hbox(spacing = 20.0, Pos.CENTER_LEFT) {
+            fieldName("Value")
+            checkbox("Tombstone", viewModel.isTombstoneProperty)
+        }
+        recordValueTextArea().visibleWhen { viewModel.isTombstoneProperty.not() }
 
-        fieldName("Validation")
-        validationArea()
+        fieldName("Validation").visibleWhen { viewModel.isTombstoneProperty.not() }
+        validationArea().visibleWhen { viewModel.isTombstoneProperty.not() }
 
         borderpane {
             right = button("Send") {
@@ -63,7 +69,7 @@ class ProducerView @Inject constructor(
         prefHeight = 800.0
     }
 
-    private fun EventTarget.valueFormatOptions() {
+    private fun EventTarget.valueFormatOptions() =
         if (viewModel.cluster.isSchemaRegistryConfigured()) {
             hbox(alignment = Pos.CENTER_LEFT) {
                 fieldName("Serializer")
@@ -72,8 +78,8 @@ class ProducerView @Inject constructor(
                     valueProperty().bindBidirectional(viewModel.serializeValueProperty)
                 }
             }
-        }
-    }
+        } else null
+
 
     private fun EventTarget.validationArea() =
         scrollpane {
@@ -91,13 +97,12 @@ class ProducerView @Inject constructor(
             maxHeight = 100.0
         }
 
-    private fun EventTarget.recordValueTextArea() {
+    private fun EventTarget.recordValueTextArea() =
         recordValueTextArea.apply {
             id = "field-producer-value"
             textProperty().bindBidirectional(viewModel.valueProperty)
             vgrow = Priority.ALWAYS
         }.attachTo(this)
-    }
 
     private fun autoComplete() {
         if (!viewModel.nextFieldProperty.value.isNullOrEmpty())

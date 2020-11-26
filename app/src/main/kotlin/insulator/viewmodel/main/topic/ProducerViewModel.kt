@@ -12,6 +12,8 @@ import insulator.kafka.producer.SerializationFormat
 import insulator.kafka.producer.StringProducer
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.binding.Bindings
+import javafx.beans.property.Property
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableBooleanValue
 import tornadofx.onChange
@@ -25,6 +27,7 @@ class ProducerViewModel @Inject constructor(
     private val stringProducer: StringProducer
 ) : InsulatorViewModel() {
 
+    val isTombstoneProperty = SimpleBooleanProperty(false)
     val serializeValueProperty = SimpleStringProperty(SerializationFormat.String.name)
 
     private val producer: Producer
@@ -38,15 +41,15 @@ class ProducerViewModel @Inject constructor(
     val keyProperty = SimpleStringProperty()
     val valueProperty = SimpleStringProperty()
     val canSendProperty: ObservableBooleanValue = Bindings.createBooleanBinding(
-        { validationErrorProperty.value == null && !keyProperty.value.isNullOrEmpty() && !valueProperty.value.isNullOrEmpty() },
+        { ((validationErrorProperty.value == null && !valueProperty.value.isNullOrEmpty()) || isTombstoneProperty.value )&& !keyProperty.value.isNullOrEmpty() },
         validationErrorProperty,
         keyProperty,
         valueProperty,
+        isTombstoneProperty
     )
 
     init {
-        if (cluster.isSchemaRegistryConfigured())
-            serializeValueProperty.set(SerializationFormat.Avro.name)
+        if (cluster.isSchemaRegistryConfigured()) serializeValueProperty.set(SerializationFormat.Avro.name)
         listOf(valueProperty, serializeValueProperty).forEach {
             it.onChange { value ->
                 value?.let {
