@@ -18,10 +18,17 @@ fun stringProducer(cluster: Cluster) =
     }
 
 class StringProducer(producerBuilder: ProducerBuilder<String>) : GenericProducer<String>(producerBuilder) {
+
     override suspend fun validate(value: String, topic: String): Either<Throwable, Unit> = Unit.right()
-    override suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit> {
+
+    override suspend fun send(topic: String, key: String, value: String) = genericSend(topic, key, value)
+
+    override suspend fun sendTombstone(topic: String, key: String) = genericSend(topic, key, null)
+
+    private fun genericSend(topic: String, key: String, value: String?): Either<Throwable, Unit> {
         val record = ProducerRecord(topic, key, value)
         return kafkaProducer.runCatching { send(record) }.fold({ Unit.right() }, { it.left() })
     }
+
     override fun close() = kafkaProducer.close()
 }

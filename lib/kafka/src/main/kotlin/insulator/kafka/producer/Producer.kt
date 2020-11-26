@@ -11,6 +11,7 @@ typealias GenericJsonToAvroConverter = suspend ((jsonString: String, schemaStrin
 interface Producer : Closeable {
     suspend fun validate(value: String, topic: String): Either<Throwable, Unit>
     suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit>
+    suspend fun sendTombstone(topic: String, key: String): Either<Throwable, Unit>
 }
 
 abstract class GenericProducer<V>(producerBuilder: ProducerBuilder<V>) : Producer {

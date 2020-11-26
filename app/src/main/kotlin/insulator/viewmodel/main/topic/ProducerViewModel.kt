@@ -41,7 +41,7 @@ class ProducerViewModel @Inject constructor(
     val keyProperty = SimpleStringProperty()
     val valueProperty = SimpleStringProperty()
     val canSendProperty: ObservableBooleanValue = Bindings.createBooleanBinding(
-        { ((validationErrorProperty.value == null && !valueProperty.value.isNullOrEmpty()) || isTombstoneProperty.value )&& !keyProperty.value.isNullOrEmpty() },
+        { ((validationErrorProperty.value == null && !valueProperty.value.isNullOrEmpty()) || isTombstoneProperty.value) && !keyProperty.value.isNullOrEmpty() },
         validationErrorProperty,
         keyProperty,
         valueProperty,
@@ -70,15 +70,11 @@ class ProducerViewModel @Inject constructor(
     }
 
     suspend fun send() {
-        if (keyProperty.value.isNullOrBlank()) {
-            error.set(Exception("Invalid key. Key must be not empty"))
-            return
+        when {
+            keyProperty.value.isNullOrBlank() -> error.set(Exception("Invalid key. Key must be not empty"))
+            isTombstoneProperty.value -> producer.sendTombstone(topic.name, keyProperty.value)
+            valueProperty.value.isNullOrBlank() -> error.set(Exception("Invalid value. Value must be not empty"))
+            else -> producer.send(topic.name, keyProperty.value, valueProperty.value).mapLeft { error.set(it) }
         }
-        if (valueProperty.value.isNullOrBlank()) {
-            error.set(Exception("Invalid value. Value must be not empty"))
-            return
-        }
-        producer.send(topic.name, keyProperty.value, valueProperty.value)
-            .mapLeft { error.set(it) }
     }
 }
