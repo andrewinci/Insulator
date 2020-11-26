@@ -23,7 +23,6 @@ import tornadofx.checkbox
 import tornadofx.combobox
 import tornadofx.enableWhen
 import tornadofx.hbox
-import tornadofx.hiddenWhen
 import tornadofx.label
 import tornadofx.onDoubleClick
 import tornadofx.scrollpane
@@ -79,7 +78,6 @@ class ProducerView @Inject constructor(
                 }
             }
         } else null
-
 
     private fun EventTarget.validationArea() =
         scrollpane {

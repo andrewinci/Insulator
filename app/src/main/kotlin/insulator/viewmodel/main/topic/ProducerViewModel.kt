@@ -12,7 +12,6 @@ import insulator.kafka.producer.SerializationFormat
 import insulator.kafka.producer.StringProducer
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.binding.Bindings
-import javafx.beans.property.Property
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableBooleanValue
