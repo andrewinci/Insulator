@@ -2,7 +2,12 @@ plugins {
     id 'insulator.library'
     id 'insulator.kafka'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id "org.unbroken-dome.test-sets"
 }
+
+testSets { integrationTest }
+
+compileIntegrationTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 
 dependencies {
     api project(":lib:helper")
