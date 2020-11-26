@@ -25,6 +25,7 @@ abstract class InsulatorView(title: String? = null) : View(title) {
         }
         if (viewModel.error.value != null) handleError(viewModel.error.value)
         viewModel.error.onChange { handleError(it) }
+        super.currentStage?.minHeight = 380.0
         super.onDock()
     }
 }
