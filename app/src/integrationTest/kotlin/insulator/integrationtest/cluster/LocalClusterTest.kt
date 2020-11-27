@@ -1,4 +1,4 @@
-package insulator.integrationtest
+package insulator.integrationtest.cluster
 
 // import insulator.integrationtest.helpers.click
 // import insulator.integrationtest.helpers.getPrimaryWindow
