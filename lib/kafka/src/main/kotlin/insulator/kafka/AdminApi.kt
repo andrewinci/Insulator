@@ -82,7 +82,10 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
         admin.createTopics(
             topics.map {
                 NewTopic(it.name, it.partitionCount, it.replicationFactor)
-                    .configs(mapOf(TopicConfig.CLEANUP_POLICY_CONFIG to compactedConfig(it.isCompacted)))
+                    .configs(
+                        mapOf(TopicConfig.CLEANUP_POLICY_CONFIG to compactedConfig(it.isCompacted))
+                            .plus(it.configuration.rawConfiguration)
+                    )
             }
         ).all().thenApply { Unit }.toSuspendCoroutine()
 

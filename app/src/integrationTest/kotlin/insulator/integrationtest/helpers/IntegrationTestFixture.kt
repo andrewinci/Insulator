@@ -10,6 +10,7 @@ import insulator.kafka.local.SchemaRegistryContainer
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.kafka.model.Topic
+import insulator.kafka.model.TopicConfiguration
 import insulator.kafka.producer.Producer
 import insulator.kafka.producer.stringProducer
 import insulator.kafka.schemaRegistry
@@ -95,6 +96,22 @@ class IntegrationTestFixture : Closeable {
             schemaRegistry?.getAllSubjects()?.map { it.forEach { schema -> schemaRegistry?.deleteSubject(schema) } }
         }
     }
+
+    suspend fun createCompactedTopic(s: String) = adminApi!!.createTopics(
+        Topic(
+            s,
+            partitionCount = 1,
+            replicationFactor = 1,
+            isCompacted = true,
+            configuration = TopicConfiguration(
+                mapOf(
+                    "delete.retention.ms" to "0",
+                    "min.cleanable.dirty.ratio" to "0.001",
+                    "segment.ms" to "100",
+                )
+            )
+        )
+    )
 
     suspend fun createTopic(s: String) = adminApi!!.createTopics(Topic(s, partitionCount = 3, replicationFactor = 1))
     fun createTestSchema(schemaName: String) = schemaRegistry!!.register(schemaName, testSchema(5))

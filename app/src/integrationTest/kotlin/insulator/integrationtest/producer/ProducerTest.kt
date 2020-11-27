@@ -1,4 +1,4 @@
-package insulator.integrationtest
+package insulator.integrationtest.producer
 
 import insulator.helper.runOnFXThread
 import insulator.integrationtest.helpers.IntegrationTestFixture

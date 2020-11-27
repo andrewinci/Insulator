@@ -80,6 +80,7 @@ Download the binary from the latest release for your OS. Learn more [here](https
 * **Producer**
   * Avro producer with **autocompletion** based on the schema
   * String producer
+  * Send tombstones
 * 🚧  **Consumer groups** 🚧
   * List consumer groups
   * Show topics, partitions and lags
@@ -105,7 +106,8 @@ See https://openjdk.java.net/jeps/343 for more info.
 
 ### Build the documentation
 
-The documentation for the github page is available under the `/docs/` folder
+The documentation for the github page is available under the `/docs/` folder.
+To build and serve it, use the following.
 
 ```bash
 bundle exec jekyll serve

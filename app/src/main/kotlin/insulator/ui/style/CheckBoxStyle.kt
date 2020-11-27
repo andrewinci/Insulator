@@ -18,6 +18,7 @@ class CheckBoxStyle : Stylesheet() {
                     borderInsets = multi(box(1.0.px))
                     borderColor = multi(box(theme.mainColor))
                 }
+                textFill = theme.black
             }
         }
     }

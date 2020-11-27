@@ -29,19 +29,18 @@ class AvroProducer(
 
     private val schemaCache = HashMap<String, Either<Throwable, String>>()
 
-    override suspend fun validate(value: String, topic: String) =
-        internalValidate(value, topic).flatMap { Unit.right() }
+    override suspend fun validate(value: String, topic: String) = internalValidate(value, topic).flatMap { Unit.right() }
 
-    override suspend fun send(topic: String, key: String, value: String) =
-        internalValidate(value, topic)
-            .map { ProducerRecord(topic, key, it) }
-            .flatMap { kafkaProducer.runCatchingE { send(it) } }
-            .map { Unit }
+    override suspend fun send(topic: String, key: String, value: String) = internalValidate(value, topic).flatMap { sendGenericRecord(topic, key, it) }
+
+    override suspend fun sendTombstone(topic: String, key: String) = sendGenericRecord(topic, key, null)
 
     override fun close() = kafkaProducer.close()
 
-    private suspend fun internalValidate(value: String, topic: String) =
-        getCachedSchema(topic).flatMap { jsonAvroConverter(value, it) }
+    private suspend fun internalValidate(value: String, topic: String) = getCachedSchema(topic).flatMap { jsonAvroConverter(value, it) }
+
+    private fun sendGenericRecord(topic: String, key: String, value: GenericRecord?) =
+        kafkaProducer.runCatchingE { send(ProducerRecord(topic, key, value)) }.map { }
 
     private suspend fun getCachedSchema(topic: String) =
         schemaCache.getOrPut(
