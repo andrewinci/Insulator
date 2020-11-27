@@ -112,10 +112,9 @@ fun testProduceToCompactedTopic(testTombstones: Boolean) = freeSpec {
                     // at least one record was removed by compacting the tombstone and cleanup
                     recordTable.items.map { it.keyProperty.value }.toSet() shouldNotBe (0 until numberOfMessages)
                     recordTable.items.size shouldBeLessThanOrEqual numberOfMessages
-                }
-                else {
+                } else {
                     // at least 1 message was updated
-                    recordTable.items.size shouldBeLessThan 2*numberOfMessages
+                    recordTable.items.size shouldBeLessThan 2 * numberOfMessages
                     recordTable.items.map { it.valueProperty.value } shouldContainAll (0 until numberOfMessages).map { "updated-value-$it" }
                 }
 
