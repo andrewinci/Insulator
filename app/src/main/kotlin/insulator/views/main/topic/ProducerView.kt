@@ -11,6 +11,7 @@ import insulator.viewmodel.main.topic.ProducerViewModel
 import javafx.beans.binding.Bindings
 import javafx.event.EventTarget
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
@@ -24,6 +25,8 @@ import tornadofx.combobox
 import tornadofx.enableWhen
 import tornadofx.hbox
 import tornadofx.label
+import tornadofx.managedWhen
+import tornadofx.onChange
 import tornadofx.onDoubleClick
 import tornadofx.scrollpane
 import tornadofx.textfield
@@ -37,23 +40,27 @@ class ProducerView @Inject constructor(
     override val viewModel: ProducerViewModel
 ) : InsulatorView() {
 
+    init {
+        viewModel.isTombstoneProperty.onChange { resize() }
+    }
+
     private val recordValueTextArea = TextArea()
 
-    override val root = vbox(spacing = 10.0) {
+    override val root = vbox(spacing = 15.0) {
         appBar { title = viewModel.topic.name }
         fieldName("Key")
         textfield(viewModel.keyProperty) { id = "field-producer-key" }
 
-        valueFormatOptions()?.visibleWhen { viewModel.isTombstoneProperty.not() }
+        valueFormatOptions()?.hideIfTombstone()
 
         hbox(spacing = 20.0, Pos.CENTER_LEFT) {
             fieldName("Value")
             checkbox("Tombstone", viewModel.isTombstoneProperty)
         }
-        recordValueTextArea().visibleWhen { viewModel.isTombstoneProperty.not() }
+        recordValueTextArea().hideIfTombstone()
 
-        fieldName("Validation").visibleWhen { viewModel.isTombstoneProperty.not() }
-        validationArea().visibleWhen { viewModel.isTombstoneProperty.not() }
+        fieldName("Validation").hideIfTombstone()
+        validationArea().hideIfTombstone()
 
         borderpane {
             right = button("Send") {
@@ -66,6 +73,11 @@ class ProducerView @Inject constructor(
         shortcut("CTRL+SPACE") { autoComplete() }
         prefWidth = 800.0
         prefHeight = 800.0
+    }
+
+    private fun Node.hideIfTombstone() = apply {
+        visibleWhen { viewModel.isTombstoneProperty.not() }
+        managedWhen { viewModel.isTombstoneProperty.not() }
     }
 
     private fun EventTarget.valueFormatOptions() =
@@ -107,8 +119,20 @@ class ProducerView @Inject constructor(
             with(recordValueTextArea) { insertText(caretPosition, "\"${viewModel.nextFieldProperty.value}\":") }
     }
 
+    private fun resize() = currentStage?.let {
+        if (viewModel.isTombstoneProperty.value) {
+            it.minHeight = 260.0
+            it.height = 260.0
+            it.maxHeight = 260.0
+        } else {
+            it.minHeight = 800.0
+            it.maxHeight = Double.MAX_VALUE
+        }
+    }
+
     override fun onDock() {
         title = "Insulator Producer"
+        resize()
         super.onDock()
     }
 }
