@@ -63,6 +63,7 @@ nav_order: 1
 * **Producer**
   * Avro producer with **autocompletion** based on the schema
   * String producer
+  * Send tombstones
 * 🚧  **Consumer groups** 🚧
   * List consumer groups
 * **Cross platform**
