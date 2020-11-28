@@ -35,6 +35,12 @@
          alt="Snyk"/>
   </a>
 
+<a href="https://gitter.im/Insulator-tool/community">
+    <img src="https://img.shields.io/gitter/room/Insulator-tool/community"
+         alt="Gitter"/>
+  </a>
+  
+
 </p>
 
 <p align="center">
