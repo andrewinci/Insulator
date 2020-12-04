@@ -16,19 +16,20 @@ class MainViewStyle : Stylesheet() {
         val tabContainer by cssclass("tab-container")
         val sidebar by cssclass("sidebar")
         val sidebarItem by cssclass("sidebar-item")
+        val clusterOptions by cssclass("cluster-options")
     }
 
     private val contentPadding = 0.1.em
 
     init {
         sidebar {
-            spacing = 1.em
             backgroundColor = multi(theme.backgroundColor)
-            alignment = Pos.TOP_CENTER
-            padding = box(0.em, 0.em, 1.em, 0.em)
-            TextStyle.h1 {
-                minHeight = 3.em
-            }
+            alignment = Pos.TOP_LEFT
+        }
+
+        clusterOptions {
+            spacing = 1.em
+            padding = box(0.em, 0.em , 2.em, 0.em)
         }
 
         sidebarItem {
@@ -36,7 +37,7 @@ class MainViewStyle : Stylesheet() {
             minHeight = 50.0.px
             borderInsets = multi(box(-theme.viewPadding, 0.px, 0.px, -theme.viewPadding))
             alignment = Pos.CENTER_LEFT
-            padding = box(1.em)
+            padding = box(1.em, 0.em)
         }
 
         splitPane {
@@ -45,15 +46,10 @@ class MainViewStyle : Stylesheet() {
                 padding = box(0.px, 1.px, 0.px, 0.px)
             }
             sidebar {
-                padding = box(theme.viewPadding, 0.px)
+                padding = box(0.px, theme.viewPadding, theme.viewPadding, theme.viewPadding)
             }
             contentList {
-                padding = box(
-                    theme.viewPadding + contentPadding,
-                    theme.viewPadding + contentPadding,
-                    contentPadding,
-                    theme.viewPadding + contentPadding,
-                )
+                padding = box(theme.viewPadding)
             }
             content {
                 padding = box(0.px, 0.px, (-2).px, 0.px)

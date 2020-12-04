@@ -91,10 +91,13 @@ class MainView @Inject constructor(
 
     private fun sidebar() =
         borderpane {
-            top = vbox(alignment = Pos.TOP_CENTER) {
+            top = vbox {
                 h1(cluster.name)
-                button("Change cluster") { action { close() }; addClass(alertButton); id = "button-change-cluster" }
-                button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
+                hbox {
+                    button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
+                    button("Change cluster") { action { close() }; addClass(alertButton); id = "button-change-cluster" }
+                    addClass(MainViewStyle.clusterOptions)
+                }
             }
             center = vbox {
                 menuItem("Topics", ICON_TOPICS, "sidebar-item-topics") { viewModel.setContentList(ListTopicView::class, currentWindow) }
