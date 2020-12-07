@@ -29,7 +29,7 @@ class MainViewStyle : Stylesheet() {
 
         clusterOptions {
             spacing = 1.em
-            padding = box(0.em, 0.em , 2.em, 0.em)
+            padding = box(0.em, 0.em, 2.em, 0.em)
         }
 
         sidebarItem {
