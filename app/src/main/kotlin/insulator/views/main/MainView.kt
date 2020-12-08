@@ -7,6 +7,7 @@ import insulator.ui.ThemeHelper
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.h1
 import insulator.ui.component.h2
+import insulator.ui.component.readOnlyButton
 import insulator.ui.component.themeButton
 import insulator.ui.style.ButtonStyle.Companion.alertButton
 import insulator.ui.style.MainViewStyle
@@ -102,6 +103,7 @@ class MainView @Inject constructor(
                 menuItem("Consumer Groups", ICON_CONSUMERS, "sidebar-item-consumer-group") { viewModel.setContentList(ListConsumerGroupView::class, currentWindow) }
             }
             bottom = hbox(alignment = Pos.CENTER) {
+                readOnlyButton {}
                 themeButton { themeHelper.dispatch { changeTheme() } }
             }
             addClass(MainViewStyle.sidebar)
