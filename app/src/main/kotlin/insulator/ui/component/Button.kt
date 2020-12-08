@@ -5,6 +5,7 @@ import insulator.helper.dispatch
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.theme
 import javafx.beans.binding.Bindings
+import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
@@ -32,13 +33,11 @@ fun EventTarget.refreshButton(name: String, refreshOp: suspend () -> Unit) =
     }
 
 
-fun EventTarget.readOnlyButton(op: () -> Unit): Button {
-    val isReadOnlyProperty = GlobalState.isReadOnlyProperty
+fun EventTarget.readOnlyButton(isReadOnlyProperty: BooleanProperty): Button {
     val getIcon = { if (isReadOnlyProperty.value) ICON_LOCK_SVG else ICON_UNLOCK_SVG }
     return button {
         action {
             isReadOnlyProperty.set(isReadOnlyProperty.not().value)
-            op()
         }
         graphicProperty().bind(
             Bindings.createObjectBinding({ SVGIcon(getIcon(), 25.0, theme.mainColor) }, isReadOnlyProperty)

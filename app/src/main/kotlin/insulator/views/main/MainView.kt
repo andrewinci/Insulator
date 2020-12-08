@@ -1,6 +1,7 @@
 package insulator.views.main
 
 import insulator.di.ClusterScope
+import insulator.helper.GlobalState
 import insulator.helper.dispatch
 import insulator.kafka.model.Cluster
 import insulator.ui.ThemeHelper
@@ -103,7 +104,7 @@ class MainView @Inject constructor(
                 menuItem("Consumer Groups", ICON_CONSUMERS, "sidebar-item-consumer-group") { viewModel.setContentList(ListConsumerGroupView::class, currentWindow) }
             }
             bottom = hbox(alignment = Pos.CENTER) {
-                readOnlyButton {}
+                readOnlyButton(GlobalState.isReadOnlyProperty)
                 themeButton { themeHelper.dispatch { changeTheme() } }
             }
             addClass(MainViewStyle.sidebar)
