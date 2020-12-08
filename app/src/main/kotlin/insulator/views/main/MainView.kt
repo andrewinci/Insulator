@@ -103,7 +103,7 @@ class MainView @Inject constructor(
                 menuItem("Schema Registry", ICON_REGISTRY, "sidebar-item-schema-registry") { viewModel.setContentList(ListSchemaView::class, currentWindow) }
                 menuItem("Consumer Groups", ICON_CONSUMERS, "sidebar-item-consumer-group") { viewModel.setContentList(ListConsumerGroupView::class, currentWindow) }
             }
-            bottom = hbox(alignment = Pos.CENTER) {
+            bottom = vbox(alignment = Pos.CENTER, spacing = 10) {
                 readOnlyButton(GlobalState.isReadOnlyProperty)
                 themeButton { themeHelper.dispatch { changeTheme() } }
             }

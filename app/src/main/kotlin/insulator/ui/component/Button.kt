@@ -1,6 +1,5 @@
 package insulator.ui.component
 
-import insulator.helper.GlobalState
 import insulator.helper.dispatch
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.theme
@@ -13,10 +12,13 @@ import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonType
+import javafx.scene.paint.Color
 import tornadofx.SVGIcon
 import tornadofx.action
 import tornadofx.addClass
 import tornadofx.button
+import tornadofx.onChange
+import tornadofx.toggleClass
 
 // from https://material.io/resources/icons
 const val ICON_MENU_SVG = "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
@@ -35,22 +37,28 @@ fun EventTarget.refreshButton(name: String, refreshOp: suspend () -> Unit) =
 
 fun EventTarget.readOnlyButton(isReadOnlyProperty: BooleanProperty): Button {
     val getIcon = { if (isReadOnlyProperty.value) ICON_LOCK_SVG else ICON_UNLOCK_SVG }
-    return button {
-        action {
-            isReadOnlyProperty.set(isReadOnlyProperty.not().value)
-        }
+    val color = { if (!isReadOnlyProperty.value) Color.RED else theme.mainColor }
+    val text = { if (isReadOnlyProperty.value) "ReadOnly mode" else "Read/Write mode" }
+    val button =  button {
+        textProperty().bind(Bindings.createStringBinding(text, isReadOnlyProperty))
+        action {  isReadOnlyProperty.set(isReadOnlyProperty.not().value) }
         graphicProperty().bind(
-            Bindings.createObjectBinding({ SVGIcon(getIcon(), 25.0, theme.mainColor) }, isReadOnlyProperty)
+            Bindings.createObjectBinding({ SVGIcon(getIcon(), 22.0, color()) }, isReadOnlyProperty)
         )
-        addClass(ButtonStyle.burgerButton)
+        addClass(ButtonStyle.toggleButton)
     }
+    isReadOnlyProperty.onChange {
+        button.toggleClass(ButtonStyle.alertButton, !isReadOnlyProperty.value)
+    }
+    return button
 }
 
 fun EventTarget.themeButton(op: () -> Unit) =
     button {
+        text = "Change theme"
         action(op)
-        graphic = SVGIcon(ICON_THEME_SVG, 25.0, theme.mainColor)
-        addClass(ButtonStyle.burgerButton)
+        graphic = SVGIcon(ICON_THEME_SVG, 22.0, theme.mainColor)
+        addClass(ButtonStyle.toggleButton)
     }
 
 fun EventTarget.settingsButton(op: () -> Unit) = button {
