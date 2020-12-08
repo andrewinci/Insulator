@@ -34,14 +34,13 @@ fun EventTarget.refreshButton(name: String, refreshOp: suspend () -> Unit) =
         addClass(ButtonStyle.blueButton)
     }
 
-
 fun EventTarget.readOnlyButton(isReadOnlyProperty: BooleanProperty): Button {
     val getIcon = { if (isReadOnlyProperty.value) ICON_LOCK_SVG else ICON_UNLOCK_SVG }
     val color = { if (!isReadOnlyProperty.value) Color.RED else theme.mainColor }
     val text = { if (isReadOnlyProperty.value) "ReadOnly mode" else "Read/Write mode" }
-    val button =  button {
+    val button = button {
         textProperty().bind(Bindings.createStringBinding(text, isReadOnlyProperty))
-        action {  isReadOnlyProperty.set(isReadOnlyProperty.not().value) }
+        action { isReadOnlyProperty.set(isReadOnlyProperty.not().value) }
         graphicProperty().bind(
             Bindings.createObjectBinding({ SVGIcon(getIcon(), 22.0, color()) }, isReadOnlyProperty)
         )

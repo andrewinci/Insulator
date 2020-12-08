@@ -1,7 +1,6 @@
 package insulator.views.main.topic
 
 import insulator.di.TopicScope
-import insulator.helper.GlobalState
 import insulator.helper.dispatch
 import insulator.helper.hideOnReadonly
 import insulator.helper.toObservable
@@ -24,7 +23,7 @@ import javafx.scene.control.Control
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import javax.inject.Inject
 
 @TopicScope
@@ -99,7 +98,6 @@ class TopicView @Inject constructor(
             viewModel.dispatch { delete() }
             closeTab()
         }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not()).hideOnReadonly()
-
 
     private fun EventTarget.showInfoButton() = button("Info") {
         id = "button-info"
