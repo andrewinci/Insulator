@@ -14,7 +14,6 @@ import javafx.event.EventTarget
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Priority
 import tornadofx.cellFormat
-import tornadofx.enableWhen
 import tornadofx.populate
 import tornadofx.treeview
 import tornadofx.vbox
