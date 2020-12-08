@@ -1,5 +1,6 @@
 package insulator.ui.component
 
+import insulator.helper.GlobalState
 import insulator.helper.dispatch
 import insulator.ui.style.ButtonStyle
 import insulator.ui.style.theme
@@ -32,8 +33,8 @@ fun EventTarget.refreshButton(name: String, refreshOp: suspend () -> Unit) =
 
 
 fun EventTarget.readOnlyButton(op: () -> Unit): Button {
-    val isReadOnlyProperty = SimpleBooleanProperty(true)
-    val getIcon = { if (isReadOnlyProperty.value) ICON_UNLOCK_SVG else ICON_LOCK_SVG }
+    val isReadOnlyProperty = GlobalState.isReadOnlyProperty
+    val getIcon = { if (isReadOnlyProperty.value) ICON_LOCK_SVG else ICON_UNLOCK_SVG }
     return button {
         action {
             isReadOnlyProperty.set(isReadOnlyProperty.not().value)
