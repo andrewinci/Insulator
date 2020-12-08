@@ -44,6 +44,9 @@ class ConsumerGroupViewModel @Inject constructor(
         }
     }.mapLeft { error.set(it) }
 
+    suspend fun delete() = adminApi.deleteConsumerGroup(nameProperty.value)
+        .mapLeft { error.set(it) }
+
     init {
         dispatch { refresh() }
     }
