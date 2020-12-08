@@ -2,6 +2,7 @@ package insulator.views.main.schemaregistry
 
 import insulator.di.ClusterScope
 import insulator.helper.dispatch
+import insulator.helper.hideOnReadonly
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.refreshButton
@@ -63,5 +64,5 @@ class ListSchemaView @Inject constructor(
         button("Create schema") {
             action { viewModel.createNewSchema(currentWindow) }
             id = "button-create-schema"
-        }
+        }.hideOnReadonly()
 }

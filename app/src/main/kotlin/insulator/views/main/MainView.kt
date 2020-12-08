@@ -1,12 +1,14 @@
 package insulator.views.main
 
 import insulator.di.ClusterScope
+import insulator.helper.GlobalState
 import insulator.helper.dispatch
 import insulator.kafka.model.Cluster
 import insulator.ui.ThemeHelper
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.h1
 import insulator.ui.component.h2
+import insulator.ui.component.readOnlyButton
 import insulator.ui.component.themeButton
 import insulator.ui.style.ButtonStyle.Companion.alertButton
 import insulator.ui.style.MainViewStyle
@@ -101,7 +103,8 @@ class MainView @Inject constructor(
                 menuItem("Schema Registry", ICON_REGISTRY, "sidebar-item-schema-registry") { viewModel.setContentList(ListSchemaView::class, currentWindow) }
                 menuItem("Consumer Groups", ICON_CONSUMERS, "sidebar-item-consumer-group") { viewModel.setContentList(ListConsumerGroupView::class, currentWindow) }
             }
-            bottom = hbox(alignment = Pos.CENTER) {
+            bottom = vbox(alignment = Pos.CENTER, spacing = 10) {
+                readOnlyButton(GlobalState.isReadOnlyProperty)
                 themeButton { themeHelper.dispatch { changeTheme() } }
             }
             addClass(MainViewStyle.sidebar)

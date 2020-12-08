@@ -6,8 +6,8 @@ nav_order: 4
 ---
 # Producer
 
-Insulator supports producing new record to the cluster topics.
-Two types of producer are currently supported: Avro and String.
+Insulator supports producing new records to the cluster topics.
+Two types of producers are currently supported: Avro and String.
 
 The string producer allows the user to create a new record with string key and value.
 

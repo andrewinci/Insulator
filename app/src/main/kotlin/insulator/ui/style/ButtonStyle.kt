@@ -6,12 +6,13 @@ import tornadofx.box
 import tornadofx.cssclass
 import tornadofx.em
 import tornadofx.multi
+import tornadofx.px
 
 class ButtonStyle : Stylesheet() {
     companion object {
         val alertButton by cssclass("alert-button")
         val blueButton by cssclass("blue-button")
-        val burgerButton by cssclass("burger-button")
+        val toggleButton by cssclass("toggle-button")
         val settingsButton by cssclass("settings-button")
     }
 
@@ -38,11 +39,15 @@ class ButtonStyle : Stylesheet() {
                         backgroundRadius = multi(box(5.em))
                         backgroundColor = multi(theme.mainColorDark)
                     }
-                    and(burgerButton) {
-                        textFill = theme.mainColor
+                    and(toggleButton) {
                         backgroundRadius = multi(box(5.em))
+                        textFill = theme.black
                         backgroundColor = multi(theme.mainColorDark)
                     }
+                }
+                and(toggleButton) {
+                    textFill = theme.mainColor
+                    minWidth = 200.px
                 }
                 and(alertButton) { textFill = theme.alertColor }
                 and(blueButton) { textFill = theme.blueColor }

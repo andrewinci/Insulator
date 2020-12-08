@@ -95,6 +95,7 @@ Download the binary from the latest release for your OS. Learn more [here](https
   * Windows, macOS and Linux ready.
 * **Dark/Light theme**
 * **Auto-update**
+* **ReadOnly mode**
 
 ## Development
 

@@ -72,3 +72,4 @@ nav_order: 1
   * Windows, macOS and Linux ready.
 * **Dark/Light theme**
 * **Auto-update**
+* **ReadOnly mode**
