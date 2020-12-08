@@ -1,6 +1,7 @@
 package insulator.viewmodel.main.consumergroup
 
 import arrow.core.computations.either
+import arrow.core.handleErrorWith
 import insulator.di.ConsumerGroupId
 import insulator.helper.dispatch
 import insulator.helper.runOnFXThread
@@ -43,6 +44,10 @@ class ConsumerGroupViewModel @Inject constructor(
             stateProperty.set(consumerGroup.state)
         }
     }.mapLeft { error.set(it) }
+
+    suspend fun delete() = adminApi.deleteConsumerGroup(nameProperty.value)
+        .mapLeft { error.set(it) }
+
 
     init {
         dispatch { refresh() }

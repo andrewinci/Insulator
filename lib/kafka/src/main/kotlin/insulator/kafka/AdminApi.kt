@@ -3,6 +3,8 @@ package insulator.kafka
 import arrow.core.Either
 import arrow.core.computations.either
 import arrow.core.flatMap
+import arrow.core.left
+import arrow.core.right
 import arrow.core.rightIfNotNull
 import insulator.kafka.factories.kafkaConfig
 import insulator.kafka.helper.toSuspendCoroutine
@@ -50,7 +52,7 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
         .map { consumerGroup -> consumerGroup.map { it.groupId() } }
 
     suspend fun deleteConsumerGroup(consumerGroupId: String) = admin.deleteConsumerGroups(listOf(consumerGroupId))
-        .all().toSuspendCoroutine().fold({ it }, { Unit })
+        .all().toSuspendCoroutine().fold({ it.left() }, { Unit.right() })
 
     suspend fun listTopics() = admin.listTopics().names().toSuspendCoroutine().map { it.toList() }
 

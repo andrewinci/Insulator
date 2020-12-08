@@ -7,7 +7,6 @@ import insulator.ui.component.appBar
 import insulator.ui.component.refreshButton
 import insulator.ui.component.searchBox
 import insulator.viewmodel.main.consumergroup.ListConsumerGroupViewModel
-import insulator.viewmodel.main.schemaregistry.LoadSchemaListError
 import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
@@ -34,24 +33,18 @@ class ListConsumerGroupView @Inject constructor(
         borderpane {
             right = searchBox(viewModel.searchItemProperty, currentView = this@ListConsumerGroupView)
         }
-        schemasListView()
+        consumerGroupListView()
     }
 
-    private fun EventTarget.schemasListView() =
+    private fun EventTarget.consumerGroupListView() =
         listview<String> {
             cellFormat { graphic = label(it) { id = "consumer-$it" } }
             itemsProperty().set(viewModel.filteredConsumerGroupsProperty)
             bindSelected(viewModel.selectedConsumerGroupProperty)
             onDoubleClick { dispatch { viewModel.showConsumerGroup() } }
-            placeholder = label("No schema found")
+
+            placeholder = label("No consumer group found")
             selectionModel.selectionMode = SelectionMode.SINGLE
             vgrow = Priority.ALWAYS
         }
-
-    override fun onError(throwable: Throwable) {
-        when (throwable) {
-            is LoadSchemaListError -> return
-            else -> viewModel.dispatch { refresh() }
-        }
-    }
 }
