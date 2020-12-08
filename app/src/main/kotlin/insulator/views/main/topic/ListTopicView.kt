@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.ClusterScope
 import insulator.helper.dispatch
+import insulator.helper.hideOnReadonly
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
 import insulator.ui.component.appBar
@@ -54,7 +55,7 @@ class ListTopicView @Inject constructor(override val viewModel: ListTopicViewMod
         button("Create topic") {
             id = "button-create-topic"
             action { viewModel.createNewTopic(currentWindow) }
-        }
+        }.hideOnReadonly()
 
     override fun onError(throwable: Throwable) {
         replaceWith<ListClusterView>()

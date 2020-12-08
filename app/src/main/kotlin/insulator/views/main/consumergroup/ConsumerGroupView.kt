@@ -2,6 +2,7 @@ package insulator.views.main.consumergroup
 
 import insulator.di.ConsumerGroupScope
 import insulator.helper.dispatch
+import insulator.helper.hideOnReadonly
 import insulator.ui.common.InsulatorTabView
 import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
@@ -59,5 +60,5 @@ class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGrou
         confirmationButton("Delete", "The consumer group \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.dispatch { delete() }
             closeTab()
-        }
+        }.hideOnReadonly()
 }
