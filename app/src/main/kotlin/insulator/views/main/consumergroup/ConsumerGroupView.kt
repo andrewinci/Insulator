@@ -1,8 +1,11 @@
 package insulator.views.main.consumergroup
 
 import insulator.di.ConsumerGroupScope
+import insulator.helper.dispatch
+import insulator.helper.hideOnReadonly
 import insulator.ui.common.InsulatorTabView
 import insulator.ui.component.appBar
+import insulator.ui.component.confirmationButton
 import insulator.ui.component.refreshButton
 import insulator.viewmodel.main.consumergroup.ConsumerGroupViewModel
 import insulator.viewmodel.main.consumergroup.GroupMember
@@ -25,7 +28,7 @@ class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGrou
         appBar {
             title = viewModel.nameProperty.value
             subtitle = viewModel.subtitleProperty
-            buttons = listOf(refreshButton("schema", viewModel::refresh))
+            buttons = listOf(refreshButton("consumer-group", viewModel::refresh), deleteButton())
         }
         treeView()
     }
@@ -52,4 +55,10 @@ class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGrou
         }
         vgrow = Priority.ALWAYS
     }
+
+    private fun EventTarget.deleteButton() =
+        confirmationButton("Delete", "The consumer group \"${viewModel.nameProperty.value}\" will be removed.") {
+            viewModel.dispatch { delete() }
+            closeTab()
+        }.hideOnReadonly()
 }

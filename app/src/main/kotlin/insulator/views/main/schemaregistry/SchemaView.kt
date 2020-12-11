@@ -1,6 +1,7 @@
 package insulator.views.main.schemaregistry
 
 import insulator.di.SubjectScope
+import insulator.helper.hideOnReadonly
 import insulator.jsonhelper.JsonFormatter
 import insulator.kafka.model.Schema
 import insulator.ui.common.InsulatorTabView
@@ -49,5 +50,5 @@ class SchemaView @Inject constructor(
         confirmationButton("Delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.delete()
             closeTab()
-        }
+        }.hideOnReadonly()
 }

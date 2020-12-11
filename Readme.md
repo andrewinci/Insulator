@@ -90,10 +90,12 @@ Download the binary from the latest release for your OS. Learn more [here](https
 * 🚧  **Consumer groups** 🚧
   * List consumer groups
   * Show topics, partitions and lags
+  * Delete consumer groups
 * **Cross platform**
   * Windows, macOS and Linux ready.
 * **Dark/Light theme**
 * **Auto-update**
+* **ReadOnly mode**
 
 ## Development
 

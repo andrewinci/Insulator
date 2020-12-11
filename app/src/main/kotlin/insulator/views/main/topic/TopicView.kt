@@ -2,6 +2,7 @@ package insulator.views.main.topic
 
 import insulator.di.TopicScope
 import insulator.helper.dispatch
+import insulator.helper.hideOnReadonly
 import insulator.helper.toObservable
 import insulator.kafka.consumer.ConsumeFrom
 import insulator.kafka.consumer.DeserializationFormat
@@ -22,25 +23,7 @@ import javafx.scene.control.Control
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableCell
 import javafx.scene.layout.Priority
-import tornadofx.action
-import tornadofx.addClass
-import tornadofx.bindSelected
-import tornadofx.borderpane
-import tornadofx.button
-import tornadofx.column
-import tornadofx.combobox
-import tornadofx.contextmenu
-import tornadofx.enableWhen
-import tornadofx.hbox
-import tornadofx.hgrow
-import tornadofx.item
-import tornadofx.minus
-import tornadofx.onDoubleClick
-import tornadofx.stringBinding
-import tornadofx.tableview
-import tornadofx.text
-import tornadofx.vbox
-import tornadofx.vgrow
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import javax.inject.Inject
 
 @TopicScope
@@ -78,7 +61,7 @@ class TopicView @Inject constructor(
             id = "button-produce"
             action { viewModel.showProducerView(currentWindow) }
             addClass(ButtonStyle.blueButton)
-        }
+        }.hideOnReadonly()
     }
 
     private fun EventTarget.consumeStopButton() {
@@ -114,7 +97,7 @@ class TopicView @Inject constructor(
         confirmationButton("Delete", "The topic \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.dispatch { delete() }
             closeTab()
-        }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
+        }.enableWhen(viewModel.consumerViewModel.isConsumingProperty.not()).hideOnReadonly()
 
     private fun EventTarget.showInfoButton() = button("Info") {
         id = "button-info"

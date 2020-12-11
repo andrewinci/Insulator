@@ -66,7 +66,10 @@ nav_order: 1
   * Send tombstones
 * 🚧  **Consumer groups** 🚧
   * List consumer groups
+  * Show topics, partitions and lags
+  * Delete consumer groups
 * **Cross platform**
   * Windows, macOS and Linux ready.
 * **Dark/Light theme**
 * **Auto-update**
+* **ReadOnly mode**
