@@ -14,7 +14,7 @@ footer = """</files>
 </configuration>"""
 
 manual_dependencies = {
-    "kotlinx-serialization-runtime-jvm-1.0-M1-1.4.0-rc-218.jar": '<file uri="https://jcenter.bintray.com/org/jetbrains/kotlinx/kotlinx-serialization-runtime-jvm/1.0-M1-1.4.0-rc-218/kotlinx-serialization-runtime-jvm-1.0-M1-1.4.0-rc-218.jar" size="531216" classpath="true" checksum="222f5a14"/>',
+    "kotlinx-serialization-runtime-jvm-1.0-M1-1.4.0-rc.jar": '<file uri="https://repo1.maven.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-runtime-jvm/1.0-M1-1.4.0-rc/kotlinx-serialization-runtime-jvm-1.0-M1-1.4.0-rc.jar" size="531212" classpath="true" checksum="d92eae1d"/>',
     # javafx for mac
     "javafx-swing-15.0.1-mac.jar": '<file os="mac" uri="https://repo1.maven.org/maven2/org/openjfx/javafx-swing/15.0.1/javafx-swing-15.0.1-mac.jar" size="88725" classpath="true" checksum="f761e2bf"/>',
     "javafx-graphics-15.0.1-mac.jar": '<file os="mac" uri="https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/15.0.1/javafx-graphics-15.0.1-mac.jar" size="4962652" classpath="true" checksum="6511c8ad"/>',

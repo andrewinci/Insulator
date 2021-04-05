@@ -25,11 +25,12 @@ class MainViewStyle : Stylesheet() {
         sidebar {
             backgroundColor = multi(theme.backgroundColor)
             alignment = Pos.TOP_LEFT
+            padding = box(0.em, 0.em, 1.em, 0.em)
         }
 
         clusterOptions {
-            spacing = 1.em
-            padding = box(0.em, 0.em, 2.em, 0.em)
+            padding = box(-0.5.em, theme.viewPadding, theme.viewPadding, theme.viewPadding)
+            minHeight = 5.em
         }
 
         sidebarItem {
@@ -37,7 +38,7 @@ class MainViewStyle : Stylesheet() {
             minHeight = 50.0.px
             borderInsets = multi(box(-theme.viewPadding, 0.px, 0.px, -theme.viewPadding))
             alignment = Pos.CENTER_LEFT
-            padding = box(1.em, 0.em)
+            padding = box(1.em)
         }
 
         splitPane {
@@ -46,7 +47,7 @@ class MainViewStyle : Stylesheet() {
                 padding = box(0.px, 1.px, 0.px, 0.px)
             }
             sidebar {
-                padding = box(0.px, theme.viewPadding, theme.viewPadding, theme.viewPadding)
+                padding = box(theme.viewPadding, 0.px)
             }
             contentList {
                 padding = box(theme.viewPadding)
