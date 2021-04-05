@@ -19,12 +19,11 @@ import insulator.test.helper.getTestSandboxFolder
 import kotlinx.coroutines.runBlocking
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.wait.strategy.Wait
+import org.testcontainers.utility.DockerImageName
 import org.testfx.api.FxToolkit
 import tornadofx.FX
 import java.io.Closeable
 import kotlin.time.ExperimentalTime
-import org.testcontainers.containers.Network
-import org.testcontainers.utility.DockerImageName
 
 private val network = Network.newNetwork()
 

@@ -48,6 +48,6 @@ class RootModule {
 
     @Singleton
     @Provides
-    fun providesLocalKafka() = KafkaContainer()//todo: fix
+    fun providesLocalKafka() = KafkaContainer() // todo: fix
         .let { LocalKafka(it, SchemaRegistryContainer().withKafka("")) }
 }
