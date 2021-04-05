@@ -23,14 +23,19 @@ import org.testfx.api.FxToolkit
 import tornadofx.FX
 import java.io.Closeable
 import kotlin.time.ExperimentalTime
+import org.testcontainers.containers.Network
+import org.testcontainers.utility.DockerImageName
 
-private val kafka = KafkaContainer().also {
-    it.start()
-    it.waitingFor(Wait.forListeningPort())
+private val kafka: KafkaContainer by lazy {
+    val res = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"))
+    res.waitingFor(Wait.forListeningPort()).start()
+    res
 }
-private val schemaRegistryContainer = SchemaRegistryContainer().withKafka(kafka).also {
-    it.start()
-    it.waitingFor(Wait.forListeningPort())
+
+private val schemaRegistryContainer: SchemaRegistryContainer by lazy {
+    val res = SchemaRegistryContainer().withKafka(kafka)
+    res.waitingFor(Wait.forListeningPort())!!.start()
+    res
 }
 
 @ExperimentalTime

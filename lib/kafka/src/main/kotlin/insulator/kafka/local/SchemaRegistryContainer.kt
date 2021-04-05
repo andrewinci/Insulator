@@ -12,13 +12,12 @@ class SchemaRegistryContainer : GenericContainer<SchemaRegistryContainer?>("conf
     }
 
     fun withKafka(kafka: KafkaContainer): SchemaRegistryContainer =
-        withKafka(kafka.networkAliases[0].toString() + ":9092")
+        withKafka(kafka.networkAliases[0].toString() + ":9093")
 
     private fun withKafka(bootstrapServers: String): SchemaRegistryContainer {
-        super.withNetwork(Network.SHARED)
         withEnv("SCHEMA_REGISTRY_HOST_NAME", "schema-registry")
         withEnv("SCHEMA_REGISTRY_LISTENERS", "http://0.0.0.0:8081")
-        withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "PLAINTEXT://" + bootstrapServers)
+        withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "PLAINTEXT://$bootstrapServers")
         return self()!!
     }
 
