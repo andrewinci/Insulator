@@ -29,7 +29,7 @@ class MainViewStyle : Stylesheet() {
         }
 
         clusterOptions {
-            padding = box(-0.5.em,theme.viewPadding,theme.viewPadding,theme.viewPadding)
+            padding = box(-0.5.em, theme.viewPadding, theme.viewPadding, theme.viewPadding)
             minHeight = 5.em
         }
 
