@@ -14,6 +14,8 @@ import insulator.kafka.local.LocalKafka
 import insulator.kafka.local.SchemaRegistryContainer
 import org.apache.avro.generic.GenericData
 import org.testcontainers.containers.KafkaContainer
+import org.testcontainers.containers.Network
+import org.testcontainers.utility.DockerImageName
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -40,7 +42,11 @@ class RootModule {
     @Singleton
     @Provides
     fun providesJsoToAvroConverter(objectMapper: ObjectMapper) =
-        JsonToAvroConverter(objectMapper, FieldParser(SimpleTypeParsersFactory(), ComplexTypeParsersFactory()), GenericData.get())
+        JsonToAvroConverter(
+            objectMapper,
+            FieldParser(SimpleTypeParsersFactory(), ComplexTypeParsersFactory()),
+            GenericData.get()
+        )
 
     @Singleton
     @Provides
@@ -48,6 +54,16 @@ class RootModule {
 
     @Singleton
     @Provides
-    fun providesLocalKafka() = KafkaContainer()
-        .let { LocalKafka(it, SchemaRegistryContainer().withKafka(it)) }
+    fun providesLocalKafka() = Network.newNetwork()
+        .let { net ->
+            net to KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.5.2"))
+                .withNetwork(net)
+                .withNetworkAliases("kafka-cluster")
+        }
+        .let { (net, kafka) ->
+            kafka to SchemaRegistryContainer("confluentinc/cp-schema-registry:5.5.2")
+                .withKafka("PLAINTEXT://kafka-cluster:9092")
+                .withNetwork(net)!!
+        }
+        .let { (kafka, schemaRegistry) -> LocalKafka(kafka, schemaRegistry) }
 }
