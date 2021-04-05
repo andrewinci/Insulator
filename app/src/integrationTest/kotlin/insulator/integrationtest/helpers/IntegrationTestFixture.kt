@@ -26,15 +26,23 @@ import kotlin.time.ExperimentalTime
 import org.testcontainers.containers.Network
 import org.testcontainers.utility.DockerImageName
 
+private val network = Network.newNetwork()
+
 private val kafka: KafkaContainer by lazy {
     val res = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"))
+        .withNetwork(network)
+        .withNetworkAliases("kafka-cluster")
     res.waitingFor(Wait.forListeningPort()).start()
     res
 }
 
 private val schemaRegistryContainer: SchemaRegistryContainer by lazy {
-    val res = SchemaRegistryContainer().withKafka(kafka)
-    res.waitingFor(Wait.forListeningPort())!!.start()
+    val res = SchemaRegistryContainer()
+        .withKafka("PLAINTEXT://kafka-cluster:9092")
+        .withNetwork(network)!!
+        .withNetworkAliases("schema-registry")!!
+    res.waitingFor(Wait.forListeningPort())?.start()
+    //
     res
 }
 

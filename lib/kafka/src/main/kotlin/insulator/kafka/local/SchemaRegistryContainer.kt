@@ -11,13 +11,11 @@ class SchemaRegistryContainer : GenericContainer<SchemaRegistryContainer?>("conf
         withExposedPorts(8081)
     }
 
-    fun withKafka(kafka: KafkaContainer): SchemaRegistryContainer =
-        withKafka(kafka.networkAliases[0].toString() + ":9093")
 
-    private fun withKafka(bootstrapServers: String): SchemaRegistryContainer {
+    fun withKafka(bootstrapServers: String): SchemaRegistryContainer {
         withEnv("SCHEMA_REGISTRY_HOST_NAME", "schema-registry")
         withEnv("SCHEMA_REGISTRY_LISTENERS", "http://0.0.0.0:8081")
-        withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "PLAINTEXT://$bootstrapServers")
+        withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", bootstrapServers)
         return self()!!
     }
 
