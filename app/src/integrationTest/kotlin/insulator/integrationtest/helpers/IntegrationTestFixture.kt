@@ -18,6 +18,7 @@ import insulator.test.helper.deleteTestSandboxFolder
 import insulator.test.helper.getTestSandboxFolder
 import kotlinx.coroutines.runBlocking
 import org.testcontainers.containers.KafkaContainer
+import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 import org.testfx.api.FxToolkit
@@ -28,7 +29,7 @@ import kotlin.time.ExperimentalTime
 private val network = Network.newNetwork()
 
 private val kafka: KafkaContainer by lazy {
-    val res = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"))
+    val res = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.5.2"))
         .withNetwork(network)
         .withNetworkAliases("kafka-cluster")
     res.waitingFor(Wait.forListeningPort()).start()
@@ -36,7 +37,7 @@ private val kafka: KafkaContainer by lazy {
 }
 
 private val schemaRegistryContainer: SchemaRegistryContainer by lazy {
-    val res = SchemaRegistryContainer()
+    val res = SchemaRegistryContainer("confluentinc/cp-schema-registry:5.5.2")
         .withKafka("PLAINTEXT://kafka-cluster:9092")
         .withNetwork(network)!!
         .withNetworkAliases("schema-registry")!!

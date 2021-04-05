@@ -3,7 +3,7 @@ package insulator.kafka.local
 import org.testcontainers.containers.GenericContainer
 
 // taken from: https://github.com/gAmUssA/testcontainers-java-module-confluent-platform/blob/master/src/main/java/io/confluent/testcontainers/SchemaRegistryContainer.java
-class SchemaRegistryContainer : GenericContainer<SchemaRegistryContainer?>("confluentinc/cp-schema-registry:5.4.3") {
+class SchemaRegistryContainer(imageName: String) : GenericContainer<SchemaRegistryContainer?>(imageName) {
     init {
         withExposedPorts(8081)
     }
