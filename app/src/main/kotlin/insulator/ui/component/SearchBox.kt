@@ -10,8 +10,10 @@ import tornadofx.textfield
 
 fun EventTarget.searchBox(searchText: Property<String>, currentView: InsulatorView, id: String = "") =
     hbox {
-        fieldName("Search")
-        textfield(searchText) { minWidth = 200.0 }.also { it.parent.focusedProperty().addListener(ChangeListener { _, _, _ -> it.requestFocus() }) }
+        textfield(searchText) {
+            minWidth = 250.0
+            promptText = "search"
+        }.also { it.parent.focusedProperty().addListener(ChangeListener { _, _, _ -> it.requestFocus() }) }
         alignment = Pos.CENTER_RIGHT; spacing = 5.0; this.id = id
     }.also {
         if (System.getProperty("os.name")?.toString()?.toLowerCase()?.contains("mac") == true)
