@@ -1,9 +1,7 @@
 package insulator.kafka.local
 
-import kotlinx.coroutines.withTimeout
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.KafkaContainer
-import org.testcontainers.containers.Network
 
 // taken from: https://github.com/gAmUssA/testcontainers-java-module-confluent-platform/blob/master/src/main/java/io/confluent/testcontainers/SchemaRegistryContainer.java
 class SchemaRegistryContainer : GenericContainer<SchemaRegistryContainer?>("confluentinc/cp-schema-registry:5.4.3") {
