@@ -98,8 +98,8 @@ class MainView @Inject constructor(
                 hbox {
                     button("Info") { action { clusterView.show(false) }; id = "button-cluster-info" }
                     button("Change cluster") { action { close() }; addClass(alertButton); id = "button-change-cluster" }
-                    addClass(MainViewStyle.clusterOptions)
                 }
+                addClass(MainViewStyle.clusterOptions)
             }
             center = vbox {
                 menuItem("Topics", ICON_TOPICS, "sidebar-item-topics") { viewModel.setContentList(ListTopicView::class, currentWindow) }
