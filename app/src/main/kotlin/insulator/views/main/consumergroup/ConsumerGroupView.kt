@@ -28,7 +28,7 @@ class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGrou
         appBar {
             title = viewModel.nameProperty.value
             subtitle = viewModel.subtitleProperty
-            buttons = listOf(refreshButton("consumer-group", viewModel::refresh), deleteButton())
+            buttons = listOf(refreshButton("consumer-group", viewModel.canRefresh, viewModel::refresh), deleteButton())
         }
         treeView()
     }
@@ -57,8 +57,8 @@ class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGrou
     }
 
     private fun EventTarget.deleteButton() =
-        confirmationButton("Delete", "The consumer group \"${viewModel.nameProperty.value}\" will be removed.") {
-            viewModel.dispatch { delete() }
-            closeTab()
-        }.hideOnReadonly()
+            confirmationButton("Delete", "The consumer group \"${viewModel.nameProperty.value}\" will be removed.") {
+                viewModel.dispatch { delete() }
+                closeTab()
+            }.hideOnReadonly()
 }
