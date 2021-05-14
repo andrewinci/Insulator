@@ -16,28 +16,28 @@ nav_order: 1
 <br/>
 <p align="center">
 
-<a href="https://github.com/andrea-vinci/Insulator/releases">
-    <img src="https://github.com/andrea-vinci/Insulator/workflows/Release/badge.svg"
+<a href="https://github.com/andrewinci/Insulator/releases">
+    <img src="https://github.com/andrewinci/Insulator/workflows/Release/badge.svg"
          alt="Release"/>
   </a>
 
-<a href="https://github.com/andrea-vinci/Insulator/actions?query=workflow%3ACI">
-    <img src="https://github.com/andrea-vinci/Insulator/workflows/CI/badge.svg"
+<a href="https://github.com/andrewinci/Insulator/actions?query=workflow%3ACI">
+    <img src="https://github.com/andrewinci/Insulator/workflows/CI/badge.svg"
          alt="CI"/>
   </a>
 
-<a href="https://codeclimate.com/github/andrea-vinci/Insulator/test_coverage">
+<a href="https://codeclimate.com/github/andrewinci/Insulator/test_coverage">
     <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/test_coverage" 
         alt="Coverage"/>
     </a>
 
-<a href="https://codeclimate.com/github/andrea-vinci/Insulator/maintainability">
+<a href="https://codeclimate.com/github/andrewinci/Insulator/maintainability">
     <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/maintainability" 
         alt="code quality"/>
     </a>
 
-<a href="https://snyk.io/test/github/andrea-vinci/Insulator?targetFile=build.gradle">
-    <img src="https://snyk.io/test/github/andrea-vinci/Insulator/badge.svg?targetFile=build.gradle"
+<a href="https://snyk.io/test/github/andrewinci/Insulator?targetFile=build.gradle">
+    <img src="https://snyk.io/test/github/andrewinci/Insulator/badge.svg?targetFile=build.gradle"
          alt="Snyk"/>
   </a>
 

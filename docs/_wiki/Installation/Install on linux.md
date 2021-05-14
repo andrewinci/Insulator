@@ -14,7 +14,7 @@ Currently the application is packaged and tested only on ubuntu.
 
 Download the archive `insulator-debian.zip` with the button below.
 
-[Latest release](https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-debian.zip){: .btn }
+[Latest release](https://github.com/andrewinci/Insulator/releases/latest/download/insulator-debian.zip){: .btn }
 
 In a terminal, navigate to the folder containing the zip previously downloaded and run the following
 

@@ -15,4 +15,4 @@ val localPath: String by lazy {
 
 val localConfigFile = "${localPath}insulator-update.xml"
 val updatePath: Path = Path.of(System.getProperty("java.io.tmpdir") ?: "", "update.zip")
-const val configPath = "https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-update.xml"
+const val configPath = "https://github.com/andrewinci/Insulator/releases/latest/download/insulator-update.xml"

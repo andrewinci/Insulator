@@ -12,7 +12,7 @@ python3.8 scripts/build.py
 
 RELEASE = os.environ.get("RELEASE_VERSION")
 insulator_jar = {
-    "insulator.jar": f"https://github.com/andrea-vinci/Insulator/releases/download/{RELEASE}/insulator.jar"
+    "insulator.jar": f"https://github.com/andrewinci/Insulator/releases/download/{RELEASE}/insulator.jar"
 }
 jars_path = "./app/build/distributions/app/lib/"
 

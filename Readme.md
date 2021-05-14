@@ -10,28 +10,28 @@
 <br/>
 <p align="center">
 
-<a href="https://github.com/andrea-vinci/Insulator/releases">
-    <img src="https://github.com/andrea-vinci/Insulator/workflows/Release/badge.svg"
+<a href="https://github.com/andrewinci/Insulator/releases">
+    <img src="https://github.com/andrewinci/Insulator/workflows/Release/badge.svg"
          alt="Release"/>
   </a>
 
-<a href="https://github.com/andrea-vinci/Insulator/actions?query=workflow%3ACI">
-    <img src="https://github.com/andrea-vinci/Insulator/workflows/CI/badge.svg"
+<a href="https://github.com/andrewinci/Insulator/actions?query=workflow%3ACI">
+    <img src="https://github.com/andrewinci/Insulator/workflows/CI/badge.svg"
          alt="CI"/>
   </a>
 
-<a href="https://codeclimate.com/github/andrea-vinci/Insulator/test_coverage">
+<a href="https://codeclimate.com/github/andrewinci/Insulator/test_coverage">
     <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/test_coverage" 
         alt="Coverage"/>
     </a>
 
-<a href="https://codeclimate.com/github/andrea-vinci/Insulator/maintainability">
+<a href="https://codeclimate.com/github/andrewinci/Insulator/maintainability">
     <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/maintainability" 
         alt="code quality"/>
     </a>
 
-<a href="https://snyk.io/test/github/andrea-vinci/Insulator?targetFile=build.gradle">
-    <img src="https://snyk.io/test/github/andrea-vinci/Insulator/badge.svg?targetFile=build.gradle"
+<a href="https://snyk.io/test/github/andrewinci/Insulator?targetFile=build.gradle">
+    <img src="https://snyk.io/test/github/andrewinci/Insulator/badge.svg?targetFile=build.gradle"
          alt="Snyk"/>
   </a>
 
@@ -44,7 +44,7 @@
 </p>
 
 <p align="center">
-  <a href="https://andrea-vinci.github.io/Insulator/wiki/">Wiki</a> •
+  <a href="https://andrewinci.github.io/Insulator/wiki/">Wiki</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#development">Development</a> •
   <a href="#credits">Credits</a> •
@@ -58,13 +58,13 @@
 
 ## Installation
 
-Download the binary from the latest release for your OS. Learn more [here](https://andrea-vinci.github.io/Insulator/wiki/Installation/).
+Download the binary from the latest release for your OS. Learn more [here](https://andrewinci.github.io/Insulator/wiki/Installation/).
 
-[![Mac release](https://badgen.net/badge/icon/Mac%20Os?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-mac.zip)
-[![Windows release](https://badgen.net/badge/icon/Windows?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-win.zip)
-[![Debian release](https://badgen.net/badge/icon/Debian?label=Download%20Latest%20Release&color=orange)](https://github.com/andrea-vinci/Insulator/releases/latest/download/insulator-debian.zip)
+[![Mac release](https://badgen.net/badge/icon/Mac%20Os?label=Download%20Latest%20Release&color=orange)](https://github.com/andrewinci/Insulator/releases/latest/download/insulator-mac.zip)
+[![Windows release](https://badgen.net/badge/icon/Windows?label=Download%20Latest%20Release&color=orange)](https://github.com/andrewinci/Insulator/releases/latest/download/insulator-win.zip)
+[![Debian release](https://badgen.net/badge/icon/Debian?label=Download%20Latest%20Release&color=orange)](https://github.com/andrewinci/Insulator/releases/latest/download/insulator-debian.zip)
 
-![brew cask install andrea-vinci/tap/insulator](https://badgen.net/badge/icon/brew%20cask%20install%20andrea-vinci%2Ftap%2Finsulator?label=🍻%20Brew&color=orange)
+![brew cask install andrewinci/tap/insulator](https://badgen.net/badge/icon/brew%20cask%20install%20andrewinci%2Ftap%2Finsulator?label=🍻%20Brew&color=orange)
 
 ## Key Features
 

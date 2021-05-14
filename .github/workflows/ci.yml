@@ -30,7 +30,7 @@ jobs:
             git config --local user.email "autolint@lint.local"
             git config --local user.name "Auto Lint"
             git commit -m "Fix PR lint" -a
-            git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/insulator.git
+            git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrewinci/insulator.git
             exit 1
           else
             echo "Nothing to change"
