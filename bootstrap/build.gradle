@@ -12,5 +12,5 @@ application { mainClassName ='insulator.BootstrapKt' }
 
 dependencies {
     implementation(group: 'org.update4j', name: 'update4j', version: "1.5.7")
-    implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.4.21')
+    implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.5.10')
 }
