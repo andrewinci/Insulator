@@ -60,9 +60,9 @@ class VersionChecker(private val customJarPath: String? = null) {
         Release(
             version = tag,
             webUrl = "$GITHUB_REPO/releases/tag/$tag",
-            macUrl = assetUrls.first { it.contains("mac") },
-            winUrl = assetUrls.first { it.contains("win") },
-            debianUrl = assetUrls.first { it.contains("debian") },
+            macUrl = assetUrls.first { it.contains("-mac") },
+            winUrl = assetUrls.first { it.contains("-win") },
+            debianUrl = assetUrls.first { it.contains("-debian") },
         )
     }
 }

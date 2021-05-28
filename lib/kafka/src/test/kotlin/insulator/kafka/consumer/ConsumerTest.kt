@@ -55,7 +55,7 @@ class ConsumerTest : StringSpec({
             // act
             sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { r -> r.value }) }
             // assert
-            eventually(10.seconds) {
+            eventually(20.seconds) {
                 messages.size shouldBe 1
             }
         }

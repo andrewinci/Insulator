@@ -150,10 +150,10 @@ jobs:
         if: ${{ matrix.artifact.name == 'insulator-mac' }}
         run: |
           git config --global user.name ${{ github.actor }}
-          git config --global user.email andrea-vinci@users.noreply.github.com
-          brew tap andrea-vinci/tap
+          git config --global user.email andrewinci@users.noreply.github.com
+          brew tap andrewinci/tap
           brew bump-cask-pr --write --commit --no-audit --no-browse --no-fork --version $RELEASE_VERSION --force insulator
-          cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrea-vinci/homebrew-tap
-          git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrea-vinci/homebrew-tap.git
+          cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrewinci/homebrew-tap
+          git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrewinci/homebrew-tap.git
         env:
           RELEASE_VERSION: ${{ steps.get_version.outputs.version }}
