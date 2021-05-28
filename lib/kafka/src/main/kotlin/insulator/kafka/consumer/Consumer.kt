@@ -62,11 +62,9 @@ class Consumer(
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
                 if (records.isEmpty) continue
-                if(searchItem.isEmpty())
-                {
+                if (searchItem.isEmpty()) {
                     callback(records.toList().map { parse(it) })
-                }
-                else{
+                } else {
                     callback(records.filter { item -> item.key() == searchItem }.toList().map { parse(it) })
                 }
             }
