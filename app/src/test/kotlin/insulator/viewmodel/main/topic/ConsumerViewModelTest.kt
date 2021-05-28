@@ -45,9 +45,9 @@ class ConsumerViewModelTest : StringSpec({
     }
 })
 
-private class ConsumerViewModelTestContext {
+private class ConsumerViewModelTestContext(val searchItem: String = "") {
     val mockConsumer = mockk<Consumer> {
-        coEvery { start(any(), any(), any(), any()) } answers {
+        coEvery { start(any(), searchItem, any(), any(), any()) } answers {
             arg<(List<insulator.kafka.model.Record>) -> Unit>(3)(listOf(insulator.kafka.model.Record("1", "2", 3L, mockk(), 1, 3L)))
             arg<(List<insulator.kafka.model.Record>) -> Unit>(3)(listOf(insulator.kafka.model.Record("1", "2", 3L, mockk(), 1, 3L)))
             arg<(List<insulator.kafka.model.Record>) -> Unit>(3)(listOf(insulator.kafka.model.Record("1", "2", 3L, mockk(), 1, 3L)))
