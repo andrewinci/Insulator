@@ -49,7 +49,7 @@ class ConsumerViewModel @Inject constructor(
             clearRecords()
             val consumerFrom = ConsumeFrom.values().first { it.text == consumeFromProperty.value }
             val deserializationFormat = DeserializationFormat.valueOf(deserializeValueProperty.value)
-            consumer.start(topic.name, consumerFrom, deserializationFormat) {
+            consumer.start(topic.name, searchItem.value, consumerFrom, deserializationFormat) {
                 records.runOnFXThread { addAll(it.map { record -> RecordViewModel(record) }) }
             }
         } else stop()
