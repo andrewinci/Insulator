@@ -54,7 +54,7 @@ class SchemaView @Inject constructor(
         }.hideOnReadonly()
 
     private fun EventTarget.deleteSchemaVersionButton() =
-        confirmationButton("Delete", "The schema \"${viewModel.selectedVersionProperty.value.schema}\" version ${viewModel.selectedVersionProperty.value.version} will be removed.") {
+        confirmationButton("Delete", "The schema \"${viewModel.nameProperty.value}\" version ${viewModel.selectedVersionProperty.value.version} will be removed.") {
             viewModel.deleteSchemaVersion()
             closeTab()
         }.hideOnReadonly()
