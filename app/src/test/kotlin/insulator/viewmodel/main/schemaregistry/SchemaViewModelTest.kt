@@ -27,6 +27,19 @@ class SchemaViewModelTest : StringSpec({
             sut.error.value shouldBe null
         }
     }
+
+    "happy path delete schema version" {
+        SchemaViewModelTestFixture().use {
+            // arrange
+            val subject = Subject(name = it.targetSubject, schemas = listOf(Schema("{}", 1, 4)))
+            val sut = SchemaViewModel(it.cluster, subject, it.mockSchemaRegistry)
+            // act
+            sut.deleteSchemaVersion()
+            // assert
+            verify(exactly = 1) { it.mockSchemaRegistry.deleteSchemaVersion(it.targetSubject, subject.schemas[0].version ) }
+            sut.error.value shouldBe null
+        }
+    }
 })
 
 private class SchemaViewModelTestFixture : FxContext() {

@@ -22,6 +22,9 @@ class SchemaRegistry(private val client: SchemaRegistryClient) {
     fun deleteSubject(subject: String) =
         client.runCatchingE { deleteSubject(subject) }.map { Unit }
 
+    fun deleteSchemaVersion(subject: String, version: Int) =
+        client.runCatchingE { deleteSchemaVersion(subject, version.toString()) }.map { Unit }
+
     fun getAllSubjects(): Either<Throwable, Collection<String>> =
         client.runCatchingE { allSubjects.sorted() }
 

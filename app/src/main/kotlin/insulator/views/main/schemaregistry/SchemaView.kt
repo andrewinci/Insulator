@@ -34,6 +34,7 @@ class SchemaView @Inject constructor(
         hbox(alignment = Pos.CENTER_LEFT) {
             fieldName("Schema")
             schemaComboBox()
+            deleteSchemaVersionButton()
         }
         jsonView(viewModel.schemaProperty, formatter)
     }
@@ -49,6 +50,12 @@ class SchemaView @Inject constructor(
     private fun EventTarget.deleteButton() =
         confirmationButton("Delete", "The schema \"${viewModel.nameProperty.value}\" will be removed.") {
             viewModel.delete()
+            closeTab()
+        }.hideOnReadonly()
+
+    private fun EventTarget.deleteSchemaVersionButton() =
+        confirmationButton("Delete", "The schema \"${viewModel.selectedVersionProperty.value.schema}\" version ${viewModel.selectedVersionProperty.value.version} will be removed.") {
+            viewModel.deleteSchemaVersion()
             closeTab()
         }.hideOnReadonly()
 }
