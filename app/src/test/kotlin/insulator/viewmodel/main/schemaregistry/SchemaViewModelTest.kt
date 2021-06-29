@@ -36,7 +36,7 @@ class SchemaViewModelTest : StringSpec({
             // act
             sut.deleteSchemaVersion()
             // assert
-            verify(exactly = 1) { it.mockSchemaRegistry.deleteSchemaVersion(it.targetSubject, subject.schemas[0].version ) }
+            verify(exactly = 1) { it.mockSchemaRegistry.deleteSchemaVersion(it.targetSubject, subject.schemas[0].version) }
             sut.error.value shouldBe null
         }
     }
