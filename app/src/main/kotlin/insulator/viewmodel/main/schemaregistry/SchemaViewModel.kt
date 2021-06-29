@@ -35,4 +35,6 @@ class SchemaViewModel @Inject constructor(
     }
 
     fun delete() = schemaRegistry?.deleteSubject(nameProperty.value)
+
+    fun deleteSchemaVersion() = schemaRegistry?.deleteSchemaVersion(nameProperty.value, selectedVersionProperty.value?.version!!)
 }
