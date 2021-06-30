@@ -73,8 +73,8 @@ jobs:
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           GITHUB_SHA: "${{ github.event.pull_request.head.sha }}"
-          DISPLAY: ":99.0"
-          _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k  -Dtestfx.setup.timeout=2500 -Dheadless.geometry=1920x1080-64"
+#          DISPLAY: ":99.0"
+#          _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k  -Dtestfx.setup.timeout=2500 -Dheadless.geometry=1920x1080-64"
           CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
           JACOCO_SOURCE_PATH: |
             ${{github.workspace}}/app/src/main/kotlin \
@@ -88,27 +88,27 @@ jobs:
           #coverageCommand: "xvfb-run --auto-servernum ./gradlew clean check integrationTest codeCoverageReport --no-daemon"
           coverageCommand: "./gradlew clean check codeCoverageReport --no-daemon"
           coverageLocations: ${{github.workspace}}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml:jacoco
-      - name: Configure AWS credentials
-        if: ${{ matrix.os.run-integration }}
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-      - name: Upload screenshoots
-        if: ${{ matrix.os.run-integration }}
-        run: |
-          aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/${{ github.event.pull_request.head.sha }}/${{ matrix.os.name }}
-      - name: Comment on PR
-        if: ${{ matrix.os.run-integration }}
-        uses: mshick/add-pr-comment@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-        with:
-          message: |
-            **Screenshoots 📷**
-            http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.event.pull_request.head.sha }}
-          allow-repeats: false
+#      - name: Configure AWS credentials
+#        if: ${{ matrix.os.run-integration }}
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: eu-west-1
+#      - name: Upload screenshoots
+#        if: ${{ matrix.os.run-integration }}
+#        run: |
+#          aws s3 sync ${{github.workspace}}/app/captures s3://insulator-screenshots/${{ github.event.pull_request.head.sha }}/${{ matrix.os.name }}
+#      - name: Comment on PR
+#        if: ${{ matrix.os.run-integration }}
+#        uses: mshick/add-pr-comment@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+#        with:
+#          message: |
+#            **Screenshoots 📷**
+#            http://insulator-screenshots.s3-website-eu-west-1.amazonaws.com/${{ github.event.pull_request.head.sha }}
+#          allow-repeats: false
       - name: Test build update4j config
         if: ${{ matrix.os.run-integration }}
         run: |
