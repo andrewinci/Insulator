@@ -73,6 +73,18 @@ class SchemaRegistryTest : StringSpec({
         res shouldBeRight { }
     }
 
+    "happy path deleteSchemaVersion" {
+        // arrange
+        val mockSchema = mockk<SchemaRegistryClient> {
+            every { deleteSchemaVersion(any(), any()) } returns 1
+        }
+        val sut = SchemaRegistry(mockSchema)
+        // act
+        val res = sut.deleteSchemaVersion("subject1", 1)
+        // assert
+        res shouldBeRight { }
+    }
+
     "register an invalid schema return left" {
         // arrange
         val mockSchema = mockk<SchemaRegistryClient>()
