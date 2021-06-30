@@ -15,8 +15,6 @@ apply plugin: 'kotlin-kapt'
 
 def dagger_version = "2.36"
 
-testSets { integrationTest }
-
 dependencies {
     implementation project(":lib:helper")
     implementation project(":lib:jsonhelper")
@@ -28,27 +26,10 @@ dependencies {
     implementation(group: 'com.google.dagger', name: 'dagger', version: "$dagger_version")
     kapt(group: 'com.google.dagger', name: 'dagger-compiler', version: "$dagger_version")
 
-    // Integration tests
+    // Tests
     testImplementation(group: 'org.testfx', name: 'openjfx-monocle', version: "jdk-12.0.1+2")
-    integrationTestImplementation(group: 'org.testcontainers', name: 'kafka', version: "1.15.3")
-    integrationTestImplementation(group: 'org.apache.kafka', name: 'kafka-clients', version: '6.0.0-ce')
 }
-
-compileIntegrationTestKotlin { kotlinOptions.jvmTarget = "1.8" }
-integrationTest.outputs.upToDateWhen { false }
 
 jar { manifest { attributes('Main-Class': 'insulator.AppKt') } }
 
 application { mainClassName = 'insulator.AppKt' }
-
-jacocoIntegrationTestReport {
-    reports {
-        xml.enabled true
-        html.enabled true
-    }
-}
-
-integrationTest{
-    minHeapSize = "512m"
-    maxHeapSize = "2G"
-}

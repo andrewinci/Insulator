@@ -21,12 +21,12 @@
   </a>
 
 <a href="https://codeclimate.com/github/andrewinci/Insulator/test_coverage">
-    <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/test_coverage" 
+    <img src="https://api.codeclimate.com/v1/badges/b9b6bbebd21238c333ba/test_coverage" 
         alt="Coverage"/>
     </a>
 
 <a href="https://codeclimate.com/github/andrewinci/Insulator/maintainability">
-    <img src="https://api.codeclimate.com/v1/badges/fd385843d031f1ad99f8/maintainability" 
+    <img src="https://api.codeclimate.com/v1/badges/b9b6bbebd21238c333ba/maintainability" 
         alt="code quality"/>
     </a>
 
