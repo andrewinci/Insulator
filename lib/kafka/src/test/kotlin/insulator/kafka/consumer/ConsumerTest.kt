@@ -30,7 +30,7 @@ class ConsumerTest : StringSpec({
                 // arrange
                 val messages = mutableListOf<String>()
                 // act
-                it.sut.start("testTopic", consumerFrom, deserializationFormat) { lst -> messages.addAll(lst.map { r -> r.value }) }
+                it.sut.start("testTopic", "", consumerFrom, deserializationFormat) { lst -> messages.addAll(lst.map { r -> r.value }) }
                 // assert
                 delay(300L)
                 eventually(3.seconds) {
@@ -53,7 +53,7 @@ class ConsumerTest : StringSpec({
             val messages = mutableListOf<String>()
             val sut = Consumer(it.consumerFactory) { Throwable("").left() }
             // act
-            sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { r -> r.value }) }
+            sut.start("testTopic", "", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { r -> r.value }) }
             // assert
             eventually(20.seconds) {
                 messages.size shouldBe 1
@@ -66,7 +66,7 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { r -> r.value }) }
+            it.sut.start("testTopic", "", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { r -> r.value }) }
             // assert
             it.sut.isRunning() shouldBe true
             it.sut.stop()
@@ -85,9 +85,9 @@ class ConsumerTest : StringSpec({
     "start twice throw an error" {
         TestConsumerScenario().use {
             // arrange
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { }
+            it.sut.start("testTopic", "", ConsumeFrom.Now, DeserializationFormat.String) { }
             // act
-            val action = suspend { it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { } }
+            val action = suspend { it.sut.start("testTopic", "", ConsumeFrom.Now, DeserializationFormat.String) { } }
             // assert
             kotlin.runCatching { action.invoke() }.isFailure shouldBe true
         }

@@ -31,14 +31,14 @@ class Consumer(
     private var threadLoop: Thread? = null
     private var running = false
 
-    suspend fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: ConsumerCallback) =
+    suspend fun start(topic: String, searchItem: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: ConsumerCallback) =
         suspendCoroutine<Unit> { continuation ->
             GlobalScope.launch {
                 if (isRunning()) throw IllegalStateException("Consumer already running")
                 val consumer = consumerFactory.build(valueFormat)
                 initializeConsumer(consumer, topic, from)
                 running = true
-                loop(consumer, callback)
+                loop(consumer, searchItem, callback)
             }.invokeOnCompletion { exception ->
                 if (exception == null) continuation.resume(Unit) else continuation.resumeWithException(exception)
             }
@@ -57,12 +57,16 @@ class Consumer(
         }.invokeOnCompletion { continuation.resume(Unit) }
     }
 
-    private fun loop(consumer: Consumer<Any, Any>, callback: ConsumerCallback) {
+    private fun loop(consumer: Consumer<Any, Any>, searchItem: String, callback: ConsumerCallback) {
         threadLoop = thread {
             while (running) {
                 val records = consumer.poll(Duration.ofSeconds(1))
                 if (records.isEmpty) continue
-                callback(records.toList().map { parse(it) })
+                if (searchItem.isEmpty()) {
+                    callback(records.toList().map { parse(it) })
+                } else {
+                    callback(records.filter { item -> item.key() == searchItem }.toList().map { parse(it) })
+                }
             }
         }
     }
