@@ -28,7 +28,7 @@ class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGrou
         appBar {
             title = viewModel.nameProperty.value
             subtitle = viewModel.subtitleProperty
-            buttons = listOf(refreshButton("consumer-group", viewModel::refresh), deleteButton())
+            buttons = listOf(refreshButton("consumer-group", viewModel.canRefresh, viewModel::refresh), deleteButton())
         }
         treeView()
     }

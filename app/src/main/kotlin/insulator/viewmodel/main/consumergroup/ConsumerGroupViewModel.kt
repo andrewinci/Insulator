@@ -8,6 +8,7 @@ import insulator.kafka.AdminApi
 import insulator.kafka.model.ConsumerGroupState
 import insulator.viewmodel.common.InsulatorViewModel
 import javafx.beans.binding.Bindings
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableStringValue
@@ -24,8 +25,10 @@ class ConsumerGroupViewModel @Inject constructor(
     private val stateProperty = SimpleObjectProperty(ConsumerGroupState.UNKNOWN)
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding({ "State: ${stateProperty.value}" }, stateProperty)
     val consumerGroupMembers: ObservableList<GroupMember> = FXCollections.observableArrayList<GroupMember>()
+    val canRefresh = SimpleBooleanProperty(true)
 
     suspend fun refresh() = either<Throwable, Unit> {
+        canRefresh.set(false)
         val consumerGroup = !adminApi.describeConsumerGroup(consumerGroupId.id)
         val sorted = consumerGroup.members
             .map { it.clientId to it.topicPartitions }
@@ -42,7 +45,7 @@ class ConsumerGroupViewModel @Inject constructor(
             consumerGroupMembers.addAll(sorted)
             stateProperty.set(consumerGroup.state)
         }
-    }.mapLeft { error.set(it) }
+    }.fold({ canRefresh.set(true); error.set(it) }, { canRefresh.set(true) })
 
     suspend fun delete() = adminApi.deleteConsumerGroup(nameProperty.value)
         .mapLeft { error.set(it) }

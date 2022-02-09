@@ -17,6 +17,7 @@ import tornadofx.SVGIcon
 import tornadofx.action
 import tornadofx.addClass
 import tornadofx.button
+import tornadofx.enableWhen
 import tornadofx.onChange
 import tornadofx.toggleClass
 
@@ -27,12 +28,16 @@ const val ICON_THEME_SVG = "M20 15.31L23.31 12 20 8.69V4h-4.69L12 .69 8.69 4H4v4
 const val ICON_LOCK_SVG = "M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
 const val ICON_UNLOCK_SVG = "M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"
 
-fun EventTarget.refreshButton(name: String, refreshOp: suspend () -> Unit) =
+fun EventTarget.refreshButton(name: String, isEnabled: BooleanProperty, refreshOp: suspend () -> Unit) =
     button("Refresh") {
         id = "button-refresh-$name"
+        enableWhen(isEnabled)
         action { dispatch { refreshOp() } }
         addClass(ButtonStyle.blueButton)
     }
+
+fun EventTarget.refreshButton(name: String, refreshOp: suspend () -> Unit) =
+    refreshButton(name, SimpleBooleanProperty(true), refreshOp)
 
 fun EventTarget.readOnlyButton(isReadOnlyProperty: BooleanProperty): Button {
     val getIcon = { if (isReadOnlyProperty.value) ICON_LOCK_SVG else ICON_UNLOCK_SVG }
