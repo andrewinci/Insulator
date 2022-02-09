@@ -70,7 +70,7 @@ jobs:
         run: "./gradlew check --no-daemon"
       - name: Run unit tests and upload coverage
         if: ${{ matrix.os.run-coverage }}
-        uses: paambaati/codeclimate-action@v2.7.5
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
           DISPLAY: ":99.0"
           _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k  -Dtestfx.setup.timeout=2500 -Dheadless.geometry=1920x1080-64"
