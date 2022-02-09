@@ -57,8 +57,8 @@ class ConsumerGroupView @Inject constructor(override val viewModel: ConsumerGrou
     }
 
     private fun EventTarget.deleteButton() =
-            confirmationButton("Delete", "The consumer group \"${viewModel.nameProperty.value}\" will be removed.") {
-                viewModel.dispatch { delete() }
-                closeTab()
-            }.hideOnReadonly()
+        confirmationButton("Delete", "The consumer group \"${viewModel.nameProperty.value}\" will be removed.") {
+            viewModel.dispatch { delete() }
+            closeTab()
+        }.hideOnReadonly()
 }

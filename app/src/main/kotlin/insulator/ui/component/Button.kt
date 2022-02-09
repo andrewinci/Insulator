@@ -13,7 +13,12 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonType
 import javafx.scene.paint.Color
-import tornadofx.*
+import tornadofx.SVGIcon
+import tornadofx.action
+import tornadofx.addClass
+import tornadofx.button
+import tornadofx.onChange
+import tornadofx.toggleClass
 
 // from https://material.io/resources/icons
 const val ICON_MENU_SVG = "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
@@ -23,15 +28,15 @@ const val ICON_LOCK_SVG = "M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 
 const val ICON_UNLOCK_SVG = "M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"
 
 fun EventTarget.refreshButton(name: String, isEnabled: BooleanProperty, refreshOp: suspend () -> Unit) =
-        button("Refresh") {
-            id = "button-refresh-$name"
-            enableWhen(isEnabled)
-            action { dispatch { refreshOp() } }
-            addClass(ButtonStyle.blueButton)
-        }
+    button("Refresh") {
+        id = "button-refresh-$name"
+        enableWhen(isEnabled)
+        action { dispatch { refreshOp() } }
+        addClass(ButtonStyle.blueButton)
+    }
 
 fun EventTarget.refreshButton(name: String, refreshOp: suspend () -> Unit) =
-        refreshButton(name, SimpleBooleanProperty(true), refreshOp)
+    refreshButton(name, SimpleBooleanProperty(true), refreshOp)
 
 fun EventTarget.readOnlyButton(isReadOnlyProperty: BooleanProperty): Button {
     val getIcon = { if (isReadOnlyProperty.value) ICON_LOCK_SVG else ICON_UNLOCK_SVG }
@@ -41,7 +46,7 @@ fun EventTarget.readOnlyButton(isReadOnlyProperty: BooleanProperty): Button {
         textProperty().bind(Bindings.createStringBinding(text, isReadOnlyProperty))
         action { isReadOnlyProperty.set(isReadOnlyProperty.not().value) }
         graphicProperty().bind(
-                Bindings.createObjectBinding({ SVGIcon(getIcon(), 22.0, color()) }, isReadOnlyProperty)
+            Bindings.createObjectBinding({ SVGIcon(getIcon(), 22.0, color()) }, isReadOnlyProperty)
         )
         addClass(ButtonStyle.toggleButton)
     }
@@ -52,12 +57,12 @@ fun EventTarget.readOnlyButton(isReadOnlyProperty: BooleanProperty): Button {
 }
 
 fun EventTarget.themeButton(op: () -> Unit) =
-        button {
-            text = "Change theme"
-            action(op)
-            graphic = SVGIcon(ICON_THEME_SVG, 22.0, theme.mainColor)
-            addClass(ButtonStyle.toggleButton)
-        }
+    button {
+        text = "Change theme"
+        action(op)
+        graphic = SVGIcon(ICON_THEME_SVG, 22.0, theme.mainColor)
+        addClass(ButtonStyle.toggleButton)
+    }
 
 fun EventTarget.settingsButton(op: () -> Unit) = button {
     graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
@@ -67,18 +72,18 @@ fun EventTarget.settingsButton(op: () -> Unit) = button {
 }
 
 fun EventTarget.confirmationButton(value: String, confirmationMessage: String, visible: Boolean = true, onOkAction: () -> Unit) =
-        confirmationButton(value, confirmationMessage, SimpleBooleanProperty(visible), onOkAction)
+    confirmationButton(value, confirmationMessage, SimpleBooleanProperty(visible), onOkAction)
 
 fun EventTarget.confirmationButton(value: String, confirmationMessage: String, visibleProperty: ObservableValue<Boolean>, onOkAction: () -> Unit) =
-        button(value) {
-            visibleProperty().bind(visibleProperty)
-            addClass(ButtonStyle.alertButton)
-            action {
-                insulatorAlert(Alert.AlertType.WARNING, confirmationMessage, ButtonType.CANCEL, ButtonType.OK) { btnType ->
-                    when (btnType) {
-                        ButtonType.OK -> onOkAction()
-                        else -> Unit
-                    }
+    button(value) {
+        visibleProperty().bind(visibleProperty)
+        addClass(ButtonStyle.alertButton)
+        action {
+            insulatorAlert(Alert.AlertType.WARNING, confirmationMessage, ButtonType.CANCEL, ButtonType.OK) { btnType ->
+                when (btnType) {
+                    ButtonType.OK -> onOkAction()
+                    else -> Unit
                 }
             }
         }
+    }

@@ -17,8 +17,8 @@ import javafx.collections.ObservableList
 import javax.inject.Inject
 
 class ConsumerGroupViewModel @Inject constructor(
-        val adminApi: AdminApi,
-        private val consumerGroupId: ConsumerGroupId
+    val adminApi: AdminApi,
+    private val consumerGroupId: ConsumerGroupId
 ) : InsulatorViewModel() {
 
     val nameProperty = SimpleStringProperty(consumerGroupId.id)
@@ -31,15 +31,15 @@ class ConsumerGroupViewModel @Inject constructor(
         canRefresh.set(false)
         val consumerGroup = !adminApi.describeConsumerGroup(consumerGroupId.id)
         val sorted = consumerGroup.members
-                .map { it.clientId to it.topicPartitions }
-                .map { (memberName, topicPartitions) ->
-                    GroupMember(
-                            memberName,
-                            topicPartitions.groupBy { it.topic }.toList().map { (a, b) ->
-                                GroupMemberTopic(a, b.sortedBy { it.partition }.map { GroupMemberTopicPartitionLag(it.partition, it.lag) })
-                            }
-                    )
-                }
+            .map { it.clientId to it.topicPartitions }
+            .map { (memberName, topicPartitions) ->
+                GroupMember(
+                    memberName,
+                    topicPartitions.groupBy { it.topic }.toList().map { (a, b) ->
+                        GroupMemberTopic(a, b.sortedBy { it.partition }.map { GroupMemberTopicPartitionLag(it.partition, it.lag) })
+                    }
+                )
+            }
         runOnFXThread {
             consumerGroupMembers.clear()
             consumerGroupMembers.addAll(sorted)
@@ -48,7 +48,7 @@ class ConsumerGroupViewModel @Inject constructor(
     }.fold({ canRefresh.set(true); error.set(it) }, { canRefresh.set(true) })
 
     suspend fun delete() = adminApi.deleteConsumerGroup(nameProperty.value)
-            .mapLeft { error.set(it) }
+        .mapLeft { error.set(it) }
 
     init {
         dispatch { refresh() }
