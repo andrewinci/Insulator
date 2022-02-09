@@ -15,6 +15,7 @@ apply plugin: 'kotlin-kapt'
 
 def dagger_version = "2.40.5"
 
+
 dependencies {
     implementation project(":lib:helper")
     implementation project(":lib:jsonhelper")
