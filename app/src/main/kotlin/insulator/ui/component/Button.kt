@@ -17,6 +17,7 @@ import tornadofx.SVGIcon
 import tornadofx.action
 import tornadofx.addClass
 import tornadofx.button
+import tornadofx.enableWhen
 import tornadofx.onChange
 import tornadofx.toggleClass
 
