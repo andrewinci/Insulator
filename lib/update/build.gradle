@@ -8,7 +8,7 @@ dependencies {
     api project(":lib:helper")
 
     // Json
-    implementation(group: 'org.json', name: 'json', version: '20210307')
+    implementation(group: 'org.json', name: 'json', version: '20211205')
 
     // Fuel
     implementation(group: 'com.github.kittinunf.fuel', name: 'fuel', version: "$fuel_version")
