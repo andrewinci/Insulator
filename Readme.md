@@ -30,14 +30,9 @@
         alt="code quality"/>
     </a>
 
-<a href="https://snyk.io/test/github/andrewinci/Insulator?targetFile=build.gradle">
-    <img src="https://snyk.io/test/github/andrewinci/Insulator/badge.svg?targetFile=build.gradle"
+<a href="https://snyk.io/test/github/andrewinci/Insulator">
+    <img src="https://snyk.io/test/github/andrewinci/Insulator/badge.svg"
          alt="Snyk"/>
-  </a>
-
-<a href="https://gitter.im/Insulator-tool/community">
-    <img src="https://img.shields.io/gitter/room/Insulator-tool/community"
-         alt="Gitter"/>
   </a>
   
 
