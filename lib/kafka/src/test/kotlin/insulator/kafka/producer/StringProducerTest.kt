@@ -30,7 +30,7 @@ class StringProducerTest : StringSpec({
         }
         val sut = StringProducer { kafkaProducer }
         // act
-        val res = sut.send("topic", "key", "value")
+        val res = sut.send("topic", "key", "value", null)
         sut.close()
         // assert
         res shouldBeRight {}
@@ -41,7 +41,7 @@ class StringProducerTest : StringSpec({
         // arrange
         val sut = StringProducer(mockk())
         // act
-        val res = sut.validate("random string ] ; {", "any-topic")
+        val res = sut.validate("random string ] ; {", "any-topic", null)
         // assert
         res shouldBeRight Unit
     }
@@ -55,7 +55,7 @@ class StringProducerTest : StringSpec({
             }
         }
         // act
-        val res = sut.send("topic", "key", "value")
+        val res = sut.send("topic", "key", "value", null)
         // assert
         res shouldBeLeft error
     }
