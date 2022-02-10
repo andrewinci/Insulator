@@ -73,10 +73,10 @@ class ProducerViewModel @Inject constructor(
                     })
             }
         }
-        listOf(valueProperty, serializationFormatProperty).forEach {
+        listOf(valueProperty, serializationFormatProperty, selectedVersionProperty).forEach {
             it.onChange {
                 producer.dispatch {
-                    validate(valueProperty.value, topic.name).fold(
+                    validate(valueProperty.value, topic.name, selectedVersionProperty.value?.version).fold(
                         { error ->
                             if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
                             if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
