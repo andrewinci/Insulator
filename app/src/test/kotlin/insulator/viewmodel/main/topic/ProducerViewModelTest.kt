@@ -60,7 +60,7 @@ class ProducerViewModelTest : StringSpec({
             // act
             val sut = ProducerViewModel(it.mockTopic, cluster, it.avroProducer, mockk())
             // assert
-            sut.serializeValueProperty.value.toString() shouldBe "Avro"
+            sut.serializationFormatProperty.value.toString() shouldBe "Avro"
         }
     }
 

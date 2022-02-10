@@ -44,11 +44,10 @@ class AvroProducer(
 
     private suspend fun getCachedSchema(topic: String) =
         schemaCache.getOrPut(
-            topic,
-            {
-                schemaRegistry.getSubject("$topic-value")
-                    .map { it.schemas.maxByOrNull { s -> s.version }?.schema }
-                    .flatMap { it?.right() ?: Throwable("Schema not found").left() }
-            }
-        )
+            topic
+        ) {
+            schemaRegistry.getSubject("$topic-value")
+                .map { it.schemas.maxByOrNull { s -> s.version }?.schema }
+                .flatMap { it?.right() ?: Throwable("Schema not found").left() }
+        }
 }
