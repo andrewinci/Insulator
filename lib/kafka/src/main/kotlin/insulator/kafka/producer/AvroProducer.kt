@@ -1,6 +1,9 @@
 package insulator.kafka.producer
 
-import arrow.core.*
+import arrow.core.Left
+import arrow.core.Right
+import arrow.core.flatMap
+import arrow.core.right
 import insulator.helper.runCatchingE
 import insulator.kafka.SchemaRegistry
 import insulator.kafka.factories.kafkaConfig
@@ -37,17 +40,17 @@ class AvroProducer(
     private suspend fun internalValidate(value: String, topic: String, version: Int?) = schemaRegistry
         .getSubject("$topic-value")
         .map { s -> s.schemas }
-        .map { schemas -> if (version != null)
-            schemas.firstOrNull { it.version == version }
+        .map { schemas ->
+            if (version != null)
+                schemas.firstOrNull { it.version == version }
             else schemas.maxByOrNull { it.version }
         }
         .flatMap { schemaVersion ->
-            if (schemaVersion == null)  Left(Throwable("Schema not found: $topic - v$version"))
+            if (schemaVersion == null) Left(Throwable("Schema not found: $topic - v$version"))
             else Right(schemaVersion.schema)
         }
         .flatMap { schema -> jsonAvroConverter(value, schema) }
 
     private fun sendGenericRecord(topic: String, key: String, value: GenericRecord?) =
         kafkaProducer.runCatchingE { send(ProducerRecord(topic, key, value)) }.map { }
-
 }

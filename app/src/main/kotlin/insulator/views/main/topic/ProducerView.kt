@@ -1,11 +1,10 @@
 package insulator.views.main.topic
 
-import com.sun.javafx.collections.ImmutableObservableList
 import com.sun.javafx.collections.ObservableListWrapper
 import insulator.di.TopicScope
 import insulator.helper.dispatch
-import insulator.kafka.producer.SerializationFormat
 import insulator.kafka.model.Schema
+import insulator.kafka.producer.SerializationFormat
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
@@ -18,7 +17,7 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
-import tornadofx.*
+import tornadofx.* // ktlint-disable no-wildcard-imports
 import javax.inject.Inject
 
 @TopicScope

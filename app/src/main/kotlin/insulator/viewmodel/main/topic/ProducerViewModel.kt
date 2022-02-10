@@ -70,7 +70,8 @@ class ProducerViewModel @Inject constructor(
                     {
                         subjectProperty.set(it)
                         selectedVersionProperty.set(subjectProperty.value?.schemas?.last())
-                    })
+                    }
+                )
             }
         }
         listOf(valueProperty, serializationFormatProperty, selectedVersionProperty).forEach {
