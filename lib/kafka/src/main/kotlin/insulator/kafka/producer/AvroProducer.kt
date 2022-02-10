@@ -27,8 +27,8 @@ class AvroProducer(
     override suspend fun validate(value: String, topic: String, schemaVersion: Int?) =
         internalValidate(value, topic, schemaVersion).flatMap { Unit.right() }
 
-    override suspend fun send(topic: String, key: String, value: String) =
-        internalValidate(value, topic, null).flatMap { sendGenericRecord(topic, key, it) }
+    override suspend fun send(topic: String, key: String, value: String, schemaVersion: Int?) =
+        internalValidate(value, topic, schemaVersion).flatMap { sendGenericRecord(topic, key, it) }
 
     override suspend fun sendTombstone(topic: String, key: String) = sendGenericRecord(topic, key, null)
 

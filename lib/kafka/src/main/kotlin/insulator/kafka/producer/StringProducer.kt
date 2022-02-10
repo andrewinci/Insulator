@@ -21,7 +21,7 @@ class StringProducer(producerBuilder: ProducerBuilder<String>) : GenericProducer
 
     override suspend fun validate(value: String, topic: String, schemaVersion: Int?): Either<Throwable, Unit> = Unit.right()
 
-    override suspend fun send(topic: String, key: String, value: String) = genericSend(topic, key, value)
+    override suspend fun send(topic: String, key: String, value: String, schemaVersion: Int?) = genericSend(topic, key, value)
 
     override suspend fun sendTombstone(topic: String, key: String) = genericSend(topic, key, null)
 

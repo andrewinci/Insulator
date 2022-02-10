@@ -4,7 +4,6 @@ import com.sun.javafx.collections.ImmutableObservableList
 import com.sun.javafx.collections.ObservableListWrapper
 import insulator.di.TopicScope
 import insulator.helper.dispatch
-import insulator.helper.toObservable
 import insulator.kafka.producer.SerializationFormat
 import insulator.kafka.model.Schema
 import insulator.ui.common.InsulatorView
@@ -12,7 +11,6 @@ import insulator.ui.component.appBar
 import insulator.ui.component.fieldName
 import insulator.viewmodel.main.topic.ProducerViewModel
 import javafx.beans.binding.Bindings
-import javafx.beans.property.SimpleListProperty
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.Node

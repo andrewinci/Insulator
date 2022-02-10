@@ -95,7 +95,7 @@ class ProducerViewModel @Inject constructor(
             keyProperty.value.isNullOrBlank() -> error.set(Exception("Invalid key. Key must be not empty"))
             isTombstoneProperty.value -> producer.sendTombstone(topic.name, keyProperty.value)
             valueProperty.value.isNullOrBlank() -> error.set(Exception("Invalid value. Value must be not empty"))
-            else -> producer.send(topic.name, keyProperty.value, valueProperty.value).mapLeft { error.set(it) }
+            else -> producer.send(topic.name, keyProperty.value, valueProperty.value, selectedVersionProperty.value?.version).mapLeft { error.set(it) }
         }
     }
 }
