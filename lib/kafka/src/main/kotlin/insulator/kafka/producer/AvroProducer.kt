@@ -1,8 +1,8 @@
 package insulator.kafka.producer
 
-import arrow.core.Either
+import arrow.core.Left
+import arrow.core.Right
 import arrow.core.flatMap
-import arrow.core.left
 import arrow.core.right
 import insulator.helper.runCatchingE
 import insulator.kafka.SchemaRegistry
@@ -27,28 +27,30 @@ class AvroProducer(
     private val jsonAvroConverter: GenericJsonToAvroConverter
 ) : GenericProducer<GenericRecord>(producerBuilder) {
 
-    private val schemaCache = HashMap<String, Either<Throwable, String>>()
+    override suspend fun validate(value: String, topic: String, schemaVersion: Int?) =
+        internalValidate(value, topic, schemaVersion).flatMap { Unit.right() }
 
-    override suspend fun validate(value: String, topic: String) = internalValidate(value, topic).flatMap { Unit.right() }
-
-    override suspend fun send(topic: String, key: String, value: String) = internalValidate(value, topic).flatMap { sendGenericRecord(topic, key, it) }
+    override suspend fun send(topic: String, key: String, value: String, schemaVersion: Int?) =
+        internalValidate(value, topic, schemaVersion).flatMap { sendGenericRecord(topic, key, it) }
 
     override suspend fun sendTombstone(topic: String, key: String) = sendGenericRecord(topic, key, null)
 
     override fun close() = kafkaProducer.close()
 
-    private suspend fun internalValidate(value: String, topic: String) = getCachedSchema(topic).flatMap { jsonAvroConverter(value, it) }
+    private suspend fun internalValidate(value: String, topic: String, version: Int?) = schemaRegistry
+        .getSubject("$topic-value")
+        .map { s -> s.schemas }
+        .map { schemas ->
+            if (version != null)
+                schemas.firstOrNull { it.version == version }
+            else schemas.maxByOrNull { it.version }
+        }
+        .flatMap { schemaVersion ->
+            if (schemaVersion == null) Left(Throwable("Schema not found: $topic - v$version"))
+            else Right(schemaVersion.schema)
+        }
+        .flatMap { schema -> jsonAvroConverter(value, schema) }
 
     private fun sendGenericRecord(topic: String, key: String, value: GenericRecord?) =
         kafkaProducer.runCatchingE { send(ProducerRecord(topic, key, value)) }.map { }
-
-    private suspend fun getCachedSchema(topic: String) =
-        schemaCache.getOrPut(
-            topic,
-            {
-                schemaRegistry.getSubject("$topic-value")
-                    .map { it.schemas.maxByOrNull { s -> s.version }?.schema }
-                    .flatMap { it?.right() ?: Throwable("Schema not found").left() }
-            }
-        )
 }

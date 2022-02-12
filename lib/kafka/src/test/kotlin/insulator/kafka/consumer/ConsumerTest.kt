@@ -2,6 +2,7 @@ package insulator.kafka.consumer
 
 import arrow.core.left
 import arrow.core.right
+import insulator.kafka.producer.SerializationFormat
 import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.core.spec.style.stringSpec
@@ -24,7 +25,7 @@ import kotlin.time.seconds
 @ExperimentalTime
 class ConsumerTest : StringSpec({
 
-    fun testScenario(consumerFrom: ConsumeFrom, deserializationFormat: DeserializationFormat, expectedMessages: Int = 1) = stringSpec {
+    fun testScenario(consumerFrom: ConsumeFrom, deserializationFormat: SerializationFormat, expectedMessages: Int = 1) = stringSpec {
         "test start consuming from $consumerFrom and format $deserializationFormat" {
             TestConsumerScenario().use {
                 // arrange
@@ -40,12 +41,12 @@ class ConsumerTest : StringSpec({
         }
     }
 
-    include(testScenario(ConsumeFrom.Beginning, DeserializationFormat.String))
-    include(testScenario(ConsumeFrom.Beginning, DeserializationFormat.Avro))
-    include(testScenario(ConsumeFrom.LastHour, DeserializationFormat.String))
-    include(testScenario(ConsumeFrom.LastDay, DeserializationFormat.String))
-    include(testScenario(ConsumeFrom.LastWeek, DeserializationFormat.String))
-    include(testScenario(ConsumeFrom.Now, DeserializationFormat.Avro, 0))
+    include(testScenario(ConsumeFrom.Beginning, SerializationFormat.String))
+    include(testScenario(ConsumeFrom.Beginning, SerializationFormat.Avro))
+    include(testScenario(ConsumeFrom.LastHour, SerializationFormat.String))
+    include(testScenario(ConsumeFrom.LastDay, SerializationFormat.String))
+    include(testScenario(ConsumeFrom.LastWeek, SerializationFormat.String))
+    include(testScenario(ConsumeFrom.Now, SerializationFormat.Avro, 0))
 
     "start happy path - unsupported schema for custom avro converter" {
         TestConsumerScenario().use {
@@ -53,7 +54,7 @@ class ConsumerTest : StringSpec({
             val messages = mutableListOf<String>()
             val sut = Consumer(it.consumerFactory) { Throwable("").left() }
             // act
-            sut.start("testTopic", ConsumeFrom.Beginning, DeserializationFormat.Avro) { lst -> messages.addAll(lst.map { r -> r.value }) }
+            sut.start("testTopic", ConsumeFrom.Beginning, SerializationFormat.Avro) { lst -> messages.addAll(lst.map { r -> r.value }) }
             // assert
             eventually(20.seconds) {
                 messages.size shouldBe 1
@@ -66,7 +67,7 @@ class ConsumerTest : StringSpec({
             // arrange
             val messages = mutableListOf<String>()
             // act
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { lst -> messages.addAll(lst.map { r -> r.value }) }
+            it.sut.start("testTopic", ConsumeFrom.Now, SerializationFormat.String) { lst -> messages.addAll(lst.map { r -> r.value }) }
             // assert
             it.sut.isRunning() shouldBe true
             it.sut.stop()
@@ -85,9 +86,9 @@ class ConsumerTest : StringSpec({
     "start twice throw an error" {
         TestConsumerScenario().use {
             // arrange
-            it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { }
+            it.sut.start("testTopic", ConsumeFrom.Now, SerializationFormat.String) { }
             // act
-            val action = suspend { it.sut.start("testTopic", ConsumeFrom.Now, DeserializationFormat.String) { } }
+            val action = suspend { it.sut.start("testTopic", ConsumeFrom.Now, SerializationFormat.String) { } }
             // assert
             kotlin.runCatching { action.invoke() }.isFailure shouldBe true
         }
@@ -97,9 +98,9 @@ class ConsumerTest : StringSpec({
 class TestConsumerScenario : Closeable {
     val consumerFactory = mockk<ConsumerFactory>() {
         every { build(any()) } answers {
-            when (firstArg<DeserializationFormat>()) {
-                DeserializationFormat.String -> stringConsumer
-                DeserializationFormat.Avro -> avroConsumer
+            when (firstArg<SerializationFormat>()) {
+                SerializationFormat.String -> stringConsumer
+                SerializationFormat.Avro -> avroConsumer
             }
         }
     }

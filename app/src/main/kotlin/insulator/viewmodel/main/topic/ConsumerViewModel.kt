@@ -4,8 +4,8 @@ import insulator.di.TopicScope
 import insulator.helper.runOnFXThread
 import insulator.kafka.consumer.ConsumeFrom
 import insulator.kafka.consumer.Consumer
-import insulator.kafka.consumer.DeserializationFormat
 import insulator.kafka.model.Topic
+import insulator.kafka.producer.SerializationFormat
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
@@ -24,7 +24,7 @@ class ConsumerViewModel @Inject constructor(
     val records: ObservableList<RecordViewModel> = FXCollections.observableList(LinkedList())
     val isConsumingProperty = SimpleBooleanProperty(false)
     val consumeFromProperty = SimpleStringProperty(ConsumeFrom.LastDay.text)
-    val deserializeValueProperty = SimpleStringProperty(DeserializationFormat.String.toString())
+    val deserializeValueProperty = SimpleStringProperty(SerializationFormat.String.toString())
     val searchItem = SimpleStringProperty("")
     val comparatorProperty = SimpleObjectProperty<Comparator<RecordViewModel>>()
 
@@ -48,7 +48,7 @@ class ConsumerViewModel @Inject constructor(
             isConsumingProperty.value = true
             clearRecords()
             val consumerFrom = ConsumeFrom.values().first { it.text == consumeFromProperty.value }
-            val deserializationFormat = DeserializationFormat.valueOf(deserializeValueProperty.value)
+            val deserializationFormat = SerializationFormat.valueOf(deserializeValueProperty.value)
             consumer.start(topic.name, consumerFrom, deserializationFormat) {
                 records.runOnFXThread { addAll(it.map { record -> RecordViewModel(record) }) }
             }
