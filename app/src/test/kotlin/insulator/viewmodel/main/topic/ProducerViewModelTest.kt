@@ -4,8 +4,11 @@ import arrow.core.left
 import arrow.core.right
 import helper.FxContext
 import insulator.jsonhelper.jsontoavro.JsonToAvroException
+import insulator.kafka.SchemaRegistry
 import insulator.kafka.model.Cluster
+import insulator.kafka.model.Schema
 import insulator.kafka.model.SchemaRegistryConfiguration
+import insulator.kafka.model.Subject
 import insulator.kafka.model.Topic
 import insulator.kafka.producer.AvroProducer
 import insulator.kafka.producer.StringProducer
@@ -27,9 +30,9 @@ class ProducerViewModelTest : StringSpec({
         ProducerViewModelTestFixture().use {
             // arrange
             val mockkProducer = mockk<StringProducer> {
-                coEvery { validate(any(), any()) } returns JsonToAvroException(errorMessage).left()
+                coEvery { validate(any(), any(), any()) } returns JsonToAvroException(errorMessage).left()
             }
-            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(), mockkProducer)
+            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(), mockkProducer, mockk())
             // act
             sut.valueProperty.set("test")
             // assert
@@ -58,7 +61,7 @@ class ProducerViewModelTest : StringSpec({
             // arrange
             val cluster = Cluster.empty().copy(schemaRegistryConfig = SchemaRegistryConfiguration("sample"))
             // act
-            val sut = ProducerViewModel(it.mockTopic, cluster, it.avroProducer, mockk())
+            val sut = ProducerViewModel(it.mockTopic, cluster, it.avroProducer, mockk(), it.mockSchemaRegistry)
             // assert
             sut.serializationFormatProperty.value.toString() shouldBe "Avro"
         }
@@ -80,7 +83,7 @@ class ProducerViewModelTest : StringSpec({
     "send happy path" {
         ProducerViewModelTestFixture().use {
             // arrange
-            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(relaxed = true), it.stringProducer)
+            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(relaxed = true), it.stringProducer, mockk())
             sut.valueProperty.set("test")
             sut.keyProperty.set("test")
             // act
@@ -95,10 +98,10 @@ class ProducerViewModelTest : StringSpec({
         ProducerViewModelTestFixture().use {
             // arrange
             val mockProducer = mockk<StringProducer> {
-                coEvery { validate(any(), any()) } returns Unit.right()
-                coEvery { send(any(), any(), any()) } returns Throwable("sample").left()
+                coEvery { validate(any(), any(), any()) } returns Unit.right()
+                coEvery { send(any(), any(), any(), any()) } returns Throwable("sample").left()
             }
-            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(relaxed = true), mockProducer)
+            val sut = ProducerViewModel(it.mockTopic, it.cluster, mockk(relaxed = true), mockProducer, mockk())
             sut.valueProperty.set("test")
             sut.keyProperty.set("test")
             // act
@@ -112,15 +115,20 @@ class ProducerViewModelTest : StringSpec({
 
 class ProducerViewModelTestFixture : FxContext() {
     val mockTopic = Topic.empty()
-    val avroProducer = mockk<AvroProducer> { coEvery { validate(any(), any()) } returns Unit.right() }
+    val avroProducer = mockk<AvroProducer> { coEvery { validate(any(), any(), any()) } returns Unit.right() }
     val stringProducer = mockk<StringProducer> {
-        coEvery { validate(any(), any()) } returns Unit.right()
-        coEvery { send(any(), any(), any()) } returns Unit.right()
+        coEvery { validate(any(), any(), any()) } returns Unit.right()
+        coEvery { send(any(), any(), any(), any()) } returns Unit.right()
+    }
+    val mockSchema = Schema("name", 1, 1)
+    val mockSchemaRegistry = mockk<SchemaRegistry>() {
+        coEvery { getSubject(any()) } returns Subject("", listOf(mockSchema)).right()
     }
     val sut = ProducerViewModel(
         mockTopic,
         cluster,
         avroProducer,
-        stringProducer
+        stringProducer,
+        mockSchemaRegistry
     )
 }

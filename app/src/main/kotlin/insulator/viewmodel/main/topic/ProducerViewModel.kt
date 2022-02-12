@@ -29,8 +29,8 @@ class ProducerViewModel @Inject constructor(
     val topic: Topic,
     val cluster: Cluster,
     private val avroProducer: AvroProducer?,
+    private val stringProducer: StringProducer,
     private val schemaRegistry: SchemaRegistry?,
-    private val stringProducer: StringProducer
 ) : InsulatorViewModel() {
 
     val isTombstoneProperty = SimpleBooleanProperty(false)
@@ -77,14 +77,16 @@ class ProducerViewModel @Inject constructor(
         listOf(valueProperty, serializationFormatProperty, selectedVersionProperty).forEach {
             it.onChange {
                 producer.dispatch {
-                    validate(valueProperty.value, topic.name, selectedVersionProperty.value?.version).fold(
-                        { error ->
-                            if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
-                            if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
-                                validationErrorProperty.set(error.message)
-                        },
-                        { validationErrorProperty.set(null) }
-                    )
+                    if (valueProperty.value != null) {
+                        validate(valueProperty.value, topic.name, selectedVersionProperty.value?.version).fold(
+                            { error ->
+                                if (error is JsonMissingFieldException) nextFieldProperty.value = error.fieldName
+                                if (error is JsonFieldParsingException || validationErrorProperty.value.isNullOrEmpty())
+                                    validationErrorProperty.set(error.message)
+                            },
+                            { validationErrorProperty.set(null) }
+                        )
+                    }
                 }
             }
         }
@@ -96,7 +98,12 @@ class ProducerViewModel @Inject constructor(
             keyProperty.value.isNullOrBlank() -> error.set(Exception("Invalid key. Key must be not empty"))
             isTombstoneProperty.value -> producer.sendTombstone(topic.name, keyProperty.value)
             valueProperty.value.isNullOrBlank() -> error.set(Exception("Invalid value. Value must be not empty"))
-            else -> producer.send(topic.name, keyProperty.value, valueProperty.value, selectedVersionProperty.value?.version).mapLeft { error.set(it) }
+            else -> producer.send(
+                topic.name,
+                keyProperty.value,
+                valueProperty.value,
+                selectedVersionProperty.value?.version
+            ).mapLeft { error.set(it) }
         }
     }
 }
