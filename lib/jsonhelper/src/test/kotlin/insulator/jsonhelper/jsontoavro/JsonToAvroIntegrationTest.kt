@@ -6,9 +6,7 @@ import insulator.jsonhelper.jsontoavro.fieldparser.SimpleTypeParsersFactory
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.FreeSpec
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.kotest.matchers.types.shouldBeTypeOf
 import org.apache.avro.generic.GenericData
 
 class JsonToAvroIntegrationTest : FreeSpec({
