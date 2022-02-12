@@ -17,9 +17,10 @@ def adler(fname):
         return hex(asum)[2:10].zfill(8).lower()
 
 
-def build_file(jar, url):
-    if url is None:
+def build_file(jar, info):
+    if info["uri"] is None:
         return None
     hash = adler(jar)
     size = os.path.getsize(jar)
-    return f'<file uri="{url}" size="{size}" classpath="true" checksum="{hash}"/>'
+    os_attr = ("os=\""+info["os"]+"\" ") if "os" in info else ""
+    return f'<file {os_attr}uri="{info["uri"]}" size="{size}" classpath="true" checksum="{hash}"/>'
