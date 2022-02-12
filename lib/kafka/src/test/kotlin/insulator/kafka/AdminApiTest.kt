@@ -51,9 +51,8 @@ class AdminApiTest : StringSpec({
 
     "listTopics throws" {
         // arrange
-        val exception = Throwable("Exception")
         val listTopicResultMock = mockk<ListTopicsResult> {
-            every { names() } returns KafkaFuture.completedFuture(HashSet<String>()).thenApply { throw exception }
+            every { names() } returns KafkaFuture.completedFuture(HashSet<String>()).thenApply { throw Throwable("Exception") }
         }
         val kafkaAdminClientMock = mockk<AdminClient> {
             every { listTopics() } returns listTopicResultMock
@@ -62,7 +61,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.listTopics()
         // assert
-        res shouldBeLeft exception
+        res.shouldBeLeft()
     }
 
     "describeTopic happy path" {

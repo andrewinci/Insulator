@@ -25,8 +25,8 @@ dependencies {
     testImplementation(group: 'io.kotest.extensions', name: 'kotest-assertions-arrow', version: "1.2.2")
 
     // Mock
-    testImplementation(group: 'io.mockk', name: 'mockk', version: '1.10.2')
+    testImplementation(group: 'io.mockk', name: 'mockk', version: '1.12.2')
 
     // Avro
-    implementation 'org.apache.avro:avro:1.9.2'
+    implementation 'org.apache.avro:avro:1.11.0'
 }

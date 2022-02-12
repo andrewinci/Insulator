@@ -7,11 +7,12 @@ import insulator.kafka.model.ConsumerGroupState
 import insulator.kafka.model.Topic
 import insulator.kafka.model.TopicPartitionLag
 import insulator.kafka.producer.stringProducer
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.timing.eventually
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -23,8 +24,8 @@ import java.io.Closeable
 import java.time.Duration
 import java.util.Properties
 import kotlin.concurrent.thread
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
-import kotlin.time.seconds
 
 @ExperimentalTime
 class ConsumerGroupTest : FreeSpec({
@@ -54,7 +55,7 @@ class ConsumerGroupTest : FreeSpec({
                     val consumerGroupList = adminApi.listConsumerGroups()
 
                     // assert
-                    consumerGroupList shouldBeRight {
+                    consumerGroupList.shouldBeRight().should {
                         it shouldContain consumerGroupName
                     }
                 }
@@ -66,7 +67,7 @@ class ConsumerGroupTest : FreeSpec({
             // act
             val consumerGroup = adminApi.describeConsumerGroup(consumerGroupName)
             // assert
-            consumerGroup shouldBeRight {
+            consumerGroup.shouldBeRight().should {
                 it.groupId shouldBe consumerGroupName
                 it.state shouldBe ConsumerGroupState.EMPTY
                 it.members.size shouldBe 0
@@ -81,7 +82,7 @@ class ConsumerGroupTest : FreeSpec({
                 // act
                 val consumerGroup = adminApi.describeConsumerGroup(consumerGroupName)
                 // assert
-                consumerGroup shouldBeRight { group ->
+                consumerGroup.shouldBeRight().should { group ->
                     group.groupId shouldBe consumerGroupName
                     group.state shouldBe ConsumerGroupState.STABLE
                     group.members.size shouldBe 3
