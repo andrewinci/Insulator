@@ -44,7 +44,7 @@ class ConsumerGroupTest : FreeSpec({
             put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupName)
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
         }
-        producer.send(testTopicName, "test", "test")
+        producer.send(testTopicName, "test", "test", null)
 
         "get list of consumer groups" {
             // start a consumer
