@@ -55,7 +55,7 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
         with:
-          java-version: 14
+          java-version: 15
           java-package: jdk
       - name: Cache
         uses: actions/cache@v2
@@ -64,7 +64,6 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-v2
-          restore-keys: ${{ runner.os }}-gradle-v2
       - name: Build and run tests
         if: ${{ !matrix.os.run-coverage }}
         run: "./gradlew check --no-daemon"
