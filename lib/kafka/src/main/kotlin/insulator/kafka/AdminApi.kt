@@ -64,15 +64,16 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
         val configuration =
             admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
                 .map {
-                    TopicConfiguration(rawConfiguration = it.entries().map { config -> config.name() to config.value() }
-                        .toMap())
+                    TopicConfiguration(
+                        rawConfiguration = it.entries().map { config -> config.name() to config.value() }
+                            .toMap()
+                    )
                 }.bind()
 
         val description = admin.describeTopics(listOf(topicName)).all()
             .toSuspendCoroutine()
             .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
             .bind()
-
 
         Topic(
             name = description.name(),

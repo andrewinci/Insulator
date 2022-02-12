@@ -7,7 +7,6 @@ import insulator.kafka.model.Schema
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.kafka.model.Subject
 import io.kotest.assertions.arrow.core.shouldBeLeft
-import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery

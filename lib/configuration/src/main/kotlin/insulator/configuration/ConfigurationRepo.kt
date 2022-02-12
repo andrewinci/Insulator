@@ -26,7 +26,7 @@ class ConfigurationRepo(private val configPath: String) {
 
     suspend fun delete(cluster: Cluster): Either<Throwable, Unit> = either {
         val config = getConfiguration().bind()
-            config.clusters
+        config.clusters
             .map { it.guid to it }.filter { (guid, _) -> guid != cluster.guid }
             .map { it.second }
             .let { Configuration(it) }
