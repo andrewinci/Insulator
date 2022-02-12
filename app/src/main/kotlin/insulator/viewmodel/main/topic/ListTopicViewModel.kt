@@ -34,7 +34,7 @@ class ListTopicViewModel @Inject constructor(
     val selectedItemProperty = SimpleStringProperty(null)
     val searchItemProperty = SimpleStringProperty(null)
     val filteredTopicsProperty: ObservableList<String> = SortedFilteredList(topicListProperty)
-        .apply { filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) } }
+        .apply { filterWhen(searchItemProperty) { p, i -> i.lowercase().contains(p.lowercase()) } }
         .filteredItems
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
         { "Topic count: ${filteredTopicsProperty.size}/${topicListProperty.size}" },

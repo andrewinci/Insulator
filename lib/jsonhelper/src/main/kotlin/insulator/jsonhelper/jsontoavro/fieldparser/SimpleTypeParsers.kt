@@ -59,7 +59,7 @@ class SimpleTypeParsersFactory {
     private val booleanParser = jsonFieldParser { field, schema ->
         when (field) {
             is Boolean -> field.right()
-            is String -> when (field.toLowerCase()) {
+            is String -> when (field.lowercase()) {
                 "false" -> false.right()
                 "true" -> true.right()
                 else -> JsonInvalidFieldException(schema, field).left()

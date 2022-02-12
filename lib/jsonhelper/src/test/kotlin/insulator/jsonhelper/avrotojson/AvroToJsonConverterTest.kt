@@ -1,13 +1,14 @@
 package insulator.jsonhelper.avrotojson
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.data.forAll
 import io.kotest.data.headers
 import io.kotest.data.row
 import io.kotest.data.table
+import io.kotest.matchers.should
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
@@ -190,7 +191,7 @@ class AvroToJsonConverterTest : StringSpec({
         // act
         val res = sut.parse(testRecord)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<UnsupportedTypeException>()
         }
     }

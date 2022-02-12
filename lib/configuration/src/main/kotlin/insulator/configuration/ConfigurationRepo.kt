@@ -16,34 +16,39 @@ class ConfigurationRepo(private val configPath: String) {
 
     suspend fun getConfiguration(): Either<ConfigurationRepoException, Configuration> = either {
         if (!File(configPath).exists()) store(Configuration(emptyList()))
-        val textConfig = !runCatchingE { File(configPath).readText() }
+        val textConfig = runCatchingE { File(configPath).readText() }
             .mapLeft { ConfigurationRepoException("Unable to load the file", it) }
-        !json.runCatchingE { decodeFromString(Configuration.serializer(), textConfig) }
+            .bind()
+        json.runCatchingE { decodeFromString(Configuration.serializer(), textConfig) }
             .mapLeft { ConfigurationRepoException("Unable to load the configurations", it) }
+            .bind()
     }
 
     suspend fun delete(cluster: Cluster): Either<Throwable, Unit> = either {
-        (!getConfiguration()).clusters
+        val config = getConfiguration().bind()
+            config.clusters
             .map { it.guid to it }.filter { (guid, _) -> guid != cluster.guid }
             .map { it.second }
             .let { Configuration(it) }
-            .also { !store(it) }
-            .also { config -> callbacks.forEach { it(config) } }
+            .also { store(it).bind() }
+            .also { c -> callbacks.forEach { it(c) } }
     }
 
     suspend fun store(theme: InsulatorTheme): Either<ConfigurationRepoException, Unit> = either {
-        val configuration = !getConfiguration()
+        val configuration = getConfiguration()
             .map { Configuration(theme = theme, clusters = it.clusters) }
-        !store(configuration)
+            .bind()
+        store(configuration)
+            .bind()
     }
 
     suspend fun store(cluster: Cluster): Either<ConfigurationRepoException, Unit> = either {
-        val currentConfiguration = !getConfiguration()
+        val currentConfiguration = getConfiguration().bind()
         val configuration = currentConfiguration.clusters
-            .map { it.guid to it }.toMap().plus(cluster.guid to cluster)
+            .associateBy { it.guid }.plus(cluster.guid to cluster)
             .map { it.value }
             .let { currentConfiguration.copy(clusters = it) }
-        !store(configuration)
+        store(configuration).bind()
         callbacks.forEach { it(configuration) }
     }
 

@@ -31,7 +31,7 @@ class VersionChecker(private val customJarPath: String? = null) {
 
     suspend fun getCurrentVersion(): Either<Throwable, Version> = either {
         val appVersion = getAppVersion().fold({ "999.999.999" }, { it })
-        val latestVersion = !getLatestVersion()
+        val latestVersion = getLatestVersion().bind()
         val isANewVersionAvailable = Semver(appVersion).isLowerThan(latestVersion.version)
         Version(appVersion, if (isANewVersionAvailable) latestVersion else null)
     }
@@ -49,14 +49,16 @@ class VersionChecker(private val customJarPath: String? = null) {
     }
 
     suspend fun getLatestVersion(): Either<Throwable, Release> = either {
-        val jsonObject = !Fuel.get(LATEST_RELEASE_API_ENDPOINT).awaitObjectResult(jsonDeserializer())
+        val jsonObject = Fuel.get(LATEST_RELEASE_API_ENDPOINT).awaitObjectResult(jsonDeserializer())
             .fold({ it.right() }, { it.left() })
             .flatMap { it.runCatchingE { obj() } }
-        val tag = !jsonObject.runCatchingE { getString("tag_name") }
-        val assets = !jsonObject.runCatchingE { getJSONArray("assets") }
-        val assetUrls = !assets
+            .bind()
+        val tag = jsonObject.runCatchingE { getString("tag_name") }.bind()
+        val assets = jsonObject.runCatchingE { getJSONArray("assets") }.bind()
+        val assetUrls = assets
             .mapIndexed { id, _ -> assets.runCatchingE { getJSONObject(id).getString("browser_download_url") } }
             .toEitherOfList()
+            .bind()
         Release(
             version = tag,
             webUrl = "$GITHUB_REPO/releases/tag/$tag",

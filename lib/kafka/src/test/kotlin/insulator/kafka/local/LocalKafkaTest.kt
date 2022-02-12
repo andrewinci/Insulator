@@ -1,9 +1,10 @@
 package insulator.kafka.local
 
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
@@ -36,7 +37,7 @@ class LocalKafkaTest : FreeSpec() {
                 // act
                 val cluster = sut.start()
                 // assert
-                cluster shouldBeRight {
+                cluster.shouldBeRight().should {
                     it.endpoint shouldBe testBootstrapServers
                     it.schemaRegistryConfig.endpoint shouldBe testSchemaRegistryEndpoint
                 }
@@ -50,7 +51,7 @@ class LocalKafkaTest : FreeSpec() {
                 // act
                 val cluster = sut.start()
                 // assert
-                cluster shouldBeLeft {
+                cluster.shouldBeLeft().should {
                     it.shouldBeInstanceOf<LocalKafkaException>()
                     it.message shouldBe startException.message
                 }
@@ -64,7 +65,7 @@ class LocalKafkaTest : FreeSpec() {
                 // act
                 val cluster = sut.start()
                 // assert
-                cluster shouldBeLeft {
+                cluster.shouldBeLeft().should {
                     it.shouldBeInstanceOf<LocalKafkaException>()
                     it.message shouldBe startException.message
                 }
@@ -78,7 +79,7 @@ class LocalKafkaTest : FreeSpec() {
                 // act
                 val cluster = sut.start()
                 // assert
-                cluster shouldBeLeft {
+                cluster.shouldBeLeft().should {
                     it.shouldBeInstanceOf<LocalKafkaException>()
                     it.message shouldBe startException.message
                 }
@@ -92,7 +93,7 @@ class LocalKafkaTest : FreeSpec() {
                 // act
                 val cluster = sut.start()
                 // assert
-                cluster shouldBeLeft {
+                cluster.shouldBeLeft().should {
                     it.shouldBeInstanceOf<LocalKafkaException>()
                     it.message shouldBe startException.message
                 }

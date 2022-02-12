@@ -8,21 +8,21 @@ plugins {
 
 tasks.withType(Test) { useJUnitPlatform() }
 
-def arrow_version = "0.11.0"
-def kotest_version = "4.3.0"
+def arrow_version = "1.0.1"
+def kotest_version = "5.1.0"
 
 dependencies {
 
     // Arrow
     implementation(group: 'io.arrow-kt', name: 'arrow-annotations', version: "$arrow_version")
-    implementation(group: 'io.arrow-kt', name: 'arrow-core-data', version: "$arrow_version")
+    implementation(group: 'io.arrow-kt', name: 'arrow-core', version: "$arrow_version")
     kapt(group: 'io.arrow-kt', name: 'arrow-meta', version: "$arrow_version")
 
     // Kotest
     testImplementation(group: 'io.kotest', name: 'kotest-runner-junit5', version: "$kotest_version")
     testImplementation(group: 'io.kotest', name: 'kotest-assertions-core', version: "$kotest_version")
     testImplementation(group: 'io.kotest', name: 'kotest-property', version: "$kotest_version")
-    testImplementation(group: 'io.kotest', name: 'kotest-assertions-arrow', version: "$kotest_version")
+    testImplementation(group: 'io.kotest.extensions', name: 'kotest-assertions-arrow', version: "1.2.2")
 
     // Mock
     testImplementation(group: 'io.mockk', name: 'mockk', version: '1.10.2')

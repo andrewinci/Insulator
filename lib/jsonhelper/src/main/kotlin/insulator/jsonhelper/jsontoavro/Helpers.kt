@@ -15,6 +15,6 @@ internal fun Schema.printType(): String {
         Schema.Type.ENUM -> "enum [${this.enumSymbols.joinToString(", ")}]"
         Schema.Type.UNION -> "union [${this.types.joinToString(", ") { it.toString(true) }}]"
         Schema.Type.ARRAY -> "array of \"${this.elementType.toString(true)}\""
-        else -> this.type.name.toLowerCase()
+        else -> this.type.name.lowercase()
     }
 }

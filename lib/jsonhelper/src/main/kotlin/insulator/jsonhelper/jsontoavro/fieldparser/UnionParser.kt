@@ -13,7 +13,7 @@ class UnionParser(private val fieldParser: FieldParser) : JsonFieldParser<Any?> 
         return if (mapAttempts.any { it.isRight() }) mapAttempts.first { it.isRight() }
         else mapAttempts
             .filter { it.isLeft() }
-            .map { (it as Either.Left<JsonFieldParsingException>).a }
+            .map { (it as Either.Left<JsonFieldParsingException>).value }
             .map { it.message }
             .joinToString(separator = "\n")
             .let { JsonFieldParsingException(it).left() }

@@ -22,10 +22,10 @@ class ByteParser : JsonFieldParser<ByteBuffer> {
         }
     }
 
-    private fun String.toBinaryArray() = this.chunked(2).map { it.toUpperCase().toInt(16).toByte() }.toByteArray()
+    private fun String.toBinaryArray() = this.chunked(2).map { it.uppercase().toInt(16).toByte() }.toByteArray()
 
     private fun mapFromHex(fieldValue: String) =
-        if (!fieldValue.toLowerCase().startsWith("0x")) JsonFieldParsingException("Invalid $fieldValue, BYTES value need to start with 0x").left()
+        if (!fieldValue.lowercase().startsWith("0x")) JsonFieldParsingException("Invalid $fieldValue, BYTES value need to start with 0x").left()
         else ByteBuffer.wrap(fieldValue.substring(2).toBinaryArray()).right()
 
     private fun mapFromDecimal(fieldValue: Double, schema: Schema): Either<JsonFieldParsingException, ByteBuffer> {

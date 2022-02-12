@@ -15,15 +15,15 @@ import org.apache.avro.generic.GenericRecordBuilder
 internal class RecordParser(private val fieldParser: FieldParser) : JsonFieldParser<GenericRecord> {
 
     override fun parse(fieldValue: Any?, schema: Schema) = either.eager<JsonFieldParsingException, GenericRecord> {
-        val jsonMap = !if (schema.type != Schema.Type.RECORD || fieldValue !is Map<*, *>)
+        val jsonMap = (if (schema.type != Schema.Type.RECORD || fieldValue !is Map<*, *>)
             JsonInvalidFieldException(schema, fieldValue).left()
-        else fieldValue.right()
+        else fieldValue.right()).bind()
 
         val recordBuilder = GenericRecordBuilder(schema)
         schema.fields.forEach { fieldSchema ->
             with(fieldSchema.name()) {
-                val parsedField = !if (this !in jsonMap) JsonMissingFieldException(fieldSchema.schema(), this).left()
-                else fieldParser.parseField(jsonMap[this], fieldSchema.schema())
+                val parsedField = (if (this !in jsonMap) JsonMissingFieldException(fieldSchema.schema(), this).left()
+                else fieldParser.parseField(jsonMap[this], fieldSchema.schema())).bind()
                 recordBuilder.set(fieldSchema, parsedField)
             }
         }

@@ -29,7 +29,7 @@ class ListConsumerGroupViewModel @Inject constructor(
     val searchItemProperty = SimpleStringProperty()
 
     val filteredConsumerGroupsProperty = SortedFilteredList(consumerGroupsProperty).apply {
-        filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+        filterWhen(searchItemProperty) { p, i -> i.lowercase().contains(p.lowercase()) }
     }.filteredItems
 
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(

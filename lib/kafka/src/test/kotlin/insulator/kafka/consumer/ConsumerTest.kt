@@ -18,10 +18,10 @@ import org.apache.kafka.clients.consumer.OffsetResetStrategy
 import org.apache.kafka.common.PartitionInfo
 import org.apache.kafka.common.TopicPartition
 import java.io.Closeable
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
-import kotlin.time.seconds
 
-@ExperimentalTime
+@OptIn(ExperimentalTime::class)
 class ConsumerTest : StringSpec({
 
     fun testScenario(consumerFrom: ConsumeFrom, deserializationFormat: DeserializationFormat, expectedMessages: Int = 1) = stringSpec {

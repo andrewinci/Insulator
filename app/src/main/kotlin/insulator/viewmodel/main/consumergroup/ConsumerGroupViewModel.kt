@@ -29,7 +29,7 @@ class ConsumerGroupViewModel @Inject constructor(
 
     suspend fun refresh() = either<Throwable, Unit> {
         canRefresh.set(false)
-        val consumerGroup = !adminApi.describeConsumerGroup(consumerGroupId.id)
+        val consumerGroup = adminApi.describeConsumerGroup(consumerGroupId.id).bind()
         val sorted = consumerGroup.members
             .map { it.clientId to it.topicPartitions }
             .map { (memberName, topicPartitions) ->

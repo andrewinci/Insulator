@@ -3,8 +3,8 @@ package insulator.kafka
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Topic
 import insulator.kafka.model.TopicConfiguration
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -109,7 +109,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.createTopics(Topic("name", null, 2, null, 1, false))
         // assert
-        res shouldBeRight {}
+        res.shouldBeRight()
     }
 
     "Create compacted topic happy path" {
@@ -124,6 +124,6 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.createTopics(Topic("name", null, 2, null, 1, true))
         // assert
-        res shouldBeRight {}
+        res.shouldBeRight()
     }
 })

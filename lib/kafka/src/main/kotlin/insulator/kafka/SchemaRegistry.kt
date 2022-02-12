@@ -29,11 +29,11 @@ class SchemaRegistry(private val client: SchemaRegistryClient) {
         client.runCatchingE { allSubjects.sorted() }
 
     suspend fun getSubject(subject: String): Either<Throwable, Subject> = either {
-        val versions = !client.runCatchingE { getAllVersions(subject) }
+        val versions = client.runCatchingE { getAllVersions(subject) }.bind()
         Subject(
             subject,
             versions
-                .map { !getByVersion(subject, it) }
+                .map { getByVersion(subject, it).bind() }
                 .map { Schema(it.schema, it.version, it.id) }
         )
     }

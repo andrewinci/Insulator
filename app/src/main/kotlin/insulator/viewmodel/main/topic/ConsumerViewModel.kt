@@ -31,8 +31,8 @@ class ConsumerViewModel @Inject constructor(
     val filteredRecords = SimpleObjectProperty<ObservableList<RecordViewModel>>(
         SortedFilteredList(records).apply {
             filterWhen(searchItem) { p, i ->
-                i.keyProperty.value?.toLowerCase()?.contains(p.toLowerCase()) ?: false ||
-                    i.valueProperty.value.toLowerCase().contains(p.toLowerCase())
+                i.keyProperty.value?.lowercase()?.contains(p.lowercase()) ?: false ||
+                    i.valueProperty.value.lowercase().contains(p.lowercase())
             }
         }.sortedItems.also {
             it.comparatorProperty().bind(comparatorProperty)

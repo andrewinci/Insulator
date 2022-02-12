@@ -3,9 +3,10 @@ package insulator.jsonhelper.jsontoavro.fieldparser
 import arrow.core.right
 import insulator.jsonhelper.jsontoavro.JsonInvalidFieldException
 import insulator.jsonhelper.jsontoavro.JsonMissingFieldException
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.should
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
@@ -34,7 +35,7 @@ class RecordParserTest : StringSpec({
         // act
         val res = sut.parse(mapOf("field1" to "fieldValue"), schema)
         // assert
-        res shouldBeRight {}
+        res.shouldBeRight()
     }
 
     "invalid record" {
@@ -47,7 +48,7 @@ class RecordParserTest : StringSpec({
         // act
         val res = sut.parse("", schema)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<JsonInvalidFieldException>()
         }
     }
@@ -62,7 +63,7 @@ class RecordParserTest : StringSpec({
         // act
         val res = sut.parse(emptyMap<String, String>(), schema)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<JsonMissingFieldException>()
         }
     }

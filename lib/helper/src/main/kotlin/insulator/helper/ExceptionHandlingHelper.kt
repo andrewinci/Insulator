@@ -13,7 +13,7 @@ fun <A, B> List<Either<A, B>>.toEitherOfList() =
         lst.flatMap {
             when (v) {
                 is Either.Left<A> -> v
-                is Either.Right<B> -> it.plus(v.b).right()
+                is Either.Right<B> -> it.plus(v.value).right()
             }
         }
     }

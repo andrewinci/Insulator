@@ -27,9 +27,10 @@ class LocalKafka(
 
     private suspend fun startLocalCluster() = either<LocalKafkaException, Cluster> {
         listOf(kafka, schemaRegistry).forEach { container ->
-            !container.runCatchingE { start() }
+            container.runCatchingE { start() }
                 .flatMap { container.runCatchingE { waitingFor(Wait.forListeningPort()) } }
                 .mapLeft { LocalKafkaException(it) }
+                .bind()
         }
 
         Cluster.empty().copy(

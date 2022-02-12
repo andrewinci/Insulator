@@ -1,9 +1,10 @@
 package insulator.jsonhelper.jsontoavro.fieldparser
 
 import insulator.jsonhelper.jsontoavro.JsonFieldParsingException
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.should
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.avro.Conversions
 import org.apache.avro.Schema
@@ -19,7 +20,7 @@ class ByteParserTest : StringSpec({
         // act
         val res = sut.parse(binaryString, schema)
         // assert
-        res shouldBeRight ByteBuffer.wrap(byteArrayOf(0, 1, 2, 3))
+        res.shouldBeRight(ByteBuffer.wrap(byteArrayOf(0, 1, 2, 3)))
     }
 
     "happy path - decimal" {
@@ -30,7 +31,7 @@ class ByteParserTest : StringSpec({
         // act
         val res = sut.parse(decimal, schema)
         // assert
-        res shouldBeRight {
+        res.shouldBeRight().should {
             Conversions.DecimalConversion().toBytes(decimal.toBigDecimal(), schema, schema.logicalType)
         }
     }
@@ -40,13 +41,13 @@ class ByteParserTest : StringSpec({
         val sut = ByteParser()
         val schema = Schema.Parser().parse("""{ "type": "bytes", "logicalType": "decimal", "precision": 6, "scale": 4}""")
         val decimal = 1.3
+        val scaledDecimal = decimal.toBigDecimal().setScale(4)
+        val expected = Conversions.DecimalConversion().toBytes(scaledDecimal, schema, schema.logicalType)
         // act
         val res = sut.parse(decimal, schema)
         // assert
-        res shouldBeRight {
-            val scaledDecimal = decimal.toBigDecimal().setScale(4)
-            Conversions.DecimalConversion().toBytes(scaledDecimal, schema, schema.logicalType)
-        }
+
+        res shouldBeRight expected
     }
 
     "parsing a decimal return left if exceed scale" {
@@ -57,7 +58,7 @@ class ByteParserTest : StringSpec({
         // act
         val res = sut.parse(decimal, schema)
         // assert
-        res shouldBeLeft {}
+        res.shouldBeLeft()
     }
 
     "return left if try to parse number to bytes" {
@@ -68,7 +69,7 @@ class ByteParserTest : StringSpec({
         // act
         val res = sut.parse(decimal, schema)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<JsonFieldParsingException>()
         }
     }
@@ -81,7 +82,7 @@ class ByteParserTest : StringSpec({
         // act
         val res = sut.parse(integer, schema)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<JsonFieldParsingException>()
         }
     }
@@ -94,7 +95,7 @@ class ByteParserTest : StringSpec({
         // act
         val res = sut.parse(invalidString, schema)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<JsonFieldParsingException>()
         }
     }

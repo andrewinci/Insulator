@@ -1,13 +1,14 @@
 package insulator.jsonhelper.jsontoavro.fieldparser
 
 import insulator.jsonhelper.jsontoavro.JsonInvalidFieldException
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.data.forAll
 import io.kotest.data.headers
 import io.kotest.data.row
 import io.kotest.data.table
+import io.kotest.matchers.should
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
@@ -98,7 +99,7 @@ class SimpleTypeParsersFactoryTest : StringSpec({
             // act
             val res = parser.parse(testValue, schema)
             // assert
-            res shouldBeLeft { it.shouldBeInstanceOf<JsonInvalidFieldException>() }
+            res.shouldBeLeft().should { it.shouldBeInstanceOf<JsonInvalidFieldException>() }
         }
     }
 
@@ -133,7 +134,7 @@ class SimpleTypeParsersFactoryTest : StringSpec({
             // act
             val res = parser.parse(testValue, schema)
             // assert
-            res shouldBeLeft { it.shouldBeInstanceOf<JsonInvalidFieldException>() }
+            res.shouldBeLeft().should { it.shouldBeInstanceOf<JsonInvalidFieldException>() }
         }
     }
 })

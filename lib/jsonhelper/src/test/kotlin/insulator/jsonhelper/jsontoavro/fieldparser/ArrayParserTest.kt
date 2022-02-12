@@ -2,9 +2,10 @@ package insulator.jsonhelper.jsontoavro.fieldparser
 
 import arrow.core.right
 import insulator.jsonhelper.jsontoavro.JsonInvalidFieldException
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.should
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
@@ -42,7 +43,7 @@ class ArrayParserTest : StringSpec({
         // act
         val res = sut.parse(field, sampleSchema)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<JsonInvalidFieldException>()
         }
     }

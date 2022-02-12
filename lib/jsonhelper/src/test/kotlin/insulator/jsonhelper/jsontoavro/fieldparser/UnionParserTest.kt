@@ -3,9 +3,10 @@ package insulator.jsonhelper.jsontoavro.fieldparser
 import arrow.core.left
 import arrow.core.right
 import insulator.jsonhelper.jsontoavro.JsonFieldParsingException
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
@@ -27,7 +28,7 @@ class UnionParserTest : StringSpec({
         // act
         val res = sut.parse("test-string", schema)
         // assert
-        res shouldBeRight {}
+        res.shouldBeRight()
     }
 
     "happy path left union" {
@@ -40,7 +41,7 @@ class UnionParserTest : StringSpec({
         // act
         val res = sut.parse(null, schema)
         // assert
-        res shouldBeRight {}
+        res.shouldBeRight()
     }
 
     "join errors if value doesn't match any type in the union" {
@@ -54,7 +55,7 @@ class UnionParserTest : StringSpec({
         // act
         val res = sut.parse(1, schema)
         // assert
-        res shouldBeLeft {
+        res.shouldBeLeft().should {
             it.shouldBeInstanceOf<JsonFieldParsingException>()
             it.message shouldBe "error1\nerror2"
         }

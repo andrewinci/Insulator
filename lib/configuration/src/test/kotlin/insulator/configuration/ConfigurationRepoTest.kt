@@ -7,10 +7,11 @@ import insulator.kafka.model.SaslConfiguration
 import insulator.kafka.model.SchemaRegistryConfiguration
 import insulator.kafka.model.SslConfiguration
 import insulator.test.helper.getTestSandboxFolder
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import java.io.File
@@ -53,14 +54,14 @@ class ConfigurationRepoTest : FreeSpec({
             // act
             val res = sut.getConfiguration()
             // assert
-            res shouldBeLeft { it.shouldBeInstanceOf<ConfigurationRepoException>() }
+            res.shouldBeLeft().should { it.shouldBeInstanceOf<ConfigurationRepoException>() }
         }
 
         "left on store configurations" {
             // act
             val res = sut.store(Cluster.empty())
             // assert
-            res shouldBeLeft { it.shouldBeInstanceOf<ConfigurationRepoException>() }
+            res.shouldBeLeft().should { it.shouldBeInstanceOf<ConfigurationRepoException>() }
         }
     }
 
@@ -83,7 +84,7 @@ class ConfigurationRepoTest : FreeSpec({
         // act
         val res = sut.getConfiguration()
         // assert
-        res shouldBeLeft {}
+        res.shouldBeLeft()
     }
 
     "delete a cluster" - {
@@ -143,7 +144,7 @@ class ConfigurationRepoTest : FreeSpec({
             )
             // assert
             res shouldBeRight Unit
-            ConfigurationRepo(testConfig).getConfiguration() shouldBeRight {}
+            ConfigurationRepo(testConfig).getConfiguration().shouldBeRight()
         }
     }
 
@@ -168,6 +169,6 @@ class ConfigurationRepoTest : FreeSpec({
         val res = sut.store(testCluster)
         // assert
         res shouldBeRight Unit
-        sut.getConfiguration() shouldBeRight { it.theme shouldBe InsulatorTheme.Dark }
+        sut.getConfiguration().shouldBeRight().should { it.theme shouldBe InsulatorTheme.Dark }
     }
 })

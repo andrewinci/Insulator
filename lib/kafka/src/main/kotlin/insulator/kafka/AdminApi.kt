@@ -34,15 +34,18 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
         val getLag = { partition: TopicPartition, currentOffset: OffsetAndMetadata? ->
             consumer.endOffsets(mutableListOf(partition)).values.first() - (currentOffset?.offset() ?: 0)
         }
-        val partitionToOffset = !admin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().toSuspendCoroutine()
-        val description = !admin.describeConsumerGroups(listOf(groupId)).all().toSuspendCoroutine().map { it.values.first() }
+        val partitionToOffset =
+            admin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().toSuspendCoroutine().bind()
+        val description =
+            admin.describeConsumerGroups(listOf(groupId)).all().toSuspendCoroutine().map { it.values.first() }.bind()
         ConsumerGroup(
             groupId = description.groupId(),
             state = description.state().toInternal(),
             members = description.members().map {
                 ConsumerGroupMember(
                     it.clientId(),
-                    it.assignment().topicPartitions().map { tp -> TopicPartitionLag(tp.topic(), tp.partition(), getLag(tp, partitionToOffset[tp])) }
+                    it.assignment().topicPartitions()
+                        .map { tp -> TopicPartitionLag(tp.topic(), tp.partition(), getLag(tp, partitionToOffset[tp])) }
                 )
             }
         )
@@ -58,22 +61,26 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
 
     suspend fun describeTopic(topicName: String): Either<Throwable, Topic> = either {
         val configResource = ConfigResource(ConfigResource.Type.TOPIC, topicName)
-        val configuration = !admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
-            .map {
-                TopicConfiguration(rawConfiguration = it.entries().map { config -> config.name() to config.value() }.toMap())
-            }
+        val configuration =
+            admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
+                .map {
+                    TopicConfiguration(rawConfiguration = it.entries().map { config -> config.name() to config.value() }
+                        .toMap())
+                }.bind()
 
-        val description = !(
-            admin.describeTopics(listOf(topicName)).all()
-                .toSuspendCoroutine()
-                .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
-            )
+        val description = admin.describeTopics(listOf(topicName)).all()
+            .toSuspendCoroutine()
+            .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
+            .bind()
+
 
         Topic(
             name = description.name(),
             isInternal = description.isInternal,
             partitionCount = description.partitions().size,
-            messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(description.toTopicPartitions()).values.sum(),
+            messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(
+                description.toTopicPartitions()
+            ).values.sum(),
             replicationFactor = description.partitions()[0].replicas().count().toShort(),
             isCompacted = configuration.isCompacted,
             configuration = configuration,
@@ -94,7 +101,8 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
     suspend fun deleteTopic(topicName: String) =
         admin.deleteTopics(listOf(topicName)).all().toSuspendCoroutine()
 
-    private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
+    private fun TopicDescription.toTopicPartitions() =
+        this.partitions().map { TopicPartition(this.name(), it.partition()) }
 
     private fun compactedConfig(isCompacted: Boolean): String =
         if (isCompacted) TopicConfig.CLEANUP_POLICY_COMPACT

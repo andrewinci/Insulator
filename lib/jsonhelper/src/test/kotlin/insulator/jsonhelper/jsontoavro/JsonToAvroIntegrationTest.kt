@@ -3,7 +3,7 @@ package insulator.jsonhelper.jsontoavro
 import com.fasterxml.jackson.databind.ObjectMapper
 import insulator.jsonhelper.jsontoavro.fieldparser.ComplexTypeParsersFactory
 import insulator.jsonhelper.jsontoavro.fieldparser.SimpleTypeParsersFactory
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.FreeSpec
 import org.apache.avro.generic.GenericData
 
@@ -21,7 +21,7 @@ class JsonToAvroIntegrationTest : FreeSpec({
             // act
             val res = sut.parse(json, schema)
             // assert
-            res shouldBeRight {}
+            res.shouldBeRight()
         }
     }
 })

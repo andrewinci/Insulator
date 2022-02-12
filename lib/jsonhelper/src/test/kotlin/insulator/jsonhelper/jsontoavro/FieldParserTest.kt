@@ -1,6 +1,6 @@
 package insulator.jsonhelper.jsontoavro
 
-import io.kotest.assertions.arrow.either.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.core.spec.style.StringSpec
 import io.mockk.mockk
 import org.apache.avro.Schema
@@ -20,6 +20,6 @@ class FieldParserTest : StringSpec({
         // act
         val res = sut.parseField("""{"$testFieldName": "sample"}""", schema.fields[0].schema())
         // assert
-        res shouldBeLeft {}
+        res.shouldBeLeft()
     }
 })

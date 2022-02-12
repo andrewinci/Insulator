@@ -16,7 +16,7 @@ fun EventTarget.searchBox(searchText: Property<String>, currentView: InsulatorVi
         }.also { it.parent.focusedProperty().addListener(ChangeListener { _, _, _ -> it.requestFocus() }) }
         alignment = Pos.CENTER_RIGHT; spacing = 5.0; this.id = id
     }.also {
-        if (System.getProperty("os.name")?.toString()?.toLowerCase()?.contains("mac") == true)
+        if (System.getProperty("os.name")?.toString()?.lowercase()?.contains("mac") == true)
             currentView.shortcut("META+F") { it.requestFocus() }
         else currentView.shortcut("CTRL+F") { it.requestFocus() }
     }

@@ -1,8 +1,8 @@
 package insulator.kafka.producer
 
 import insulator.kafka.model.Cluster
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -33,7 +33,7 @@ class StringProducerTest : StringSpec({
         val res = sut.send("topic", "key", "value")
         sut.close()
         // assert
-        res shouldBeRight {}
+        res.shouldBeRight()
         verify(exactly = 1) { kafkaProducer.close() }
     }
 

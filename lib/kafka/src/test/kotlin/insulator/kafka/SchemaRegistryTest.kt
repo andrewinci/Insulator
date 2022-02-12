@@ -4,8 +4,8 @@ import insulator.kafka.model.Cluster
 import insulator.kafka.model.SchemaRegistryConfiguration
 import io.confluent.kafka.schemaregistry.ParsedSchema
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -58,7 +58,7 @@ class SchemaRegistryTest : StringSpec({
         // act
         val res = sut.getSubject("subject1")
         // assert
-        res shouldBeRight { }
+        res.shouldBeRight()
     }
 
     "happy path deleteSubject" {
@@ -70,7 +70,7 @@ class SchemaRegistryTest : StringSpec({
         // act
         val res = sut.deleteSubject("subject1")
         // assert
-        res shouldBeRight { }
+        res.shouldBeRight()
     }
 
     "happy path deleteSchemaVersion" {
@@ -82,7 +82,7 @@ class SchemaRegistryTest : StringSpec({
         // act
         val res = sut.deleteSchemaVersion("subject1", 1)
         // assert
-        res shouldBeRight { }
+        res.shouldBeRight()
     }
 
     "register an invalid schema return left" {
@@ -92,7 +92,7 @@ class SchemaRegistryTest : StringSpec({
         // act
         val res = sut.register("test", "{}")
         // assert
-        res shouldBeLeft {}
+        res.shouldBeLeft()
     }
 
     "register a valid schema return true if accepted by the schema registry" {
@@ -108,6 +108,6 @@ class SchemaRegistryTest : StringSpec({
         // act
         val res = sut.register("test", testSchema)
         // assert
-        res shouldBeRight {}
+        res.shouldBeRight()
     }
 })

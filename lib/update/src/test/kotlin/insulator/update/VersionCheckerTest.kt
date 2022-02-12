@@ -5,8 +5,8 @@ import insulator.GITHUB_REPO
 import insulator.test.helper.getTestSandboxFolder
 import insulator.update.model.Release
 import insulator.update.model.Version
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -79,7 +79,7 @@ class VersionCheckerTest : StringSpec({
             // act
             val latestVersion = sut.getLatestVersion()
             // assert
-            latestVersion shouldBeLeft {}
+            latestVersion.shouldBeLeft()
         }
     }
 
@@ -91,7 +91,7 @@ class VersionCheckerTest : StringSpec({
             // act
             val latestVersion = sut.getLatestVersion()
             // assert
-            latestVersion shouldBeLeft {}
+            latestVersion.shouldBeLeft()
         }
     }
 
@@ -103,7 +103,7 @@ class VersionCheckerTest : StringSpec({
             // act
             val latestVersion = sut.getLatestVersion()
             // assert
-            latestVersion shouldBeLeft {}
+            latestVersion.shouldBeLeft()
         }
     }
 
@@ -118,7 +118,7 @@ class VersionCheckerTest : StringSpec({
             // act
             val latestVersion = sut.getAppVersion()
             // assert
-            latestVersion shouldBeLeft {}
+            latestVersion.shouldBeLeft()
         }
     }
 
@@ -129,7 +129,7 @@ class VersionCheckerTest : StringSpec({
             // act
             val latestVersion = sut.getAppVersion()
             // assert
-            latestVersion shouldBeLeft {}
+            latestVersion.shouldBeLeft()
         }
     }
 })

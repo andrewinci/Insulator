@@ -35,7 +35,7 @@ class ListSchemaViewModel @Inject constructor(
     val searchItemProperty = SimpleStringProperty()
 
     val filteredSchemasProperty = SortedFilteredList(schemasProperty).apply {
-        filterWhen(searchItemProperty) { p, i -> i.toLowerCase().contains(p.toLowerCase()) }
+        filterWhen(searchItemProperty) { p, i -> i.lowercase().contains(p.lowercase()) }
     }.filteredItems
 
     val subtitleProperty: ObservableStringValue = Bindings.createStringBinding(
