@@ -73,7 +73,7 @@ jobs:
         uses: paambaati/codeclimate-action@v3.0.0
         env:
           DISPLAY: ":99.0"
-          _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k  -Dtestfx.setup.timeout=2500 -Dheadless.geometry=1920x1080-64"
+          _JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k  -Dtestfx.setup.timeout=2500 -Dheadless.geometry=800x600-32"
           GITHUB_SHA: "${{ github.event.pull_request.head.sha }}"
           CC_TEST_REPORTER_ID: ${{secrets.codecovToken}}
           JACOCO_SOURCE_PATH: |
