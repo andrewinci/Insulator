@@ -63,8 +63,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-v2
+          restore-keys: ${{ runner.os }}-gradle-v2
       - name: Build and run tests
         if: ${{ !matrix.os.run-coverage }}
         run: "./gradlew check --no-daemon"
