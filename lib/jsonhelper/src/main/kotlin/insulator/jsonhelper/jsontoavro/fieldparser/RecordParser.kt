@@ -10,7 +10,7 @@ import insulator.jsonhelper.jsontoavro.JsonFieldParser
 import insulator.jsonhelper.jsontoavro.JsonFieldParsingException
 import insulator.jsonhelper.jsontoavro.JsonInvalidFieldException
 import insulator.jsonhelper.jsontoavro.JsonMissingFieldException
-import insulator.jsonhelper.jsontoavro.JsonUnusedFieldException
+import insulator.jsonhelper.jsontoavro.JsonUnexpectedFieldException
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
@@ -35,7 +35,7 @@ internal class RecordParser(private val fieldParser: FieldParser) : JsonFieldPar
         }
         !(
             if (jsonMap.isEmpty()) Right(recordBuilder.build())
-            else Left(JsonUnusedFieldException(jsonMap.keys.toList()))
+            else Left(JsonUnexpectedFieldException(jsonMap.keys.toList()))
             )
     }
 }
