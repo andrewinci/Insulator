@@ -62,7 +62,7 @@ class AdminApiTest : StringSpec({
         // act
         val res = sut.listTopics()
         // assert
-        res shouldBeLeft exception
+        res shouldBeLeft {}
     }
 
     "describeTopic happy path" {
