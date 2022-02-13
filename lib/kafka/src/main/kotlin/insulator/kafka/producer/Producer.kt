@@ -9,8 +9,8 @@ typealias ProducerBuilder<V> = () -> KafkaProducer<String, V>
 typealias GenericJsonToAvroConverter = suspend ((jsonString: String, schemaString: String) -> Either<Throwable, GenericRecord>)
 
 interface Producer : Closeable {
-    suspend fun validate(value: String, topic: String): Either<Throwable, Unit>
-    suspend fun send(topic: String, key: String, value: String): Either<Throwable, Unit>
+    suspend fun validate(value: String, topic: String, schemaVersion: Int?): Either<Throwable, Unit>
+    suspend fun send(topic: String, key: String, value: String, schemaVersion: Int?): Either<Throwable, Unit>
     suspend fun sendTombstone(topic: String, key: String): Either<Throwable, Unit>
 }
 

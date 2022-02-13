@@ -151,7 +151,7 @@ jobs:
           git config --global user.name ${{ github.actor }}
           git config --global user.email andrewinci@users.noreply.github.com
           brew tap andrewinci/tap
-          brew bump-cask-pr --write --commit --no-audit --no-browse --no-fork --version $RELEASE_VERSION --force insulator
+          brew bump-cask-pr --write-only --commit --no-audit --no-browse --no-fork --version $RELEASE_VERSION --force insulator
           cd /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/andrewinci/homebrew-tap
           git push https://${{ secrets.GITHUBTOKEN }}@github.com/andrewinci/homebrew-tap.git
         env:

@@ -3,6 +3,7 @@ package insulator.kafka.consumer
 import arrow.core.Either
 import insulator.kafka.model.Cluster
 import insulator.kafka.model.Record
+import insulator.kafka.producer.SerializationFormat
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.apache.avro.generic.GenericRecord
@@ -31,7 +32,7 @@ class Consumer(
     private var threadLoop: Thread? = null
     private var running = false
 
-    suspend fun start(topic: String, from: ConsumeFrom, valueFormat: DeserializationFormat, callback: ConsumerCallback) =
+    suspend fun start(topic: String, from: ConsumeFrom, valueFormat: SerializationFormat, callback: ConsumerCallback) =
         suspendCoroutine<Unit> { continuation ->
             GlobalScope.launch {
                 if (isRunning()) throw IllegalStateException("Consumer already running")
@@ -121,9 +122,4 @@ enum class ConsumeFrom(val text: String) {
     LastDay("Last day"),
     LastWeek("Last week"),
     Beginning("Beginning"),
-}
-
-enum class DeserializationFormat {
-    String,
-    Avro,
 }

@@ -5,8 +5,8 @@ import insulator.helper.dispatch
 import insulator.helper.hideOnReadonly
 import insulator.helper.toObservable
 import insulator.kafka.consumer.ConsumeFrom
-import insulator.kafka.consumer.DeserializationFormat
 import insulator.kafka.model.Cluster
+import insulator.kafka.producer.SerializationFormat
 import insulator.ui.common.InsulatorTabView
 import insulator.ui.component.appBar
 import insulator.ui.component.confirmationButton
@@ -77,10 +77,10 @@ class TopicView @Inject constructor(
 
     private fun EventTarget.valueFormatOptions() {
         if (cluster.isSchemaRegistryConfigured()) {
-            viewModel.consumerViewModel.deserializeValueProperty.set(DeserializationFormat.Avro.name)
+            viewModel.consumerViewModel.deserializeValueProperty.set(SerializationFormat.Avro.name)
             fieldName("deserializer")
             combobox<String> {
-                items = DeserializationFormat.values().toObservable { it.toString() }
+                items = SerializationFormat.values().toObservable { it.toString() }
                 valueProperty().bindBidirectional(viewModel.consumerViewModel.deserializeValueProperty)
                 enableWhen(viewModel.consumerViewModel.isConsumingProperty.not())
             }

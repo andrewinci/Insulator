@@ -1,5 +1,7 @@
 package insulator.jsonhelper.jsontoavro.fieldparser
 
+import arrow.core.Left
+import arrow.core.Right
 import arrow.core.computations.either
 import arrow.core.left
 import arrow.core.right
@@ -8,6 +10,7 @@ import insulator.jsonhelper.jsontoavro.JsonFieldParser
 import insulator.jsonhelper.jsontoavro.JsonFieldParsingException
 import insulator.jsonhelper.jsontoavro.JsonInvalidFieldException
 import insulator.jsonhelper.jsontoavro.JsonMissingFieldException
+import insulator.jsonhelper.jsontoavro.JsonUnexpectedFieldException
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
@@ -19,7 +22,7 @@ internal class RecordParser(private val fieldParser: FieldParser) : JsonFieldPar
             if (schema.type != Schema.Type.RECORD || fieldValue !is Map<*, *>)
                 JsonInvalidFieldException(schema, fieldValue).left()
             else fieldValue.right()
-            ).bind()
+            ).map { it.toMutableMap() }.bind()
 
         val recordBuilder = GenericRecordBuilder(schema)
         schema.fields.forEach { fieldSchema ->
@@ -29,8 +32,12 @@ internal class RecordParser(private val fieldParser: FieldParser) : JsonFieldPar
                     else fieldParser.parseField(jsonMap[this], fieldSchema.schema())
                     ).bind()
                 recordBuilder.set(fieldSchema, parsedField)
+                jsonMap.remove(this)
             }
         }
-        recordBuilder.build()
+        !(
+            if (jsonMap.isEmpty()) Right(recordBuilder.build())
+            else Left(JsonUnexpectedFieldException(jsonMap.keys.toList()))
+            )
     }
 }

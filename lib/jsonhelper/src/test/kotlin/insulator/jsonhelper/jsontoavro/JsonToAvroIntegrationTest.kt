@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import insulator.jsonhelper.jsontoavro.fieldparser.ComplexTypeParsersFactory
 import insulator.jsonhelper.jsontoavro.fieldparser.SimpleTypeParsersFactory
 import io.kotest.assertions.arrow.core.shouldBeRight
+import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.should
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.apache.avro.generic.GenericData
 
 class JsonToAvroIntegrationTest : FreeSpec({
@@ -22,6 +25,18 @@ class JsonToAvroIntegrationTest : FreeSpec({
             val res = sut.parse(json, schema)
             // assert
             res.shouldBeRight()
+        }
+
+        "left if not all fields are used " {
+            val schema = schemaTemplate("""{"name":"test", "type":"string"}""")
+            val json =
+                """{"test":"123", "unused": 321}"""
+            // act
+            val res = sut.parse(json, schema)
+            // assert
+            res.shouldBeLeft().should {
+                it.shouldBeInstanceOf<JsonUnexpectedFieldException>()
+            }
         }
     }
 })

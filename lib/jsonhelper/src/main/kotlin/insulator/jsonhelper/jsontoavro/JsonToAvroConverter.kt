@@ -36,3 +36,4 @@ class JsonParsingException(message: String?, cause: Throwable? = null) : JsonToA
 open class JsonFieldParsingException(message: String?) : JsonToAvroException(message)
 class JsonInvalidFieldException(expectedSchema: Schema, fieldName: Any?) : JsonFieldParsingException("Invalid field \"$fieldName\". Expected ${expectedSchema.printType()}")
 class JsonMissingFieldException(expectedSchema: Schema, val fieldName: String? = null) : JsonFieldParsingException("Missing field \"$fieldName\". Expected ${expectedSchema.printType()}")
+class JsonUnexpectedFieldException(fieldName: List<Any?>) : JsonFieldParsingException("Unexpected json fields \"$fieldName\"")
