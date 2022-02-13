@@ -28,5 +28,5 @@ dependencies {
     testImplementation(group: 'io.mockk', name: 'mockk', version: '1.10.2')
 
     // Avro
-    implementation 'org.apache.avro:avro:1.9.2'
+    implementation 'org.apache.avro:avro:1.11.0'
 }
