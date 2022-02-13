@@ -90,6 +90,6 @@ jobs:
       - name: Test build update4j config
         if: ${{ matrix.os.run-coverage }}
         run: |
-          ./gradlew getDependencySources
-          ./gradlew :app:mergeLocalLibs
+          ./gradlew getDependencySources && \
+          ./gradlew :app:mergeLocalLibs && \
           python3 scripts/build.py

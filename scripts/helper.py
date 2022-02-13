@@ -18,9 +18,10 @@ def adler(fname):
 
 
 def build_file(jar, info):
-    if info["uri"] is None:
+    if info is None or info.get("uri") is None:
+        print("WARN: Missing uri for jar", jar, "-> Ignored")
         return None
     hash = adler(jar)
     size = os.path.getsize(jar)
-    os_attr = ("os=\""+info["os"]+"\" ") if "os" in info else ""
+    os_attr = ('os="' + info["os"] + '" ') if "os" in info else ""
     return f'<file {os_attr}uri="{info["uri"]}" size="{size}" classpath="true" checksum="{hash}"/>'
