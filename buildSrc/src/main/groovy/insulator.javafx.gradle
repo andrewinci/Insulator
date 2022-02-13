@@ -13,5 +13,5 @@ dependencies {
     implementation(group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-javafx', version: '1.4.0-M1')
 
     // JavaFX test helpers
-    testCompile(group: 'org.testfx', name: 'testfx-junit5', version: "$testfx_version")
+    testImplementation(group: 'org.testfx', name: 'testfx-junit5', version: "$testfx_version")
 }

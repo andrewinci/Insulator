@@ -9,9 +9,9 @@ repositories {
 dependencies {
     implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: '1.4.10')
     implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-serialization', version: '1.4.10')
-    implementation(group: 'org.jlleitschuh.gradle', name: 'ktlint-gradle', version: '9.4.1')
+    implementation(group: 'org.jlleitschuh.gradle', name: 'ktlint-gradle', version: '10.2.1')
     implementation(group: 'com.adarshr', name: 'gradle-test-logger-plugin', version: '2.1.1')
-    implementation(group: 'org.openjfx', name: 'javafx-plugin', version: '0.0.9')
+    implementation(group: 'org.openjfx', name: 'javafx-plugin', version: '0.0.11')
     implementation(group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '6.1.0')
-    implementation(group: 'org.unbroken-dome.gradle-plugins', name: 'gradle-testsets-plugin', version: '3.0.1')
+    implementation(group: 'org.unbroken-dome.gradle-plugins', name: 'gradle-testsets-plugin', version: '4.0.0')
 }
