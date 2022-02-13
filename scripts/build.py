@@ -1,12 +1,13 @@
 import glob
 import os
 from helper import build_file
+import requests
 
 """
 Must run first
 ./gradlew getDependencySources
 ./gradlew :app:mergeLocalLibs
-python3.8 scripts/build.py
+python3 scripts/build.py
 """
 
 header = """<configuration timestamp="2022-02-12T00:00:00.000000000Z">
@@ -53,6 +54,13 @@ os_specific_jar = {
 
 jars_path = "./app/build/distributions/app/lib/"
 
+# retrieve os specific jars
+for k in os_specific_jar:
+    with open(jars_path + k, 'wb') as jar:
+        r = requests.get(os_specific_jar[k]["uri"], allow_redirects=True)
+        jar.write(r.content)
+
+# retrieve jars dependencies from the gradle output
 dependency_files = set(
     glob.glob("./**/**/**/dependencies.txt") + glob.glob("./**/**/dependencies.txt")
 )
@@ -65,10 +73,13 @@ dependency_map = {j: {"uri": url} for [j, url] in dependencies}
 dependency_map.update(insulator_jar)
 dependency_map.update(os_specific_jar)
 
+# Remove prefix in local jars
 jars = [j.replace(jars_path, "") for j in glob.glob(f"{jars_path}*.jar")]
 
+# Build xml line for each dependency
 files = {j: build_file(jars_path + j, dependency_map.get(j)) for j in jars}
 
+# Put all together
 print("Writing new update4j config file")
 with open("insulator-update.xml", "w") as config:
     config.write(header + "\n")
