@@ -4,6 +4,7 @@ task mergeLocalLibs(type: Jar) {
         return
     }
     dependsOn 'dist'
+    duplicatesStrategy(DuplicatesStrategy.WARN)
 
     def distPath = "${buildDir}/distributions/app/lib/"
     destinationDirectory = file(distPath)
