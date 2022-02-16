@@ -15,6 +15,7 @@ import insulator.ui.style.MainViewStyle
 import insulator.viewmodel.main.MainViewModel
 import insulator.viewmodel.main.TabViewModel
 import insulator.views.configurations.ClusterView
+import insulator.views.main.acl.ListACLView
 import insulator.views.main.consumergroup.ListConsumerGroupView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
@@ -105,6 +106,7 @@ class MainView @Inject constructor(
                 menuItem("Topics", ICON_TOPICS, "sidebar-item-topics") { viewModel.setContentList(ListTopicView::class, currentWindow) }
                 menuItem("Schema Registry", ICON_REGISTRY, "sidebar-item-schema-registry") { viewModel.setContentList(ListSchemaView::class, currentWindow) }
                 menuItem("Consumer Groups", ICON_CONSUMERS, "sidebar-item-consumer-group") { viewModel.setContentList(ListConsumerGroupView::class, currentWindow) }
+                menuItem("ACLs", ICON_CONSUMERS, "sidebar-item-acl") { viewModel.setContentList(ListACLView::class, currentWindow) }
             }
             bottom = vbox(alignment = Pos.CENTER, spacing = 10) {
                 readOnlyButton(GlobalState.isReadOnlyProperty)

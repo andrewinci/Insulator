@@ -4,6 +4,7 @@ import insulator.di.ClusterComponent
 import insulator.di.ClusterScope
 import insulator.kafka.model.Cluster
 import insulator.viewmodel.common.InsulatorViewModel
+import insulator.views.main.acl.ListACLView
 import insulator.views.main.consumergroup.ListConsumerGroupView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
@@ -30,6 +31,8 @@ class MainViewModel @Inject constructor(
             if (cluster.isSchemaRegistryConfigured()) contentList.set(clusterComponent.listSchemaView().root)
             else alert(Alert.AlertType.WARNING, "Schema registry configuration not found", owner = owner); Unit
         }
+        ListACLView::class -> contentList.set(clusterComponent.listACLView().root)
+
         else -> error.set(Throwable("UI: Unable to navigate to ${clazz.qualifiedName}"))
     }
 }

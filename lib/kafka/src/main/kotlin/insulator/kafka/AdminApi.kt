@@ -23,26 +23,59 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.acl.AccessControlEntryFilter
+import org.apache.kafka.common.acl.AclBindingFilter
+import org.apache.kafka.common.acl.AclOperation
+import org.apache.kafka.common.acl.AclPermissionType
 import org.apache.kafka.common.config.ConfigResource
 import org.apache.kafka.common.config.TopicConfig
+import org.apache.kafka.common.resource.PatternType
+import org.apache.kafka.common.resource.ResourcePatternFilter
+import org.apache.kafka.common.resource.ResourceType
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.io.Closeable
 
+
+fun adminApi(cluster: Cluster) =
+    kafkaConfig(cluster)
+        .apply { put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java) }
+        .let { AdminApi(AdminClient.create(it), KafkaConsumer(it)) }
+
+
 class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) : Closeable {
+
+    // ACLs
+    suspend fun listACLs(): Either<Throwable, List<String>> {
+        admin.describeCluster().authorizedOperations().toSuspendCoroutine()
+        val filter = AclBindingFilter(
+            ResourcePatternFilter(ResourceType.ANY, null, PatternType.LITERAL),
+            AccessControlEntryFilter(null, null, AclOperation.ANY, AclPermissionType.ANY)
+        )
+        return admin.describeAcls(filter).values().toSuspendCoroutine().map { aclList ->
+            aclList.map {
+                it.toString()
+            }
+        }
+    }
+
+    // CONSUMER GROUPS
 
     suspend fun describeConsumerGroup(groupId: String) = either<Throwable, ConsumerGroup> {
         val getLag = { partition: TopicPartition, currentOffset: OffsetAndMetadata? ->
             consumer.endOffsets(mutableListOf(partition)).values.first() - (currentOffset?.offset() ?: 0)
         }
-        val partitionToOffset = !admin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().toSuspendCoroutine()
-        val description = !admin.describeConsumerGroups(listOf(groupId)).all().toSuspendCoroutine().map { it.values.first() }
+        val partitionToOffset =
+            !admin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().toSuspendCoroutine()
+        val description =
+            !admin.describeConsumerGroups(listOf(groupId)).all().toSuspendCoroutine().map { it.values.first() }
         ConsumerGroup(
             groupId = description.groupId(),
             state = description.state().toInternal(),
             members = description.members().map {
                 ConsumerGroupMember(
                     it.clientId(),
-                    it.assignment().topicPartitions().map { tp -> TopicPartitionLag(tp.topic(), tp.partition(), getLag(tp, partitionToOffset[tp])) }
+                    it.assignment().topicPartitions()
+                        .map { tp -> TopicPartitionLag(tp.topic(), tp.partition(), getLag(tp, partitionToOffset[tp])) }
                 )
             }
         )
@@ -54,26 +87,33 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
     suspend fun deleteConsumerGroup(consumerGroupId: String) = admin.deleteConsumerGroups(listOf(consumerGroupId))
         .all().toSuspendCoroutine().fold({ it.left() }, { Unit.right() })
 
+
+    // TOPICS
+
     suspend fun listTopics() = admin.listTopics().names().toSuspendCoroutine().map { it.toList() }
 
     suspend fun describeTopic(topicName: String): Either<Throwable, Topic> = either {
         val configResource = ConfigResource(ConfigResource.Type.TOPIC, topicName)
-        val configuration = !admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
-            .map {
-                TopicConfiguration(rawConfiguration = it.entries().map { config -> config.name() to config.value() }.toMap())
-            }
+        val configuration =
+            !admin.describeConfigs(listOf(configResource)).values()[configResource]!!.toSuspendCoroutine()
+                .map {
+                    TopicConfiguration(rawConfiguration = it.entries().map { config -> config.name() to config.value() }
+                        .toMap())
+                }
 
         val description = !(
-            admin.describeTopics(listOf(topicName)).all()
-                .toSuspendCoroutine()
-                .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
-            )
+                admin.describeTopics(listOf(topicName)).all()
+                    .toSuspendCoroutine()
+                    .flatMap { it[topicName].rightIfNotNull { Throwable("Invalid response from KafkaAdmin describeTopics") } }
+                )
 
         Topic(
             name = description.name(),
             isInternal = description.isInternal,
             partitionCount = description.partitions().size,
-            messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(description.toTopicPartitions()).values.sum(),
+            messageCount = consumer.endOffsets(description.toTopicPartitions()).values.sum() - consumer.beginningOffsets(
+                description.toTopicPartitions()
+            ).values.sum(),
             replicationFactor = description.partitions()[0].replicas().count().toShort(),
             isCompacted = configuration.isCompacted,
             configuration = configuration,
@@ -94,7 +134,8 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
     suspend fun deleteTopic(topicName: String) =
         admin.deleteTopics(listOf(topicName)).all().toSuspendCoroutine()
 
-    private fun TopicDescription.toTopicPartitions() = this.partitions().map { TopicPartition(this.name(), it.partition()) }
+    private fun TopicDescription.toTopicPartitions() =
+        this.partitions().map { TopicPartition(this.name(), it.partition()) }
 
     private fun compactedConfig(isCompacted: Boolean): String =
         if (isCompacted) TopicConfig.CLEANUP_POLICY_COMPACT
@@ -103,7 +144,3 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
     override fun close() = admin.close()
 }
 
-fun adminApi(cluster: Cluster) =
-    kafkaConfig(cluster)
-        .apply { put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java) }
-        .let { AdminApi(AdminClient.create(it), KafkaConsumer(it)) }
