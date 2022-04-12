@@ -6,6 +6,7 @@ import tornadofx.visibleWhen
 
 object GlobalState {
     val isReadOnlyProperty = SimpleBooleanProperty(true)
+    val humanReadableAvroProperty = SimpleBooleanProperty(true)
 }
 
 fun <T : Node> T.hideOnReadonly(): T {

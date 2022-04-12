@@ -24,6 +24,7 @@ class ConfigurationView @Inject constructor(private val viewModel: Configuration
             fieldset {
                 field("Use dark theme") { checkbox(property = viewModel.darkTheme) }
                 field("Readonly mode") { checkbox(property = viewModel.readonlyMode) }
+                field("Human readable avro") { checkbox(property = viewModel.humanReadableAvro) }
             }
         }
         borderpane {
