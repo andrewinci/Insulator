@@ -13,7 +13,6 @@ import tornadofx.checkbox
 import tornadofx.field
 import tornadofx.fieldset
 import tornadofx.form
-import tornadofx.text
 import javax.inject.Inject
 
 class ConfigurationView @Inject constructor(private val viewModel: ConfigurationViewModel) : View() {
@@ -21,16 +20,16 @@ class ConfigurationView @Inject constructor(private val viewModel: Configuration
     override val root = form {
         h1("Configurations")
         fieldset {
-            fieldset {
-                field("Use dark theme") { checkbox(property = viewModel.darkTheme) }
-                field("Readonly mode") { checkbox(property = viewModel.readonlyMode) }
-                field("Human readable avro") { checkbox(property = viewModel.humanReadableAvro) }
-            }
+            // Switch between light and dark theme.
+            field("Use dark theme") { checkbox(property = viewModel.darkTheme) }
+            // Prevents the user to create topics, schemas or produce records.
+            field("Readonly mode") { checkbox(property = viewModel.readonlyMode) }
+            // Parse avro logical type (e.g. date, timestamp) into human readable strings.
+            field("Human readable avro") { checkbox(property = viewModel.humanReadableAvro) }
         }
         borderpane {
             right = closeButton()
         }
-        prefWidth = 380.0
     }
 
     fun show() {
@@ -47,8 +46,8 @@ class ConfigurationView @Inject constructor(private val viewModel: Configuration
 
     override fun onDock() {
         super.currentStage?.let {
-            it.minWidth = 380.0
-            it.width = 380.0
+            it.minWidth = 230.0
+            it.width = 230.0
             it.resizableProperty().value = false
         }
         super.onDock()
