@@ -65,11 +65,18 @@ fun EventTarget.themeButton(op: () -> Unit) =
         addClass(ButtonStyle.toggleButton)
     }
 
-fun EventTarget.settingsButton(op: () -> Unit) = button {
+fun EventTarget.clusterSettingsButton(op: () -> Unit) = button {
     graphic = SVGIcon(ICON_SETTINGS_SVG, 18)
     action(op)
     alignment = Pos.CENTER_RIGHT
     addClass(ButtonStyle.settingsButton)
+}
+
+fun EventTarget.configurationButton(op: () -> Unit) = button {
+    text = "Settings"
+    graphic = SVGIcon(ICON_SETTINGS_SVG, 18, theme.mainColor)
+    action(op)
+    addClass(ButtonStyle.toggleButton)
 }
 
 fun EventTarget.confirmationButton(value: String, confirmationMessage: String, visible: Boolean = true, onOkAction: () -> Unit) =

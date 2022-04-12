@@ -28,7 +28,7 @@ class ThemeHelperTest : FreeSpec({
             // arrange
             val sut = ThemeHelper(configurationRepoMock)
             // act
-            sut.changeTheme()
+            sut.toggleTheme()
             // assert
             coVerify(exactly = 1) { configurationRepoMock.store(InsulatorTheme.Light) }
         }
