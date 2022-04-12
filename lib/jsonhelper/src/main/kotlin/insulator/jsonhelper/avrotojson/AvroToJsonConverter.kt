@@ -27,39 +27,39 @@ class UnsupportedTypeException(type: String) : AvroToJsonParsingException("Unsup
 
 class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
 
-    fun parse(record: GenericRecord) =
-        parseField(record, record.schema)
+    fun parse(record: GenericRecord, humanReadableLogicalType: Boolean = false) =
+        parseField(record, record.schema, humanReadableLogicalType)
             .flatMap { objectMapper.runCatchingE { writeValueAsString(it) } }
 
-    private fun parseField(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> =
+    private fun parseField(field: Any?, schema: Schema, humanReadableLogicalType: Boolean): Either<AvroToJsonParsingException, Any?> =
         when (schema.type) {
-            RECORD -> parseRecord(field, schema)
-            BYTES -> parseBytes(field, schema)
-            UNION -> parseUnion(field, schema)
-            ARRAY -> parseArray(field, schema)
+            RECORD -> parseRecord(field, schema, humanReadableLogicalType)
+            BYTES -> parseBytes(field, schema, humanReadableLogicalType)
+            UNION -> parseUnion(field, schema, humanReadableLogicalType)
+            ARRAY -> parseArray(field, schema, humanReadableLogicalType)
             NULL -> parseNull(field)
             BOOLEAN -> parseBoolean(field)
             STRING -> parseString(field)
             ENUM -> parseEnum(field)
-            INT, LONG, FLOAT, DOUBLE -> parseNumber(field)
+            INT, LONG, FLOAT, DOUBLE -> parseNumber(field, schema, humanReadableLogicalType)
             // missing: MAP, FIXED
             else -> UnsupportedTypeException(schema.type.getName()).left()
         }
 
-    private fun parseRecord(field: Any?, schema: Schema): Either<AvroToJsonParsingException, Any?> {
+    private fun parseRecord(field: Any?, schema: Schema, humanReadableLogicalType: Boolean): Either<AvroToJsonParsingException, Any?> {
         if (field !is GenericRecord) return AvroFieldParsingException(field, "Record").left()
         val keySchema = schema.fields.map { it.name() to it.schema() }
         return keySchema
-            .map { (name, schema) -> parseField(field[name], schema) }
+            .map { (name, schema) -> parseField(field[name], schema, humanReadableLogicalType) }
             .toEitherOfList()
             .map { values -> keySchema.map { it.first }.zip(values).toMap() }
     }
 
-    private fun parseUnion(field: Any?, schema: Schema) =
-        schema.types.map { t -> parseField(field, t) }
+    private fun parseUnion(field: Any?, schema: Schema, humanReadableLogicalType: Boolean) =
+        schema.types.map { t -> parseField(field, t, humanReadableLogicalType) }
             .let { attempts -> attempts.firstOrNull { it.isRight() } ?: attempts.first() }
 
-    private fun parseArray(field: Any?, schema: Schema) =
-        if (field is Collection<*>) field.map { parseField(it, schema.elementType) }.toEitherOfList()
+    private fun parseArray(field: Any?, schema: Schema, humanReadableLogicalType: Boolean) =
+        if (field is Collection<*>) field.map { parseField(it, schema.elementType, humanReadableLogicalType) }.toEitherOfList()
         else AvroFieldParsingException(field, "Array").left()
 }
