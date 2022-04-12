@@ -93,7 +93,7 @@ class AvroToJsonConverterTest : StringSpec({
             .also { it.set(testFieldName, testValue) }
             .build()
         // act
-        val res = sut.parse(testRecord)
+        val res = sut.parse(testRecord, true)
         // assert
         res shouldBeRight """{"$testFieldName":1.23}"""
     }
@@ -171,6 +171,57 @@ class AvroToJsonConverterTest : StringSpec({
         val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, avroFieldValue) }.build()
         // act
         val res = sut.parse(testRecord)
+        // assert
+        res shouldBeRight """{"$testFieldName":"$testFieldValue"}"""
+    }
+
+    "parse date" {
+        // arrange
+        val testFieldName = "testField"
+        val testFieldValue = "2022-04-12"
+        val schema = Schema.Parser().parse(
+            schemaTemplate(
+                """{"name":"$testFieldName", "type":{ "type": "int", "logicalType": "date"} }"""
+            )
+        )
+        val avroFieldValue = 19094 // 12 april 2022
+        val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, avroFieldValue) }.build()
+        // act
+        val res = sut.parse(testRecord, true)
+        // assert
+        res shouldBeRight """{"$testFieldName":"$testFieldValue"}"""
+    }
+
+    "parse timestamp-millis" {
+        // arrange
+        val testFieldName = "testField"
+        val testFieldValue = "2022-04-12T05:22:47Z"
+        val schema = Schema.Parser().parse(
+            schemaTemplate(
+                """{"name":"$testFieldName", "type":{ "type": "long", "logicalType": "timestamp-millis"} }"""
+            )
+        )
+        val avroFieldValue = 1649740967000 // Tue Apr 12 2022 05:22:47 GMT+0000
+        val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, avroFieldValue) }.build()
+        // act
+        val res = sut.parse(testRecord, true)
+        // assert
+        res shouldBeRight """{"$testFieldName":"$testFieldValue"}"""
+    }
+
+    "parse time-millis" {
+        // arrange
+        val testFieldName = "testField"
+        val testFieldValue = "03:25:45.123"
+        val schema = Schema.Parser().parse(
+            schemaTemplate(
+                """{"name":"$testFieldName", "type":{ "type": "int", "logicalType": "time-millis"} }"""
+            )
+        )
+        val avroFieldValue = 12345123 // 03:25:45.123
+        val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, avroFieldValue) }.build()
+        // act
+        val res = sut.parse(testRecord, true)
         // assert
         res shouldBeRight """{"$testFieldName":"$testFieldValue"}"""
     }

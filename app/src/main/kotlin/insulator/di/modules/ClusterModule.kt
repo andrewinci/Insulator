@@ -3,6 +3,7 @@ package insulator.di.modules
 import dagger.Module
 import dagger.Provides
 import insulator.di.ClusterScope
+import insulator.helper.GlobalState
 import insulator.jsonhelper.avrotojson.AvroToJsonConverter
 import insulator.jsonhelper.jsontoavro.JsonToAvroConverter
 import insulator.kafka.SchemaRegistry
@@ -23,7 +24,7 @@ class ClusterModule {
     @Provides
     @ClusterScope
     fun providesConsumer(cluster: Cluster, converter: AvroToJsonConverter) =
-        consumer(cluster, converter::parse)
+        consumer(cluster) { converter.parse(it, GlobalState.humanReadableAvroProperty.value) }
 
     @Provides
     @ClusterScope

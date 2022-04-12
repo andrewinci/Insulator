@@ -19,4 +19,5 @@ class ConfigurationViewModel @Inject constructor(private val themeHelper: ThemeH
         themeHelper.dispatch { currentTheme().map { set(it == InsulatorTheme.Dark) } }
     }
     val readonlyMode = GlobalState.isReadOnlyProperty
+    val humanReadableAvro = GlobalState.humanReadableAvroProperty
 }
