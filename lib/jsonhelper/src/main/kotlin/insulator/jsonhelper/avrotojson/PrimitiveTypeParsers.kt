@@ -16,7 +16,11 @@ import java.time.temporal.ChronoUnit
 internal fun parseBoolean(field: Any?) =
     if (field is Boolean) field.right() else AvroFieldParsingException(field, "Boolean").left()
 
-internal fun parseNumber(field: Any?, schema: Schema, humanReadableLogicalType: Boolean): Either<AvroToJsonParsingException, Any?> {
+internal fun parseNumber(
+    field: Any?,
+    schema: Schema,
+    humanReadableLogicalType: Boolean
+): Either<AvroToJsonParsingException, Any?> {
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.of("UTC"))
     val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.of("UTC"))
     return when {
@@ -58,7 +62,8 @@ internal fun parseNull(field: Any?) =
 internal fun parseBytes(field: Any?, schema: Schema, humanReadableLogicalType: Boolean = false) =
     when {
         field !is ByteBuffer -> AvroFieldParsingException(field, "ByteBuffer").left()
-        humanReadableLogicalType && schema.objectProps["logicalType"] == "decimal" -> Conversions.DecimalConversion()
-            .fromBytes(field, schema, schema.logicalType).right()
+        humanReadableLogicalType && schema.objectProps["logicalType"] == "decimal" ->
+            Conversions.DecimalConversion()
+                .fromBytes(field, schema, schema.logicalType).right()
         else -> ("0x" + field.array().joinToString("") { String.format("%02x", it) }).right()
     }
