@@ -1,6 +1,8 @@
 package insulator.ui
 
+import arrow.core.Either
 import insulator.configuration.ConfigurationRepo
+import insulator.configuration.ConfigurationRepoException
 import insulator.configuration.model.InsulatorTheme
 import insulator.ui.style.darkTheme
 import insulator.ui.style.lightTheme
@@ -14,13 +16,21 @@ import javax.inject.Singleton
 @Singleton
 class ThemeHelper @Inject constructor(private val configurationRepo: ConfigurationRepo) {
 
-    suspend fun changeTheme() {
+    suspend fun setTheme(theme: InsulatorTheme) {
         configurationRepo.getConfiguration().map {
-            configurationRepo.store(
-                if (it.theme == InsulatorTheme.Dark) InsulatorTheme.Light else InsulatorTheme.Dark
-            )
+            configurationRepo.store(theme)
         }
         updateUITheme()
+    }
+
+    suspend fun currentTheme(): Either<ConfigurationRepoException, InsulatorTheme> {
+        return configurationRepo.getConfiguration().map { it.theme }
+    }
+
+    suspend fun toggleTheme() {
+        configurationRepo.getConfiguration().map {
+            if (it.theme == InsulatorTheme.Dark) setTheme(InsulatorTheme.Light) else setTheme(InsulatorTheme.Dark)
+        }
     }
 
     suspend fun updateUITheme() {

@@ -1,20 +1,19 @@
 package insulator.views.main
 
 import insulator.di.ClusterScope
-import insulator.helper.GlobalState
-import insulator.helper.dispatch
 import insulator.kafka.model.Cluster
 import insulator.ui.ThemeHelper
 import insulator.ui.common.InsulatorView
+import insulator.ui.component.configurationButton
 import insulator.ui.component.h1
 import insulator.ui.component.h2
-import insulator.ui.component.readOnlyButton
-import insulator.ui.component.themeButton
 import insulator.ui.style.ButtonStyle.Companion.alertButton
 import insulator.ui.style.MainViewStyle
+import insulator.viewmodel.configurations.ConfigurationViewModel
 import insulator.viewmodel.main.MainViewModel
 import insulator.viewmodel.main.TabViewModel
 import insulator.views.configurations.ClusterView
+import insulator.views.configurations.ConfigurationView
 import insulator.views.main.consumergroup.ListConsumerGroupView
 import insulator.views.main.schemaregistry.ListSchemaView
 import insulator.views.main.topic.ListTopicView
@@ -107,8 +106,7 @@ class MainView @Inject constructor(
                 menuItem("Consumer Groups", ICON_CONSUMERS, "sidebar-item-consumer-group") { viewModel.setContentList(ListConsumerGroupView::class, currentWindow) }
             }
             bottom = vbox(alignment = Pos.CENTER, spacing = 10) {
-                readOnlyButton(GlobalState.isReadOnlyProperty)
-                themeButton { themeHelper.dispatch { changeTheme() } }
+                configurationButton { ConfigurationView(ConfigurationViewModel(themeHelper)).show() }
             }
             addClass(MainViewStyle.sidebar)
             minWidth = SIDEBAR_WIDTH

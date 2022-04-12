@@ -7,9 +7,9 @@ import insulator.kafka.local.LocalKafkaException
 import insulator.kafka.model.Cluster
 import insulator.ui.common.InsulatorView
 import insulator.ui.component.action
+import insulator.ui.component.clusterSettingsButton
 import insulator.ui.component.h1
 import insulator.ui.component.h2
-import insulator.ui.component.settingsButton
 import insulator.ui.component.subTitle
 import insulator.ui.style.ButtonStyle
 import insulator.update.VersionChecker
@@ -86,7 +86,7 @@ class ListClusterView @Inject constructor(
                 subTitle(cluster.endpoint) { maxWidth = 260.0 }
             }
             right = vbox(alignment = Pos.CENTER_RIGHT) {
-                settingsButton {
+                clusterSettingsButton {
                     clusterComponentFactory.build(cluster).clusterView().show()
                 }
             }
