@@ -14,6 +14,7 @@ fun kafkaConfig(cluster: Cluster) = Properties().apply {
     put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.endpoint)
     put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000)
     put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 30000)
+    put("confluent.reporters.telemetry.auto.enable", false) // disable confluent reporter
     if (cluster.useSSL) {
         put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, "PKCS12")
         put(AdminClientConfig.SECURITY_PROTOCOL_CONFIG, "SSL")
