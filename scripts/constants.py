@@ -91,8 +91,8 @@ other_jars = {
         "os": "win",
     },
     # missing transitive dependencies
-    "telemetry-events-api-7.0.1-ce.jar": {
-        "uri": "https://packages.confluent.io/maven/org/apache/kafka/kafka-clients/7.0.1-ce/kafka-clients-7.0.1-ce.jar"
+    "telemetry-events-api-7.0.2-ce.jar": {
+        "uri": "https://packages.confluent.io/maven/io/confluent/telemetry-events-api/7.0.2-ce/telemetry-events-api-7.0.2-ce.jar"
     },
     "jackson-core-2.12.5.jar": {
         "uri": "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.12.5/jackson-core-2.12.5.jar"

@@ -1,7 +1,7 @@
 
 dependencies {
     // Kafka
-    implementation(group: 'io.confluent', name: 'kafka-avro-serializer', version: '7.0.1')
-    implementation(group: 'org.apache.kafka', name: 'kafka-clients', version: '7.0.1-ce')
-    implementation(group: 'io.confluent', name: 'kafka-schema-registry-client', version: '7.0.1')
+    implementation(group: 'io.confluent', name: 'kafka-avro-serializer', version: '7.0.2')
+    implementation(group: 'org.apache.kafka', name: 'kafka-clients', version: '7.0.2-ce')
+    implementation(group: 'io.confluent', name: 'kafka-schema-registry-client', version: '7.0.2')
 }

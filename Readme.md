@@ -120,7 +120,7 @@ bundle exec jekyll serve
 At startup, the bootstrap checks if a `DEV_MODE` file with the release tag is available.
 ```bash
 # MAC OS
-echo "<version-tag>" > ~/Library/Application Support/Insulator/DEV_MODE
+echo "<version-tag>" > ~/Library/Application\ Support/insulator/DEV_MODE
 
 # Linux
 echo "<version-tag>" > ~/.config/Insulator/DEV_MODE
