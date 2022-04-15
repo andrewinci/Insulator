@@ -33,7 +33,7 @@ dependency_map.update(insulator_jar)
 dependency_map.update(other_jars)
 
 # Remove prefix in local jars
-jars = [j.replace(jars_path, "") for j in glob.glob(f"{jars_path}*.jar")]
+jars = {j.replace(jars_path, "") for j in glob.glob(f"{jars_path}*.jar")}
 
 # Build xml line for each dependency
 files = {j: build_file(jars_path + j, dependency_map.get(j)) for j in jars}
