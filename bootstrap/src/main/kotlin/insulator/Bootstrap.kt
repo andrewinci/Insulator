@@ -27,8 +27,9 @@ fun main(args: Array<String>) {
         .let { (left, right) -> left?.let { Result.failure(it) } ?: Result.success(right!!) }
         .mapCatching { config ->
             if (config.requiresUpdate()) {
-                val result = config.update(UpdateOptions.archive(updatePath).updateHandler(InsulatorUpdateHandler()))
-                result.exception?.let { throw it } ?: Archive.read(updatePath).install()
+                val result =
+                    config.update(UpdateOptions.archive(TMP_UPDATE_PATH).updateHandler(InsulatorUpdateHandler()))
+                result.exception?.let { throw it } ?: Archive.read(TMP_UPDATE_PATH).install()
             }
             config
         }
@@ -38,9 +39,21 @@ fun main(args: Array<String>) {
 
 private fun handleErrors(exception: Throwable) {
     val errorMessage = when (exception) {
-        is UnknownHostException -> Triple("Unable to check for updates. Check your internet connection and retry", "Download error", JOptionPane.WARNING_MESSAGE)
-        is SocketTimeoutException -> Triple("Unable to complete the download. Check your internet connection and retry", "Timeout error", JOptionPane.WARNING_MESSAGE)
-        is FileNotFoundException -> Triple("Unable to find the remote configuration file.", "Download error", JOptionPane.ERROR_MESSAGE)
+        is UnknownHostException -> Triple(
+            "Unable to check for updates. Check your internet connection and retry",
+            "Download error",
+            JOptionPane.WARNING_MESSAGE
+        )
+        is SocketTimeoutException -> Triple(
+            "Unable to complete the download. Check your internet connection and retry",
+            "Timeout error",
+            JOptionPane.WARNING_MESSAGE
+        )
+        is FileNotFoundException -> Triple(
+            "Unable to find the remote configuration file.",
+            "Download error",
+            JOptionPane.ERROR_MESSAGE
+        )
         else -> Triple("Unexpected error: $exception.", "Unexpected error", JOptionPane.ERROR_MESSAGE)
     }
     view.showMessageDialog(errorMessage.first, errorMessage.second, errorMessage.third)
@@ -48,21 +61,21 @@ private fun handleErrors(exception: Throwable) {
 }
 
 fun saveConfig(stream: InputStream): InputStream {
-    if (!File(localPath).exists()) File(localPath).mkdirs()
+    if (!File(LOCAL_CONFIG_PATH).exists()) File(LOCAL_CONFIG_PATH).mkdirs()
     Files.copy(
         stream,
-        Paths.get(localConfigFile),
+        Paths.get(LOCAL_CONFIG_FILE_PATH),
         StandardCopyOption.REPLACE_EXISTING
     )
-    return FileInputStream(localConfigFile)
+    return FileInputStream(LOCAL_CONFIG_FILE_PATH)
 }
 
 fun tryLoadLocalConfig(): Pair<Throwable?, Configuration?> =
-    URL(configPath).runCatching { openConnection().getInputStream() }
+    URL(getUpdateConfigURL()).runCatching { openConnection().getInputStream() }
         .fold(
             { Result.success(it) },
             { error ->
-                with(File(localConfigFile)) {
+                with(File(LOCAL_CONFIG_FILE_PATH)) {
                     if (exists()) Result.success(inputStream())
                     else Result.failure(error)
                 }
@@ -71,6 +84,11 @@ fun tryLoadLocalConfig(): Pair<Throwable?, Configuration?> =
         .mapCatching { stream -> saveConfig(stream) }
         .mapCatching { stream -> InputStreamReader(stream).use { Configuration.read(it) } }
         .fold({ Pair(null, it) }, { Pair(it, null) })
+
+fun getUpdateConfigURL() =
+    if (File(DEV_FILE_PATH).exists())
+        "https://github.com/andrewinci/Insulator/releases/download/${File(DEV_FILE_PATH).readText().trim()}/insulator-update.xml"
+    else LATEST_RELEASE_URL
 
 class InsulatorUpdateHandler : UpdateHandler {
     override fun startDownloads() = view.showUpdateView()

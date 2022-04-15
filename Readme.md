@@ -116,6 +116,16 @@ To build and serve it, use the following.
 bundle exec jekyll serve
 ```
 
+### Use a specific GH (pre)release in the bootstrap
+At startup, the bootstrap checks if a `DEV_MODE` file with the release tag is available.
+```bash
+# MAC OS
+echo "<version-tag>" > ~/Library/Application Support/Insulator/DEV_MODE
+
+# Linux
+echo "<version-tag>" > ~/.config/Insulator/DEV_MODE
+```
+
 ## Credits
 
 [JetBrains](https://www.jetbrains.com/?from=Insulator)
