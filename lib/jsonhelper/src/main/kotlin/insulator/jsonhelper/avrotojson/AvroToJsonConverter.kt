@@ -47,7 +47,7 @@ class AvroToJsonConverter(private val objectMapper: ObjectMapper) {
         }
 
     private fun parseRecord(field: Any?, schema: Schema, humanReadableLogicalType: Boolean): Either<AvroToJsonParsingException, Any?> {
-        if (field !is GenericRecord) return AvroFieldParsingException(field, "Record").left()
+        if (field !is GenericRecord || field.schema != schema) return AvroFieldParsingException(field, "Record").left()
         val keySchema = schema.fields.map { it.name() to it.schema() }
         return keySchema
             .map { (name, schema) -> parseField(field[name], schema, humanReadableLogicalType) }
