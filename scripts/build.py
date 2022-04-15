@@ -5,7 +5,7 @@ from constants import header, footer, insulator_jar, other_jars
 import requests
 
 """
-Must run first
+Run with:
 ./gradlew getDependencySources
 ./gradlew :app:mergeLocalLibs
 python3 scripts/build.py
