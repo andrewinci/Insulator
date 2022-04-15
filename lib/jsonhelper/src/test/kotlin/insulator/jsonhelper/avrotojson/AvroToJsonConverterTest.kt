@@ -266,7 +266,7 @@ class AvroToJsonConverterTest : StringSpec({
         // act
         val res = sut.parse(testRecord)
         // assert
-        res shouldBeRight  {}
+        res shouldBeRight {}
     }
 })
 
