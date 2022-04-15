@@ -61,7 +61,8 @@ class AvroToJsonConverterTest : StringSpec({
         testCases.forAll { testType, _, result ->
             // arrange
             val testFieldName = "testField"
-            val schema = Schema.Parser().parse(schemaTemplate("""{"name":"$testFieldName", "type":$testType, "default": $result }"""))
+            val schema = Schema.Parser()
+                .parse(schemaTemplate("""{"name":"$testFieldName", "type":$testType, "default": $result }"""))
             val testRecord = GenericRecordBuilder(schema).build()
             // act
             val res = sut.parse(testRecord)
@@ -86,9 +87,11 @@ class AvroToJsonConverterTest : StringSpec({
     "byte array type - logical decimal" {
         // arrange
         val testFieldName = "testField"
-        val schema = Schema.Parser().parse(schemaTemplate("""{"name":"$testFieldName", "type": {"type":"bytes", "logicalType":"decimal", "precision":4, "scale":2} }"""))
+        val schema = Schema.Parser()
+            .parse(schemaTemplate("""{"name":"$testFieldName", "type": {"type":"bytes", "logicalType":"decimal", "precision":4, "scale":2} }"""))
         val fieldSchema = schema.fields[0].schema()
-        val testValue = Conversions.DecimalConversion().toBytes(BigDecimal.valueOf(1.23), fieldSchema, fieldSchema.logicalType)
+        val testValue =
+            Conversions.DecimalConversion().toBytes(BigDecimal.valueOf(1.23), fieldSchema, fieldSchema.logicalType)
         val testRecord = GenericRecordBuilder(schema)
             .also { it.set(testFieldName, testValue) }
             .build()
@@ -101,7 +104,8 @@ class AvroToJsonConverterTest : StringSpec({
     "parse array type" {
         // arrange
         val testFieldName = "testField"
-        val schema = Schema.Parser().parse(schemaTemplate("""{"name":"$testFieldName", "type":{"type":"array", "items":"string"}}"""))
+        val schema = Schema.Parser()
+            .parse(schemaTemplate("""{"name":"$testFieldName", "type":{"type":"array", "items":"string"}}"""))
         val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, listOf("1", "2", "3")) }.build()
         // act
         val res = sut.parse(testRecord)
@@ -112,7 +116,8 @@ class AvroToJsonConverterTest : StringSpec({
     "parse nullable array type" {
         // arrange
         val testFieldName = "testField"
-        val schema = Schema.Parser().parse(schemaTemplate("""{"name":"$testFieldName", "type":[{"type":"array", "items":"string"}, "null"]}"""))
+        val schema = Schema.Parser()
+            .parse(schemaTemplate("""{"name":"$testFieldName", "type":[{"type":"array", "items":"string"}, "null"]}"""))
         val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, null) }.build()
         // act
         val res = sut.parse(testRecord)
@@ -244,6 +249,24 @@ class AvroToJsonConverterTest : StringSpec({
         res shouldBeLeft {
             it.shouldBeInstanceOf<UnsupportedTypeException>()
         }
+    }
+
+    "parse union of records" {
+        // arrange
+        val schema = Schema.Parser().parse(
+            schemaTemplate(
+                """{"name":"union","type":[{"type":"record","name":"record1","fields":[{"name":"field1","type":"string"},{"name":"field2","type":"string"}]},{"type":"record","name":"record2","fields":[{"name":"field3","type":"string"}]}]}"""
+            )
+        )
+        val nestedRecord = GenericRecordBuilder(schema.fields[0].schema().types[0]).also {
+            it.set("field1", "value1")
+            it.set("field2", "value2")
+        }.build()
+        val testRecord = GenericRecordBuilder(schema).also { it.set("union", nestedRecord) }.build()
+        // act
+        val res = sut.parse(testRecord)
+        // assert
+        res shouldBeRight {}
     }
 })
 
