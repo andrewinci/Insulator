@@ -42,6 +42,13 @@ internal fun parseNumber(
             val instant = Instant.EPOCH.plus(field.toLong(), ChronoUnit.MICROS)
             timeFormatter.format(instant).right()
         }
+        humanReadableLogicalType && schema.objectProps["logicalType"] == "local-timestamp-micros" && field is Long -> {
+            val instant = Instant.EPOCH.plus(field.toLong(), ChronoUnit.MICROS)
+            timeFormatter.format(instant).right()
+        }
+        humanReadableLogicalType && schema.objectProps["logicalType"] == "local-timestamp-millis" && field is Long -> {
+            Instant.EPOCH.plus(field, ChronoUnit.MILLIS).toString().right()
+        }
         field is Number -> field.right()
         else -> AvroFieldParsingException(field, "Number").left()
     }

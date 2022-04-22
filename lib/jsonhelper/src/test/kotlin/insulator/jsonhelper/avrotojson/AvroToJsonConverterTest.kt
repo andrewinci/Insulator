@@ -214,6 +214,23 @@ class AvroToJsonConverterTest : StringSpec({
         res shouldBeRight """{"$testFieldName":"$testFieldValue"}"""
     }
 
+    "parse local-timestamp-millis" {
+        // arrange
+        val testFieldName = "testField"
+        val testFieldValue = "2022-04-12T05:22:47Z"
+        val schema = Schema.Parser().parse(
+            schemaTemplate(
+                """{"name":"$testFieldName", "type":{ "type": "long", "logicalType": "local-timestamp-millis"} }"""
+            )
+        )
+        val avroFieldValue = 1649740967000 // Tue Apr 12 2022 05:22:47 GMT+0000
+        val testRecord = GenericRecordBuilder(schema).also { it.set(testFieldName, avroFieldValue) }.build()
+        // act
+        val res = sut.parse(testRecord, true)
+        // assert
+        res shouldBeRight """{"$testFieldName":"$testFieldValue"}"""
+    }
+
     "parse time-millis" {
         // arrange
         val testFieldName = "testField"
