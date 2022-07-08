@@ -3,6 +3,7 @@ package insulator.kafka
 import arrow.core.Either
 import arrow.core.computations.either
 import arrow.core.flatMap
+import arrow.core.getOrHandle
 import arrow.core.left
 import arrow.core.right
 import arrow.core.rightIfNotNull
@@ -27,12 +28,34 @@ import org.apache.kafka.common.config.ConfigResource
 import org.apache.kafka.common.config.TopicConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.io.Closeable
+import java.util.*
 
-class AdminApi(private val admin: AdminClient, private val consumer: Consumer<Any, Any>) : Closeable {
+class AdminApi(private val properties: Properties) : Closeable {
+
+    private var admin: AdminClient
+    private var consumer: Consumer<Any, Any>
+
+    init {
+        properties[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+        this.admin = AdminClient.create(properties)
+        this.consumer = KafkaConsumer(properties)
+    }
 
     suspend fun describeConsumerGroup(groupId: String) = either<Throwable, ConsumerGroup> {
+        //build a consumer with the same consumer group
+        properties[ConsumerConfig.GROUP_ID_CONFIG] = groupId
+        val allTopics = listTopics().getOrHandle { throw it }
+        val specificConsumer = KafkaConsumer<Any,Any>(properties)
+        val topicPartitions = allTopics
+            .map { describeTopic(it).getOrHandle { throw it } }
+            .flatMap { topic ->  (0..topic.partitionCount).map { TopicPartition(topic.name, 0) }  }
+            .toSet()
+        val res = specificConsumer.committed(topicPartitions).filter { it.value != null }
+        println(res)
+
+
         val getLag = { partition: TopicPartition, currentOffset: OffsetAndMetadata? ->
-            consumer.endOffsets(mutableListOf(partition)).values.first() - (currentOffset?.offset() ?: 0)
+            specificConsumer.endOffsets(mutableListOf(partition)).values.first() - (currentOffset?.offset() ?: 0)
         }
         val partitionToOffset = !admin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().toSuspendCoroutine()
         val description = !admin.describeConsumerGroups(listOf(groupId)).all().toSuspendCoroutine().map { it.values.first() }
@@ -104,6 +127,4 @@ class AdminApi(private val admin: AdminClient, private val consumer: Consumer<An
 }
 
 fun adminApi(cluster: Cluster) =
-    kafkaConfig(cluster)
-        .apply { put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java) }
-        .let { AdminApi(AdminClient.create(it), KafkaConsumer(it)) }
+    AdminApi(kafkaConfig(cluster))
