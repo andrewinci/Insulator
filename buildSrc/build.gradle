@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: '1.4.10')
+    implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: '1.7.20')
     implementation(group: 'org.jetbrains.kotlin', name: 'kotlin-serialization', version: '1.4.10')
     implementation(group: 'org.jlleitschuh.gradle', name: 'ktlint-gradle', version: '10.2.1')
     implementation(group: 'com.adarshr', name: 'gradle-test-logger-plugin', version: '2.1.1')
