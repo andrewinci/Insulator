@@ -1,4 +1,4 @@
-> :warning: **This is project is not actively maintained**: Use [insulator2](https://github.com/andrewinci/insulator2) instead
+> :warning: **This project is not actively maintained**: Use [insulator2](https://github.com/andrewinci/insulator2) instead
 <h1 align="center">
   <br>
   <img src="assets/icon.png" alt="Insulator" width="200">
